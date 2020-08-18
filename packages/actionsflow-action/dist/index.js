@@ -9549,7 +9549,8 @@ var Stack = __webpack_require__(339),
     isMap = __webpack_require__(746),
     isObject = __webpack_require__(540),
     isSet = __webpack_require__(399),
-    keys = __webpack_require__(215);
+    keys = __webpack_require__(215),
+    keysIn = __webpack_require__(481);
 
 /** Used to compose bitmasks for cloning. */
 var CLONE_DEEP_FLAG = 1,
