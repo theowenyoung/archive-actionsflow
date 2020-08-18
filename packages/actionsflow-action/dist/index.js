@@ -124,70 +124,7 @@ module.exports = {
 /* 2 */,
 /* 3 */,
 /* 4 */,
-/* 5 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-
-
-const fill = __webpack_require__(510);
-const utils = __webpack_require__(872);
-
-const compile = (ast, options = {}) => {
-  let walk = (node, parent = {}) => {
-    let invalidBlock = utils.isInvalidBrace(parent);
-    let invalidNode = node.invalid === true && options.escapeInvalid === true;
-    let invalid = invalidBlock === true || invalidNode === true;
-    let prefix = options.escapeInvalid === true ? '\\' : '';
-    let output = '';
-
-    if (node.isOpen === true) {
-      return prefix + node.value;
-    }
-    if (node.isClose === true) {
-      return prefix + node.value;
-    }
-
-    if (node.type === 'open') {
-      return invalid ? (prefix + node.value) : '(';
-    }
-
-    if (node.type === 'close') {
-      return invalid ? (prefix + node.value) : ')';
-    }
-
-    if (node.type === 'comma') {
-      return node.prev.type === 'comma' ? '' : (invalid ? node.value : '|');
-    }
-
-    if (node.value) {
-      return node.value;
-    }
-
-    if (node.nodes && node.ranges > 0) {
-      let args = utils.reduce(node.nodes);
-      let range = fill(...args, { ...options, wrap: false, toRegex: true });
-
-      if (range.length !== 0) {
-        return args.length > 1 && range.length > 1 ? `(${range})` : range;
-      }
-    }
-
-    if (node.nodes) {
-      for (let child of node.nodes) {
-        output += walk(child, node);
-      }
-    }
-    return output;
-  };
-
-  return walk(ast);
-};
-
-module.exports = compile;
-
-
-/***/ }),
+/* 5 */,
 /* 6 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -416,47 +353,45 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 /* 16 */
 /***/ (function(module) {
 
-var isObject = function isObject(value) {
-    return value instanceof Object && value.constructor === Object;
+"use strict";
+
+
+const stringReplaceAll = (string, substring, replacer) => {
+	let index = string.indexOf(substring);
+	if (index === -1) {
+		return string;
+	}
+
+	const substringLength = substring.length;
+	let endIndex = 0;
+	let returnValue = '';
+	do {
+		returnValue += string.substr(endIndex, index - endIndex) + substring + replacer;
+		endIndex = index + substringLength;
+		index = string.indexOf(substring, endIndex);
+	} while (index !== -1);
+
+	returnValue += string.substr(endIndex);
+	return returnValue;
 };
 
-var parseWrapArguments = function parseWrapArguments(args) {
-    var length = args.length;
-    var work;
-    var options = {};
-    var cb;
+const stringEncaseCRLFWithFirstIndex = (string, prefix, postfix, index) => {
+	let endIndex = 0;
+	let returnValue = '';
+	do {
+		const gotCR = string[index - 1] === '\r';
+		returnValue += string.substr(endIndex, (gotCR ? index - 1 : index) - endIndex) + prefix + (gotCR ? '\r\n' : '\n') + postfix;
+		endIndex = index + 1;
+		index = string.indexOf('\n', endIndex);
+	} while (index !== -1);
 
-    /**
-     * As we can receive an unlimited number of keys
-     * we find the index of the first function which is
-     * the "work" handler to fetch the keys.
-     */
-    for (var i = 0; i < length; i += 1) {
-        if (typeof args[i] === 'function') {
-            if (typeof args[i + 2] === 'function') {
-                cb = args.pop();
-            } else if (typeof args[i + 1] === 'function') {
-                cb = args.pop();
-            }
-            if (isObject(args[i + 1])) {
-                options = args.pop();
-            }
-            work = args.pop();
-            break;
-        }
-    }
-
-    return {
-        keys: args,
-        work: work,
-        options: options,
-        cb: cb
-    };
+	returnValue += string.substr(endIndex);
+	return returnValue;
 };
 
 module.exports = {
-    isObject: isObject,
-    parseWrapArguments: parseWrapArguments
+	stringReplaceAll,
+	stringEncaseCRLFWithFirstIndex
 };
 
 
@@ -489,7 +424,7 @@ exports.string = string;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 /*eslint no-unused-vars:0*/
-var utils = __webpack_require__(16);
+var utils = __webpack_require__(564);
 var isObject = utils.isObject;
 
 /**
@@ -666,7 +601,7 @@ function propagateCloseEventToSources(streams) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const async = __webpack_require__(120);
 const sync = __webpack_require__(719);
-const settings_1 = __webpack_require__(450);
+const settings_1 = __webpack_require__(217);
 exports.Settings = settings_1.default;
 function stat(path, optionsOrSettingsOrCallback, callback) {
     if (typeof optionsOrSettingsOrCallback === 'function') {
@@ -690,24 +625,7 @@ function getSettings(settingsOrOptions = {}) {
 
 /***/ }),
 /* 21 */,
-/* 22 */
-/***/ (function(module) {
-
-"use strict";
-
-module.exports = path => {
-	const isExtendedLengthPath = /^\\\\\?\\/.test(path);
-	const hasNonAscii = /[^\u0000-\u0080]+/.test(path); // eslint-disable-line no-control-regex
-
-	if (isExtendedLengthPath || hasNonAscii) {
-		return path;
-	}
-
-	return path.replace(/\\/g, '/');
-};
-
-
-/***/ }),
+/* 22 */,
 /* 23 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -993,7 +911,7 @@ module.exports = {"Aacute":"Á","aacute":"á","Abreve":"Ă","abreve":"ă","ac":"
 
 "use strict";
 
-const AggregateError = __webpack_require__(804);
+const AggregateError = __webpack_require__(458);
 
 module.exports = async (
 	iterable,
@@ -1379,7 +1297,125 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 49 */,
+/* 49 */
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+
+exports.isInteger = num => {
+  if (typeof num === 'number') {
+    return Number.isInteger(num);
+  }
+  if (typeof num === 'string' && num.trim() !== '') {
+    return Number.isInteger(Number(num));
+  }
+  return false;
+};
+
+/**
+ * Find a node of the given type
+ */
+
+exports.find = (node, type) => node.nodes.find(node => node.type === type);
+
+/**
+ * Find a node of the given type
+ */
+
+exports.exceedsLimit = (min, max, step = 1, limit) => {
+  if (limit === false) return false;
+  if (!exports.isInteger(min) || !exports.isInteger(max)) return false;
+  return ((Number(max) - Number(min)) / Number(step)) >= limit;
+};
+
+/**
+ * Escape the given node with '\\' before node.value
+ */
+
+exports.escapeNode = (block, n = 0, type) => {
+  let node = block.nodes[n];
+  if (!node) return;
+
+  if ((type && node.type === type) || node.type === 'open' || node.type === 'close') {
+    if (node.escaped !== true) {
+      node.value = '\\' + node.value;
+      node.escaped = true;
+    }
+  }
+};
+
+/**
+ * Returns true if the given brace node should be enclosed in literal braces
+ */
+
+exports.encloseBrace = node => {
+  if (node.type !== 'brace') return false;
+  if ((node.commas >> 0 + node.ranges >> 0) === 0) {
+    node.invalid = true;
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Returns true if a brace node is invalid.
+ */
+
+exports.isInvalidBrace = block => {
+  if (block.type !== 'brace') return false;
+  if (block.invalid === true || block.dollar) return true;
+  if ((block.commas >> 0 + block.ranges >> 0) === 0) {
+    block.invalid = true;
+    return true;
+  }
+  if (block.open !== true || block.close !== true) {
+    block.invalid = true;
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Returns true if a node is an open or close node
+ */
+
+exports.isOpenOrClose = node => {
+  if (node.type === 'open' || node.type === 'close') {
+    return true;
+  }
+  return node.open === true || node.close === true;
+};
+
+/**
+ * Reduce an array of text nodes.
+ */
+
+exports.reduce = nodes => nodes.reduce((acc, node) => {
+  if (node.type === 'text') acc.push(node.value);
+  if (node.type === 'range') node.type = 'text';
+  return acc;
+}, []);
+
+/**
+ * Flatten an array
+ */
+
+exports.flatten = (...args) => {
+  const result = [];
+  const flat = arr => {
+    for (let i = 0; i < arr.length; i++) {
+      let ele = arr[i];
+      Array.isArray(ele) ? flat(ele, result) : ele !== void 0 && result.push(ele);
+    }
+    return result;
+  };
+  flat(args);
+  return result;
+};
+
+
+/***/ }),
 /* 50 */
 /***/ (function(module) {
 
@@ -1664,7 +1700,7 @@ exports.clean = exports.build = void 0;
 const tslib_1 = __webpack_require__(403);
 const build_1 = tslib_1.__importDefault(__webpack_require__(509));
 exports.build = build_1.default;
-const clean_1 = tslib_1.__importDefault(__webpack_require__(97));
+const clean_1 = tslib_1.__importDefault(__webpack_require__(621));
 exports.clean = clean_1.default;
 //# sourceMappingURL=index.js.map
 
@@ -1754,139 +1790,7 @@ exports.clean = clean_1.default;
 
 
 /***/ }),
-/* 53 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-// Generated by CoffeeScript 1.12.7
-(function() {
-  "use strict";
-  var builder, defaults, escapeCDATA, requiresCDATA, wrapCDATA,
-    hasProp = {}.hasOwnProperty;
-
-  builder = __webpack_require__(764);
-
-  defaults = __webpack_require__(835).defaults;
-
-  requiresCDATA = function(entry) {
-    return typeof entry === "string" && (entry.indexOf('&') >= 0 || entry.indexOf('>') >= 0 || entry.indexOf('<') >= 0);
-  };
-
-  wrapCDATA = function(entry) {
-    return "<![CDATA[" + (escapeCDATA(entry)) + "]]>";
-  };
-
-  escapeCDATA = function(entry) {
-    return entry.replace(']]>', ']]]]><![CDATA[>');
-  };
-
-  exports.Builder = (function() {
-    function Builder(opts) {
-      var key, ref, value;
-      this.options = {};
-      ref = defaults["0.2"];
-      for (key in ref) {
-        if (!hasProp.call(ref, key)) continue;
-        value = ref[key];
-        this.options[key] = value;
-      }
-      for (key in opts) {
-        if (!hasProp.call(opts, key)) continue;
-        value = opts[key];
-        this.options[key] = value;
-      }
-    }
-
-    Builder.prototype.buildObject = function(rootObj) {
-      var attrkey, charkey, render, rootElement, rootName;
-      attrkey = this.options.attrkey;
-      charkey = this.options.charkey;
-      if ((Object.keys(rootObj).length === 1) && (this.options.rootName === defaults['0.2'].rootName)) {
-        rootName = Object.keys(rootObj)[0];
-        rootObj = rootObj[rootName];
-      } else {
-        rootName = this.options.rootName;
-      }
-      render = (function(_this) {
-        return function(element, obj) {
-          var attr, child, entry, index, key, value;
-          if (typeof obj !== 'object') {
-            if (_this.options.cdata && requiresCDATA(obj)) {
-              element.raw(wrapCDATA(obj));
-            } else {
-              element.txt(obj);
-            }
-          } else if (Array.isArray(obj)) {
-            for (index in obj) {
-              if (!hasProp.call(obj, index)) continue;
-              child = obj[index];
-              for (key in child) {
-                entry = child[key];
-                element = render(element.ele(key), entry).up();
-              }
-            }
-          } else {
-            for (key in obj) {
-              if (!hasProp.call(obj, key)) continue;
-              child = obj[key];
-              if (key === attrkey) {
-                if (typeof child === "object") {
-                  for (attr in child) {
-                    value = child[attr];
-                    element = element.att(attr, value);
-                  }
-                }
-              } else if (key === charkey) {
-                if (_this.options.cdata && requiresCDATA(child)) {
-                  element = element.raw(wrapCDATA(child));
-                } else {
-                  element = element.txt(child);
-                }
-              } else if (Array.isArray(child)) {
-                for (index in child) {
-                  if (!hasProp.call(child, index)) continue;
-                  entry = child[index];
-                  if (typeof entry === 'string') {
-                    if (_this.options.cdata && requiresCDATA(entry)) {
-                      element = element.ele(key).raw(wrapCDATA(entry)).up();
-                    } else {
-                      element = element.ele(key, entry).up();
-                    }
-                  } else {
-                    element = render(element.ele(key), entry).up();
-                  }
-                }
-              } else if (typeof child === "object") {
-                element = render(element.ele(key), child).up();
-              } else {
-                if (typeof child === 'string' && _this.options.cdata && requiresCDATA(child)) {
-                  element = element.ele(key).raw(wrapCDATA(child)).up();
-                } else {
-                  if (child == null) {
-                    child = '';
-                  }
-                  element = element.ele(key, child.toString()).up();
-                }
-              }
-            }
-          }
-          return element;
-        };
-      })(this);
-      rootElement = builder.create(rootName, this.options.xmldec, this.options.doctype, {
-        headless: this.options.headless,
-        allowSurrogateChars: this.options.allowSurrogateChars
-      });
-      return render(rootElement, rootObj).end(this.options.renderOpts);
-    };
-
-    return Builder;
-
-  })();
-
-}).call(this);
-
-
-/***/ }),
+/* 53 */,
 /* 54 */,
 /* 55 */,
 /* 56 */
@@ -1905,7 +1809,126 @@ module.exports = coreJsData;
 /* 58 */,
 /* 59 */,
 /* 60 */,
-/* 61 */,
+/* 61 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+
+
+const fill = __webpack_require__(939);
+const stringify = __webpack_require__(450);
+const utils = __webpack_require__(49);
+
+const append = (queue = '', stash = '', enclose = false) => {
+  let result = [];
+
+  queue = [].concat(queue);
+  stash = [].concat(stash);
+
+  if (!stash.length) return queue;
+  if (!queue.length) {
+    return enclose ? utils.flatten(stash).map(ele => `{${ele}}`) : stash;
+  }
+
+  for (let item of queue) {
+    if (Array.isArray(item)) {
+      for (let value of item) {
+        result.push(append(value, stash, enclose));
+      }
+    } else {
+      for (let ele of stash) {
+        if (enclose === true && typeof ele === 'string') ele = `{${ele}}`;
+        result.push(Array.isArray(ele) ? append(item, ele, enclose) : (item + ele));
+      }
+    }
+  }
+  return utils.flatten(result);
+};
+
+const expand = (ast, options = {}) => {
+  let rangeLimit = options.rangeLimit === void 0 ? 1000 : options.rangeLimit;
+
+  let walk = (node, parent = {}) => {
+    node.queue = [];
+
+    let p = parent;
+    let q = parent.queue;
+
+    while (p.type !== 'brace' && p.type !== 'root' && p.parent) {
+      p = p.parent;
+      q = p.queue;
+    }
+
+    if (node.invalid || node.dollar) {
+      q.push(append(q.pop(), stringify(node, options)));
+      return;
+    }
+
+    if (node.type === 'brace' && node.invalid !== true && node.nodes.length === 2) {
+      q.push(append(q.pop(), ['{}']));
+      return;
+    }
+
+    if (node.nodes && node.ranges > 0) {
+      let args = utils.reduce(node.nodes);
+
+      if (utils.exceedsLimit(...args, options.step, rangeLimit)) {
+        throw new RangeError('expanded array length exceeds range limit. Use options.rangeLimit to increase or disable the limit.');
+      }
+
+      let range = fill(...args, options);
+      if (range.length === 0) {
+        range = stringify(node, options);
+      }
+
+      q.push(append(q.pop(), range));
+      node.nodes = [];
+      return;
+    }
+
+    let enclose = utils.encloseBrace(node);
+    let queue = node.queue;
+    let block = node;
+
+    while (block.type !== 'brace' && block.type !== 'root' && block.parent) {
+      block = block.parent;
+      queue = block.queue;
+    }
+
+    for (let i = 0; i < node.nodes.length; i++) {
+      let child = node.nodes[i];
+
+      if (child.type === 'comma' && node.type === 'brace') {
+        if (i === 1) queue.push('');
+        queue.push('');
+        continue;
+      }
+
+      if (child.type === 'close') {
+        q.push(append(q.pop(), queue, enclose));
+        continue;
+      }
+
+      if (child.value && child.type !== 'open') {
+        queue.push(append(queue.pop(), child.value));
+        continue;
+      }
+
+      if (child.nodes) {
+        walk(child, node);
+      }
+    }
+
+    return queue;
+  };
+
+  return utils.flatten(walk(ast));
+};
+
+module.exports = expand;
+
+
+/***/ }),
 /* 62 */,
 /* 63 */,
 /* 64 */,
@@ -2434,7 +2457,70 @@ module.exports = stackSet;
 /***/ }),
 /* 74 */,
 /* 75 */,
-/* 76 */,
+/* 76 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+
+
+const fill = __webpack_require__(939);
+const utils = __webpack_require__(49);
+
+const compile = (ast, options = {}) => {
+  let walk = (node, parent = {}) => {
+    let invalidBlock = utils.isInvalidBrace(parent);
+    let invalidNode = node.invalid === true && options.escapeInvalid === true;
+    let invalid = invalidBlock === true || invalidNode === true;
+    let prefix = options.escapeInvalid === true ? '\\' : '';
+    let output = '';
+
+    if (node.isOpen === true) {
+      return prefix + node.value;
+    }
+    if (node.isClose === true) {
+      return prefix + node.value;
+    }
+
+    if (node.type === 'open') {
+      return invalid ? (prefix + node.value) : '(';
+    }
+
+    if (node.type === 'close') {
+      return invalid ? (prefix + node.value) : ')';
+    }
+
+    if (node.type === 'comma') {
+      return node.prev.type === 'comma' ? '' : (invalid ? node.value : '|');
+    }
+
+    if (node.value) {
+      return node.value;
+    }
+
+    if (node.nodes && node.ranges > 0) {
+      let args = utils.reduce(node.nodes);
+      let range = fill(...args, { ...options, wrap: false, toRegex: true });
+
+      if (range.length !== 0) {
+        return args.length > 1 && range.length > 1 ? `(${range})` : range;
+      }
+    }
+
+    if (node.nodes) {
+      for (let child of node.nodes) {
+        output += walk(child, node);
+      }
+    }
+    return output;
+  };
+
+  return walk(ast);
+};
+
+module.exports = compile;
+
+
+/***/ }),
 /* 77 */,
 /* 78 */,
 /* 79 */
@@ -2544,26 +2630,7 @@ module.exports = function buildFullPath(baseURL, requestedURL) {
 
 
 /***/ }),
-/* 81 */
-/***/ (function(module) {
-
-/**
- * The base implementation of `_.unary` without support for storing metadata.
- *
- * @private
- * @param {Function} func The function to cap arguments for.
- * @returns {Function} Returns the new capped function.
- */
-function baseUnary(func) {
-  return function(value) {
-    return func(value);
-  };
-}
-
-module.exports = baseUnary;
-
-
-/***/ }),
+/* 81 */,
 /* 82 */,
 /* 83 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
@@ -2681,7 +2748,44 @@ module.exports = overArg;
 module.exports = require("os");
 
 /***/ }),
-/* 88 */,
+/* 88 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const stream_1 = __webpack_require__(413);
+const stream_2 = __webpack_require__(400);
+const provider_1 = __webpack_require__(513);
+class ProviderStream extends provider_1.default {
+    constructor() {
+        super(...arguments);
+        this._reader = new stream_2.default(this._settings);
+    }
+    read(task) {
+        const root = this._getRootDirectory(task);
+        const options = this._getReaderOptions(task);
+        const source = this.api(root, task, options);
+        const destination = new stream_1.Readable({ objectMode: true, read: () => { } });
+        source
+            .once('error', (error) => destination.emit('error', error))
+            .on('data', (entry) => destination.emit('data', options.transform(entry)))
+            .once('end', () => destination.emit('end'));
+        destination
+            .once('close', () => source.destroy());
+        return destination;
+    }
+    api(root, task, options) {
+        if (task.dynamic) {
+            return this._reader.dynamic(root, options);
+        }
+        return this._reader.static(task.patterns, options);
+    }
+}
+exports.default = ProviderStream;
+
+
+/***/ }),
 /* 89 */,
 /* 90 */,
 /* 91 */,
@@ -2825,22 +2929,28 @@ module.exports = hasher;
 /***/ }),
 /* 96 */,
 /* 97 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ (function(module) {
 
 "use strict";
+/*!
+ * is-number <https://github.com/jonschlinkert/is-number>
+ *
+ * Copyright (c) 2014-present, Jon Schlinkert.
+ * Released under the MIT License.
+ */
 
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = __webpack_require__(403);
-__webpack_require__(775);
-const del_1 = tslib_1.__importDefault(__webpack_require__(479));
-const log_1 = tslib_1.__importDefault(__webpack_require__(766));
-exports.default = (options) => {
-    options = Object.assign({ dest: "./dist", base: process.cwd(), logLevel: "info" }, options);
-    return del_1.default([options.dest, "./.cache"]).then(() => {
-        log_1.default.info("Successfully deleted directories");
-    });
+
+
+module.exports = function(num) {
+  if (typeof num === 'number') {
+    return num - num === 0;
+  }
+  if (typeof num === 'string' && num.trim() !== '') {
+    return Number.isFinite ? Number.isFinite(+num) : isFinite(+num);
+  }
+  return false;
 };
-//# sourceMappingURL=clean.js.map
+
 
 /***/ }),
 /* 98 */
@@ -4063,179 +4173,135 @@ module.exports = parse;
 
 /***/ }),
 /* 111 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
-"use strict";
+// Generated by CoffeeScript 1.12.7
+(function() {
+  "use strict";
+  var builder, defaults, escapeCDATA, requiresCDATA, wrapCDATA,
+    hasProp = {}.hasOwnProperty;
 
+  builder = __webpack_require__(764);
 
-const stringify = __webpack_require__(988);
-const compile = __webpack_require__(5);
-const expand = __webpack_require__(497);
-const parse = __webpack_require__(531);
+  defaults = __webpack_require__(835).defaults;
 
-/**
- * Expand the given pattern or create a regex-compatible string.
- *
- * ```js
- * const braces = require('braces');
- * console.log(braces('{a,b,c}', { compile: true })); //=> ['(a|b|c)']
- * console.log(braces('{a,b,c}')); //=> ['a', 'b', 'c']
- * ```
- * @param {String} `str`
- * @param {Object} `options`
- * @return {String}
- * @api public
- */
+  requiresCDATA = function(entry) {
+    return typeof entry === "string" && (entry.indexOf('&') >= 0 || entry.indexOf('>') >= 0 || entry.indexOf('<') >= 0);
+  };
 
-const braces = (input, options = {}) => {
-  let output = [];
+  wrapCDATA = function(entry) {
+    return "<![CDATA[" + (escapeCDATA(entry)) + "]]>";
+  };
 
-  if (Array.isArray(input)) {
-    for (let pattern of input) {
-      let result = braces.create(pattern, options);
-      if (Array.isArray(result)) {
-        output.push(...result);
-      } else {
-        output.push(result);
+  escapeCDATA = function(entry) {
+    return entry.replace(']]>', ']]]]><![CDATA[>');
+  };
+
+  exports.Builder = (function() {
+    function Builder(opts) {
+      var key, ref, value;
+      this.options = {};
+      ref = defaults["0.2"];
+      for (key in ref) {
+        if (!hasProp.call(ref, key)) continue;
+        value = ref[key];
+        this.options[key] = value;
+      }
+      for (key in opts) {
+        if (!hasProp.call(opts, key)) continue;
+        value = opts[key];
+        this.options[key] = value;
       }
     }
-  } else {
-    output = [].concat(braces.create(input, options));
-  }
 
-  if (options && options.expand === true && options.nodupes === true) {
-    output = [...new Set(output)];
-  }
-  return output;
-};
+    Builder.prototype.buildObject = function(rootObj) {
+      var attrkey, charkey, render, rootElement, rootName;
+      attrkey = this.options.attrkey;
+      charkey = this.options.charkey;
+      if ((Object.keys(rootObj).length === 1) && (this.options.rootName === defaults['0.2'].rootName)) {
+        rootName = Object.keys(rootObj)[0];
+        rootObj = rootObj[rootName];
+      } else {
+        rootName = this.options.rootName;
+      }
+      render = (function(_this) {
+        return function(element, obj) {
+          var attr, child, entry, index, key, value;
+          if (typeof obj !== 'object') {
+            if (_this.options.cdata && requiresCDATA(obj)) {
+              element.raw(wrapCDATA(obj));
+            } else {
+              element.txt(obj);
+            }
+          } else if (Array.isArray(obj)) {
+            for (index in obj) {
+              if (!hasProp.call(obj, index)) continue;
+              child = obj[index];
+              for (key in child) {
+                entry = child[key];
+                element = render(element.ele(key), entry).up();
+              }
+            }
+          } else {
+            for (key in obj) {
+              if (!hasProp.call(obj, key)) continue;
+              child = obj[key];
+              if (key === attrkey) {
+                if (typeof child === "object") {
+                  for (attr in child) {
+                    value = child[attr];
+                    element = element.att(attr, value);
+                  }
+                }
+              } else if (key === charkey) {
+                if (_this.options.cdata && requiresCDATA(child)) {
+                  element = element.raw(wrapCDATA(child));
+                } else {
+                  element = element.txt(child);
+                }
+              } else if (Array.isArray(child)) {
+                for (index in child) {
+                  if (!hasProp.call(child, index)) continue;
+                  entry = child[index];
+                  if (typeof entry === 'string') {
+                    if (_this.options.cdata && requiresCDATA(entry)) {
+                      element = element.ele(key).raw(wrapCDATA(entry)).up();
+                    } else {
+                      element = element.ele(key, entry).up();
+                    }
+                  } else {
+                    element = render(element.ele(key), entry).up();
+                  }
+                }
+              } else if (typeof child === "object") {
+                element = render(element.ele(key), child).up();
+              } else {
+                if (typeof child === 'string' && _this.options.cdata && requiresCDATA(child)) {
+                  element = element.ele(key).raw(wrapCDATA(child)).up();
+                } else {
+                  if (child == null) {
+                    child = '';
+                  }
+                  element = element.ele(key, child.toString()).up();
+                }
+              }
+            }
+          }
+          return element;
+        };
+      })(this);
+      rootElement = builder.create(rootName, this.options.xmldec, this.options.doctype, {
+        headless: this.options.headless,
+        allowSurrogateChars: this.options.allowSurrogateChars
+      });
+      return render(rootElement, rootObj).end(this.options.renderOpts);
+    };
 
-/**
- * Parse the given `str` with the given `options`.
- *
- * ```js
- * // braces.parse(pattern, [, options]);
- * const ast = braces.parse('a/{b,c}/d');
- * console.log(ast);
- * ```
- * @param {String} pattern Brace pattern to parse
- * @param {Object} options
- * @return {Object} Returns an AST
- * @api public
- */
+    return Builder;
 
-braces.parse = (input, options = {}) => parse(input, options);
+  })();
 
-/**
- * Creates a braces string from an AST, or an AST node.
- *
- * ```js
- * const braces = require('braces');
- * let ast = braces.parse('foo/{a,b}/bar');
- * console.log(stringify(ast.nodes[2])); //=> '{a,b}'
- * ```
- * @param {String} `input` Brace pattern or AST.
- * @param {Object} `options`
- * @return {Array} Returns an array of expanded values.
- * @api public
- */
-
-braces.stringify = (input, options = {}) => {
-  if (typeof input === 'string') {
-    return stringify(braces.parse(input, options), options);
-  }
-  return stringify(input, options);
-};
-
-/**
- * Compiles a brace pattern into a regex-compatible, optimized string.
- * This method is called by the main [braces](#braces) function by default.
- *
- * ```js
- * const braces = require('braces');
- * console.log(braces.compile('a/{b,c}/d'));
- * //=> ['a/(b|c)/d']
- * ```
- * @param {String} `input` Brace pattern or AST.
- * @param {Object} `options`
- * @return {Array} Returns an array of expanded values.
- * @api public
- */
-
-braces.compile = (input, options = {}) => {
-  if (typeof input === 'string') {
-    input = braces.parse(input, options);
-  }
-  return compile(input, options);
-};
-
-/**
- * Expands a brace pattern into an array. This method is called by the
- * main [braces](#braces) function when `options.expand` is true. Before
- * using this method it's recommended that you read the [performance notes](#performance))
- * and advantages of using [.compile](#compile) instead.
- *
- * ```js
- * const braces = require('braces');
- * console.log(braces.expand('a/{b,c}/d'));
- * //=> ['a/b/d', 'a/c/d'];
- * ```
- * @param {String} `pattern` Brace pattern
- * @param {Object} `options`
- * @return {Array} Returns an array of expanded values.
- * @api public
- */
-
-braces.expand = (input, options = {}) => {
-  if (typeof input === 'string') {
-    input = braces.parse(input, options);
-  }
-
-  let result = expand(input, options);
-
-  // filter out empty strings if specified
-  if (options.noempty === true) {
-    result = result.filter(Boolean);
-  }
-
-  // filter out duplicates if specified
-  if (options.nodupes === true) {
-    result = [...new Set(result)];
-  }
-
-  return result;
-};
-
-/**
- * Processes a brace pattern and returns either an expanded array
- * (if `options.expand` is true), a highly optimized regex-compatible string.
- * This method is called by the main [braces](#braces) function.
- *
- * ```js
- * const braces = require('braces');
- * console.log(braces.create('user-{200..300}/project-{a,b,c}-{1..10}'))
- * //=> 'user-(20[0-9]|2[1-9][0-9]|300)/project-(a|b|c)-([1-9]|10)'
- * ```
- * @param {String} `pattern` Brace pattern
- * @param {Object} `options`
- * @return {Array} Returns an array of expanded values.
- * @api public
- */
-
-braces.create = (input, options = {}) => {
-  if (input === '' || input.length < 3) {
-    return [input];
-  }
-
- return options.expand !== true
-    ? braces.compile(input, options)
-    : braces.expand(input, options);
-};
-
-/**
- * Expose "braces"
- */
-
-module.exports = braces;
+}).call(this);
 
 
 /***/ }),
@@ -4371,7 +4437,7 @@ const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
 const fastGlob = __webpack_require__(344);
 const gitIgnore = __webpack_require__(858);
-const slash = __webpack_require__(22);
+const slash = __webpack_require__(903);
 
 const DEFAULT_IGNORE = [
 	'**/node_modules/**',
@@ -4533,7 +4599,7 @@ function callSuccessCallback(callback, result) {
 
 var DataView = __webpack_require__(666),
     Map = __webpack_require__(406),
-    Promise = __webpack_require__(163),
+    Promise = __webpack_require__(716),
     Set = __webpack_require__(431),
     WeakMap = __webpack_require__(975),
     baseGetTag = __webpack_require__(311),
@@ -6411,301 +6477,7 @@ if (process.platform === 'linux') {
 
 
 /***/ }),
-/* 154 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-/*!
- * to-regex-range <https://github.com/micromatch/to-regex-range>
- *
- * Copyright (c) 2015-present, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-const isNumber = __webpack_require__(517);
-
-const toRegexRange = (min, max, options) => {
-  if (isNumber(min) === false) {
-    throw new TypeError('toRegexRange: expected the first argument to be a number');
-  }
-
-  if (max === void 0 || min === max) {
-    return String(min);
-  }
-
-  if (isNumber(max) === false) {
-    throw new TypeError('toRegexRange: expected the second argument to be a number.');
-  }
-
-  let opts = { relaxZeros: true, ...options };
-  if (typeof opts.strictZeros === 'boolean') {
-    opts.relaxZeros = opts.strictZeros === false;
-  }
-
-  let relax = String(opts.relaxZeros);
-  let shorthand = String(opts.shorthand);
-  let capture = String(opts.capture);
-  let wrap = String(opts.wrap);
-  let cacheKey = min + ':' + max + '=' + relax + shorthand + capture + wrap;
-
-  if (toRegexRange.cache.hasOwnProperty(cacheKey)) {
-    return toRegexRange.cache[cacheKey].result;
-  }
-
-  let a = Math.min(min, max);
-  let b = Math.max(min, max);
-
-  if (Math.abs(a - b) === 1) {
-    let result = min + '|' + max;
-    if (opts.capture) {
-      return `(${result})`;
-    }
-    if (opts.wrap === false) {
-      return result;
-    }
-    return `(?:${result})`;
-  }
-
-  let isPadded = hasPadding(min) || hasPadding(max);
-  let state = { min, max, a, b };
-  let positives = [];
-  let negatives = [];
-
-  if (isPadded) {
-    state.isPadded = isPadded;
-    state.maxLen = String(state.max).length;
-  }
-
-  if (a < 0) {
-    let newMin = b < 0 ? Math.abs(b) : 1;
-    negatives = splitToPatterns(newMin, Math.abs(a), state, opts);
-    a = state.a = 0;
-  }
-
-  if (b >= 0) {
-    positives = splitToPatterns(a, b, state, opts);
-  }
-
-  state.negatives = negatives;
-  state.positives = positives;
-  state.result = collatePatterns(negatives, positives, opts);
-
-  if (opts.capture === true) {
-    state.result = `(${state.result})`;
-  } else if (opts.wrap !== false && (positives.length + negatives.length) > 1) {
-    state.result = `(?:${state.result})`;
-  }
-
-  toRegexRange.cache[cacheKey] = state;
-  return state.result;
-};
-
-function collatePatterns(neg, pos, options) {
-  let onlyNegative = filterPatterns(neg, pos, '-', false, options) || [];
-  let onlyPositive = filterPatterns(pos, neg, '', false, options) || [];
-  let intersected = filterPatterns(neg, pos, '-?', true, options) || [];
-  let subpatterns = onlyNegative.concat(intersected).concat(onlyPositive);
-  return subpatterns.join('|');
-}
-
-function splitToRanges(min, max) {
-  let nines = 1;
-  let zeros = 1;
-
-  let stop = countNines(min, nines);
-  let stops = new Set([max]);
-
-  while (min <= stop && stop <= max) {
-    stops.add(stop);
-    nines += 1;
-    stop = countNines(min, nines);
-  }
-
-  stop = countZeros(max + 1, zeros) - 1;
-
-  while (min < stop && stop <= max) {
-    stops.add(stop);
-    zeros += 1;
-    stop = countZeros(max + 1, zeros) - 1;
-  }
-
-  stops = [...stops];
-  stops.sort(compare);
-  return stops;
-}
-
-/**
- * Convert a range to a regex pattern
- * @param {Number} `start`
- * @param {Number} `stop`
- * @return {String}
- */
-
-function rangeToPattern(start, stop, options) {
-  if (start === stop) {
-    return { pattern: start, count: [], digits: 0 };
-  }
-
-  let zipped = zip(start, stop);
-  let digits = zipped.length;
-  let pattern = '';
-  let count = 0;
-
-  for (let i = 0; i < digits; i++) {
-    let [startDigit, stopDigit] = zipped[i];
-
-    if (startDigit === stopDigit) {
-      pattern += startDigit;
-
-    } else if (startDigit !== '0' || stopDigit !== '9') {
-      pattern += toCharacterClass(startDigit, stopDigit, options);
-
-    } else {
-      count++;
-    }
-  }
-
-  if (count) {
-    pattern += options.shorthand === true ? '\\d' : '[0-9]';
-  }
-
-  return { pattern, count: [count], digits };
-}
-
-function splitToPatterns(min, max, tok, options) {
-  let ranges = splitToRanges(min, max);
-  let tokens = [];
-  let start = min;
-  let prev;
-
-  for (let i = 0; i < ranges.length; i++) {
-    let max = ranges[i];
-    let obj = rangeToPattern(String(start), String(max), options);
-    let zeros = '';
-
-    if (!tok.isPadded && prev && prev.pattern === obj.pattern) {
-      if (prev.count.length > 1) {
-        prev.count.pop();
-      }
-
-      prev.count.push(obj.count[0]);
-      prev.string = prev.pattern + toQuantifier(prev.count);
-      start = max + 1;
-      continue;
-    }
-
-    if (tok.isPadded) {
-      zeros = padZeros(max, tok, options);
-    }
-
-    obj.string = zeros + obj.pattern + toQuantifier(obj.count);
-    tokens.push(obj);
-    start = max + 1;
-    prev = obj;
-  }
-
-  return tokens;
-}
-
-function filterPatterns(arr, comparison, prefix, intersection, options) {
-  let result = [];
-
-  for (let ele of arr) {
-    let { string } = ele;
-
-    // only push if _both_ are negative...
-    if (!intersection && !contains(comparison, 'string', string)) {
-      result.push(prefix + string);
-    }
-
-    // or _both_ are positive
-    if (intersection && contains(comparison, 'string', string)) {
-      result.push(prefix + string);
-    }
-  }
-  return result;
-}
-
-/**
- * Zip strings
- */
-
-function zip(a, b) {
-  let arr = [];
-  for (let i = 0; i < a.length; i++) arr.push([a[i], b[i]]);
-  return arr;
-}
-
-function compare(a, b) {
-  return a > b ? 1 : b > a ? -1 : 0;
-}
-
-function contains(arr, key, val) {
-  return arr.some(ele => ele[key] === val);
-}
-
-function countNines(min, len) {
-  return Number(String(min).slice(0, -len) + '9'.repeat(len));
-}
-
-function countZeros(integer, zeros) {
-  return integer - (integer % Math.pow(10, zeros));
-}
-
-function toQuantifier(digits) {
-  let [start = 0, stop = ''] = digits;
-  if (stop || start > 1) {
-    return `{${start + (stop ? ',' + stop : '')}}`;
-  }
-  return '';
-}
-
-function toCharacterClass(a, b, options) {
-  return `[${a}${(b - a === 1) ? '' : '-'}${b}]`;
-}
-
-function hasPadding(str) {
-  return /^-?(0+)\d/.test(str);
-}
-
-function padZeros(value, tok, options) {
-  if (!tok.isPadded) {
-    return value;
-  }
-
-  let diff = Math.abs(tok.maxLen - String(value).length);
-  let relax = options.relaxZeros !== false;
-
-  switch (diff) {
-    case 0:
-      return '';
-    case 1:
-      return relax ? '0?' : '0';
-    case 2:
-      return relax ? '0{0,2}' : '00';
-    default: {
-      return relax ? `0{0,${diff}}` : `0{${diff}}`;
-    }
-  }
-}
-
-/**
- * Cache
- */
-
-toRegexRange.cache = {};
-toRegexRange.clearCache = () => (toRegexRange.cache = {});
-
-/**
- * Expose `toRegexRange`
- */
-
-module.exports = toRegexRange;
-
-
-/***/ }),
+/* 154 */,
 /* 155 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -7638,13 +7410,474 @@ convert.rgb.gray = function (rgb) {
 /* 163 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var getNative = __webpack_require__(698),
-    root = __webpack_require__(348);
+"use strict";
 
-/* Built-in method references that are verified to be native. */
-var Promise = getNative(root, 'Promise');
 
-module.exports = Promise;
+const util = __webpack_require__(669);
+const braces = __webpack_require__(358);
+const picomatch = __webpack_require__(478);
+const utils = __webpack_require__(167);
+const isEmptyString = val => typeof val === 'string' && (val === '' || val === './');
+
+/**
+ * Returns an array of strings that match one or more glob patterns.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm(list, patterns[, options]);
+ *
+ * console.log(mm(['a.js', 'a.txt'], ['*.js']));
+ * //=> [ 'a.js' ]
+ * ```
+ * @param {String|Array<string>} list List of strings to match.
+ * @param {String|Array<string>} patterns One or more glob patterns to use for matching.
+ * @param {Object} options See available [options](#options)
+ * @return {Array} Returns an array of matches
+ * @summary false
+ * @api public
+ */
+
+const micromatch = (list, patterns, options) => {
+  patterns = [].concat(patterns);
+  list = [].concat(list);
+
+  let omit = new Set();
+  let keep = new Set();
+  let items = new Set();
+  let negatives = 0;
+
+  let onResult = state => {
+    items.add(state.output);
+    if (options && options.onResult) {
+      options.onResult(state);
+    }
+  };
+
+  for (let i = 0; i < patterns.length; i++) {
+    let isMatch = picomatch(String(patterns[i]), { ...options, onResult }, true);
+    let negated = isMatch.state.negated || isMatch.state.negatedExtglob;
+    if (negated) negatives++;
+
+    for (let item of list) {
+      let matched = isMatch(item, true);
+
+      let match = negated ? !matched.isMatch : matched.isMatch;
+      if (!match) continue;
+
+      if (negated) {
+        omit.add(matched.output);
+      } else {
+        omit.delete(matched.output);
+        keep.add(matched.output);
+      }
+    }
+  }
+
+  let result = negatives === patterns.length ? [...items] : [...keep];
+  let matches = result.filter(item => !omit.has(item));
+
+  if (options && matches.length === 0) {
+    if (options.failglob === true) {
+      throw new Error(`No matches found for "${patterns.join(', ')}"`);
+    }
+
+    if (options.nonull === true || options.nullglob === true) {
+      return options.unescape ? patterns.map(p => p.replace(/\\/g, '')) : patterns;
+    }
+  }
+
+  return matches;
+};
+
+/**
+ * Backwards compatibility
+ */
+
+micromatch.match = micromatch;
+
+/**
+ * Returns a matcher function from the given glob `pattern` and `options`.
+ * The returned function takes a string to match as its only argument and returns
+ * true if the string is a match.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.matcher(pattern[, options]);
+ *
+ * const isMatch = mm.matcher('*.!(*a)');
+ * console.log(isMatch('a.a')); //=> false
+ * console.log(isMatch('a.b')); //=> true
+ * ```
+ * @param {String} `pattern` Glob pattern
+ * @param {Object} `options`
+ * @return {Function} Returns a matcher function.
+ * @api public
+ */
+
+micromatch.matcher = (pattern, options) => picomatch(pattern, options);
+
+/**
+ * Returns true if **any** of the given glob `patterns` match the specified `string`.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.isMatch(string, patterns[, options]);
+ *
+ * console.log(mm.isMatch('a.a', ['b.*', '*.a'])); //=> true
+ * console.log(mm.isMatch('a.a', 'b.*')); //=> false
+ * ```
+ * @param {String} str The string to test.
+ * @param {String|Array} patterns One or more glob patterns to use for matching.
+ * @param {Object} [options] See available [options](#options).
+ * @return {Boolean} Returns true if any patterns match `str`
+ * @api public
+ */
+
+micromatch.isMatch = (str, patterns, options) => picomatch(patterns, options)(str);
+
+/**
+ * Backwards compatibility
+ */
+
+micromatch.any = micromatch.isMatch;
+
+/**
+ * Returns a list of strings that _**do not match any**_ of the given `patterns`.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.not(list, patterns[, options]);
+ *
+ * console.log(mm.not(['a.a', 'b.b', 'c.c'], '*.a'));
+ * //=> ['b.b', 'c.c']
+ * ```
+ * @param {Array} `list` Array of strings to match.
+ * @param {String|Array} `patterns` One or more glob pattern to use for matching.
+ * @param {Object} `options` See available [options](#options) for changing how matches are performed
+ * @return {Array} Returns an array of strings that **do not match** the given patterns.
+ * @api public
+ */
+
+micromatch.not = (list, patterns, options = {}) => {
+  patterns = [].concat(patterns).map(String);
+  let result = new Set();
+  let items = [];
+
+  let onResult = state => {
+    if (options.onResult) options.onResult(state);
+    items.push(state.output);
+  };
+
+  let matches = micromatch(list, patterns, { ...options, onResult });
+
+  for (let item of items) {
+    if (!matches.includes(item)) {
+      result.add(item);
+    }
+  }
+  return [...result];
+};
+
+/**
+ * Returns true if the given `string` contains the given pattern. Similar
+ * to [.isMatch](#isMatch) but the pattern can match any part of the string.
+ *
+ * ```js
+ * var mm = require('micromatch');
+ * // mm.contains(string, pattern[, options]);
+ *
+ * console.log(mm.contains('aa/bb/cc', '*b'));
+ * //=> true
+ * console.log(mm.contains('aa/bb/cc', '*d'));
+ * //=> false
+ * ```
+ * @param {String} `str` The string to match.
+ * @param {String|Array} `patterns` Glob pattern to use for matching.
+ * @param {Object} `options` See available [options](#options) for changing how matches are performed
+ * @return {Boolean} Returns true if the patter matches any part of `str`.
+ * @api public
+ */
+
+micromatch.contains = (str, pattern, options) => {
+  if (typeof str !== 'string') {
+    throw new TypeError(`Expected a string: "${util.inspect(str)}"`);
+  }
+
+  if (Array.isArray(pattern)) {
+    return pattern.some(p => micromatch.contains(str, p, options));
+  }
+
+  if (typeof pattern === 'string') {
+    if (isEmptyString(str) || isEmptyString(pattern)) {
+      return false;
+    }
+
+    if (str.includes(pattern) || (str.startsWith('./') && str.slice(2).includes(pattern))) {
+      return true;
+    }
+  }
+
+  return micromatch.isMatch(str, pattern, { ...options, contains: true });
+};
+
+/**
+ * Filter the keys of the given object with the given `glob` pattern
+ * and `options`. Does not attempt to match nested keys. If you need this feature,
+ * use [glob-object][] instead.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.matchKeys(object, patterns[, options]);
+ *
+ * const obj = { aa: 'a', ab: 'b', ac: 'c' };
+ * console.log(mm.matchKeys(obj, '*b'));
+ * //=> { ab: 'b' }
+ * ```
+ * @param {Object} `object` The object with keys to filter.
+ * @param {String|Array} `patterns` One or more glob patterns to use for matching.
+ * @param {Object} `options` See available [options](#options) for changing how matches are performed
+ * @return {Object} Returns an object with only keys that match the given patterns.
+ * @api public
+ */
+
+micromatch.matchKeys = (obj, patterns, options) => {
+  if (!utils.isObject(obj)) {
+    throw new TypeError('Expected the first argument to be an object');
+  }
+  let keys = micromatch(Object.keys(obj), patterns, options);
+  let res = {};
+  for (let key of keys) res[key] = obj[key];
+  return res;
+};
+
+/**
+ * Returns true if some of the strings in the given `list` match any of the given glob `patterns`.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.some(list, patterns[, options]);
+ *
+ * console.log(mm.some(['foo.js', 'bar.js'], ['*.js', '!foo.js']));
+ * // true
+ * console.log(mm.some(['foo.js'], ['*.js', '!foo.js']));
+ * // false
+ * ```
+ * @param {String|Array} `list` The string or array of strings to test. Returns as soon as the first match is found.
+ * @param {String|Array} `patterns` One or more glob patterns to use for matching.
+ * @param {Object} `options` See available [options](#options) for changing how matches are performed
+ * @return {Boolean} Returns true if any patterns match `str`
+ * @api public
+ */
+
+micromatch.some = (list, patterns, options) => {
+  let items = [].concat(list);
+
+  for (let pattern of [].concat(patterns)) {
+    let isMatch = picomatch(String(pattern), options);
+    if (items.some(item => isMatch(item))) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+ * Returns true if every string in the given `list` matches
+ * any of the given glob `patterns`.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.every(list, patterns[, options]);
+ *
+ * console.log(mm.every('foo.js', ['foo.js']));
+ * // true
+ * console.log(mm.every(['foo.js', 'bar.js'], ['*.js']));
+ * // true
+ * console.log(mm.every(['foo.js', 'bar.js'], ['*.js', '!foo.js']));
+ * // false
+ * console.log(mm.every(['foo.js'], ['*.js', '!foo.js']));
+ * // false
+ * ```
+ * @param {String|Array} `list` The string or array of strings to test.
+ * @param {String|Array} `patterns` One or more glob patterns to use for matching.
+ * @param {Object} `options` See available [options](#options) for changing how matches are performed
+ * @return {Boolean} Returns true if any patterns match `str`
+ * @api public
+ */
+
+micromatch.every = (list, patterns, options) => {
+  let items = [].concat(list);
+
+  for (let pattern of [].concat(patterns)) {
+    let isMatch = picomatch(String(pattern), options);
+    if (!items.every(item => isMatch(item))) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
+ * Returns true if **all** of the given `patterns` match
+ * the specified string.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.all(string, patterns[, options]);
+ *
+ * console.log(mm.all('foo.js', ['foo.js']));
+ * // true
+ *
+ * console.log(mm.all('foo.js', ['*.js', '!foo.js']));
+ * // false
+ *
+ * console.log(mm.all('foo.js', ['*.js', 'foo.js']));
+ * // true
+ *
+ * console.log(mm.all('foo.js', ['*.js', 'f*', '*o*', '*o.js']));
+ * // true
+ * ```
+ * @param {String|Array} `str` The string to test.
+ * @param {String|Array} `patterns` One or more glob patterns to use for matching.
+ * @param {Object} `options` See available [options](#options) for changing how matches are performed
+ * @return {Boolean} Returns true if any patterns match `str`
+ * @api public
+ */
+
+micromatch.all = (str, patterns, options) => {
+  if (typeof str !== 'string') {
+    throw new TypeError(`Expected a string: "${util.inspect(str)}"`);
+  }
+
+  return [].concat(patterns).every(p => picomatch(p, options)(str));
+};
+
+/**
+ * Returns an array of matches captured by `pattern` in `string, or `null` if the pattern did not match.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.capture(pattern, string[, options]);
+ *
+ * console.log(mm.capture('test/*.js', 'test/foo.js'));
+ * //=> ['foo']
+ * console.log(mm.capture('test/*.js', 'foo/bar.css'));
+ * //=> null
+ * ```
+ * @param {String} `glob` Glob pattern to use for matching.
+ * @param {String} `input` String to match
+ * @param {Object} `options` See available [options](#options) for changing how matches are performed
+ * @return {Boolean} Returns an array of captures if the input matches the glob pattern, otherwise `null`.
+ * @api public
+ */
+
+micromatch.capture = (glob, input, options) => {
+  let posix = utils.isWindows(options);
+  let regex = picomatch.makeRe(String(glob), { ...options, capture: true });
+  let match = regex.exec(posix ? utils.toPosixSlashes(input) : input);
+
+  if (match) {
+    return match.slice(1).map(v => v === void 0 ? '' : v);
+  }
+};
+
+/**
+ * Create a regular expression from the given glob `pattern`.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * // mm.makeRe(pattern[, options]);
+ *
+ * console.log(mm.makeRe('*.js'));
+ * //=> /^(?:(\.[\\\/])?(?!\.)(?=.)[^\/]*?\.js)$/
+ * ```
+ * @param {String} `pattern` A glob pattern to convert to regex.
+ * @param {Object} `options`
+ * @return {RegExp} Returns a regex created from the given pattern.
+ * @api public
+ */
+
+micromatch.makeRe = (...args) => picomatch.makeRe(...args);
+
+/**
+ * Scan a glob pattern to separate the pattern into segments. Used
+ * by the [split](#split) method.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * const state = mm.scan(pattern[, options]);
+ * ```
+ * @param {String} `pattern`
+ * @param {Object} `options`
+ * @return {Object} Returns an object with
+ * @api public
+ */
+
+micromatch.scan = (...args) => picomatch.scan(...args);
+
+/**
+ * Parse a glob pattern to create the source string for a regular
+ * expression.
+ *
+ * ```js
+ * const mm = require('micromatch');
+ * const state = mm(pattern[, options]);
+ * ```
+ * @param {String} `glob`
+ * @param {Object} `options`
+ * @return {Object} Returns an object with useful properties and output to be used as regex source string.
+ * @api public
+ */
+
+micromatch.parse = (patterns, options) => {
+  let res = [];
+  for (let pattern of [].concat(patterns || [])) {
+    for (let str of braces(String(pattern), options)) {
+      res.push(picomatch.parse(str, options));
+    }
+  }
+  return res;
+};
+
+/**
+ * Process the given brace `pattern`.
+ *
+ * ```js
+ * const { braces } = require('micromatch');
+ * console.log(braces('foo/{a,b,c}/bar'));
+ * //=> [ 'foo/(a|b|c)/bar' ]
+ *
+ * console.log(braces('foo/{a,b,c}/bar', { expand: true }));
+ * //=> [ 'foo/a/bar', 'foo/b/bar', 'foo/c/bar' ]
+ * ```
+ * @param {String} `pattern` String with brace pattern to process.
+ * @param {Object} `options` Any [options](#options) to change how expansion is performed. See the [braces][] library for all available options.
+ * @return {Array}
+ * @api public
+ */
+
+micromatch.braces = (pattern, options) => {
+  if (typeof pattern !== 'string') throw new TypeError('Expected a string');
+  if ((options && options.nobrace === true) || !/\{.*\}/.test(pattern)) {
+    return [pattern];
+  }
+  return braces(pattern, options);
+};
+
+/**
+ * Expand braces
+ */
+
+micromatch.braceExpand = (pattern, options) => {
+  if (typeof pattern !== 'string') throw new TypeError('Expected a string');
+  return micromatch.braces(pattern, { ...options, expand: true });
+};
+
+/**
+ * Expose micromatch
+ */
+
+module.exports = micromatch;
 
 
 /***/ }),
@@ -8271,661 +8504,143 @@ function wrappy (fn, cb) {
 
 /***/ }),
 /* 175 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-/** @module cacheManager/multiCaching */
-var async = __webpack_require__(448);
-var CallbackFiller = __webpack_require__(443);
-var utils = __webpack_require__(16);
-var isObject = utils.isObject;
-var parseWrapArguments = utils.parseWrapArguments;
-
-/**
- * Module that lets you specify a hierarchy of caches.
- *
- * @param {array} caches - Array of caching objects.
- * @param {object} [options]
- * @param {function} [options.isCacheableValue] - A callback function which is called
- *   with every value returned from cache or from a wrapped function. This lets you specify
- *   which values should and should not be cached. If the function returns true, it will be
- *   stored in cache. By default it caches everything except undefined.
- *
- *   If an underlying cache specifies its own isCacheableValue function, that function will
- *   be used instead of the multiCaching's _isCacheableValue function.
- */
-var multiCaching = function(caches, options) {
-    var self = {};
-    options = options || {};
-
-    var Promise = options.promiseDependency || global.Promise;
-
-    if (!Array.isArray(caches)) {
-        throw new Error('multiCaching requires an array of caches');
-    }
-
-    var callbackFiller = new CallbackFiller();
-    var backgroundQueue = new Set();
-
-    if (typeof options.isCacheableValue === 'function') {
-        self._isCacheableValue = options.isCacheableValue;
-    } else {
-        self._isCacheableValue = function(value) {
-            return value !== undefined;
-        };
-    }
-
-    /**
-     * If the underlying cache specifies its own isCacheableValue function (such
-     * as how node-cache-manager-redis does), use that function, otherwise use
-     * self._isCacheableValue function.
-     */
-    function getIsCacheableValueFunction(cache) {
-        if (cache.store && typeof cache.store.isCacheableValue === 'function') {
-            return cache.store.isCacheableValue.bind(cache.store);
-        } else {
-            return self._isCacheableValue;
-        }
-    }
-
-    function getFromHighestPriorityCachePromise() {
-        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
-            return typeof v !== 'undefined';
-        });
-
-        return new Promise(function(resolve, reject) {
-            var cb = function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            };
-            args.push(cb);
-            getFromHighestPriorityCache.apply(null, args);
-        });
-    }
-
-    function getFromHighestPriorityCache() {
-        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
-            return typeof v !== 'undefined';
-        });
-        var cb;
-        var options = {};
-
-        if (typeof args[args.length - 1] === 'function') {
-            cb = args.pop();
-        }
-
-        if (!cb) {
-            return getFromHighestPriorityCachePromise.apply(this, args);
-        }
-
-        if (isObject(args[args.length - 1])) {
-            options = args.pop();
-        }
-
-        /**
-         * Keep a copy of the keys to retrieve
-         */
-        var keys = Array.prototype.slice.apply(args);
-        var multi = keys.length > 1;
-
-        /**
-         * Then put back the options in the args Array
-         */
-        args.push(options);
-
-        if (multi) {
-            /**
-             * Keep track of the keys left to fetch accross the caches
-             */
-            var keysToFetch = Array.prototype.slice.apply(keys);
-
-            /**
-             * Hash to save our multi keys result
-             */
-            var mapResult = {};
-        }
-
-        var i = 0;
-        async.eachSeries(caches, function(cache, next) {
-            var callback = function(err, result) {
-                if (err) {
-                    return next(err);
-                }
-
-                var _isCacheableValue = getIsCacheableValueFunction(cache);
-
-                if (multi) {
-                    addResultToMap(result, _isCacheableValue);
-
-                    if (keysToFetch.length === 0 || i === caches.length - 1) {
-                        // Return an Array with the values merged from all the caches
-                        return cb(null, keys.map(function(k) {
-                            return mapResult[k] || undefined;
-                        }), i);
-                    }
-                } else if (_isCacheableValue(result)) {
-                    // break out of async loop.
-                    return cb(err, result, i);
-                }
-
-                i += 1;
-                next();
-            };
-
-            if (multi) {
-                if (typeof cache.store.mget !== 'function') {
-                    /**
-                     * Silently fail for store that don't support mget()
-                     */
-                    return callback(null, []);
-                }
-                var _args = Array.prototype.slice.apply(keysToFetch);
-                _args.push(options);
-                _args.push(callback);
-                cache.store.mget.apply(cache.store, _args);
-            } else {
-                cache.store.get(args[0], options, callback);
-            }
-        }, function(err, result) {
-            return cb(err, result);
-        });
-
-        function addResultToMap(result, isCacheable) {
-            var key;
-            var diff = 0;
-
-            /**
-             * We loop through the result and if the value
-             * is cacheable we add it to the mapResult hash
-             * and remove the key to fetch from the "keysToFetch" array
-             */
-            result.forEach(function(res, i) {
-                if (isCacheable(res)) {
-                    key = keysToFetch[i - diff];
-
-                    // Add the result to our map
-                    mapResult[key] = res;
-
-                    // delete key from our keysToFetch array
-                    keysToFetch.splice(i - diff, 1);
-                    diff += 1;
-                }
-            });
-        }
-    }
-
-    function setInMultipleCachesPromise() {
-        var args = Array.prototype.slice.apply(arguments);
-
-        return new Promise(function(resolve, reject) {
-            var cb = function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            };
-            args.push(cb);
-            setInMultipleCaches.apply(null, args);
-        });
-    }
-
-    function setInMultipleCaches() {
-        var args = Array.prototype.slice.apply(arguments);
-        var _caches = Array.isArray(args[0]) ? args.shift() : caches;
-
-        var cb;
-        var options = {};
-
-        if (typeof args[args.length - 1] === 'function') {
-            cb = args.pop();
-        }
-
-        if (!cb) {
-            return setInMultipleCachesPromise.apply(this, args);
-        }
-
-        if (args.length % 2 > 0 && isObject(args[args.length - 1])) {
-            options = args.pop();
-        }
-
-        var length = args.length;
-        var multi = length > 2;
-        var i;
-
-        async.each(_caches, function(cache, next) {
-            var _isCacheableValue = getIsCacheableValueFunction(cache);
-            var keysValues = Array.prototype.slice.apply(args);
-
-            /**
-             * We filter out the keys *not* cacheable
-             */
-            for (i = 0; i < length; i += 2) {
-                if (!_isCacheableValue(keysValues[i + 1])) {
-                    keysValues.splice(i, 2);
-                }
-            }
-
-            if (keysValues.length === 0) {
-                return next();
-            }
-
-            var cacheOptions = options;
-            if (typeof options.ttl === 'function') {
-                /**
-                 * Dynamically set the ttl by context depending of the store
-                 */
-                cacheOptions = {};
-                cacheOptions.ttl = options.ttl(keysValues, cache.store.name);
-            }
-
-            if (multi) {
-                if (typeof cache.store.mset !== 'function') {
-                    /**
-                     * Silently fail for store that don't support mset()
-                     */
-                    return next();
-                }
-                keysValues.push(cacheOptions);
-                keysValues.push(next);
-
-                cache.store.mset.apply(cache.store, keysValues);
-            } else {
-                cache.store.set(keysValues[0], keysValues[1], cacheOptions, next);
-            }
-        }, function(err, result) {
-            cb(err, result);
-        });
-    }
-
-    function getAndPassUpPromise(key) {
-        return new Promise(function(resolve, reject) {
-            self.getAndPassUp(key, function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
-    }
-
-    /**
-     * Looks for an item in cache tiers.
-     * When a key is found in a lower cache, all higher levels are updated.
-     *
-     * @param {string} key
-     * @param {function} cb
-     */
-    self.getAndPassUp = function(key, cb) {
-        if (!cb) {
-            return getAndPassUpPromise(key);
-        }
-
-        getFromHighestPriorityCache(key, function(err, result, index) {
-            if (err) {
-                return cb(err);
-            }
-
-            if (index) {
-                var cachesToUpdate = caches.slice(0, index);
-                async.each(cachesToUpdate, function(cache, next) {
-                    var _isCacheableValue = getIsCacheableValueFunction(cache);
-                    if (_isCacheableValue(result)) {
-                        // We rely on the cache module's default TTL
-                        cache.set(key, result, next);
-                    }
-                });
-            }
-
-            return cb(err, result);
-        });
-    };
-
-    function wrapPromise(key, promise, options) {
-        return new Promise(function(resolve, reject) {
-            self.wrap(key, function(cb) {
-                Promise.resolve()
-                    .then(promise)
-                    .then(function(result) {
-                        cb(null, result);
-                    })
-                    .catch(cb);
-            }, options, function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
-    }
-
-    function handleBackgroundRefresh(caches, index, key, work, options) {
-        if (caches[index].refreshThreshold && !backgroundQueue.has(key)) {
-            backgroundQueue.add(key);
-            caches[index].checkRefreshThreshold(key, function(err, isExpiring) {
-                if (err) {
-                    backgroundQueue.delete(key);
-                    return;
-                }
-                if (isExpiring) {
-                    work(function(workErr, workData) {
-                        if (workErr || !self._isCacheableValue(workData)) {
-                            backgroundQueue.delete(key);
-                            return;
-                        }
-                        var args = [caches, key, workData, options, function() {
-                            backgroundQueue.delete(key);
-                        }];
-                        setInMultipleCaches.apply(null, args);
-                    });
-                } else {
-                    backgroundQueue.delete(key);
-                }
-            });
-        }
-    }
-
-    /**
-     * Wraps a function in one or more caches.
-     * Has same API as regular caching module.
-     *
-     * If a key doesn't exist in any cache, it gets set in all caches.
-     * If a key exists in a high-priority (e.g., first) cache, it gets returned immediately
-     * without getting set in other lower-priority caches.
-     * If a key doesn't exist in a higher-priority cache but exists in a lower-priority
-     * cache, it gets set in all higher-priority caches.
-     * You can pass any number of keys as long as the wrapped function returns
-     * an array with the same number of values and in the same order.
-     *
-     * @function
-     * @name wrap
-     *
-     * @param {string} key - The cache key to use in cache operations. Can be one or many.
-     * @param {function} work - The function to wrap
-     * @param {object} [options] - options passed to `set` function
-     * @param {function} cb
-     */
-    self.wrap = function() {
-        var parsedArgs = parseWrapArguments(Array.prototype.slice.apply(arguments));
-        var keys = parsedArgs.keys;
-        var work = parsedArgs.work;
-        var options = parsedArgs.options;
-        var cb = parsedArgs.cb;
-
-        if (!cb) {
-            keys.push(work);
-            keys.push(options);
-            return wrapPromise.apply(this, keys);
-        }
-
-        if (keys.length > 1) {
-            /**
-             * Handle more than 1 key
-             */
-            return wrapMultiple(keys, work, options, cb);
-        }
-
-        var key = keys[0];
-
-        var hasKey = callbackFiller.has(key);
-        callbackFiller.add(key, {cb: cb});
-        if (hasKey) { return; }
-
-        getFromHighestPriorityCache(key, function(err, result, index) {
-            if (err) {
-                return callbackFiller.fill(key, err);
-            } else if (self._isCacheableValue(result)) {
-                handleBackgroundRefresh(caches, index, key, work, options);
-                var cachesToUpdate = caches.slice(0, index);
-                var args = [cachesToUpdate, key, result, options, function(err) {
-                    callbackFiller.fill(key, err, result);
-                }];
-
-                setInMultipleCaches.apply(null, args);
-            } else {
-                work(function(err, data) {
-                    if (err) {
-                        return callbackFiller.fill(key, err);
-                    }
-
-                    if (!self._isCacheableValue(data)) {
-                        return callbackFiller.fill(key, err, data);
-                    }
-
-                    var args = [caches, key, data, options, function(err) {
-                        callbackFiller.fill(key, err, data);
-                    }];
-
-                    setInMultipleCaches.apply(null, args);
-                });
-            }
-        });
-    };
-
-    function wrapMultiple(keys, work, options, cb) {
-        /**
-         * We create a unique key for the multiple keys
-         * by concatenating them
-         */
-        var combinedKey = keys.reduce(function(acc, k) {
-            return acc + k;
-        }, '');
-
-        var hasKey = callbackFiller.has(combinedKey);
-        callbackFiller.add(combinedKey, {cb: cb});
-        if (hasKey) { return; }
-
-        keys.push(options);
-        keys.push(onResult);
-
-        /**
-         * Get from all the caches. If multiple keys have been passed,
-         * we'll go through all the caches and merge the result
-         */
-        getFromHighestPriorityCache.apply(this, keys);
-
-        function onResult(err, result, index) {
-            if (err) {
-                return done(err);
-            }
-
-            /**
-             * If all the values returned are cacheable we don't need
-             * to call our "work" method and the values returned by the cache
-             * are valid. If one or more of the values is not cacheable
-             * the cache result is not valid.
-             */
-            var cacheOK = result.filter(function(_result) {
-                return self._isCacheableValue(_result);
-            }).length === result.length;
-
-            if (!cacheOK) {
-                /**
-                 * We need to fetch the data first
-                 */
-                return work(workCallback);
-            }
-
-            var cachesToUpdate = caches.slice(0, index);
-
-            /**
-             * Prepare arguments to set the values in
-             * higher priority caches
-             */
-            var _args = [cachesToUpdate];
-
-            /**
-             * Add the {key, value} pair
-             */
-            result.forEach(function(value, i) {
-                _args.push(keys[i]);
-                _args.push(value);
-            });
-
-            /**
-             * Add options and final callback
-             */
-            _args.push(options);
-            _args.push(function(err) {
-                done(err, result);
-            });
-
-            return setInMultipleCaches.apply(null, _args);
-
-            /**
-             * Wrapped function callback
-             */
-            function workCallback(err, data) {
-                if (err) {
-                    return done(err);
-                }
-
-                /**
-                 * Prepare arguments for "setInMultipleCaches"
-                 */
-                var _args;
-
-                _args = [];
-                data.forEach(function(value, i) {
-                    /**
-                     * Add the {key, value} pair to the args
-                     * array that we will send to mset()
-                     */
-                    if (self._isCacheableValue(value)) {
-                        _args.push(keys[i]);
-                        _args.push(value);
-                    }
-                });
-                // If no key,value --> exit
-                if (_args.length === 0) {
-                    return done(null);
-                }
-
-                /**
-                 * Add options and final callback
-                 */
-                _args.push(options);
-                _args.push(function(err) {
-                    done(err, data);
-                });
-
-                setInMultipleCaches.apply(null, _args);
-            }
-
-            /**
-             * Final callback
-             */
-            function done(err, data) {
-                callbackFiller.fill(combinedKey, err, data);
-            }
-        }
-    }
-
-    /**
-     * Set value in all caches
-     *
-     * @function
-     * @name set
-     *
-     * @param {string} key
-     * @param {*} value
-     * @param {object} [options] to pass to underlying set function.
-     * @param {function} [cb]
-     */
-    self.set = setInMultipleCaches;
-
-    /**
-     * Set multiple values in all caches
-     * Accepts an unlimited pair of {key, value}
-     *
-     * @function
-     * @name mset
-     *
-     * @param {string} key
-     * @param {*} value
-     * @param {string} [key2]
-     * @param {*} [value2]
-     * @param {object} [options] to pass to underlying set function.
-     * @param {function} [cb]
-     */
-    self.mset = setInMultipleCaches;
-
-    /**
-     * Get value from highest level cache that has stored it.
-     *
-     * @function
-     * @name get
-     *
-     * @param {string} key
-     * @param {object} [options] to pass to underlying get function.
-     * @param {function} cb
-     */
-    self.get = getFromHighestPriorityCache;
-
-    /**
-     * Get multiple value from highest level cache that has stored it.
-     * If some values are not found, the next highest cache is used
-     * until either all keys are found or all caches have been fetched.
-     * Accepts an unlimited number of keys.
-     *
-     * @function
-     * @name mget
-     *
-     * @param {string} key key to get (any number)
-     * @param {object} [options] to pass to underlying get function.
-     * @param {function} cb optional callback
-     */
-    self.mget = getFromHighestPriorityCache;
-
-    /**
-     * Delete value from all caches.
-     *
-     * @function
-     * @name del
-     *
-     * @param {string} key
-     * @param {object} [options] to pass to underlying del function.
-     * @param {function} cb
-     */
-    self.del = function() {
-        var args = Array.prototype.slice.apply(arguments);
-        var cb;
-        var options = {};
-
-        if (typeof args[args.length - 1] === 'function') {
-            cb = args.pop();
-        }
-
-        if (isObject(args[args.length - 1])) {
-            options = args.pop();
-        }
-
-        args.push(options);
-        async.each(caches, function(cache, next) {
-            var _args = Array.prototype.slice.apply(args);
-            _args.push(next);
-            cache.store.del.apply(cache.store, _args);
-        }, cb);
-    };
-
-    /**
-     * Reset all caches.
-     *
-     * @function
-     * @name reset
-     *
-     * @param {function} cb
-     */
-    self.reset = function(cb) {
-        async.each(caches, function(cache, next) {
-            cache.store.reset(next);
-        }, cb);
-    };
-
-    return self;
+/***/ (function(module) {
+
+"use strict";
+
+const TEMPLATE_REGEX = /(?:\\(u(?:[a-f\d]{4}|\{[a-f\d]{1,6}\})|x[a-f\d]{2}|.))|(?:\{(~)?(\w+(?:\([^)]*\))?(?:\.\w+(?:\([^)]*\))?)*)(?:[ \t]|(?=\r?\n)))|(\})|((?:.|[\r\n\f])+?)/gi;
+const STYLE_REGEX = /(?:^|\.)(\w+)(?:\(([^)]*)\))?/g;
+const STRING_REGEX = /^(['"])((?:\\.|(?!\1)[^\\])*)\1$/;
+const ESCAPE_REGEX = /\\(u(?:[a-f\d]{4}|{[a-f\d]{1,6}})|x[a-f\d]{2}|.)|([^\\])/gi;
+
+const ESCAPES = new Map([
+	['n', '\n'],
+	['r', '\r'],
+	['t', '\t'],
+	['b', '\b'],
+	['f', '\f'],
+	['v', '\v'],
+	['0', '\0'],
+	['\\', '\\'],
+	['e', '\u001B'],
+	['a', '\u0007']
+]);
+
+function unescape(c) {
+	const u = c[0] === 'u';
+	const bracket = c[1] === '{';
+
+	if ((u && !bracket && c.length === 5) || (c[0] === 'x' && c.length === 3)) {
+		return String.fromCharCode(parseInt(c.slice(1), 16));
+	}
+
+	if (u && bracket) {
+		return String.fromCodePoint(parseInt(c.slice(2, -1), 16));
+	}
+
+	return ESCAPES.get(c) || c;
+}
+
+function parseArguments(name, arguments_) {
+	const results = [];
+	const chunks = arguments_.trim().split(/\s*,\s*/g);
+	let matches;
+
+	for (const chunk of chunks) {
+		const number = Number(chunk);
+		if (!Number.isNaN(number)) {
+			results.push(number);
+		} else if ((matches = chunk.match(STRING_REGEX))) {
+			results.push(matches[2].replace(ESCAPE_REGEX, (m, escape, character) => escape ? unescape(escape) : character));
+		} else {
+			throw new Error(`Invalid Chalk template style argument: ${chunk} (in style '${name}')`);
+		}
+	}
+
+	return results;
+}
+
+function parseStyle(style) {
+	STYLE_REGEX.lastIndex = 0;
+
+	const results = [];
+	let matches;
+
+	while ((matches = STYLE_REGEX.exec(style)) !== null) {
+		const name = matches[1];
+
+		if (matches[2]) {
+			const args = parseArguments(name, matches[2]);
+			results.push([name].concat(args));
+		} else {
+			results.push([name]);
+		}
+	}
+
+	return results;
+}
+
+function buildStyle(chalk, styles) {
+	const enabled = {};
+
+	for (const layer of styles) {
+		for (const style of layer.styles) {
+			enabled[style[0]] = layer.inverse ? null : style.slice(1);
+		}
+	}
+
+	let current = chalk;
+	for (const [styleName, styles] of Object.entries(enabled)) {
+		if (!Array.isArray(styles)) {
+			continue;
+		}
+
+		if (!(styleName in current)) {
+			throw new Error(`Unknown Chalk style: ${styleName}`);
+		}
+
+		current = styles.length > 0 ? current[styleName](...styles) : current[styleName];
+	}
+
+	return current;
+}
+
+module.exports = (chalk, temporary) => {
+	const styles = [];
+	const chunks = [];
+	let chunk = [];
+
+	// eslint-disable-next-line max-params
+	temporary.replace(TEMPLATE_REGEX, (m, escapeCharacter, inverse, style, close, character) => {
+		if (escapeCharacter) {
+			chunk.push(unescape(escapeCharacter));
+		} else if (style) {
+			const string = chunk.join('');
+			chunk = [];
+			chunks.push(styles.length === 0 ? string : buildStyle(chalk, styles)(string));
+			styles.push({inverse, styles: parseStyle(style)});
+		} else if (close) {
+			if (styles.length === 0) {
+				throw new Error('Found extraneous } in Chalk template literal');
+			}
+
+			chunks.push(buildStyle(chalk, styles)(chunk.join('')));
+			chunk = [];
+			styles.pop();
+		} else {
+			chunk.push(character);
+		}
+	});
+
+	chunks.push(chunk.join(''));
+
+	if (styles.length > 0) {
+		const errMessage = `Chalk template literal is missing ${styles.length} closing bracket${styles.length === 1 ? '' : 's'} (\`}\`)`;
+		throw new Error(errMessage);
+	}
+
+	return chunks.join('');
 };
-
-module.exports = multiCaching;
 
 
 /***/ }),
@@ -8938,16 +8653,16 @@ module.exports = multiCaching;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = __webpack_require__(403);
-const core_1 = tslib_1.__importDefault(__webpack_require__(852));
+const core = tslib_1.__importStar(__webpack_require__(852));
 const actionsflow_1 = __webpack_require__(51);
 actionsflow_1.build({
     logLevel: "debug",
 })
     .then(() => {
-    core_1.default.setOutput("result", "test");
+    core.setOutput("result", "test");
 })
     .catch((e) => {
-    core_1.default.setFailed(e);
+    core.setFailed(e);
 });
 
 
@@ -9899,7 +9614,29 @@ module.exports = keys;
 
 /***/ }),
 /* 216 */,
-/* 217 */,
+/* 217 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = __webpack_require__(268);
+class Settings {
+    constructor(_options = {}) {
+        this._options = _options;
+        this.followSymbolicLink = this._getValue(this._options.followSymbolicLink, true);
+        this.fs = fs.createFileSystemAdapter(this._options.fs);
+        this.markSymbolicLink = this._getValue(this._options.markSymbolicLink, false);
+        this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
+    }
+    _getValue(option, value) {
+        return option === undefined ? value : option;
+    }
+}
+exports.default = Settings;
+
+
+/***/ }),
 /* 218 */,
 /* 219 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
@@ -11501,12 +11238,11 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 "use strict";
 
 
-var Type = __webpack_require__(773);
 
-module.exports = new Type('tag:yaml.org,2002:map', {
-  kind: 'mapping',
-  construct: function (data) { return data !== null ? data : {}; }
-});
+var yaml = __webpack_require__(168);
+
+
+module.exports = yaml;
 
 
 /***/ }),
@@ -11637,7 +11373,7 @@ exports.delete = async function (path, options) {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var baseIsTypedArray = __webpack_require__(179),
-    baseUnary = __webpack_require__(81),
+    baseUnary = __webpack_require__(988),
     nodeUtil = __webpack_require__(551);
 
 /* Node.js helper references. */
@@ -13390,147 +13126,7 @@ Object.defineProperty(module, 'exports', {
 
 
 /***/ }),
-/* 291 */
-/***/ (function(module) {
-
-"use strict";
-
-const TEMPLATE_REGEX = /(?:\\(u(?:[a-f\d]{4}|\{[a-f\d]{1,6}\})|x[a-f\d]{2}|.))|(?:\{(~)?(\w+(?:\([^)]*\))?(?:\.\w+(?:\([^)]*\))?)*)(?:[ \t]|(?=\r?\n)))|(\})|((?:.|[\r\n\f])+?)/gi;
-const STYLE_REGEX = /(?:^|\.)(\w+)(?:\(([^)]*)\))?/g;
-const STRING_REGEX = /^(['"])((?:\\.|(?!\1)[^\\])*)\1$/;
-const ESCAPE_REGEX = /\\(u(?:[a-f\d]{4}|{[a-f\d]{1,6}})|x[a-f\d]{2}|.)|([^\\])/gi;
-
-const ESCAPES = new Map([
-	['n', '\n'],
-	['r', '\r'],
-	['t', '\t'],
-	['b', '\b'],
-	['f', '\f'],
-	['v', '\v'],
-	['0', '\0'],
-	['\\', '\\'],
-	['e', '\u001B'],
-	['a', '\u0007']
-]);
-
-function unescape(c) {
-	const u = c[0] === 'u';
-	const bracket = c[1] === '{';
-
-	if ((u && !bracket && c.length === 5) || (c[0] === 'x' && c.length === 3)) {
-		return String.fromCharCode(parseInt(c.slice(1), 16));
-	}
-
-	if (u && bracket) {
-		return String.fromCodePoint(parseInt(c.slice(2, -1), 16));
-	}
-
-	return ESCAPES.get(c) || c;
-}
-
-function parseArguments(name, arguments_) {
-	const results = [];
-	const chunks = arguments_.trim().split(/\s*,\s*/g);
-	let matches;
-
-	for (const chunk of chunks) {
-		const number = Number(chunk);
-		if (!Number.isNaN(number)) {
-			results.push(number);
-		} else if ((matches = chunk.match(STRING_REGEX))) {
-			results.push(matches[2].replace(ESCAPE_REGEX, (m, escape, character) => escape ? unescape(escape) : character));
-		} else {
-			throw new Error(`Invalid Chalk template style argument: ${chunk} (in style '${name}')`);
-		}
-	}
-
-	return results;
-}
-
-function parseStyle(style) {
-	STYLE_REGEX.lastIndex = 0;
-
-	const results = [];
-	let matches;
-
-	while ((matches = STYLE_REGEX.exec(style)) !== null) {
-		const name = matches[1];
-
-		if (matches[2]) {
-			const args = parseArguments(name, matches[2]);
-			results.push([name].concat(args));
-		} else {
-			results.push([name]);
-		}
-	}
-
-	return results;
-}
-
-function buildStyle(chalk, styles) {
-	const enabled = {};
-
-	for (const layer of styles) {
-		for (const style of layer.styles) {
-			enabled[style[0]] = layer.inverse ? null : style.slice(1);
-		}
-	}
-
-	let current = chalk;
-	for (const [styleName, styles] of Object.entries(enabled)) {
-		if (!Array.isArray(styles)) {
-			continue;
-		}
-
-		if (!(styleName in current)) {
-			throw new Error(`Unknown Chalk style: ${styleName}`);
-		}
-
-		current = styles.length > 0 ? current[styleName](...styles) : current[styleName];
-	}
-
-	return current;
-}
-
-module.exports = (chalk, temporary) => {
-	const styles = [];
-	const chunks = [];
-	let chunk = [];
-
-	// eslint-disable-next-line max-params
-	temporary.replace(TEMPLATE_REGEX, (m, escapeCharacter, inverse, style, close, character) => {
-		if (escapeCharacter) {
-			chunk.push(unescape(escapeCharacter));
-		} else if (style) {
-			const string = chunk.join('');
-			chunk = [];
-			chunks.push(styles.length === 0 ? string : buildStyle(chalk, styles)(string));
-			styles.push({inverse, styles: parseStyle(style)});
-		} else if (close) {
-			if (styles.length === 0) {
-				throw new Error('Found extraneous } in Chalk template literal');
-			}
-
-			chunks.push(buildStyle(chalk, styles)(chunk.join('')));
-			chunk = [];
-			styles.pop();
-		} else {
-			chunk.push(character);
-		}
-	});
-
-	chunks.push(chunk.join(''));
-
-	if (styles.length > 0) {
-		const errMessage = `Chalk template literal is missing ${styles.length} closing bracket${styles.length === 1 ? '' : 's'} (\`}\`)`;
-		throw new Error(errMessage);
-	}
-
-	return chunks.join('');
-};
-
-
-/***/ }),
+/* 291 */,
 /* 292 */,
 /* 293 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
@@ -13539,7 +13135,7 @@ module.exports = (chalk, temporary) => {
 
 const os = __webpack_require__(87);
 const tty = __webpack_require__(867);
-const hasFlag = __webpack_require__(472);
+const hasFlag = __webpack_require__(804);
 
 const {env} = process;
 
@@ -14980,7 +14576,7 @@ module.exports = isIndex;
 
 const taskManager = __webpack_require__(582);
 const async_1 = __webpack_require__(155);
-const stream_1 = __webpack_require__(475);
+const stream_1 = __webpack_require__(88);
 const sync_1 = __webpack_require__(372);
 const settings_1 = __webpack_require__(561);
 const utils = __webpack_require__(17);
@@ -15847,61 +15443,177 @@ module.exports = require("assert");
 /* 358 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-// Generated by CoffeeScript 1.12.7
-(function() {
-  var NodeType, XMLDTDAttList, XMLNode,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+"use strict";
 
-  XMLNode = __webpack_require__(290);
 
-  NodeType = __webpack_require__(712);
+const stringify = __webpack_require__(450);
+const compile = __webpack_require__(76);
+const expand = __webpack_require__(61);
+const parse = __webpack_require__(627);
 
-  module.exports = XMLDTDAttList = (function(superClass) {
-    extend(XMLDTDAttList, superClass);
+/**
+ * Expand the given pattern or create a regex-compatible string.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces('{a,b,c}', { compile: true })); //=> ['(a|b|c)']
+ * console.log(braces('{a,b,c}')); //=> ['a', 'b', 'c']
+ * ```
+ * @param {String} `str`
+ * @param {Object} `options`
+ * @return {String}
+ * @api public
+ */
 
-    function XMLDTDAttList(parent, elementName, attributeName, attributeType, defaultValueType, defaultValue) {
-      XMLDTDAttList.__super__.constructor.call(this, parent);
-      if (elementName == null) {
-        throw new Error("Missing DTD element name. " + this.debugInfo());
+const braces = (input, options = {}) => {
+  let output = [];
+
+  if (Array.isArray(input)) {
+    for (let pattern of input) {
+      let result = braces.create(pattern, options);
+      if (Array.isArray(result)) {
+        output.push(...result);
+      } else {
+        output.push(result);
       }
-      if (attributeName == null) {
-        throw new Error("Missing DTD attribute name. " + this.debugInfo(elementName));
-      }
-      if (!attributeType) {
-        throw new Error("Missing DTD attribute type. " + this.debugInfo(elementName));
-      }
-      if (!defaultValueType) {
-        throw new Error("Missing DTD attribute default. " + this.debugInfo(elementName));
-      }
-      if (defaultValueType.indexOf('#') !== 0) {
-        defaultValueType = '#' + defaultValueType;
-      }
-      if (!defaultValueType.match(/^(#REQUIRED|#IMPLIED|#FIXED|#DEFAULT)$/)) {
-        throw new Error("Invalid default value type; expected: #REQUIRED, #IMPLIED, #FIXED or #DEFAULT. " + this.debugInfo(elementName));
-      }
-      if (defaultValue && !defaultValueType.match(/^(#FIXED|#DEFAULT)$/)) {
-        throw new Error("Default value only applies to #FIXED or #DEFAULT. " + this.debugInfo(elementName));
-      }
-      this.elementName = this.stringify.name(elementName);
-      this.type = NodeType.AttributeDeclaration;
-      this.attributeName = this.stringify.name(attributeName);
-      this.attributeType = this.stringify.dtdAttType(attributeType);
-      if (defaultValue) {
-        this.defaultValue = this.stringify.dtdAttDefault(defaultValue);
-      }
-      this.defaultValueType = defaultValueType;
     }
+  } else {
+    output = [].concat(braces.create(input, options));
+  }
 
-    XMLDTDAttList.prototype.toString = function(options) {
-      return this.options.writer.dtdAttList(this, this.options.writer.filterOptions(options));
-    };
+  if (options && options.expand === true && options.nodupes === true) {
+    output = [...new Set(output)];
+  }
+  return output;
+};
 
-    return XMLDTDAttList;
+/**
+ * Parse the given `str` with the given `options`.
+ *
+ * ```js
+ * // braces.parse(pattern, [, options]);
+ * const ast = braces.parse('a/{b,c}/d');
+ * console.log(ast);
+ * ```
+ * @param {String} pattern Brace pattern to parse
+ * @param {Object} options
+ * @return {Object} Returns an AST
+ * @api public
+ */
 
-  })(XMLNode);
+braces.parse = (input, options = {}) => parse(input, options);
 
-}).call(this);
+/**
+ * Creates a braces string from an AST, or an AST node.
+ *
+ * ```js
+ * const braces = require('braces');
+ * let ast = braces.parse('foo/{a,b}/bar');
+ * console.log(stringify(ast.nodes[2])); //=> '{a,b}'
+ * ```
+ * @param {String} `input` Brace pattern or AST.
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.stringify = (input, options = {}) => {
+  if (typeof input === 'string') {
+    return stringify(braces.parse(input, options), options);
+  }
+  return stringify(input, options);
+};
+
+/**
+ * Compiles a brace pattern into a regex-compatible, optimized string.
+ * This method is called by the main [braces](#braces) function by default.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces.compile('a/{b,c}/d'));
+ * //=> ['a/(b|c)/d']
+ * ```
+ * @param {String} `input` Brace pattern or AST.
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.compile = (input, options = {}) => {
+  if (typeof input === 'string') {
+    input = braces.parse(input, options);
+  }
+  return compile(input, options);
+};
+
+/**
+ * Expands a brace pattern into an array. This method is called by the
+ * main [braces](#braces) function when `options.expand` is true. Before
+ * using this method it's recommended that you read the [performance notes](#performance))
+ * and advantages of using [.compile](#compile) instead.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces.expand('a/{b,c}/d'));
+ * //=> ['a/b/d', 'a/c/d'];
+ * ```
+ * @param {String} `pattern` Brace pattern
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.expand = (input, options = {}) => {
+  if (typeof input === 'string') {
+    input = braces.parse(input, options);
+  }
+
+  let result = expand(input, options);
+
+  // filter out empty strings if specified
+  if (options.noempty === true) {
+    result = result.filter(Boolean);
+  }
+
+  // filter out duplicates if specified
+  if (options.nodupes === true) {
+    result = [...new Set(result)];
+  }
+
+  return result;
+};
+
+/**
+ * Processes a brace pattern and returns either an expanded array
+ * (if `options.expand` is true), a highly optimized regex-compatible string.
+ * This method is called by the main [braces](#braces) function.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces.create('user-{200..300}/project-{a,b,c}-{1..10}'))
+ * //=> 'user-(20[0-9]|2[1-9][0-9]|300)/project-(a|b|c)-([1-9]|10)'
+ * ```
+ * @param {String} `pattern` Brace pattern
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.create = (input, options = {}) => {
+  if (input === '' || input.length < 3) {
+    return [input];
+  }
+
+ return options.expand !== true
+    ? braces.compile(input, options)
+    : braces.expand(input, options);
+};
+
+/**
+ * Expose "braces"
+ */
+
+module.exports = braces;
 
 
 /***/ }),
@@ -17685,7 +17397,11 @@ module.exports.default = axios;
 /* 382 */,
 /* 383 */,
 /* 384 */,
-/* 385 */
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
@@ -17695,7 +17411,7 @@ const {stdout: stdoutColor, stderr: stderrColor} = __webpack_require__(293);
 const {
 	stringReplaceAll,
 	stringEncaseCRLFWithFirstIndex
-} = __webpack_require__(769);
+} = __webpack_require__(16);
 
 const {isArray} = Array;
 
@@ -17904,7 +17620,7 @@ const chalkTag = (chalk, ...strings) => {
 	}
 
 	if (template === undefined) {
-		template = __webpack_require__(291);
+		template = __webpack_require__(175);
 	}
 
 	return template(chalk, parts.join(''));
@@ -17921,10 +17637,6 @@ module.exports = chalk;
 
 
 /***/ }),
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
 /* 390 */,
 /* 391 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
@@ -18144,8 +17856,8 @@ module.exports = listCacheHas;
 /* 399 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var baseIsSet = __webpack_require__(938),
-    baseUnary = __webpack_require__(81),
+var baseIsSet = __webpack_require__(497),
+    baseUnary = __webpack_require__(988),
     nodeUtil = __webpack_require__(551);
 
 /* Node.js helper references. */
@@ -21580,25 +21292,41 @@ module.exports = Uint8Array;
 /***/ }),
 /* 449 */,
 /* 450 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
-const fs = __webpack_require__(268);
-class Settings {
-    constructor(_options = {}) {
-        this._options = _options;
-        this.followSymbolicLink = this._getValue(this._options.followSymbolicLink, true);
-        this.fs = fs.createFileSystemAdapter(this._options.fs);
-        this.markSymbolicLink = this._getValue(this._options.markSymbolicLink, false);
-        this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
+
+const utils = __webpack_require__(49);
+
+module.exports = (ast, options = {}) => {
+  let stringify = (node, parent = {}) => {
+    let invalidBlock = options.escapeInvalid && utils.isInvalidBrace(parent);
+    let invalidNode = node.invalid === true && options.escapeInvalid === true;
+    let output = '';
+
+    if (node.value) {
+      if ((invalidBlock || invalidNode) && utils.isOpenOrClose(node)) {
+        return '\\' + node.value;
+      }
+      return node.value;
     }
-    _getValue(option, value) {
-        return option === undefined ? value : option;
+
+    if (node.value) {
+      return node.value;
     }
-}
-exports.default = Settings;
+
+    if (node.nodes) {
+      for (let child of node.nodes) {
+        output += stringify(child);
+      }
+    }
+    return output;
+  };
+
+  return stringify(ast);
+};
+
 
 
 /***/ }),
@@ -21679,7 +21407,60 @@ module.exports = new Type('tag:yaml.org,2002:js/undefined', {
 
 
 /***/ }),
-/* 458 */,
+/* 458 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+
+const indentString = __webpack_require__(681);
+const cleanStack = __webpack_require__(93);
+
+const cleanInternalStack = stack => stack.replace(/\s+at .*aggregate-error\/index.js:\d+:\d+\)?/g, '');
+
+class AggregateError extends Error {
+	constructor(errors) {
+		if (!Array.isArray(errors)) {
+			throw new TypeError(`Expected input to be an Array, got ${typeof errors}`);
+		}
+
+		errors = [...errors].map(error => {
+			if (error instanceof Error) {
+				return error;
+			}
+
+			if (error !== null && typeof error === 'object') {
+				// Handle plain error objects with message property and/or possibly other metadata
+				return Object.assign(new Error(error.message), error);
+			}
+
+			return new Error(error);
+		});
+
+		let message = errors
+			.map(error => {
+				// The `stack` property is not standardized, so we can't assume it exists
+				return typeof error.stack === 'string' ? cleanInternalStack(cleanStack(error.stack)) : String(error);
+			})
+			.join('\n');
+		message = '\n' + indentString(message, 4);
+		super(message);
+
+		this.name = 'AggregateError';
+
+		Object.defineProperty(this, '_errors', {value: errors});
+	}
+
+	* [Symbol.iterator]() {
+		for (const error of this._errors) {
+			yield error;
+		}
+	}
+}
+
+module.exports = AggregateError;
+
+
+/***/ }),
 /* 459 */,
 /* 460 */,
 /* 461 */,
@@ -21832,21 +21613,7 @@ module.exports = baseCreate;
 
 
 /***/ }),
-/* 472 */
-/***/ (function(module) {
-
-"use strict";
-
-
-module.exports = (flag, argv = process.argv) => {
-	const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
-	const position = argv.indexOf(prefix + flag);
-	const terminatorPosition = argv.indexOf('--');
-	return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
-};
-
-
-/***/ }),
+/* 472 */,
 /* 473 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -21885,40 +21652,297 @@ module.exports = hashGet;
 /***/ }),
 /* 474 */,
 /* 475 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
+/*!
+ * to-regex-range <https://github.com/micromatch/to-regex-range>
+ *
+ * Copyright (c) 2015-present, Jon Schlinkert.
+ * Released under the MIT License.
+ */
 
-Object.defineProperty(exports, "__esModule", { value: true });
-const stream_1 = __webpack_require__(413);
-const stream_2 = __webpack_require__(400);
-const provider_1 = __webpack_require__(513);
-class ProviderStream extends provider_1.default {
-    constructor() {
-        super(...arguments);
-        this._reader = new stream_2.default(this._settings);
+
+
+const isNumber = __webpack_require__(97);
+
+const toRegexRange = (min, max, options) => {
+  if (isNumber(min) === false) {
+    throw new TypeError('toRegexRange: expected the first argument to be a number');
+  }
+
+  if (max === void 0 || min === max) {
+    return String(min);
+  }
+
+  if (isNumber(max) === false) {
+    throw new TypeError('toRegexRange: expected the second argument to be a number.');
+  }
+
+  let opts = { relaxZeros: true, ...options };
+  if (typeof opts.strictZeros === 'boolean') {
+    opts.relaxZeros = opts.strictZeros === false;
+  }
+
+  let relax = String(opts.relaxZeros);
+  let shorthand = String(opts.shorthand);
+  let capture = String(opts.capture);
+  let wrap = String(opts.wrap);
+  let cacheKey = min + ':' + max + '=' + relax + shorthand + capture + wrap;
+
+  if (toRegexRange.cache.hasOwnProperty(cacheKey)) {
+    return toRegexRange.cache[cacheKey].result;
+  }
+
+  let a = Math.min(min, max);
+  let b = Math.max(min, max);
+
+  if (Math.abs(a - b) === 1) {
+    let result = min + '|' + max;
+    if (opts.capture) {
+      return `(${result})`;
     }
-    read(task) {
-        const root = this._getRootDirectory(task);
-        const options = this._getReaderOptions(task);
-        const source = this.api(root, task, options);
-        const destination = new stream_1.Readable({ objectMode: true, read: () => { } });
-        source
-            .once('error', (error) => destination.emit('error', error))
-            .on('data', (entry) => destination.emit('data', options.transform(entry)))
-            .once('end', () => destination.emit('end'));
-        destination
-            .once('close', () => source.destroy());
-        return destination;
+    if (opts.wrap === false) {
+      return result;
     }
-    api(root, task, options) {
-        if (task.dynamic) {
-            return this._reader.dynamic(root, options);
-        }
-        return this._reader.static(task.patterns, options);
-    }
+    return `(?:${result})`;
+  }
+
+  let isPadded = hasPadding(min) || hasPadding(max);
+  let state = { min, max, a, b };
+  let positives = [];
+  let negatives = [];
+
+  if (isPadded) {
+    state.isPadded = isPadded;
+    state.maxLen = String(state.max).length;
+  }
+
+  if (a < 0) {
+    let newMin = b < 0 ? Math.abs(b) : 1;
+    negatives = splitToPatterns(newMin, Math.abs(a), state, opts);
+    a = state.a = 0;
+  }
+
+  if (b >= 0) {
+    positives = splitToPatterns(a, b, state, opts);
+  }
+
+  state.negatives = negatives;
+  state.positives = positives;
+  state.result = collatePatterns(negatives, positives, opts);
+
+  if (opts.capture === true) {
+    state.result = `(${state.result})`;
+  } else if (opts.wrap !== false && (positives.length + negatives.length) > 1) {
+    state.result = `(?:${state.result})`;
+  }
+
+  toRegexRange.cache[cacheKey] = state;
+  return state.result;
+};
+
+function collatePatterns(neg, pos, options) {
+  let onlyNegative = filterPatterns(neg, pos, '-', false, options) || [];
+  let onlyPositive = filterPatterns(pos, neg, '', false, options) || [];
+  let intersected = filterPatterns(neg, pos, '-?', true, options) || [];
+  let subpatterns = onlyNegative.concat(intersected).concat(onlyPositive);
+  return subpatterns.join('|');
 }
-exports.default = ProviderStream;
+
+function splitToRanges(min, max) {
+  let nines = 1;
+  let zeros = 1;
+
+  let stop = countNines(min, nines);
+  let stops = new Set([max]);
+
+  while (min <= stop && stop <= max) {
+    stops.add(stop);
+    nines += 1;
+    stop = countNines(min, nines);
+  }
+
+  stop = countZeros(max + 1, zeros) - 1;
+
+  while (min < stop && stop <= max) {
+    stops.add(stop);
+    zeros += 1;
+    stop = countZeros(max + 1, zeros) - 1;
+  }
+
+  stops = [...stops];
+  stops.sort(compare);
+  return stops;
+}
+
+/**
+ * Convert a range to a regex pattern
+ * @param {Number} `start`
+ * @param {Number} `stop`
+ * @return {String}
+ */
+
+function rangeToPattern(start, stop, options) {
+  if (start === stop) {
+    return { pattern: start, count: [], digits: 0 };
+  }
+
+  let zipped = zip(start, stop);
+  let digits = zipped.length;
+  let pattern = '';
+  let count = 0;
+
+  for (let i = 0; i < digits; i++) {
+    let [startDigit, stopDigit] = zipped[i];
+
+    if (startDigit === stopDigit) {
+      pattern += startDigit;
+
+    } else if (startDigit !== '0' || stopDigit !== '9') {
+      pattern += toCharacterClass(startDigit, stopDigit, options);
+
+    } else {
+      count++;
+    }
+  }
+
+  if (count) {
+    pattern += options.shorthand === true ? '\\d' : '[0-9]';
+  }
+
+  return { pattern, count: [count], digits };
+}
+
+function splitToPatterns(min, max, tok, options) {
+  let ranges = splitToRanges(min, max);
+  let tokens = [];
+  let start = min;
+  let prev;
+
+  for (let i = 0; i < ranges.length; i++) {
+    let max = ranges[i];
+    let obj = rangeToPattern(String(start), String(max), options);
+    let zeros = '';
+
+    if (!tok.isPadded && prev && prev.pattern === obj.pattern) {
+      if (prev.count.length > 1) {
+        prev.count.pop();
+      }
+
+      prev.count.push(obj.count[0]);
+      prev.string = prev.pattern + toQuantifier(prev.count);
+      start = max + 1;
+      continue;
+    }
+
+    if (tok.isPadded) {
+      zeros = padZeros(max, tok, options);
+    }
+
+    obj.string = zeros + obj.pattern + toQuantifier(obj.count);
+    tokens.push(obj);
+    start = max + 1;
+    prev = obj;
+  }
+
+  return tokens;
+}
+
+function filterPatterns(arr, comparison, prefix, intersection, options) {
+  let result = [];
+
+  for (let ele of arr) {
+    let { string } = ele;
+
+    // only push if _both_ are negative...
+    if (!intersection && !contains(comparison, 'string', string)) {
+      result.push(prefix + string);
+    }
+
+    // or _both_ are positive
+    if (intersection && contains(comparison, 'string', string)) {
+      result.push(prefix + string);
+    }
+  }
+  return result;
+}
+
+/**
+ * Zip strings
+ */
+
+function zip(a, b) {
+  let arr = [];
+  for (let i = 0; i < a.length; i++) arr.push([a[i], b[i]]);
+  return arr;
+}
+
+function compare(a, b) {
+  return a > b ? 1 : b > a ? -1 : 0;
+}
+
+function contains(arr, key, val) {
+  return arr.some(ele => ele[key] === val);
+}
+
+function countNines(min, len) {
+  return Number(String(min).slice(0, -len) + '9'.repeat(len));
+}
+
+function countZeros(integer, zeros) {
+  return integer - (integer % Math.pow(10, zeros));
+}
+
+function toQuantifier(digits) {
+  let [start = 0, stop = ''] = digits;
+  if (stop || start > 1) {
+    return `{${start + (stop ? ',' + stop : '')}}`;
+  }
+  return '';
+}
+
+function toCharacterClass(a, b, options) {
+  return `[${a}${(b - a === 1) ? '' : '-'}${b}]`;
+}
+
+function hasPadding(str) {
+  return /^-?(0+)\d/.test(str);
+}
+
+function padZeros(value, tok, options) {
+  if (!tok.isPadded) {
+    return value;
+  }
+
+  let diff = Math.abs(tok.maxLen - String(value).length);
+  let relax = options.relaxZeros !== false;
+
+  switch (diff) {
+    case 0:
+      return '';
+    case 1:
+      return relax ? '0?' : '0';
+    case 2:
+      return relax ? '0{0,2}' : '00';
+    default: {
+      return relax ? `0{0,${diff}}` : `0{${diff}}`;
+    }
+  }
+}
+
+/**
+ * Cache
+ */
+
+toRegexRange.cache = {};
+toRegexRange.clearCache = () => (toRegexRange.cache = {});
+
+/**
+ * Expose `toRegexRange`
+ */
+
+module.exports = toRegexRange;
 
 
 /***/ }),
@@ -21956,7 +21980,7 @@ const {promisify} = __webpack_require__(669);
 const path = __webpack_require__(622);
 const globby = __webpack_require__(315);
 const isGlob = __webpack_require__(984);
-const slash = __webpack_require__(22);
+const slash = __webpack_require__(903);
 const gracefulFs = __webpack_require__(729);
 const isPathCwd = __webpack_require__(950);
 const isPathInside = __webpack_require__(225);
@@ -22114,315 +22138,7 @@ module.exports = keysIn;
 
 
 /***/ }),
-/* 482 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var pathModule = __webpack_require__(622);
-var isWindows = process.platform === 'win32';
-var fs = __webpack_require__(747);
-
-// JavaScript implementation of realpath, ported from node pre-v6
-
-var DEBUG = process.env.NODE_DEBUG && /fs/.test(process.env.NODE_DEBUG);
-
-function rethrow() {
-  // Only enable in debug mode. A backtrace uses ~1000 bytes of heap space and
-  // is fairly slow to generate.
-  var callback;
-  if (DEBUG) {
-    var backtrace = new Error;
-    callback = debugCallback;
-  } else
-    callback = missingCallback;
-
-  return callback;
-
-  function debugCallback(err) {
-    if (err) {
-      backtrace.message = err.message;
-      err = backtrace;
-      missingCallback(err);
-    }
-  }
-
-  function missingCallback(err) {
-    if (err) {
-      if (process.throwDeprecation)
-        throw err;  // Forgot a callback but don't know where? Use NODE_DEBUG=fs
-      else if (!process.noDeprecation) {
-        var msg = 'fs: missing callback ' + (err.stack || err.message);
-        if (process.traceDeprecation)
-          console.trace(msg);
-        else
-          console.error(msg);
-      }
-    }
-  }
-}
-
-function maybeCallback(cb) {
-  return typeof cb === 'function' ? cb : rethrow();
-}
-
-var normalize = pathModule.normalize;
-
-// Regexp that finds the next partion of a (partial) path
-// result is [base_with_slash, base], e.g. ['somedir/', 'somedir']
-if (isWindows) {
-  var nextPartRe = /(.*?)(?:[\/\\]+|$)/g;
-} else {
-  var nextPartRe = /(.*?)(?:[\/]+|$)/g;
-}
-
-// Regex to find the device root, including trailing slash. E.g. 'c:\\'.
-if (isWindows) {
-  var splitRootRe = /^(?:[a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/][^\\\/]+)?[\\\/]*/;
-} else {
-  var splitRootRe = /^[\/]*/;
-}
-
-exports.realpathSync = function realpathSync(p, cache) {
-  // make p is absolute
-  p = pathModule.resolve(p);
-
-  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
-    return cache[p];
-  }
-
-  var original = p,
-      seenLinks = {},
-      knownHard = {};
-
-  // current character position in p
-  var pos;
-  // the partial path so far, including a trailing slash if any
-  var current;
-  // the partial path without a trailing slash (except when pointing at a root)
-  var base;
-  // the partial path scanned in the previous round, with slash
-  var previous;
-
-  start();
-
-  function start() {
-    // Skip over roots
-    var m = splitRootRe.exec(p);
-    pos = m[0].length;
-    current = m[0];
-    base = m[0];
-    previous = '';
-
-    // On windows, check that the root exists. On unix there is no need.
-    if (isWindows && !knownHard[base]) {
-      fs.lstatSync(base);
-      knownHard[base] = true;
-    }
-  }
-
-  // walk down the path, swapping out linked pathparts for their real
-  // values
-  // NB: p.length changes.
-  while (pos < p.length) {
-    // find the next part
-    nextPartRe.lastIndex = pos;
-    var result = nextPartRe.exec(p);
-    previous = current;
-    current += result[0];
-    base = previous + result[1];
-    pos = nextPartRe.lastIndex;
-
-    // continue if not a symlink
-    if (knownHard[base] || (cache && cache[base] === base)) {
-      continue;
-    }
-
-    var resolvedLink;
-    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
-      // some known symbolic link.  no need to stat again.
-      resolvedLink = cache[base];
-    } else {
-      var stat = fs.lstatSync(base);
-      if (!stat.isSymbolicLink()) {
-        knownHard[base] = true;
-        if (cache) cache[base] = base;
-        continue;
-      }
-
-      // read the link if it wasn't read before
-      // dev/ino always return 0 on windows, so skip the check.
-      var linkTarget = null;
-      if (!isWindows) {
-        var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
-        if (seenLinks.hasOwnProperty(id)) {
-          linkTarget = seenLinks[id];
-        }
-      }
-      if (linkTarget === null) {
-        fs.statSync(base);
-        linkTarget = fs.readlinkSync(base);
-      }
-      resolvedLink = pathModule.resolve(previous, linkTarget);
-      // track this, if given a cache.
-      if (cache) cache[base] = resolvedLink;
-      if (!isWindows) seenLinks[id] = linkTarget;
-    }
-
-    // resolve the link, then start over
-    p = pathModule.resolve(resolvedLink, p.slice(pos));
-    start();
-  }
-
-  if (cache) cache[original] = p;
-
-  return p;
-};
-
-
-exports.realpath = function realpath(p, cache, cb) {
-  if (typeof cb !== 'function') {
-    cb = maybeCallback(cache);
-    cache = null;
-  }
-
-  // make p is absolute
-  p = pathModule.resolve(p);
-
-  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
-    return process.nextTick(cb.bind(null, null, cache[p]));
-  }
-
-  var original = p,
-      seenLinks = {},
-      knownHard = {};
-
-  // current character position in p
-  var pos;
-  // the partial path so far, including a trailing slash if any
-  var current;
-  // the partial path without a trailing slash (except when pointing at a root)
-  var base;
-  // the partial path scanned in the previous round, with slash
-  var previous;
-
-  start();
-
-  function start() {
-    // Skip over roots
-    var m = splitRootRe.exec(p);
-    pos = m[0].length;
-    current = m[0];
-    base = m[0];
-    previous = '';
-
-    // On windows, check that the root exists. On unix there is no need.
-    if (isWindows && !knownHard[base]) {
-      fs.lstat(base, function(err) {
-        if (err) return cb(err);
-        knownHard[base] = true;
-        LOOP();
-      });
-    } else {
-      process.nextTick(LOOP);
-    }
-  }
-
-  // walk down the path, swapping out linked pathparts for their real
-  // values
-  function LOOP() {
-    // stop if scanned past end of path
-    if (pos >= p.length) {
-      if (cache) cache[original] = p;
-      return cb(null, p);
-    }
-
-    // find the next part
-    nextPartRe.lastIndex = pos;
-    var result = nextPartRe.exec(p);
-    previous = current;
-    current += result[0];
-    base = previous + result[1];
-    pos = nextPartRe.lastIndex;
-
-    // continue if not a symlink
-    if (knownHard[base] || (cache && cache[base] === base)) {
-      return process.nextTick(LOOP);
-    }
-
-    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
-      // known symbolic link.  no need to stat again.
-      return gotResolvedLink(cache[base]);
-    }
-
-    return fs.lstat(base, gotStat);
-  }
-
-  function gotStat(err, stat) {
-    if (err) return cb(err);
-
-    // if not a symlink, skip to the next path part
-    if (!stat.isSymbolicLink()) {
-      knownHard[base] = true;
-      if (cache) cache[base] = base;
-      return process.nextTick(LOOP);
-    }
-
-    // stat & read the link if not read before
-    // call gotTarget as soon as the link target is known
-    // dev/ino always return 0 on windows, so skip the check.
-    if (!isWindows) {
-      var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
-      if (seenLinks.hasOwnProperty(id)) {
-        return gotTarget(null, seenLinks[id], base);
-      }
-    }
-    fs.stat(base, function(err) {
-      if (err) return cb(err);
-
-      fs.readlink(base, function(err, target) {
-        if (!isWindows) seenLinks[id] = target;
-        gotTarget(err, target);
-      });
-    });
-  }
-
-  function gotTarget(err, target, base) {
-    if (err) return cb(err);
-
-    var resolvedLink = pathModule.resolve(previous, target);
-    if (cache) cache[base] = resolvedLink;
-    gotResolvedLink(resolvedLink);
-  }
-
-  function gotResolvedLink(resolvedLink) {
-    // resolve the link, then start over
-    p = pathModule.resolve(resolvedLink, p.slice(pos));
-    start();
-  }
-};
-
-
-/***/ }),
+/* 482 */,
 /* 483 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -22453,7 +22169,7 @@ exports.realpath = function realpath(p, cache, cb) {
 
   XMLDocType = __webpack_require__(856);
 
-  XMLDTDAttList = __webpack_require__(358);
+  XMLDTDAttList = __webpack_require__(665);
 
   XMLDTDEntity = __webpack_require__(834);
 
@@ -23449,120 +23165,24 @@ module.exports = picomatch;
 /* 497 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+var getTag = __webpack_require__(126),
+    isObjectLike = __webpack_require__(425);
 
+/** `Object#toString` result references. */
+var setTag = '[object Set]';
 
-const fill = __webpack_require__(510);
-const stringify = __webpack_require__(988);
-const utils = __webpack_require__(872);
+/**
+ * The base implementation of `_.isSet` without Node.js optimizations.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a set, else `false`.
+ */
+function baseIsSet(value) {
+  return isObjectLike(value) && getTag(value) == setTag;
+}
 
-const append = (queue = '', stash = '', enclose = false) => {
-  let result = [];
-
-  queue = [].concat(queue);
-  stash = [].concat(stash);
-
-  if (!stash.length) return queue;
-  if (!queue.length) {
-    return enclose ? utils.flatten(stash).map(ele => `{${ele}}`) : stash;
-  }
-
-  for (let item of queue) {
-    if (Array.isArray(item)) {
-      for (let value of item) {
-        result.push(append(value, stash, enclose));
-      }
-    } else {
-      for (let ele of stash) {
-        if (enclose === true && typeof ele === 'string') ele = `{${ele}}`;
-        result.push(Array.isArray(ele) ? append(item, ele, enclose) : (item + ele));
-      }
-    }
-  }
-  return utils.flatten(result);
-};
-
-const expand = (ast, options = {}) => {
-  let rangeLimit = options.rangeLimit === void 0 ? 1000 : options.rangeLimit;
-
-  let walk = (node, parent = {}) => {
-    node.queue = [];
-
-    let p = parent;
-    let q = parent.queue;
-
-    while (p.type !== 'brace' && p.type !== 'root' && p.parent) {
-      p = p.parent;
-      q = p.queue;
-    }
-
-    if (node.invalid || node.dollar) {
-      q.push(append(q.pop(), stringify(node, options)));
-      return;
-    }
-
-    if (node.type === 'brace' && node.invalid !== true && node.nodes.length === 2) {
-      q.push(append(q.pop(), ['{}']));
-      return;
-    }
-
-    if (node.nodes && node.ranges > 0) {
-      let args = utils.reduce(node.nodes);
-
-      if (utils.exceedsLimit(...args, options.step, rangeLimit)) {
-        throw new RangeError('expanded array length exceeds range limit. Use options.rangeLimit to increase or disable the limit.');
-      }
-
-      let range = fill(...args, options);
-      if (range.length === 0) {
-        range = stringify(node, options);
-      }
-
-      q.push(append(q.pop(), range));
-      node.nodes = [];
-      return;
-    }
-
-    let enclose = utils.encloseBrace(node);
-    let queue = node.queue;
-    let block = node;
-
-    while (block.type !== 'brace' && block.type !== 'root' && block.parent) {
-      block = block.parent;
-      queue = block.queue;
-    }
-
-    for (let i = 0; i < node.nodes.length; i++) {
-      let child = node.nodes[i];
-
-      if (child.type === 'comma' && node.type === 'brace') {
-        if (i === 1) queue.push('');
-        queue.push('');
-        continue;
-      }
-
-      if (child.type === 'close') {
-        q.push(append(q.pop(), queue, enclose));
-        continue;
-      }
-
-      if (child.value && child.type !== 'open') {
-        queue.push(append(queue.pop(), child.value));
-        continue;
-      }
-
-      if (child.nodes) {
-        walk(child, node);
-      }
-    }
-
-    return queue;
-  };
-
-  return utils.flatten(walk(ast));
-};
-
-module.exports = expand;
+module.exports = baseIsSet;
 
 
 /***/ }),
@@ -23888,262 +23508,7 @@ exports.default = build;
 //# sourceMappingURL=build.js.map
 
 /***/ }),
-/* 510 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-/*!
- * fill-range <https://github.com/jonschlinkert/fill-range>
- *
- * Copyright (c) 2014-present, Jon Schlinkert.
- * Licensed under the MIT License.
- */
-
-
-
-const util = __webpack_require__(669);
-const toRegexRange = __webpack_require__(154);
-
-const isObject = val => val !== null && typeof val === 'object' && !Array.isArray(val);
-
-const transform = toNumber => {
-  return value => toNumber === true ? Number(value) : String(value);
-};
-
-const isValidValue = value => {
-  return typeof value === 'number' || (typeof value === 'string' && value !== '');
-};
-
-const isNumber = num => Number.isInteger(+num);
-
-const zeros = input => {
-  let value = `${input}`;
-  let index = -1;
-  if (value[0] === '-') value = value.slice(1);
-  if (value === '0') return false;
-  while (value[++index] === '0');
-  return index > 0;
-};
-
-const stringify = (start, end, options) => {
-  if (typeof start === 'string' || typeof end === 'string') {
-    return true;
-  }
-  return options.stringify === true;
-};
-
-const pad = (input, maxLength, toNumber) => {
-  if (maxLength > 0) {
-    let dash = input[0] === '-' ? '-' : '';
-    if (dash) input = input.slice(1);
-    input = (dash + input.padStart(dash ? maxLength - 1 : maxLength, '0'));
-  }
-  if (toNumber === false) {
-    return String(input);
-  }
-  return input;
-};
-
-const toMaxLen = (input, maxLength) => {
-  let negative = input[0] === '-' ? '-' : '';
-  if (negative) {
-    input = input.slice(1);
-    maxLength--;
-  }
-  while (input.length < maxLength) input = '0' + input;
-  return negative ? ('-' + input) : input;
-};
-
-const toSequence = (parts, options) => {
-  parts.negatives.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
-  parts.positives.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
-
-  let prefix = options.capture ? '' : '?:';
-  let positives = '';
-  let negatives = '';
-  let result;
-
-  if (parts.positives.length) {
-    positives = parts.positives.join('|');
-  }
-
-  if (parts.negatives.length) {
-    negatives = `-(${prefix}${parts.negatives.join('|')})`;
-  }
-
-  if (positives && negatives) {
-    result = `${positives}|${negatives}`;
-  } else {
-    result = positives || negatives;
-  }
-
-  if (options.wrap) {
-    return `(${prefix}${result})`;
-  }
-
-  return result;
-};
-
-const toRange = (a, b, isNumbers, options) => {
-  if (isNumbers) {
-    return toRegexRange(a, b, { wrap: false, ...options });
-  }
-
-  let start = String.fromCharCode(a);
-  if (a === b) return start;
-
-  let stop = String.fromCharCode(b);
-  return `[${start}-${stop}]`;
-};
-
-const toRegex = (start, end, options) => {
-  if (Array.isArray(start)) {
-    let wrap = options.wrap === true;
-    let prefix = options.capture ? '' : '?:';
-    return wrap ? `(${prefix}${start.join('|')})` : start.join('|');
-  }
-  return toRegexRange(start, end, options);
-};
-
-const rangeError = (...args) => {
-  return new RangeError('Invalid range arguments: ' + util.inspect(...args));
-};
-
-const invalidRange = (start, end, options) => {
-  if (options.strictRanges === true) throw rangeError([start, end]);
-  return [];
-};
-
-const invalidStep = (step, options) => {
-  if (options.strictRanges === true) {
-    throw new TypeError(`Expected step "${step}" to be a number`);
-  }
-  return [];
-};
-
-const fillNumbers = (start, end, step = 1, options = {}) => {
-  let a = Number(start);
-  let b = Number(end);
-
-  if (!Number.isInteger(a) || !Number.isInteger(b)) {
-    if (options.strictRanges === true) throw rangeError([start, end]);
-    return [];
-  }
-
-  // fix negative zero
-  if (a === 0) a = 0;
-  if (b === 0) b = 0;
-
-  let descending = a > b;
-  let startString = String(start);
-  let endString = String(end);
-  let stepString = String(step);
-  step = Math.max(Math.abs(step), 1);
-
-  let padded = zeros(startString) || zeros(endString) || zeros(stepString);
-  let maxLen = padded ? Math.max(startString.length, endString.length, stepString.length) : 0;
-  let toNumber = padded === false && stringify(start, end, options) === false;
-  let format = options.transform || transform(toNumber);
-
-  if (options.toRegex && step === 1) {
-    return toRange(toMaxLen(start, maxLen), toMaxLen(end, maxLen), true, options);
-  }
-
-  let parts = { negatives: [], positives: [] };
-  let push = num => parts[num < 0 ? 'negatives' : 'positives'].push(Math.abs(num));
-  let range = [];
-  let index = 0;
-
-  while (descending ? a >= b : a <= b) {
-    if (options.toRegex === true && step > 1) {
-      push(a);
-    } else {
-      range.push(pad(format(a, index), maxLen, toNumber));
-    }
-    a = descending ? a - step : a + step;
-    index++;
-  }
-
-  if (options.toRegex === true) {
-    return step > 1
-      ? toSequence(parts, options)
-      : toRegex(range, null, { wrap: false, ...options });
-  }
-
-  return range;
-};
-
-const fillLetters = (start, end, step = 1, options = {}) => {
-  if ((!isNumber(start) && start.length > 1) || (!isNumber(end) && end.length > 1)) {
-    return invalidRange(start, end, options);
-  }
-
-
-  let format = options.transform || (val => String.fromCharCode(val));
-  let a = `${start}`.charCodeAt(0);
-  let b = `${end}`.charCodeAt(0);
-
-  let descending = a > b;
-  let min = Math.min(a, b);
-  let max = Math.max(a, b);
-
-  if (options.toRegex && step === 1) {
-    return toRange(min, max, false, options);
-  }
-
-  let range = [];
-  let index = 0;
-
-  while (descending ? a >= b : a <= b) {
-    range.push(format(a, index));
-    a = descending ? a - step : a + step;
-    index++;
-  }
-
-  if (options.toRegex === true) {
-    return toRegex(range, null, { wrap: false, options });
-  }
-
-  return range;
-};
-
-const fill = (start, end, step, options = {}) => {
-  if (end == null && isValidValue(start)) {
-    return [start];
-  }
-
-  if (!isValidValue(start) || !isValidValue(end)) {
-    return invalidRange(start, end, options);
-  }
-
-  if (typeof step === 'function') {
-    return fill(start, end, 1, { transform: step });
-  }
-
-  if (isObject(step)) {
-    return fill(start, end, 0, step);
-  }
-
-  let opts = { ...options };
-  if (opts.capture === true) opts.wrap = true;
-  step = step || opts.step || 1;
-
-  if (!isNumber(step)) {
-    if (step != null && !isObject(step)) return invalidStep(step, opts);
-    return fill(start, end, 1, step);
-  }
-
-  if (isNumber(start) && isNumber(end)) {
-    return fillNumbers(start, end, step, opts);
-  }
-
-  return fillLetters(start, end, Math.max(Math.abs(step), 1), opts);
-};
-
-module.exports = fill;
-
-
-/***/ }),
+/* 510 */,
 /* 511 */,
 /* 512 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
@@ -24346,31 +23711,7 @@ module.exports = {
 
 
 /***/ }),
-/* 517 */
-/***/ (function(module) {
-
-"use strict";
-/*!
- * is-number <https://github.com/jonschlinkert/is-number>
- *
- * Copyright (c) 2014-present, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-module.exports = function(num) {
-  if (typeof num === 'number') {
-    return num - num === 0;
-  }
-  if (typeof num === 'string' && num.trim() !== '') {
-    return Number.isFinite ? Number.isFinite(+num) : isFinite(+num);
-  }
-  return false;
-};
-
-
-/***/ }),
+/* 517 */,
 /* 518 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -24547,346 +23888,7 @@ module.exports = new Type('tag:yaml.org,2002:float', {
 /* 528 */,
 /* 529 */,
 /* 530 */,
-/* 531 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-
-
-const stringify = __webpack_require__(988);
-
-/**
- * Constants
- */
-
-const {
-  MAX_LENGTH,
-  CHAR_BACKSLASH, /* \ */
-  CHAR_BACKTICK, /* ` */
-  CHAR_COMMA, /* , */
-  CHAR_DOT, /* . */
-  CHAR_LEFT_PARENTHESES, /* ( */
-  CHAR_RIGHT_PARENTHESES, /* ) */
-  CHAR_LEFT_CURLY_BRACE, /* { */
-  CHAR_RIGHT_CURLY_BRACE, /* } */
-  CHAR_LEFT_SQUARE_BRACKET, /* [ */
-  CHAR_RIGHT_SQUARE_BRACKET, /* ] */
-  CHAR_DOUBLE_QUOTE, /* " */
-  CHAR_SINGLE_QUOTE, /* ' */
-  CHAR_NO_BREAK_SPACE,
-  CHAR_ZERO_WIDTH_NOBREAK_SPACE
-} = __webpack_require__(844);
-
-/**
- * parse
- */
-
-const parse = (input, options = {}) => {
-  if (typeof input !== 'string') {
-    throw new TypeError('Expected a string');
-  }
-
-  let opts = options || {};
-  let max = typeof opts.maxLength === 'number' ? Math.min(MAX_LENGTH, opts.maxLength) : MAX_LENGTH;
-  if (input.length > max) {
-    throw new SyntaxError(`Input length (${input.length}), exceeds max characters (${max})`);
-  }
-
-  let ast = { type: 'root', input, nodes: [] };
-  let stack = [ast];
-  let block = ast;
-  let prev = ast;
-  let brackets = 0;
-  let length = input.length;
-  let index = 0;
-  let depth = 0;
-  let value;
-  let memo = {};
-
-  /**
-   * Helpers
-   */
-
-  const advance = () => input[index++];
-  const push = node => {
-    if (node.type === 'text' && prev.type === 'dot') {
-      prev.type = 'text';
-    }
-
-    if (prev && prev.type === 'text' && node.type === 'text') {
-      prev.value += node.value;
-      return;
-    }
-
-    block.nodes.push(node);
-    node.parent = block;
-    node.prev = prev;
-    prev = node;
-    return node;
-  };
-
-  push({ type: 'bos' });
-
-  while (index < length) {
-    block = stack[stack.length - 1];
-    value = advance();
-
-    /**
-     * Invalid chars
-     */
-
-    if (value === CHAR_ZERO_WIDTH_NOBREAK_SPACE || value === CHAR_NO_BREAK_SPACE) {
-      continue;
-    }
-
-    /**
-     * Escaped chars
-     */
-
-    if (value === CHAR_BACKSLASH) {
-      push({ type: 'text', value: (options.keepEscaping ? value : '') + advance() });
-      continue;
-    }
-
-    /**
-     * Right square bracket (literal): ']'
-     */
-
-    if (value === CHAR_RIGHT_SQUARE_BRACKET) {
-      push({ type: 'text', value: '\\' + value });
-      continue;
-    }
-
-    /**
-     * Left square bracket: '['
-     */
-
-    if (value === CHAR_LEFT_SQUARE_BRACKET) {
-      brackets++;
-
-      let closed = true;
-      let next;
-
-      while (index < length && (next = advance())) {
-        value += next;
-
-        if (next === CHAR_LEFT_SQUARE_BRACKET) {
-          brackets++;
-          continue;
-        }
-
-        if (next === CHAR_BACKSLASH) {
-          value += advance();
-          continue;
-        }
-
-        if (next === CHAR_RIGHT_SQUARE_BRACKET) {
-          brackets--;
-
-          if (brackets === 0) {
-            break;
-          }
-        }
-      }
-
-      push({ type: 'text', value });
-      continue;
-    }
-
-    /**
-     * Parentheses
-     */
-
-    if (value === CHAR_LEFT_PARENTHESES) {
-      block = push({ type: 'paren', nodes: [] });
-      stack.push(block);
-      push({ type: 'text', value });
-      continue;
-    }
-
-    if (value === CHAR_RIGHT_PARENTHESES) {
-      if (block.type !== 'paren') {
-        push({ type: 'text', value });
-        continue;
-      }
-      block = stack.pop();
-      push({ type: 'text', value });
-      block = stack[stack.length - 1];
-      continue;
-    }
-
-    /**
-     * Quotes: '|"|`
-     */
-
-    if (value === CHAR_DOUBLE_QUOTE || value === CHAR_SINGLE_QUOTE || value === CHAR_BACKTICK) {
-      let open = value;
-      let next;
-
-      if (options.keepQuotes !== true) {
-        value = '';
-      }
-
-      while (index < length && (next = advance())) {
-        if (next === CHAR_BACKSLASH) {
-          value += next + advance();
-          continue;
-        }
-
-        if (next === open) {
-          if (options.keepQuotes === true) value += next;
-          break;
-        }
-
-        value += next;
-      }
-
-      push({ type: 'text', value });
-      continue;
-    }
-
-    /**
-     * Left curly brace: '{'
-     */
-
-    if (value === CHAR_LEFT_CURLY_BRACE) {
-      depth++;
-
-      let dollar = prev.value && prev.value.slice(-1) === '$' || block.dollar === true;
-      let brace = {
-        type: 'brace',
-        open: true,
-        close: false,
-        dollar,
-        depth,
-        commas: 0,
-        ranges: 0,
-        nodes: []
-      };
-
-      block = push(brace);
-      stack.push(block);
-      push({ type: 'open', value });
-      continue;
-    }
-
-    /**
-     * Right curly brace: '}'
-     */
-
-    if (value === CHAR_RIGHT_CURLY_BRACE) {
-      if (block.type !== 'brace') {
-        push({ type: 'text', value });
-        continue;
-      }
-
-      let type = 'close';
-      block = stack.pop();
-      block.close = true;
-
-      push({ type, value });
-      depth--;
-
-      block = stack[stack.length - 1];
-      continue;
-    }
-
-    /**
-     * Comma: ','
-     */
-
-    if (value === CHAR_COMMA && depth > 0) {
-      if (block.ranges > 0) {
-        block.ranges = 0;
-        let open = block.nodes.shift();
-        block.nodes = [open, { type: 'text', value: stringify(block) }];
-      }
-
-      push({ type: 'comma', value });
-      block.commas++;
-      continue;
-    }
-
-    /**
-     * Dot: '.'
-     */
-
-    if (value === CHAR_DOT && depth > 0 && block.commas === 0) {
-      let siblings = block.nodes;
-
-      if (depth === 0 || siblings.length === 0) {
-        push({ type: 'text', value });
-        continue;
-      }
-
-      if (prev.type === 'dot') {
-        block.range = [];
-        prev.value += value;
-        prev.type = 'range';
-
-        if (block.nodes.length !== 3 && block.nodes.length !== 5) {
-          block.invalid = true;
-          block.ranges = 0;
-          prev.type = 'text';
-          continue;
-        }
-
-        block.ranges++;
-        block.args = [];
-        continue;
-      }
-
-      if (prev.type === 'range') {
-        siblings.pop();
-
-        let before = siblings[siblings.length - 1];
-        before.value += prev.value + value;
-        prev = before;
-        block.ranges--;
-        continue;
-      }
-
-      push({ type: 'dot', value });
-      continue;
-    }
-
-    /**
-     * Text
-     */
-
-    push({ type: 'text', value });
-  }
-
-  // Mark imbalanced braces and brackets as invalid
-  do {
-    block = stack.pop();
-
-    if (block.type !== 'root') {
-      block.nodes.forEach(node => {
-        if (!node.nodes) {
-          if (node.type === 'open') node.isOpen = true;
-          if (node.type === 'close') node.isClose = true;
-          if (!node.nodes) node.type = 'text';
-          node.invalid = true;
-        }
-      });
-
-      // get the location of the block on parent.nodes (block's siblings)
-      let parent = stack[stack.length - 1];
-      let index = parent.nodes.indexOf(block);
-      // replace the (invalid) block with it's nodes
-      parent.nodes.splice(index, 1, ...block.nodes);
-    }
-  } while (stack.length > 0);
-
-  push({ type: 'eos' });
-  return ast;
-};
-
-module.exports = parse;
-
-
-/***/ }),
+/* 531 */,
 /* 532 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -24947,7 +23949,7 @@ module.exports = {
 
   defaults = __webpack_require__(835);
 
-  builder = __webpack_require__(53);
+  builder = __webpack_require__(111);
 
   parser = __webpack_require__(446);
 
@@ -25823,7 +24825,54 @@ module.exports = baseKeys;
 
 /***/ }),
 /* 563 */,
-/* 564 */,
+/* 564 */
+/***/ (function(module) {
+
+var isObject = function isObject(value) {
+    return value instanceof Object && value.constructor === Object;
+};
+
+var parseWrapArguments = function parseWrapArguments(args) {
+    var length = args.length;
+    var work;
+    var options = {};
+    var cb;
+
+    /**
+     * As we can receive an unlimited number of keys
+     * we find the index of the first function which is
+     * the "work" handler to fetch the keys.
+     */
+    for (var i = 0; i < length; i += 1) {
+        if (typeof args[i] === 'function') {
+            if (typeof args[i + 2] === 'function') {
+                cb = args.pop();
+            } else if (typeof args[i + 1] === 'function') {
+                cb = args.pop();
+            }
+            if (isObject(args[i + 1])) {
+                options = args.pop();
+            }
+            work = args.pop();
+            break;
+        }
+    }
+
+    return {
+        keys: args,
+        work: work,
+        options: options,
+        cb: cb
+    };
+};
+
+module.exports = {
+    isObject: isObject,
+    parseWrapArguments: parseWrapArguments
+};
+
+
+/***/ }),
 /* 565 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -27449,7 +26498,7 @@ var origRealpathSync = fs.realpathSync
 
 var version = process.version
 var ok = /^v[0-5]\./.test(version)
-var old = __webpack_require__(482)
+var old = __webpack_require__(938)
 
 function newError (er) {
   return er && er.syscall === 'realpath' && (
@@ -28141,7 +27190,7 @@ DiskStore.prototype._getFilePathByKey = function (key) {
 
   XMLDummy = __webpack_require__(361);
 
-  XMLDTDAttList = __webpack_require__(358);
+  XMLDTDAttList = __webpack_require__(665);
 
   XMLDTDElement = __webpack_require__(206);
 
@@ -29521,7 +28570,25 @@ module.exports = require("constants");
 
 /***/ }),
 /* 620 */,
-/* 621 */,
+/* 621 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = __webpack_require__(403);
+__webpack_require__(775);
+const del_1 = tslib_1.__importDefault(__webpack_require__(479));
+const log_1 = tslib_1.__importDefault(__webpack_require__(766));
+exports.default = (options) => {
+    options = Object.assign({ dest: "./dist", base: process.cwd(), logLevel: "info" }, options);
+    return del_1.default([options.dest, "./.cache"]).then(() => {
+        log_1.default.info("Successfully deleted directories");
+    });
+};
+//# sourceMappingURL=clean.js.map
+
+/***/ }),
 /* 622 */
 /***/ (function(module) {
 
@@ -29529,476 +28596,25 @@ module.exports = require("path");
 
 /***/ }),
 /* 623 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-"use strict";
-
-
-const util = __webpack_require__(669);
-const braces = __webpack_require__(111);
-const picomatch = __webpack_require__(478);
-const utils = __webpack_require__(167);
-const isEmptyString = val => typeof val === 'string' && (val === '' || val === './');
+/***/ (function(module) {
 
 /**
- * Returns an array of strings that match one or more glob patterns.
+ * Removes `key` and its value from the hash.
  *
- * ```js
- * const mm = require('micromatch');
- * // mm(list, patterns[, options]);
- *
- * console.log(mm(['a.js', 'a.txt'], ['*.js']));
- * //=> [ 'a.js' ]
- * ```
- * @param {String|Array<string>} list List of strings to match.
- * @param {String|Array<string>} patterns One or more glob patterns to use for matching.
- * @param {Object} options See available [options](#options)
- * @return {Array} Returns an array of matches
- * @summary false
- * @api public
+ * @private
+ * @name delete
+ * @memberOf Hash
+ * @param {Object} hash The hash to modify.
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
  */
+function hashDelete(key) {
+  var result = this.has(key) && delete this.__data__[key];
+  this.size -= result ? 1 : 0;
+  return result;
+}
 
-const micromatch = (list, patterns, options) => {
-  patterns = [].concat(patterns);
-  list = [].concat(list);
-
-  let omit = new Set();
-  let keep = new Set();
-  let items = new Set();
-  let negatives = 0;
-
-  let onResult = state => {
-    items.add(state.output);
-    if (options && options.onResult) {
-      options.onResult(state);
-    }
-  };
-
-  for (let i = 0; i < patterns.length; i++) {
-    let isMatch = picomatch(String(patterns[i]), { ...options, onResult }, true);
-    let negated = isMatch.state.negated || isMatch.state.negatedExtglob;
-    if (negated) negatives++;
-
-    for (let item of list) {
-      let matched = isMatch(item, true);
-
-      let match = negated ? !matched.isMatch : matched.isMatch;
-      if (!match) continue;
-
-      if (negated) {
-        omit.add(matched.output);
-      } else {
-        omit.delete(matched.output);
-        keep.add(matched.output);
-      }
-    }
-  }
-
-  let result = negatives === patterns.length ? [...items] : [...keep];
-  let matches = result.filter(item => !omit.has(item));
-
-  if (options && matches.length === 0) {
-    if (options.failglob === true) {
-      throw new Error(`No matches found for "${patterns.join(', ')}"`);
-    }
-
-    if (options.nonull === true || options.nullglob === true) {
-      return options.unescape ? patterns.map(p => p.replace(/\\/g, '')) : patterns;
-    }
-  }
-
-  return matches;
-};
-
-/**
- * Backwards compatibility
- */
-
-micromatch.match = micromatch;
-
-/**
- * Returns a matcher function from the given glob `pattern` and `options`.
- * The returned function takes a string to match as its only argument and returns
- * true if the string is a match.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.matcher(pattern[, options]);
- *
- * const isMatch = mm.matcher('*.!(*a)');
- * console.log(isMatch('a.a')); //=> false
- * console.log(isMatch('a.b')); //=> true
- * ```
- * @param {String} `pattern` Glob pattern
- * @param {Object} `options`
- * @return {Function} Returns a matcher function.
- * @api public
- */
-
-micromatch.matcher = (pattern, options) => picomatch(pattern, options);
-
-/**
- * Returns true if **any** of the given glob `patterns` match the specified `string`.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.isMatch(string, patterns[, options]);
- *
- * console.log(mm.isMatch('a.a', ['b.*', '*.a'])); //=> true
- * console.log(mm.isMatch('a.a', 'b.*')); //=> false
- * ```
- * @param {String} str The string to test.
- * @param {String|Array} patterns One or more glob patterns to use for matching.
- * @param {Object} [options] See available [options](#options).
- * @return {Boolean} Returns true if any patterns match `str`
- * @api public
- */
-
-micromatch.isMatch = (str, patterns, options) => picomatch(patterns, options)(str);
-
-/**
- * Backwards compatibility
- */
-
-micromatch.any = micromatch.isMatch;
-
-/**
- * Returns a list of strings that _**do not match any**_ of the given `patterns`.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.not(list, patterns[, options]);
- *
- * console.log(mm.not(['a.a', 'b.b', 'c.c'], '*.a'));
- * //=> ['b.b', 'c.c']
- * ```
- * @param {Array} `list` Array of strings to match.
- * @param {String|Array} `patterns` One or more glob pattern to use for matching.
- * @param {Object} `options` See available [options](#options) for changing how matches are performed
- * @return {Array} Returns an array of strings that **do not match** the given patterns.
- * @api public
- */
-
-micromatch.not = (list, patterns, options = {}) => {
-  patterns = [].concat(patterns).map(String);
-  let result = new Set();
-  let items = [];
-
-  let onResult = state => {
-    if (options.onResult) options.onResult(state);
-    items.push(state.output);
-  };
-
-  let matches = micromatch(list, patterns, { ...options, onResult });
-
-  for (let item of items) {
-    if (!matches.includes(item)) {
-      result.add(item);
-    }
-  }
-  return [...result];
-};
-
-/**
- * Returns true if the given `string` contains the given pattern. Similar
- * to [.isMatch](#isMatch) but the pattern can match any part of the string.
- *
- * ```js
- * var mm = require('micromatch');
- * // mm.contains(string, pattern[, options]);
- *
- * console.log(mm.contains('aa/bb/cc', '*b'));
- * //=> true
- * console.log(mm.contains('aa/bb/cc', '*d'));
- * //=> false
- * ```
- * @param {String} `str` The string to match.
- * @param {String|Array} `patterns` Glob pattern to use for matching.
- * @param {Object} `options` See available [options](#options) for changing how matches are performed
- * @return {Boolean} Returns true if the patter matches any part of `str`.
- * @api public
- */
-
-micromatch.contains = (str, pattern, options) => {
-  if (typeof str !== 'string') {
-    throw new TypeError(`Expected a string: "${util.inspect(str)}"`);
-  }
-
-  if (Array.isArray(pattern)) {
-    return pattern.some(p => micromatch.contains(str, p, options));
-  }
-
-  if (typeof pattern === 'string') {
-    if (isEmptyString(str) || isEmptyString(pattern)) {
-      return false;
-    }
-
-    if (str.includes(pattern) || (str.startsWith('./') && str.slice(2).includes(pattern))) {
-      return true;
-    }
-  }
-
-  return micromatch.isMatch(str, pattern, { ...options, contains: true });
-};
-
-/**
- * Filter the keys of the given object with the given `glob` pattern
- * and `options`. Does not attempt to match nested keys. If you need this feature,
- * use [glob-object][] instead.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.matchKeys(object, patterns[, options]);
- *
- * const obj = { aa: 'a', ab: 'b', ac: 'c' };
- * console.log(mm.matchKeys(obj, '*b'));
- * //=> { ab: 'b' }
- * ```
- * @param {Object} `object` The object with keys to filter.
- * @param {String|Array} `patterns` One or more glob patterns to use for matching.
- * @param {Object} `options` See available [options](#options) for changing how matches are performed
- * @return {Object} Returns an object with only keys that match the given patterns.
- * @api public
- */
-
-micromatch.matchKeys = (obj, patterns, options) => {
-  if (!utils.isObject(obj)) {
-    throw new TypeError('Expected the first argument to be an object');
-  }
-  let keys = micromatch(Object.keys(obj), patterns, options);
-  let res = {};
-  for (let key of keys) res[key] = obj[key];
-  return res;
-};
-
-/**
- * Returns true if some of the strings in the given `list` match any of the given glob `patterns`.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.some(list, patterns[, options]);
- *
- * console.log(mm.some(['foo.js', 'bar.js'], ['*.js', '!foo.js']));
- * // true
- * console.log(mm.some(['foo.js'], ['*.js', '!foo.js']));
- * // false
- * ```
- * @param {String|Array} `list` The string or array of strings to test. Returns as soon as the first match is found.
- * @param {String|Array} `patterns` One or more glob patterns to use for matching.
- * @param {Object} `options` See available [options](#options) for changing how matches are performed
- * @return {Boolean} Returns true if any patterns match `str`
- * @api public
- */
-
-micromatch.some = (list, patterns, options) => {
-  let items = [].concat(list);
-
-  for (let pattern of [].concat(patterns)) {
-    let isMatch = picomatch(String(pattern), options);
-    if (items.some(item => isMatch(item))) {
-      return true;
-    }
-  }
-  return false;
-};
-
-/**
- * Returns true if every string in the given `list` matches
- * any of the given glob `patterns`.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.every(list, patterns[, options]);
- *
- * console.log(mm.every('foo.js', ['foo.js']));
- * // true
- * console.log(mm.every(['foo.js', 'bar.js'], ['*.js']));
- * // true
- * console.log(mm.every(['foo.js', 'bar.js'], ['*.js', '!foo.js']));
- * // false
- * console.log(mm.every(['foo.js'], ['*.js', '!foo.js']));
- * // false
- * ```
- * @param {String|Array} `list` The string or array of strings to test.
- * @param {String|Array} `patterns` One or more glob patterns to use for matching.
- * @param {Object} `options` See available [options](#options) for changing how matches are performed
- * @return {Boolean} Returns true if any patterns match `str`
- * @api public
- */
-
-micromatch.every = (list, patterns, options) => {
-  let items = [].concat(list);
-
-  for (let pattern of [].concat(patterns)) {
-    let isMatch = picomatch(String(pattern), options);
-    if (!items.every(item => isMatch(item))) {
-      return false;
-    }
-  }
-  return true;
-};
-
-/**
- * Returns true if **all** of the given `patterns` match
- * the specified string.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.all(string, patterns[, options]);
- *
- * console.log(mm.all('foo.js', ['foo.js']));
- * // true
- *
- * console.log(mm.all('foo.js', ['*.js', '!foo.js']));
- * // false
- *
- * console.log(mm.all('foo.js', ['*.js', 'foo.js']));
- * // true
- *
- * console.log(mm.all('foo.js', ['*.js', 'f*', '*o*', '*o.js']));
- * // true
- * ```
- * @param {String|Array} `str` The string to test.
- * @param {String|Array} `patterns` One or more glob patterns to use for matching.
- * @param {Object} `options` See available [options](#options) for changing how matches are performed
- * @return {Boolean} Returns true if any patterns match `str`
- * @api public
- */
-
-micromatch.all = (str, patterns, options) => {
-  if (typeof str !== 'string') {
-    throw new TypeError(`Expected a string: "${util.inspect(str)}"`);
-  }
-
-  return [].concat(patterns).every(p => picomatch(p, options)(str));
-};
-
-/**
- * Returns an array of matches captured by `pattern` in `string, or `null` if the pattern did not match.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.capture(pattern, string[, options]);
- *
- * console.log(mm.capture('test/*.js', 'test/foo.js'));
- * //=> ['foo']
- * console.log(mm.capture('test/*.js', 'foo/bar.css'));
- * //=> null
- * ```
- * @param {String} `glob` Glob pattern to use for matching.
- * @param {String} `input` String to match
- * @param {Object} `options` See available [options](#options) for changing how matches are performed
- * @return {Boolean} Returns an array of captures if the input matches the glob pattern, otherwise `null`.
- * @api public
- */
-
-micromatch.capture = (glob, input, options) => {
-  let posix = utils.isWindows(options);
-  let regex = picomatch.makeRe(String(glob), { ...options, capture: true });
-  let match = regex.exec(posix ? utils.toPosixSlashes(input) : input);
-
-  if (match) {
-    return match.slice(1).map(v => v === void 0 ? '' : v);
-  }
-};
-
-/**
- * Create a regular expression from the given glob `pattern`.
- *
- * ```js
- * const mm = require('micromatch');
- * // mm.makeRe(pattern[, options]);
- *
- * console.log(mm.makeRe('*.js'));
- * //=> /^(?:(\.[\\\/])?(?!\.)(?=.)[^\/]*?\.js)$/
- * ```
- * @param {String} `pattern` A glob pattern to convert to regex.
- * @param {Object} `options`
- * @return {RegExp} Returns a regex created from the given pattern.
- * @api public
- */
-
-micromatch.makeRe = (...args) => picomatch.makeRe(...args);
-
-/**
- * Scan a glob pattern to separate the pattern into segments. Used
- * by the [split](#split) method.
- *
- * ```js
- * const mm = require('micromatch');
- * const state = mm.scan(pattern[, options]);
- * ```
- * @param {String} `pattern`
- * @param {Object} `options`
- * @return {Object} Returns an object with
- * @api public
- */
-
-micromatch.scan = (...args) => picomatch.scan(...args);
-
-/**
- * Parse a glob pattern to create the source string for a regular
- * expression.
- *
- * ```js
- * const mm = require('micromatch');
- * const state = mm(pattern[, options]);
- * ```
- * @param {String} `glob`
- * @param {Object} `options`
- * @return {Object} Returns an object with useful properties and output to be used as regex source string.
- * @api public
- */
-
-micromatch.parse = (patterns, options) => {
-  let res = [];
-  for (let pattern of [].concat(patterns || [])) {
-    for (let str of braces(String(pattern), options)) {
-      res.push(picomatch.parse(str, options));
-    }
-  }
-  return res;
-};
-
-/**
- * Process the given brace `pattern`.
- *
- * ```js
- * const { braces } = require('micromatch');
- * console.log(braces('foo/{a,b,c}/bar'));
- * //=> [ 'foo/(a|b|c)/bar' ]
- *
- * console.log(braces('foo/{a,b,c}/bar', { expand: true }));
- * //=> [ 'foo/a/bar', 'foo/b/bar', 'foo/c/bar' ]
- * ```
- * @param {String} `pattern` String with brace pattern to process.
- * @param {Object} `options` Any [options](#options) to change how expansion is performed. See the [braces][] library for all available options.
- * @return {Array}
- * @api public
- */
-
-micromatch.braces = (pattern, options) => {
-  if (typeof pattern !== 'string') throw new TypeError('Expected a string');
-  if ((options && options.nobrace === true) || !/\{.*\}/.test(pattern)) {
-    return [pattern];
-  }
-  return braces(pattern, options);
-};
-
-/**
- * Expand braces
- */
-
-micromatch.braceExpand = (pattern, options) => {
-  if (typeof pattern !== 'string') throw new TypeError('Expected a string');
-  return micromatch.braces(pattern, { ...options, expand: true });
-};
-
-/**
- * Expose micromatch
- */
-
-module.exports = micromatch;
+module.exports = hashDelete;
 
 
 /***/ }),
@@ -30085,11 +28701,337 @@ module.exports = micromatch;
 "use strict";
 
 
+const stringify = __webpack_require__(450);
 
-var yaml = __webpack_require__(168);
+/**
+ * Constants
+ */
 
+const {
+  MAX_LENGTH,
+  CHAR_BACKSLASH, /* \ */
+  CHAR_BACKTICK, /* ` */
+  CHAR_COMMA, /* , */
+  CHAR_DOT, /* . */
+  CHAR_LEFT_PARENTHESES, /* ( */
+  CHAR_RIGHT_PARENTHESES, /* ) */
+  CHAR_LEFT_CURLY_BRACE, /* { */
+  CHAR_RIGHT_CURLY_BRACE, /* } */
+  CHAR_LEFT_SQUARE_BRACKET, /* [ */
+  CHAR_RIGHT_SQUARE_BRACKET, /* ] */
+  CHAR_DOUBLE_QUOTE, /* " */
+  CHAR_SINGLE_QUOTE, /* ' */
+  CHAR_NO_BREAK_SPACE,
+  CHAR_ZERO_WIDTH_NOBREAK_SPACE
+} = __webpack_require__(936);
 
-module.exports = yaml;
+/**
+ * parse
+ */
+
+const parse = (input, options = {}) => {
+  if (typeof input !== 'string') {
+    throw new TypeError('Expected a string');
+  }
+
+  let opts = options || {};
+  let max = typeof opts.maxLength === 'number' ? Math.min(MAX_LENGTH, opts.maxLength) : MAX_LENGTH;
+  if (input.length > max) {
+    throw new SyntaxError(`Input length (${input.length}), exceeds max characters (${max})`);
+  }
+
+  let ast = { type: 'root', input, nodes: [] };
+  let stack = [ast];
+  let block = ast;
+  let prev = ast;
+  let brackets = 0;
+  let length = input.length;
+  let index = 0;
+  let depth = 0;
+  let value;
+  let memo = {};
+
+  /**
+   * Helpers
+   */
+
+  const advance = () => input[index++];
+  const push = node => {
+    if (node.type === 'text' && prev.type === 'dot') {
+      prev.type = 'text';
+    }
+
+    if (prev && prev.type === 'text' && node.type === 'text') {
+      prev.value += node.value;
+      return;
+    }
+
+    block.nodes.push(node);
+    node.parent = block;
+    node.prev = prev;
+    prev = node;
+    return node;
+  };
+
+  push({ type: 'bos' });
+
+  while (index < length) {
+    block = stack[stack.length - 1];
+    value = advance();
+
+    /**
+     * Invalid chars
+     */
+
+    if (value === CHAR_ZERO_WIDTH_NOBREAK_SPACE || value === CHAR_NO_BREAK_SPACE) {
+      continue;
+    }
+
+    /**
+     * Escaped chars
+     */
+
+    if (value === CHAR_BACKSLASH) {
+      push({ type: 'text', value: (options.keepEscaping ? value : '') + advance() });
+      continue;
+    }
+
+    /**
+     * Right square bracket (literal): ']'
+     */
+
+    if (value === CHAR_RIGHT_SQUARE_BRACKET) {
+      push({ type: 'text', value: '\\' + value });
+      continue;
+    }
+
+    /**
+     * Left square bracket: '['
+     */
+
+    if (value === CHAR_LEFT_SQUARE_BRACKET) {
+      brackets++;
+
+      let closed = true;
+      let next;
+
+      while (index < length && (next = advance())) {
+        value += next;
+
+        if (next === CHAR_LEFT_SQUARE_BRACKET) {
+          brackets++;
+          continue;
+        }
+
+        if (next === CHAR_BACKSLASH) {
+          value += advance();
+          continue;
+        }
+
+        if (next === CHAR_RIGHT_SQUARE_BRACKET) {
+          brackets--;
+
+          if (brackets === 0) {
+            break;
+          }
+        }
+      }
+
+      push({ type: 'text', value });
+      continue;
+    }
+
+    /**
+     * Parentheses
+     */
+
+    if (value === CHAR_LEFT_PARENTHESES) {
+      block = push({ type: 'paren', nodes: [] });
+      stack.push(block);
+      push({ type: 'text', value });
+      continue;
+    }
+
+    if (value === CHAR_RIGHT_PARENTHESES) {
+      if (block.type !== 'paren') {
+        push({ type: 'text', value });
+        continue;
+      }
+      block = stack.pop();
+      push({ type: 'text', value });
+      block = stack[stack.length - 1];
+      continue;
+    }
+
+    /**
+     * Quotes: '|"|`
+     */
+
+    if (value === CHAR_DOUBLE_QUOTE || value === CHAR_SINGLE_QUOTE || value === CHAR_BACKTICK) {
+      let open = value;
+      let next;
+
+      if (options.keepQuotes !== true) {
+        value = '';
+      }
+
+      while (index < length && (next = advance())) {
+        if (next === CHAR_BACKSLASH) {
+          value += next + advance();
+          continue;
+        }
+
+        if (next === open) {
+          if (options.keepQuotes === true) value += next;
+          break;
+        }
+
+        value += next;
+      }
+
+      push({ type: 'text', value });
+      continue;
+    }
+
+    /**
+     * Left curly brace: '{'
+     */
+
+    if (value === CHAR_LEFT_CURLY_BRACE) {
+      depth++;
+
+      let dollar = prev.value && prev.value.slice(-1) === '$' || block.dollar === true;
+      let brace = {
+        type: 'brace',
+        open: true,
+        close: false,
+        dollar,
+        depth,
+        commas: 0,
+        ranges: 0,
+        nodes: []
+      };
+
+      block = push(brace);
+      stack.push(block);
+      push({ type: 'open', value });
+      continue;
+    }
+
+    /**
+     * Right curly brace: '}'
+     */
+
+    if (value === CHAR_RIGHT_CURLY_BRACE) {
+      if (block.type !== 'brace') {
+        push({ type: 'text', value });
+        continue;
+      }
+
+      let type = 'close';
+      block = stack.pop();
+      block.close = true;
+
+      push({ type, value });
+      depth--;
+
+      block = stack[stack.length - 1];
+      continue;
+    }
+
+    /**
+     * Comma: ','
+     */
+
+    if (value === CHAR_COMMA && depth > 0) {
+      if (block.ranges > 0) {
+        block.ranges = 0;
+        let open = block.nodes.shift();
+        block.nodes = [open, { type: 'text', value: stringify(block) }];
+      }
+
+      push({ type: 'comma', value });
+      block.commas++;
+      continue;
+    }
+
+    /**
+     * Dot: '.'
+     */
+
+    if (value === CHAR_DOT && depth > 0 && block.commas === 0) {
+      let siblings = block.nodes;
+
+      if (depth === 0 || siblings.length === 0) {
+        push({ type: 'text', value });
+        continue;
+      }
+
+      if (prev.type === 'dot') {
+        block.range = [];
+        prev.value += value;
+        prev.type = 'range';
+
+        if (block.nodes.length !== 3 && block.nodes.length !== 5) {
+          block.invalid = true;
+          block.ranges = 0;
+          prev.type = 'text';
+          continue;
+        }
+
+        block.ranges++;
+        block.args = [];
+        continue;
+      }
+
+      if (prev.type === 'range') {
+        siblings.pop();
+
+        let before = siblings[siblings.length - 1];
+        before.value += prev.value + value;
+        prev = before;
+        block.ranges--;
+        continue;
+      }
+
+      push({ type: 'dot', value });
+      continue;
+    }
+
+    /**
+     * Text
+     */
+
+    push({ type: 'text', value });
+  }
+
+  // Mark imbalanced braces and brackets as invalid
+  do {
+    block = stack.pop();
+
+    if (block.type !== 'root') {
+      block.nodes.forEach(node => {
+        if (!node.nodes) {
+          if (node.type === 'open') node.isOpen = true;
+          if (node.type === 'close') node.isClose = true;
+          if (!node.nodes) node.type = 'text';
+          node.invalid = true;
+        }
+      });
+
+      // get the location of the block on parent.nodes (block's siblings)
+      let parent = stack[stack.length - 1];
+      let index = parent.nodes.indexOf(block);
+      // replace the (invalid) block with it's nodes
+      parent.nodes.splice(index, 1, ...block.nodes);
+    }
+  } while (stack.length > 0);
+
+  push({ type: 'eos' });
+  return ast;
+};
+
+module.exports = parse;
 
 
 /***/ }),
@@ -31090,7 +30032,67 @@ rimraf.sync = rimrafSync
 
 
 /***/ }),
-/* 665 */,
+/* 665 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+// Generated by CoffeeScript 1.12.7
+(function() {
+  var NodeType, XMLDTDAttList, XMLNode,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  XMLNode = __webpack_require__(290);
+
+  NodeType = __webpack_require__(712);
+
+  module.exports = XMLDTDAttList = (function(superClass) {
+    extend(XMLDTDAttList, superClass);
+
+    function XMLDTDAttList(parent, elementName, attributeName, attributeType, defaultValueType, defaultValue) {
+      XMLDTDAttList.__super__.constructor.call(this, parent);
+      if (elementName == null) {
+        throw new Error("Missing DTD element name. " + this.debugInfo());
+      }
+      if (attributeName == null) {
+        throw new Error("Missing DTD attribute name. " + this.debugInfo(elementName));
+      }
+      if (!attributeType) {
+        throw new Error("Missing DTD attribute type. " + this.debugInfo(elementName));
+      }
+      if (!defaultValueType) {
+        throw new Error("Missing DTD attribute default. " + this.debugInfo(elementName));
+      }
+      if (defaultValueType.indexOf('#') !== 0) {
+        defaultValueType = '#' + defaultValueType;
+      }
+      if (!defaultValueType.match(/^(#REQUIRED|#IMPLIED|#FIXED|#DEFAULT)$/)) {
+        throw new Error("Invalid default value type; expected: #REQUIRED, #IMPLIED, #FIXED or #DEFAULT. " + this.debugInfo(elementName));
+      }
+      if (defaultValue && !defaultValueType.match(/^(#FIXED|#DEFAULT)$/)) {
+        throw new Error("Default value only applies to #FIXED or #DEFAULT. " + this.debugInfo(elementName));
+      }
+      this.elementName = this.stringify.name(elementName);
+      this.type = NodeType.AttributeDeclaration;
+      this.attributeName = this.stringify.name(attributeName);
+      this.attributeType = this.stringify.dtdAttType(attributeType);
+      if (defaultValue) {
+        this.defaultValue = this.stringify.dtdAttDefault(defaultValue);
+      }
+      this.defaultValueType = defaultValueType;
+    }
+
+    XMLDTDAttList.prototype.toString = function(options) {
+      return this.options.writer.dtdAttList(this, this.options.writer.filterOptions(options));
+    };
+
+    return XMLDTDAttList;
+
+  })(XMLNode);
+
+}).call(this);
+
+
+/***/ }),
 /* 666 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -34370,7 +33372,19 @@ module.exports = {
 /* 713 */,
 /* 714 */,
 /* 715 */,
-/* 716 */,
+/* 716 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+var getNative = __webpack_require__(698),
+    root = __webpack_require__(348);
+
+/* Built-in method references that are verified to be native. */
+var Promise = getNative(root, 'Promise');
+
+module.exports = Promise;
+
+
+/***/ }),
 /* 717 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -35563,7 +34577,7 @@ module.exports = new Schema({
   explicit: [
     __webpack_require__(412),
     __webpack_require__(869),
-    __webpack_require__(251)
+    __webpack_require__(991)
   ]
 });
 
@@ -35613,7 +34627,7 @@ function __ncc_wildcard$0 (arg) {
   else if (arg === "none") return __webpack_require__(18);
 }
 var CallbackFiller = __webpack_require__(443);
-var utils = __webpack_require__(16);
+var utils = __webpack_require__(564);
 var parseWrapArguments = utils.parseWrapArguments;
 
 /**
@@ -36039,7 +35053,7 @@ module.exports = baseKeysIn;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var baseIsMap = __webpack_require__(895),
-    baseUnary = __webpack_require__(81),
+    baseUnary = __webpack_require__(988),
     nodeUtil = __webpack_require__(551);
 
 /* Node.js helper references. */
@@ -36145,7 +35159,7 @@ module.exports = baseTimes;
 /*eslint no-unused-vars:0*/
 var Lru = __webpack_require__(355);
 var cloneDeep = __webpack_require__(781);
-var utils = __webpack_require__(16);
+var utils = __webpack_require__(564);
 var isObject = utils.isObject;
 
 function clone(object) {
@@ -36865,29 +35879,7 @@ module.exports = arrayEach;
 
 
 /***/ }),
-/* 765 */
-/***/ (function(module) {
-
-/**
- * Removes `key` and its value from the hash.
- *
- * @private
- * @name delete
- * @memberOf Hash
- * @param {Object} hash The hash to modify.
- * @param {string} key The key of the value to remove.
- * @returns {boolean} Returns `true` if the entry was removed, else `false`.
- */
-function hashDelete(key) {
-  var result = this.has(key) && delete this.__data__[key];
-  this.size -= result ? 1 : 0;
-  return result;
-}
-
-module.exports = hashDelete;
-
-
-/***/ }),
+/* 765 */,
 /* 766 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -36895,7 +35887,7 @@ module.exports = hashDelete;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = __webpack_require__(403);
-const chalk_1 = tslib_1.__importDefault(__webpack_require__(385));
+const chalk_1 = tslib_1.__importDefault(__webpack_require__(389));
 const loglevel_1 = tslib_1.__importDefault(__webpack_require__(50));
 const loglevel_plugin_prefix_1 = tslib_1.__importDefault(__webpack_require__(737));
 const log = loglevel_1.default.getLogger("actionsflow");
@@ -37026,52 +36018,7 @@ module.exports = baseGetAllKeys;
 
 
 /***/ }),
-/* 769 */
-/***/ (function(module) {
-
-"use strict";
-
-
-const stringReplaceAll = (string, substring, replacer) => {
-	let index = string.indexOf(substring);
-	if (index === -1) {
-		return string;
-	}
-
-	const substringLength = substring.length;
-	let endIndex = 0;
-	let returnValue = '';
-	do {
-		returnValue += string.substr(endIndex, index - endIndex) + substring + replacer;
-		endIndex = index + substringLength;
-		index = string.indexOf(substring, endIndex);
-	} while (index !== -1);
-
-	returnValue += string.substr(endIndex);
-	return returnValue;
-};
-
-const stringEncaseCRLFWithFirstIndex = (string, prefix, postfix, index) => {
-	let endIndex = 0;
-	let returnValue = '';
-	do {
-		const gotCR = string[index - 1] === '\r';
-		returnValue += string.substr(endIndex, (gotCR ? index - 1 : index) - endIndex) + prefix + (gotCR ? '\r\n' : '\n') + postfix;
-		endIndex = index + 1;
-		index = string.indexOf('\n', endIndex);
-	} while (index !== -1);
-
-	returnValue += string.substr(endIndex);
-	return returnValue;
-};
-
-module.exports = {
-	stringReplaceAll,
-	stringEncaseCRLFWithFirstIndex
-};
-
-
-/***/ }),
+/* 769 */,
 /* 770 */,
 /* 771 */,
 /* 772 */,
@@ -37802,56 +36749,17 @@ module.exports = Schema.DEFAULT = new Schema({
 
 /***/ }),
 /* 804 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(module) {
 
 "use strict";
 
-const indentString = __webpack_require__(681);
-const cleanStack = __webpack_require__(93);
 
-const cleanInternalStack = stack => stack.replace(/\s+at .*aggregate-error\/index.js:\d+:\d+\)?/g, '');
-
-class AggregateError extends Error {
-	constructor(errors) {
-		if (!Array.isArray(errors)) {
-			throw new TypeError(`Expected input to be an Array, got ${typeof errors}`);
-		}
-
-		errors = [...errors].map(error => {
-			if (error instanceof Error) {
-				return error;
-			}
-
-			if (error !== null && typeof error === 'object') {
-				// Handle plain error objects with message property and/or possibly other metadata
-				return Object.assign(new Error(error.message), error);
-			}
-
-			return new Error(error);
-		});
-
-		let message = errors
-			.map(error => {
-				// The `stack` property is not standardized, so we can't assume it exists
-				return typeof error.stack === 'string' ? cleanInternalStack(cleanStack(error.stack)) : String(error);
-			})
-			.join('\n');
-		message = '\n' + indentString(message, 4);
-		super(message);
-
-		this.name = 'AggregateError';
-
-		Object.defineProperty(this, '_errors', {value: errors});
-	}
-
-	* [Symbol.iterator]() {
-		for (const error of this._errors) {
-			yield error;
-		}
-	}
-}
-
-module.exports = AggregateError;
+module.exports = (flag, argv = process.argv) => {
+	const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
+	const position = argv.indexOf(prefix + flag);
+	const terminatorPosition = argv.indexOf('--');
+	return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
+};
 
 
 /***/ }),
@@ -37929,7 +36837,7 @@ module.exports.extend         = extend;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var hashClear = __webpack_require__(677),
-    hashDelete = __webpack_require__(765),
+    hashDelete = __webpack_require__(623),
     hashGet = __webpack_require__(473),
     hashHas = __webpack_require__(199),
     hashSet = __webpack_require__(854);
@@ -39269,70 +38177,7 @@ exports.default = EntryFilter;
 
 
 /***/ }),
-/* 844 */
-/***/ (function(module) {
-
-"use strict";
-
-
-module.exports = {
-  MAX_LENGTH: 1024 * 64,
-
-  // Digits
-  CHAR_0: '0', /* 0 */
-  CHAR_9: '9', /* 9 */
-
-  // Alphabet chars.
-  CHAR_UPPERCASE_A: 'A', /* A */
-  CHAR_LOWERCASE_A: 'a', /* a */
-  CHAR_UPPERCASE_Z: 'Z', /* Z */
-  CHAR_LOWERCASE_Z: 'z', /* z */
-
-  CHAR_LEFT_PARENTHESES: '(', /* ( */
-  CHAR_RIGHT_PARENTHESES: ')', /* ) */
-
-  CHAR_ASTERISK: '*', /* * */
-
-  // Non-alphabetic chars.
-  CHAR_AMPERSAND: '&', /* & */
-  CHAR_AT: '@', /* @ */
-  CHAR_BACKSLASH: '\\', /* \ */
-  CHAR_BACKTICK: '`', /* ` */
-  CHAR_CARRIAGE_RETURN: '\r', /* \r */
-  CHAR_CIRCUMFLEX_ACCENT: '^', /* ^ */
-  CHAR_COLON: ':', /* : */
-  CHAR_COMMA: ',', /* , */
-  CHAR_DOLLAR: '$', /* . */
-  CHAR_DOT: '.', /* . */
-  CHAR_DOUBLE_QUOTE: '"', /* " */
-  CHAR_EQUAL: '=', /* = */
-  CHAR_EXCLAMATION_MARK: '!', /* ! */
-  CHAR_FORM_FEED: '\f', /* \f */
-  CHAR_FORWARD_SLASH: '/', /* / */
-  CHAR_HASH: '#', /* # */
-  CHAR_HYPHEN_MINUS: '-', /* - */
-  CHAR_LEFT_ANGLE_BRACKET: '<', /* < */
-  CHAR_LEFT_CURLY_BRACE: '{', /* { */
-  CHAR_LEFT_SQUARE_BRACKET: '[', /* [ */
-  CHAR_LINE_FEED: '\n', /* \n */
-  CHAR_NO_BREAK_SPACE: '\u00A0', /* \u00A0 */
-  CHAR_PERCENT: '%', /* % */
-  CHAR_PLUS: '+', /* + */
-  CHAR_QUESTION_MARK: '?', /* ? */
-  CHAR_RIGHT_ANGLE_BRACKET: '>', /* > */
-  CHAR_RIGHT_CURLY_BRACE: '}', /* } */
-  CHAR_RIGHT_SQUARE_BRACKET: ']', /* ] */
-  CHAR_SEMICOLON: ';', /* ; */
-  CHAR_SINGLE_QUOTE: '\'', /* ' */
-  CHAR_SPACE: ' ', /*   */
-  CHAR_TAB: '\t', /* \t */
-  CHAR_UNDERSCORE: '_', /* _ */
-  CHAR_VERTICAL_LINE: '|', /* | */
-  CHAR_ZERO_WIDTH_NOBREAK_SPACE: '\uFEFF' /* \uFEFF */
-};
-
-
-/***/ }),
+/* 844 */,
 /* 845 */,
 /* 846 */,
 /* 847 */,
@@ -41368,7 +40213,7 @@ module.exports = hashSet;
 
   NodeType = __webpack_require__(712);
 
-  XMLDTDAttList = __webpack_require__(358);
+  XMLDTDAttList = __webpack_require__(665);
 
   XMLDTDEntity = __webpack_require__(834);
 
@@ -42751,125 +41596,7 @@ exports._mapSort = _mapSort;
 //# sourceMappingURL=stringifiers.js.map
 
 /***/ }),
-/* 872 */
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-
-exports.isInteger = num => {
-  if (typeof num === 'number') {
-    return Number.isInteger(num);
-  }
-  if (typeof num === 'string' && num.trim() !== '') {
-    return Number.isInteger(Number(num));
-  }
-  return false;
-};
-
-/**
- * Find a node of the given type
- */
-
-exports.find = (node, type) => node.nodes.find(node => node.type === type);
-
-/**
- * Find a node of the given type
- */
-
-exports.exceedsLimit = (min, max, step = 1, limit) => {
-  if (limit === false) return false;
-  if (!exports.isInteger(min) || !exports.isInteger(max)) return false;
-  return ((Number(max) - Number(min)) / Number(step)) >= limit;
-};
-
-/**
- * Escape the given node with '\\' before node.value
- */
-
-exports.escapeNode = (block, n = 0, type) => {
-  let node = block.nodes[n];
-  if (!node) return;
-
-  if ((type && node.type === type) || node.type === 'open' || node.type === 'close') {
-    if (node.escaped !== true) {
-      node.value = '\\' + node.value;
-      node.escaped = true;
-    }
-  }
-};
-
-/**
- * Returns true if the given brace node should be enclosed in literal braces
- */
-
-exports.encloseBrace = node => {
-  if (node.type !== 'brace') return false;
-  if ((node.commas >> 0 + node.ranges >> 0) === 0) {
-    node.invalid = true;
-    return true;
-  }
-  return false;
-};
-
-/**
- * Returns true if a brace node is invalid.
- */
-
-exports.isInvalidBrace = block => {
-  if (block.type !== 'brace') return false;
-  if (block.invalid === true || block.dollar) return true;
-  if ((block.commas >> 0 + block.ranges >> 0) === 0) {
-    block.invalid = true;
-    return true;
-  }
-  if (block.open !== true || block.close !== true) {
-    block.invalid = true;
-    return true;
-  }
-  return false;
-};
-
-/**
- * Returns true if a node is an open or close node
- */
-
-exports.isOpenOrClose = node => {
-  if (node.type === 'open' || node.type === 'close') {
-    return true;
-  }
-  return node.open === true || node.close === true;
-};
-
-/**
- * Reduce an array of text nodes.
- */
-
-exports.reduce = nodes => nodes.reduce((acc, node) => {
-  if (node.type === 'text') acc.push(node.value);
-  if (node.type === 'range') node.type = 'text';
-  return acc;
-}, []);
-
-/**
- * Flatten an array
- */
-
-exports.flatten = (...args) => {
-  const result = [];
-  const flat = arr => {
-    for (let i = 0; i < arr.length; i++) {
-      let ele = arr[i];
-      Array.isArray(ele) ? flat(ele, result) : ele !== void 0 && result.push(ele);
-    }
-    return result;
-  };
-  flat(args);
-  return result;
-};
-
-
-/***/ }),
+/* 872 */,
 /* 873 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -43002,7 +41729,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.matchAny = exports.convertPatternsToRe = exports.makeRe = exports.getPatternParts = exports.expandBraceExpansion = exports.expandPatternsWithBraceExpansion = exports.isAffectDepthOfReadingPattern = exports.endsWithSlashGlobStar = exports.hasGlobStar = exports.getBaseDirectory = exports.getPositivePatterns = exports.getNegativePatterns = exports.isPositivePattern = exports.isNegativePattern = exports.convertToNegativePattern = exports.convertToPositivePattern = exports.isDynamicPattern = exports.isStaticPattern = void 0;
 const path = __webpack_require__(622);
 const globParent = __webpack_require__(7);
-const micromatch = __webpack_require__(623);
+const micromatch = __webpack_require__(163);
 const picomatch = __webpack_require__(478);
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
@@ -43771,7 +42498,24 @@ module.exports = assignValue;
 /* 900 */,
 /* 901 */,
 /* 902 */,
-/* 903 */,
+/* 903 */
+/***/ (function(module) {
+
+"use strict";
+
+module.exports = path => {
+	const isExtendedLengthPath = /^\\\\\?\\/.test(path);
+	const hasNonAscii = /[^\u0000-\u0080]+/.test(path); // eslint-disable-line no-control-regex
+
+	if (isExtendedLengthPath || hasNonAscii) {
+		return path;
+	}
+
+	return path.replace(/\\/g, '/');
+};
+
+
+/***/ }),
 /* 904 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -44005,7 +42749,7 @@ exports.buildNativeSecrets = exports.buildNativeEvent = exports.buildSingleWorkf
 const tslib_1 = __webpack_require__(403);
 const path_1 = tslib_1.__importDefault(__webpack_require__(622));
 const fast_glob_1 = tslib_1.__importDefault(__webpack_require__(344));
-const js_yaml_1 = tslib_1.__importDefault(__webpack_require__(627));
+const js_yaml_1 = tslib_1.__importDefault(__webpack_require__(251));
 const map_obj_1 = tslib_1.__importDefault(__webpack_require__(327));
 const fs_extra_1 = tslib_1.__importDefault(__webpack_require__(607));
 const log_1 = tslib_1.__importDefault(__webpack_require__(766));
@@ -45078,7 +43822,70 @@ exports.default = decodeCodePoint;
 
 /***/ }),
 /* 935 */,
-/* 936 */,
+/* 936 */
+/***/ (function(module) {
+
+"use strict";
+
+
+module.exports = {
+  MAX_LENGTH: 1024 * 64,
+
+  // Digits
+  CHAR_0: '0', /* 0 */
+  CHAR_9: '9', /* 9 */
+
+  // Alphabet chars.
+  CHAR_UPPERCASE_A: 'A', /* A */
+  CHAR_LOWERCASE_A: 'a', /* a */
+  CHAR_UPPERCASE_Z: 'Z', /* Z */
+  CHAR_LOWERCASE_Z: 'z', /* z */
+
+  CHAR_LEFT_PARENTHESES: '(', /* ( */
+  CHAR_RIGHT_PARENTHESES: ')', /* ) */
+
+  CHAR_ASTERISK: '*', /* * */
+
+  // Non-alphabetic chars.
+  CHAR_AMPERSAND: '&', /* & */
+  CHAR_AT: '@', /* @ */
+  CHAR_BACKSLASH: '\\', /* \ */
+  CHAR_BACKTICK: '`', /* ` */
+  CHAR_CARRIAGE_RETURN: '\r', /* \r */
+  CHAR_CIRCUMFLEX_ACCENT: '^', /* ^ */
+  CHAR_COLON: ':', /* : */
+  CHAR_COMMA: ',', /* , */
+  CHAR_DOLLAR: '$', /* . */
+  CHAR_DOT: '.', /* . */
+  CHAR_DOUBLE_QUOTE: '"', /* " */
+  CHAR_EQUAL: '=', /* = */
+  CHAR_EXCLAMATION_MARK: '!', /* ! */
+  CHAR_FORM_FEED: '\f', /* \f */
+  CHAR_FORWARD_SLASH: '/', /* / */
+  CHAR_HASH: '#', /* # */
+  CHAR_HYPHEN_MINUS: '-', /* - */
+  CHAR_LEFT_ANGLE_BRACKET: '<', /* < */
+  CHAR_LEFT_CURLY_BRACE: '{', /* { */
+  CHAR_LEFT_SQUARE_BRACKET: '[', /* [ */
+  CHAR_LINE_FEED: '\n', /* \n */
+  CHAR_NO_BREAK_SPACE: '\u00A0', /* \u00A0 */
+  CHAR_PERCENT: '%', /* % */
+  CHAR_PLUS: '+', /* + */
+  CHAR_QUESTION_MARK: '?', /* ? */
+  CHAR_RIGHT_ANGLE_BRACKET: '>', /* > */
+  CHAR_RIGHT_CURLY_BRACE: '}', /* } */
+  CHAR_RIGHT_SQUARE_BRACKET: ']', /* ] */
+  CHAR_SEMICOLON: ';', /* ; */
+  CHAR_SINGLE_QUOTE: '\'', /* ' */
+  CHAR_SPACE: ' ', /*   */
+  CHAR_TAB: '\t', /* \t */
+  CHAR_UNDERSCORE: '_', /* _ */
+  CHAR_VERTICAL_LINE: '|', /* | */
+  CHAR_ZERO_WIDTH_NOBREAK_SPACE: '\uFEFF' /* \uFEFF */
+};
+
+
+/***/ }),
 /* 937 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -45112,30 +43919,570 @@ module.exports = new Schema({
 
 /***/ }),
 /* 938 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
-var getTag = __webpack_require__(126),
-    isObjectLike = __webpack_require__(425);
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/** `Object#toString` result references. */
-var setTag = '[object Set]';
+var pathModule = __webpack_require__(622);
+var isWindows = process.platform === 'win32';
+var fs = __webpack_require__(747);
 
-/**
- * The base implementation of `_.isSet` without Node.js optimizations.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a set, else `false`.
- */
-function baseIsSet(value) {
-  return isObjectLike(value) && getTag(value) == setTag;
+// JavaScript implementation of realpath, ported from node pre-v6
+
+var DEBUG = process.env.NODE_DEBUG && /fs/.test(process.env.NODE_DEBUG);
+
+function rethrow() {
+  // Only enable in debug mode. A backtrace uses ~1000 bytes of heap space and
+  // is fairly slow to generate.
+  var callback;
+  if (DEBUG) {
+    var backtrace = new Error;
+    callback = debugCallback;
+  } else
+    callback = missingCallback;
+
+  return callback;
+
+  function debugCallback(err) {
+    if (err) {
+      backtrace.message = err.message;
+      err = backtrace;
+      missingCallback(err);
+    }
+  }
+
+  function missingCallback(err) {
+    if (err) {
+      if (process.throwDeprecation)
+        throw err;  // Forgot a callback but don't know where? Use NODE_DEBUG=fs
+      else if (!process.noDeprecation) {
+        var msg = 'fs: missing callback ' + (err.stack || err.message);
+        if (process.traceDeprecation)
+          console.trace(msg);
+        else
+          console.error(msg);
+      }
+    }
+  }
 }
 
-module.exports = baseIsSet;
+function maybeCallback(cb) {
+  return typeof cb === 'function' ? cb : rethrow();
+}
+
+var normalize = pathModule.normalize;
+
+// Regexp that finds the next partion of a (partial) path
+// result is [base_with_slash, base], e.g. ['somedir/', 'somedir']
+if (isWindows) {
+  var nextPartRe = /(.*?)(?:[\/\\]+|$)/g;
+} else {
+  var nextPartRe = /(.*?)(?:[\/]+|$)/g;
+}
+
+// Regex to find the device root, including trailing slash. E.g. 'c:\\'.
+if (isWindows) {
+  var splitRootRe = /^(?:[a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/][^\\\/]+)?[\\\/]*/;
+} else {
+  var splitRootRe = /^[\/]*/;
+}
+
+exports.realpathSync = function realpathSync(p, cache) {
+  // make p is absolute
+  p = pathModule.resolve(p);
+
+  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
+    return cache[p];
+  }
+
+  var original = p,
+      seenLinks = {},
+      knownHard = {};
+
+  // current character position in p
+  var pos;
+  // the partial path so far, including a trailing slash if any
+  var current;
+  // the partial path without a trailing slash (except when pointing at a root)
+  var base;
+  // the partial path scanned in the previous round, with slash
+  var previous;
+
+  start();
+
+  function start() {
+    // Skip over roots
+    var m = splitRootRe.exec(p);
+    pos = m[0].length;
+    current = m[0];
+    base = m[0];
+    previous = '';
+
+    // On windows, check that the root exists. On unix there is no need.
+    if (isWindows && !knownHard[base]) {
+      fs.lstatSync(base);
+      knownHard[base] = true;
+    }
+  }
+
+  // walk down the path, swapping out linked pathparts for their real
+  // values
+  // NB: p.length changes.
+  while (pos < p.length) {
+    // find the next part
+    nextPartRe.lastIndex = pos;
+    var result = nextPartRe.exec(p);
+    previous = current;
+    current += result[0];
+    base = previous + result[1];
+    pos = nextPartRe.lastIndex;
+
+    // continue if not a symlink
+    if (knownHard[base] || (cache && cache[base] === base)) {
+      continue;
+    }
+
+    var resolvedLink;
+    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
+      // some known symbolic link.  no need to stat again.
+      resolvedLink = cache[base];
+    } else {
+      var stat = fs.lstatSync(base);
+      if (!stat.isSymbolicLink()) {
+        knownHard[base] = true;
+        if (cache) cache[base] = base;
+        continue;
+      }
+
+      // read the link if it wasn't read before
+      // dev/ino always return 0 on windows, so skip the check.
+      var linkTarget = null;
+      if (!isWindows) {
+        var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
+        if (seenLinks.hasOwnProperty(id)) {
+          linkTarget = seenLinks[id];
+        }
+      }
+      if (linkTarget === null) {
+        fs.statSync(base);
+        linkTarget = fs.readlinkSync(base);
+      }
+      resolvedLink = pathModule.resolve(previous, linkTarget);
+      // track this, if given a cache.
+      if (cache) cache[base] = resolvedLink;
+      if (!isWindows) seenLinks[id] = linkTarget;
+    }
+
+    // resolve the link, then start over
+    p = pathModule.resolve(resolvedLink, p.slice(pos));
+    start();
+  }
+
+  if (cache) cache[original] = p;
+
+  return p;
+};
+
+
+exports.realpath = function realpath(p, cache, cb) {
+  if (typeof cb !== 'function') {
+    cb = maybeCallback(cache);
+    cache = null;
+  }
+
+  // make p is absolute
+  p = pathModule.resolve(p);
+
+  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
+    return process.nextTick(cb.bind(null, null, cache[p]));
+  }
+
+  var original = p,
+      seenLinks = {},
+      knownHard = {};
+
+  // current character position in p
+  var pos;
+  // the partial path so far, including a trailing slash if any
+  var current;
+  // the partial path without a trailing slash (except when pointing at a root)
+  var base;
+  // the partial path scanned in the previous round, with slash
+  var previous;
+
+  start();
+
+  function start() {
+    // Skip over roots
+    var m = splitRootRe.exec(p);
+    pos = m[0].length;
+    current = m[0];
+    base = m[0];
+    previous = '';
+
+    // On windows, check that the root exists. On unix there is no need.
+    if (isWindows && !knownHard[base]) {
+      fs.lstat(base, function(err) {
+        if (err) return cb(err);
+        knownHard[base] = true;
+        LOOP();
+      });
+    } else {
+      process.nextTick(LOOP);
+    }
+  }
+
+  // walk down the path, swapping out linked pathparts for their real
+  // values
+  function LOOP() {
+    // stop if scanned past end of path
+    if (pos >= p.length) {
+      if (cache) cache[original] = p;
+      return cb(null, p);
+    }
+
+    // find the next part
+    nextPartRe.lastIndex = pos;
+    var result = nextPartRe.exec(p);
+    previous = current;
+    current += result[0];
+    base = previous + result[1];
+    pos = nextPartRe.lastIndex;
+
+    // continue if not a symlink
+    if (knownHard[base] || (cache && cache[base] === base)) {
+      return process.nextTick(LOOP);
+    }
+
+    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
+      // known symbolic link.  no need to stat again.
+      return gotResolvedLink(cache[base]);
+    }
+
+    return fs.lstat(base, gotStat);
+  }
+
+  function gotStat(err, stat) {
+    if (err) return cb(err);
+
+    // if not a symlink, skip to the next path part
+    if (!stat.isSymbolicLink()) {
+      knownHard[base] = true;
+      if (cache) cache[base] = base;
+      return process.nextTick(LOOP);
+    }
+
+    // stat & read the link if not read before
+    // call gotTarget as soon as the link target is known
+    // dev/ino always return 0 on windows, so skip the check.
+    if (!isWindows) {
+      var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
+      if (seenLinks.hasOwnProperty(id)) {
+        return gotTarget(null, seenLinks[id], base);
+      }
+    }
+    fs.stat(base, function(err) {
+      if (err) return cb(err);
+
+      fs.readlink(base, function(err, target) {
+        if (!isWindows) seenLinks[id] = target;
+        gotTarget(err, target);
+      });
+    });
+  }
+
+  function gotTarget(err, target, base) {
+    if (err) return cb(err);
+
+    var resolvedLink = pathModule.resolve(previous, target);
+    if (cache) cache[base] = resolvedLink;
+    gotResolvedLink(resolvedLink);
+  }
+
+  function gotResolvedLink(resolvedLink) {
+    // resolve the link, then start over
+    p = pathModule.resolve(resolvedLink, p.slice(pos));
+    start();
+  }
+};
 
 
 /***/ }),
-/* 939 */,
+/* 939 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+/*!
+ * fill-range <https://github.com/jonschlinkert/fill-range>
+ *
+ * Copyright (c) 2014-present, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+const util = __webpack_require__(669);
+const toRegexRange = __webpack_require__(475);
+
+const isObject = val => val !== null && typeof val === 'object' && !Array.isArray(val);
+
+const transform = toNumber => {
+  return value => toNumber === true ? Number(value) : String(value);
+};
+
+const isValidValue = value => {
+  return typeof value === 'number' || (typeof value === 'string' && value !== '');
+};
+
+const isNumber = num => Number.isInteger(+num);
+
+const zeros = input => {
+  let value = `${input}`;
+  let index = -1;
+  if (value[0] === '-') value = value.slice(1);
+  if (value === '0') return false;
+  while (value[++index] === '0');
+  return index > 0;
+};
+
+const stringify = (start, end, options) => {
+  if (typeof start === 'string' || typeof end === 'string') {
+    return true;
+  }
+  return options.stringify === true;
+};
+
+const pad = (input, maxLength, toNumber) => {
+  if (maxLength > 0) {
+    let dash = input[0] === '-' ? '-' : '';
+    if (dash) input = input.slice(1);
+    input = (dash + input.padStart(dash ? maxLength - 1 : maxLength, '0'));
+  }
+  if (toNumber === false) {
+    return String(input);
+  }
+  return input;
+};
+
+const toMaxLen = (input, maxLength) => {
+  let negative = input[0] === '-' ? '-' : '';
+  if (negative) {
+    input = input.slice(1);
+    maxLength--;
+  }
+  while (input.length < maxLength) input = '0' + input;
+  return negative ? ('-' + input) : input;
+};
+
+const toSequence = (parts, options) => {
+  parts.negatives.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+  parts.positives.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+
+  let prefix = options.capture ? '' : '?:';
+  let positives = '';
+  let negatives = '';
+  let result;
+
+  if (parts.positives.length) {
+    positives = parts.positives.join('|');
+  }
+
+  if (parts.negatives.length) {
+    negatives = `-(${prefix}${parts.negatives.join('|')})`;
+  }
+
+  if (positives && negatives) {
+    result = `${positives}|${negatives}`;
+  } else {
+    result = positives || negatives;
+  }
+
+  if (options.wrap) {
+    return `(${prefix}${result})`;
+  }
+
+  return result;
+};
+
+const toRange = (a, b, isNumbers, options) => {
+  if (isNumbers) {
+    return toRegexRange(a, b, { wrap: false, ...options });
+  }
+
+  let start = String.fromCharCode(a);
+  if (a === b) return start;
+
+  let stop = String.fromCharCode(b);
+  return `[${start}-${stop}]`;
+};
+
+const toRegex = (start, end, options) => {
+  if (Array.isArray(start)) {
+    let wrap = options.wrap === true;
+    let prefix = options.capture ? '' : '?:';
+    return wrap ? `(${prefix}${start.join('|')})` : start.join('|');
+  }
+  return toRegexRange(start, end, options);
+};
+
+const rangeError = (...args) => {
+  return new RangeError('Invalid range arguments: ' + util.inspect(...args));
+};
+
+const invalidRange = (start, end, options) => {
+  if (options.strictRanges === true) throw rangeError([start, end]);
+  return [];
+};
+
+const invalidStep = (step, options) => {
+  if (options.strictRanges === true) {
+    throw new TypeError(`Expected step "${step}" to be a number`);
+  }
+  return [];
+};
+
+const fillNumbers = (start, end, step = 1, options = {}) => {
+  let a = Number(start);
+  let b = Number(end);
+
+  if (!Number.isInteger(a) || !Number.isInteger(b)) {
+    if (options.strictRanges === true) throw rangeError([start, end]);
+    return [];
+  }
+
+  // fix negative zero
+  if (a === 0) a = 0;
+  if (b === 0) b = 0;
+
+  let descending = a > b;
+  let startString = String(start);
+  let endString = String(end);
+  let stepString = String(step);
+  step = Math.max(Math.abs(step), 1);
+
+  let padded = zeros(startString) || zeros(endString) || zeros(stepString);
+  let maxLen = padded ? Math.max(startString.length, endString.length, stepString.length) : 0;
+  let toNumber = padded === false && stringify(start, end, options) === false;
+  let format = options.transform || transform(toNumber);
+
+  if (options.toRegex && step === 1) {
+    return toRange(toMaxLen(start, maxLen), toMaxLen(end, maxLen), true, options);
+  }
+
+  let parts = { negatives: [], positives: [] };
+  let push = num => parts[num < 0 ? 'negatives' : 'positives'].push(Math.abs(num));
+  let range = [];
+  let index = 0;
+
+  while (descending ? a >= b : a <= b) {
+    if (options.toRegex === true && step > 1) {
+      push(a);
+    } else {
+      range.push(pad(format(a, index), maxLen, toNumber));
+    }
+    a = descending ? a - step : a + step;
+    index++;
+  }
+
+  if (options.toRegex === true) {
+    return step > 1
+      ? toSequence(parts, options)
+      : toRegex(range, null, { wrap: false, ...options });
+  }
+
+  return range;
+};
+
+const fillLetters = (start, end, step = 1, options = {}) => {
+  if ((!isNumber(start) && start.length > 1) || (!isNumber(end) && end.length > 1)) {
+    return invalidRange(start, end, options);
+  }
+
+
+  let format = options.transform || (val => String.fromCharCode(val));
+  let a = `${start}`.charCodeAt(0);
+  let b = `${end}`.charCodeAt(0);
+
+  let descending = a > b;
+  let min = Math.min(a, b);
+  let max = Math.max(a, b);
+
+  if (options.toRegex && step === 1) {
+    return toRange(min, max, false, options);
+  }
+
+  let range = [];
+  let index = 0;
+
+  while (descending ? a >= b : a <= b) {
+    range.push(format(a, index));
+    a = descending ? a - step : a + step;
+    index++;
+  }
+
+  if (options.toRegex === true) {
+    return toRegex(range, null, { wrap: false, options });
+  }
+
+  return range;
+};
+
+const fill = (start, end, step, options = {}) => {
+  if (end == null && isValidValue(start)) {
+    return [start];
+  }
+
+  if (!isValidValue(start) || !isValidValue(end)) {
+    return invalidRange(start, end, options);
+  }
+
+  if (typeof step === 'function') {
+    return fill(start, end, 1, { transform: step });
+  }
+
+  if (isObject(step)) {
+    return fill(start, end, 0, step);
+  }
+
+  let opts = { ...options };
+  if (opts.capture === true) opts.wrap = true;
+  step = step || opts.step || 1;
+
+  if (!isNumber(step)) {
+    if (step != null && !isObject(step)) return invalidStep(step, opts);
+    return fill(start, end, 1, step);
+  }
+
+  if (isNumber(start) && isNumber(end)) {
+    return fillNumbers(start, end, step, opts);
+  }
+
+  return fillLetters(start, end, Math.max(Math.abs(step), 1), opts);
+};
+
+module.exports = fill;
+
+
+/***/ }),
 /* 940 */,
 /* 941 */,
 /* 942 */
@@ -45373,7 +44720,665 @@ module.exports = path_ => {
 
 
 /***/ }),
-/* 951 */,
+/* 951 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+/** @module cacheManager/multiCaching */
+var async = __webpack_require__(448);
+var CallbackFiller = __webpack_require__(443);
+var utils = __webpack_require__(564);
+var isObject = utils.isObject;
+var parseWrapArguments = utils.parseWrapArguments;
+
+/**
+ * Module that lets you specify a hierarchy of caches.
+ *
+ * @param {array} caches - Array of caching objects.
+ * @param {object} [options]
+ * @param {function} [options.isCacheableValue] - A callback function which is called
+ *   with every value returned from cache or from a wrapped function. This lets you specify
+ *   which values should and should not be cached. If the function returns true, it will be
+ *   stored in cache. By default it caches everything except undefined.
+ *
+ *   If an underlying cache specifies its own isCacheableValue function, that function will
+ *   be used instead of the multiCaching's _isCacheableValue function.
+ */
+var multiCaching = function(caches, options) {
+    var self = {};
+    options = options || {};
+
+    var Promise = options.promiseDependency || global.Promise;
+
+    if (!Array.isArray(caches)) {
+        throw new Error('multiCaching requires an array of caches');
+    }
+
+    var callbackFiller = new CallbackFiller();
+    var backgroundQueue = new Set();
+
+    if (typeof options.isCacheableValue === 'function') {
+        self._isCacheableValue = options.isCacheableValue;
+    } else {
+        self._isCacheableValue = function(value) {
+            return value !== undefined;
+        };
+    }
+
+    /**
+     * If the underlying cache specifies its own isCacheableValue function (such
+     * as how node-cache-manager-redis does), use that function, otherwise use
+     * self._isCacheableValue function.
+     */
+    function getIsCacheableValueFunction(cache) {
+        if (cache.store && typeof cache.store.isCacheableValue === 'function') {
+            return cache.store.isCacheableValue.bind(cache.store);
+        } else {
+            return self._isCacheableValue;
+        }
+    }
+
+    function getFromHighestPriorityCachePromise() {
+        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
+            return typeof v !== 'undefined';
+        });
+
+        return new Promise(function(resolve, reject) {
+            var cb = function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            };
+            args.push(cb);
+            getFromHighestPriorityCache.apply(null, args);
+        });
+    }
+
+    function getFromHighestPriorityCache() {
+        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
+            return typeof v !== 'undefined';
+        });
+        var cb;
+        var options = {};
+
+        if (typeof args[args.length - 1] === 'function') {
+            cb = args.pop();
+        }
+
+        if (!cb) {
+            return getFromHighestPriorityCachePromise.apply(this, args);
+        }
+
+        if (isObject(args[args.length - 1])) {
+            options = args.pop();
+        }
+
+        /**
+         * Keep a copy of the keys to retrieve
+         */
+        var keys = Array.prototype.slice.apply(args);
+        var multi = keys.length > 1;
+
+        /**
+         * Then put back the options in the args Array
+         */
+        args.push(options);
+
+        if (multi) {
+            /**
+             * Keep track of the keys left to fetch accross the caches
+             */
+            var keysToFetch = Array.prototype.slice.apply(keys);
+
+            /**
+             * Hash to save our multi keys result
+             */
+            var mapResult = {};
+        }
+
+        var i = 0;
+        async.eachSeries(caches, function(cache, next) {
+            var callback = function(err, result) {
+                if (err) {
+                    return next(err);
+                }
+
+                var _isCacheableValue = getIsCacheableValueFunction(cache);
+
+                if (multi) {
+                    addResultToMap(result, _isCacheableValue);
+
+                    if (keysToFetch.length === 0 || i === caches.length - 1) {
+                        // Return an Array with the values merged from all the caches
+                        return cb(null, keys.map(function(k) {
+                            return mapResult[k] || undefined;
+                        }), i);
+                    }
+                } else if (_isCacheableValue(result)) {
+                    // break out of async loop.
+                    return cb(err, result, i);
+                }
+
+                i += 1;
+                next();
+            };
+
+            if (multi) {
+                if (typeof cache.store.mget !== 'function') {
+                    /**
+                     * Silently fail for store that don't support mget()
+                     */
+                    return callback(null, []);
+                }
+                var _args = Array.prototype.slice.apply(keysToFetch);
+                _args.push(options);
+                _args.push(callback);
+                cache.store.mget.apply(cache.store, _args);
+            } else {
+                cache.store.get(args[0], options, callback);
+            }
+        }, function(err, result) {
+            return cb(err, result);
+        });
+
+        function addResultToMap(result, isCacheable) {
+            var key;
+            var diff = 0;
+
+            /**
+             * We loop through the result and if the value
+             * is cacheable we add it to the mapResult hash
+             * and remove the key to fetch from the "keysToFetch" array
+             */
+            result.forEach(function(res, i) {
+                if (isCacheable(res)) {
+                    key = keysToFetch[i - diff];
+
+                    // Add the result to our map
+                    mapResult[key] = res;
+
+                    // delete key from our keysToFetch array
+                    keysToFetch.splice(i - diff, 1);
+                    diff += 1;
+                }
+            });
+        }
+    }
+
+    function setInMultipleCachesPromise() {
+        var args = Array.prototype.slice.apply(arguments);
+
+        return new Promise(function(resolve, reject) {
+            var cb = function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            };
+            args.push(cb);
+            setInMultipleCaches.apply(null, args);
+        });
+    }
+
+    function setInMultipleCaches() {
+        var args = Array.prototype.slice.apply(arguments);
+        var _caches = Array.isArray(args[0]) ? args.shift() : caches;
+
+        var cb;
+        var options = {};
+
+        if (typeof args[args.length - 1] === 'function') {
+            cb = args.pop();
+        }
+
+        if (!cb) {
+            return setInMultipleCachesPromise.apply(this, args);
+        }
+
+        if (args.length % 2 > 0 && isObject(args[args.length - 1])) {
+            options = args.pop();
+        }
+
+        var length = args.length;
+        var multi = length > 2;
+        var i;
+
+        async.each(_caches, function(cache, next) {
+            var _isCacheableValue = getIsCacheableValueFunction(cache);
+            var keysValues = Array.prototype.slice.apply(args);
+
+            /**
+             * We filter out the keys *not* cacheable
+             */
+            for (i = 0; i < length; i += 2) {
+                if (!_isCacheableValue(keysValues[i + 1])) {
+                    keysValues.splice(i, 2);
+                }
+            }
+
+            if (keysValues.length === 0) {
+                return next();
+            }
+
+            var cacheOptions = options;
+            if (typeof options.ttl === 'function') {
+                /**
+                 * Dynamically set the ttl by context depending of the store
+                 */
+                cacheOptions = {};
+                cacheOptions.ttl = options.ttl(keysValues, cache.store.name);
+            }
+
+            if (multi) {
+                if (typeof cache.store.mset !== 'function') {
+                    /**
+                     * Silently fail for store that don't support mset()
+                     */
+                    return next();
+                }
+                keysValues.push(cacheOptions);
+                keysValues.push(next);
+
+                cache.store.mset.apply(cache.store, keysValues);
+            } else {
+                cache.store.set(keysValues[0], keysValues[1], cacheOptions, next);
+            }
+        }, function(err, result) {
+            cb(err, result);
+        });
+    }
+
+    function getAndPassUpPromise(key) {
+        return new Promise(function(resolve, reject) {
+            self.getAndPassUp(key, function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    /**
+     * Looks for an item in cache tiers.
+     * When a key is found in a lower cache, all higher levels are updated.
+     *
+     * @param {string} key
+     * @param {function} cb
+     */
+    self.getAndPassUp = function(key, cb) {
+        if (!cb) {
+            return getAndPassUpPromise(key);
+        }
+
+        getFromHighestPriorityCache(key, function(err, result, index) {
+            if (err) {
+                return cb(err);
+            }
+
+            if (index) {
+                var cachesToUpdate = caches.slice(0, index);
+                async.each(cachesToUpdate, function(cache, next) {
+                    var _isCacheableValue = getIsCacheableValueFunction(cache);
+                    if (_isCacheableValue(result)) {
+                        // We rely on the cache module's default TTL
+                        cache.set(key, result, next);
+                    }
+                });
+            }
+
+            return cb(err, result);
+        });
+    };
+
+    function wrapPromise(key, promise, options) {
+        return new Promise(function(resolve, reject) {
+            self.wrap(key, function(cb) {
+                Promise.resolve()
+                    .then(promise)
+                    .then(function(result) {
+                        cb(null, result);
+                    })
+                    .catch(cb);
+            }, options, function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    function handleBackgroundRefresh(caches, index, key, work, options) {
+        if (caches[index].refreshThreshold && !backgroundQueue.has(key)) {
+            backgroundQueue.add(key);
+            caches[index].checkRefreshThreshold(key, function(err, isExpiring) {
+                if (err) {
+                    backgroundQueue.delete(key);
+                    return;
+                }
+                if (isExpiring) {
+                    work(function(workErr, workData) {
+                        if (workErr || !self._isCacheableValue(workData)) {
+                            backgroundQueue.delete(key);
+                            return;
+                        }
+                        var args = [caches, key, workData, options, function() {
+                            backgroundQueue.delete(key);
+                        }];
+                        setInMultipleCaches.apply(null, args);
+                    });
+                } else {
+                    backgroundQueue.delete(key);
+                }
+            });
+        }
+    }
+
+    /**
+     * Wraps a function in one or more caches.
+     * Has same API as regular caching module.
+     *
+     * If a key doesn't exist in any cache, it gets set in all caches.
+     * If a key exists in a high-priority (e.g., first) cache, it gets returned immediately
+     * without getting set in other lower-priority caches.
+     * If a key doesn't exist in a higher-priority cache but exists in a lower-priority
+     * cache, it gets set in all higher-priority caches.
+     * You can pass any number of keys as long as the wrapped function returns
+     * an array with the same number of values and in the same order.
+     *
+     * @function
+     * @name wrap
+     *
+     * @param {string} key - The cache key to use in cache operations. Can be one or many.
+     * @param {function} work - The function to wrap
+     * @param {object} [options] - options passed to `set` function
+     * @param {function} cb
+     */
+    self.wrap = function() {
+        var parsedArgs = parseWrapArguments(Array.prototype.slice.apply(arguments));
+        var keys = parsedArgs.keys;
+        var work = parsedArgs.work;
+        var options = parsedArgs.options;
+        var cb = parsedArgs.cb;
+
+        if (!cb) {
+            keys.push(work);
+            keys.push(options);
+            return wrapPromise.apply(this, keys);
+        }
+
+        if (keys.length > 1) {
+            /**
+             * Handle more than 1 key
+             */
+            return wrapMultiple(keys, work, options, cb);
+        }
+
+        var key = keys[0];
+
+        var hasKey = callbackFiller.has(key);
+        callbackFiller.add(key, {cb: cb});
+        if (hasKey) { return; }
+
+        getFromHighestPriorityCache(key, function(err, result, index) {
+            if (err) {
+                return callbackFiller.fill(key, err);
+            } else if (self._isCacheableValue(result)) {
+                handleBackgroundRefresh(caches, index, key, work, options);
+                var cachesToUpdate = caches.slice(0, index);
+                var args = [cachesToUpdate, key, result, options, function(err) {
+                    callbackFiller.fill(key, err, result);
+                }];
+
+                setInMultipleCaches.apply(null, args);
+            } else {
+                work(function(err, data) {
+                    if (err) {
+                        return callbackFiller.fill(key, err);
+                    }
+
+                    if (!self._isCacheableValue(data)) {
+                        return callbackFiller.fill(key, err, data);
+                    }
+
+                    var args = [caches, key, data, options, function(err) {
+                        callbackFiller.fill(key, err, data);
+                    }];
+
+                    setInMultipleCaches.apply(null, args);
+                });
+            }
+        });
+    };
+
+    function wrapMultiple(keys, work, options, cb) {
+        /**
+         * We create a unique key for the multiple keys
+         * by concatenating them
+         */
+        var combinedKey = keys.reduce(function(acc, k) {
+            return acc + k;
+        }, '');
+
+        var hasKey = callbackFiller.has(combinedKey);
+        callbackFiller.add(combinedKey, {cb: cb});
+        if (hasKey) { return; }
+
+        keys.push(options);
+        keys.push(onResult);
+
+        /**
+         * Get from all the caches. If multiple keys have been passed,
+         * we'll go through all the caches and merge the result
+         */
+        getFromHighestPriorityCache.apply(this, keys);
+
+        function onResult(err, result, index) {
+            if (err) {
+                return done(err);
+            }
+
+            /**
+             * If all the values returned are cacheable we don't need
+             * to call our "work" method and the values returned by the cache
+             * are valid. If one or more of the values is not cacheable
+             * the cache result is not valid.
+             */
+            var cacheOK = result.filter(function(_result) {
+                return self._isCacheableValue(_result);
+            }).length === result.length;
+
+            if (!cacheOK) {
+                /**
+                 * We need to fetch the data first
+                 */
+                return work(workCallback);
+            }
+
+            var cachesToUpdate = caches.slice(0, index);
+
+            /**
+             * Prepare arguments to set the values in
+             * higher priority caches
+             */
+            var _args = [cachesToUpdate];
+
+            /**
+             * Add the {key, value} pair
+             */
+            result.forEach(function(value, i) {
+                _args.push(keys[i]);
+                _args.push(value);
+            });
+
+            /**
+             * Add options and final callback
+             */
+            _args.push(options);
+            _args.push(function(err) {
+                done(err, result);
+            });
+
+            return setInMultipleCaches.apply(null, _args);
+
+            /**
+             * Wrapped function callback
+             */
+            function workCallback(err, data) {
+                if (err) {
+                    return done(err);
+                }
+
+                /**
+                 * Prepare arguments for "setInMultipleCaches"
+                 */
+                var _args;
+
+                _args = [];
+                data.forEach(function(value, i) {
+                    /**
+                     * Add the {key, value} pair to the args
+                     * array that we will send to mset()
+                     */
+                    if (self._isCacheableValue(value)) {
+                        _args.push(keys[i]);
+                        _args.push(value);
+                    }
+                });
+                // If no key,value --> exit
+                if (_args.length === 0) {
+                    return done(null);
+                }
+
+                /**
+                 * Add options and final callback
+                 */
+                _args.push(options);
+                _args.push(function(err) {
+                    done(err, data);
+                });
+
+                setInMultipleCaches.apply(null, _args);
+            }
+
+            /**
+             * Final callback
+             */
+            function done(err, data) {
+                callbackFiller.fill(combinedKey, err, data);
+            }
+        }
+    }
+
+    /**
+     * Set value in all caches
+     *
+     * @function
+     * @name set
+     *
+     * @param {string} key
+     * @param {*} value
+     * @param {object} [options] to pass to underlying set function.
+     * @param {function} [cb]
+     */
+    self.set = setInMultipleCaches;
+
+    /**
+     * Set multiple values in all caches
+     * Accepts an unlimited pair of {key, value}
+     *
+     * @function
+     * @name mset
+     *
+     * @param {string} key
+     * @param {*} value
+     * @param {string} [key2]
+     * @param {*} [value2]
+     * @param {object} [options] to pass to underlying set function.
+     * @param {function} [cb]
+     */
+    self.mset = setInMultipleCaches;
+
+    /**
+     * Get value from highest level cache that has stored it.
+     *
+     * @function
+     * @name get
+     *
+     * @param {string} key
+     * @param {object} [options] to pass to underlying get function.
+     * @param {function} cb
+     */
+    self.get = getFromHighestPriorityCache;
+
+    /**
+     * Get multiple value from highest level cache that has stored it.
+     * If some values are not found, the next highest cache is used
+     * until either all keys are found or all caches have been fetched.
+     * Accepts an unlimited number of keys.
+     *
+     * @function
+     * @name mget
+     *
+     * @param {string} key key to get (any number)
+     * @param {object} [options] to pass to underlying get function.
+     * @param {function} cb optional callback
+     */
+    self.mget = getFromHighestPriorityCache;
+
+    /**
+     * Delete value from all caches.
+     *
+     * @function
+     * @name del
+     *
+     * @param {string} key
+     * @param {object} [options] to pass to underlying del function.
+     * @param {function} cb
+     */
+    self.del = function() {
+        var args = Array.prototype.slice.apply(arguments);
+        var cb;
+        var options = {};
+
+        if (typeof args[args.length - 1] === 'function') {
+            cb = args.pop();
+        }
+
+        if (isObject(args[args.length - 1])) {
+            options = args.pop();
+        }
+
+        args.push(options);
+        async.each(caches, function(cache, next) {
+            var _args = Array.prototype.slice.apply(args);
+            _args.push(next);
+            cache.store.del.apply(cache.store, _args);
+        }, cb);
+    };
+
+    /**
+     * Reset all caches.
+     *
+     * @function
+     * @name reset
+     *
+     * @param {function} cb
+     */
+    self.reset = function(cb) {
+        async.each(caches, function(cache, next) {
+            cache.store.reset(next);
+        }, cb);
+    };
+
+    return self;
+};
+
+module.exports = multiCaching;
+
+
+/***/ }),
 /* 952 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -46560,7 +46565,7 @@ module.exports = (
 /** @namespace cacheManager */
 var cacheManager = {
     caching: __webpack_require__(741),
-    multiCaching: __webpack_require__(175)
+    multiCaching: __webpack_require__(951)
 };
 
 module.exports = cacheManager;
@@ -46715,41 +46720,22 @@ exports.default = ReaderSync;
 
 /***/ }),
 /* 988 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
-
-
-const utils = __webpack_require__(872);
-
-module.exports = (ast, options = {}) => {
-  let stringify = (node, parent = {}) => {
-    let invalidBlock = options.escapeInvalid && utils.isInvalidBrace(parent);
-    let invalidNode = node.invalid === true && options.escapeInvalid === true;
-    let output = '';
-
-    if (node.value) {
-      if ((invalidBlock || invalidNode) && utils.isOpenOrClose(node)) {
-        return '\\' + node.value;
-      }
-      return node.value;
-    }
-
-    if (node.value) {
-      return node.value;
-    }
-
-    if (node.nodes) {
-      for (let child of node.nodes) {
-        output += stringify(child);
-      }
-    }
-    return output;
+/**
+ * The base implementation of `_.unary` without support for storing metadata.
+ *
+ * @private
+ * @param {Function} func The function to cap arguments for.
+ * @returns {Function} Returns the new capped function.
+ */
+function baseUnary(func) {
+  return function(value) {
+    return func(value);
   };
+}
 
-  return stringify(ast);
-};
-
+module.exports = baseUnary;
 
 
 /***/ }),
@@ -46782,7 +46768,21 @@ module.exports = objectToString;
 
 /***/ }),
 /* 990 */,
-/* 991 */,
+/* 991 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+
+
+var Type = __webpack_require__(773);
+
+module.exports = new Type('tag:yaml.org,2002:map', {
+  kind: 'mapping',
+  construct: function (data) { return data !== null ? data : {}; }
+});
+
+
+/***/ }),
 /* 992 */,
 /* 993 */,
 /* 994 */,
