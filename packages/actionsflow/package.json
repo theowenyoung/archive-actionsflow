@@ -14,7 +14,7 @@
     "start": "tsc -w -p tsconfig.production.json",
     "build": "tsc -p tsconfig.production.json",
     "test": "tsdx test",
-    "lint": "eslint --fix ./src && prettier --write ./src",
+    "lint": "eslint --fix ./src && prettier --write --loglevel warn ./src",
     "clean": "rimraf ./dist",
     "prepare": "npm run build",
     "hooks:pre-commit": "npm run lint"
