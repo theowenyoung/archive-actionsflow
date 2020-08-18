@@ -1,0 +1,13 @@
+on:
+  telegram_bot:
+    token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+jobs:
+  ifttt:
+    name: Make a Request to IFTTT
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alfredosalzillo/ifttt-webhook-action@v1
+        with:
+          event: test
+          key: ${{ secrets.IFTTT_KEY }}
+          value1: ${{ toJson(on.telegram_bot.outputs) }}

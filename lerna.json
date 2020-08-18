@@ -1,0 +1,25 @@
+{
+  "packages": ["packages/*"],
+  "version": "independent",
+  "command": {
+    "create": {
+      "license": "MIT"
+    },
+    "publish": {
+      "allowBranch": "main",
+      "bump": "patch",
+      "conventionalCommits": true,
+      "message": "chore(release): publish"
+    }
+  },
+  "npmClient": "yarn",
+  "registry": "https://registry.npmjs.org/",
+  "useWorkspaces": true,
+  "ignoreChanges": [
+    "CHANGELOG.md",
+    "*.md",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/__testfixtures__/**"
+  ]
+}

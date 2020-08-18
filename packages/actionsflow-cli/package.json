@@ -1,0 +1,55 @@
+{
+  "name": "actionsflow-cli",
+  "version": "0.0.5",
+  "description": "Actionsflow Command line ",
+  "keywords": [
+    "actionsflow",
+    "github",
+    "workflow"
+  ],
+  "author": "Owen Young <theowenyoung@gmail.com>",
+  "homepage": "https://actionsflow.github.io",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc -w -p tsconfig.production.json",
+    "build": "tsc -p tsconfig.production.json",
+    "build:em": "tsc -p tsconfig.json",
+    "test": "tsdx test",
+    "lint": "eslint --fix ./src && prettier --write ./src",
+    "prepare": "npm run build",
+    "clean": "rimraf ./dist",
+    "hooks:pre-commit": "npm run lint"
+  },
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actionsflow/actionsflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.10.4",
+    "@types/semver": "^7.3.2",
+    "@types/update-notifier": "^4.1.1",
+    "chalk": "^4.1.0",
+    "loglevel": "^1.6.8",
+    "loglevel-plugin-prefix": "^0.8.4",
+    "resolve-cwd": "^3.0.0",
+    "semver": "^7.3.2",
+    "update-notifier": "^4.1.0",
+    "yargs": "^15.4.1"
+  },
+  "gitHead": "c0fa784300ff8ccb860c84b9c507f9532f80f2fd"
+}

@@ -1,0 +1,43 @@
+{
+  "name": "actionsflow-action",
+  "version": "0.0.4",
+  "private": true,
+  "description": "Actionsflow action",
+  "keywords": [
+    "actionsflow"
+  ],
+  "author": "Owen Young <theowenyoung@gmail.com>",
+  "homepage": "https://actionsflow.github.io",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actionsflow/actionsflow.git"
+  },
+  "scripts": {
+    "start": "tsc -w -p tsconfig.production.json",
+    "build": "ncc build src/index.ts",
+    "test": "tsdx test",
+    "lint": "eslint --fix ./src && prettier --write ./src",
+    "prepare": "npm run build",
+    "clean": "rimraf ./dist",
+    "hooks:pre-commit": "npm run lint"
+  },
+  "bugs": {
+    "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "actionsflow": "^0.0.5"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.3"
+  }
+}

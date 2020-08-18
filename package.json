@@ -1,0 +1,50 @@
+{
+  "name": "root",
+  "private": true,
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "scripts": {
+    "start": "lerna run --parallel start",
+    "clean": "lerna run --parallel clean",
+    "prepare": "npm run clean && lerna run prepare",
+    "build": "npm run clean && lerna run build",
+    "release": "lerna publish",
+    "lint": "lerna run --parallel lint",
+    "bootstrap": "lerna bootstrap",
+    "lerna": "lerna",
+    "cm": "npx git-cz",
+    "build:example": "cd examples && ../packages/actionsflow/lib/bin/actionsflow.js build",
+    "clean:example": "cd examples && ../packages/actionsflow/lib/bin/actionsflow.js clean",
+    "actionsflow": "./packages/actionsflow/lib/bin/actionsflow.js"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@types/jest": "^26.0.10",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "cz-conventional-changelog": "^3.2.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "git-cz": "^4.7.0",
+    "husky": "^4.2.5",
+    "jest": "^26.4.0",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.2.0",
+    "tsdx": "^0.13.2",
+    "tslib": "^2.0.1",
+    "typescript": "^3.9.7"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  }
+}

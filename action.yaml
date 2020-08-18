@@ -1,0 +1,13 @@
+name: "Actionsflow Action"
+description: "Run actionsflow in github"
+inputs:
+  workflow:
+    description: "test"
+    required: false
+
+runs:
+  using: "node12"
+  main: "packages/actionsflow-action/dist/index.js"
+branding:
+  icon: "send"
+  color: "blue"
