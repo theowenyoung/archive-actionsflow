@@ -12,6 +12,7 @@
     "prepare": "npm run clean && lerna run prepare",
     "build": "npm run clean && lerna run build",
     "release": "lerna publish",
+    "test": "lerna run test",
     "lint": "lerna run --parallel lint",
     "bootstrap": "lerna bootstrap",
     "lerna": "lerna",

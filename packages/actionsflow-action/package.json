@@ -24,7 +24,7 @@
   "scripts": {
     "start": "tsc -w -p tsconfig.production.json",
     "build": "ncc build src/index.ts",
-    "test": "tsdx test",
+    "test": "jest --passWithNoTests",
     "lint": "eslint --fix ./src && prettier --write  --loglevel warn ./src",
     "prepare": "npm run build",
     "clean": "rimraf ./dist",

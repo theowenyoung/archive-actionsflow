@@ -13,7 +13,7 @@
   "scripts": {
     "start": "tsc -w -p tsconfig.production.json",
     "build": "tsc -p tsconfig.production.json",
-    "test": "tsdx test",
+    "test": "jest --passWithNoTests",
     "lint": "eslint --fix ./src && prettier --write --loglevel warn ./src",
     "clean": "rimraf ./dist",
     "prepare": "npm run build",
