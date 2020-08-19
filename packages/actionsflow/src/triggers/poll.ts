@@ -5,20 +5,18 @@ import get from "lodash.get";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  IItem,
   ITriggerRunFunctionResult,
-  TriggerName,
   IHelpers,
   AnyObject,
-} from "../interfaces";
+} from "actionsflow-interface";
 
 export default class Poll implements ITriggerClassType {
-  name: TriggerName = "poll";
+  name = "poll";
   options: AnyObject = {};
   helpers: IHelpers;
   every = 5;
   shouldDeduplicate = true;
-  getItemKey(item: IItem): string {
+  getItemKey(item: AnyObject): string {
     // TODO adapt every cases
     const deduplication_key = this.options.deduplication_key;
     if (deduplication_key) {
@@ -48,7 +46,7 @@ export default class Poll implements ITriggerClassType {
     if (!url) {
       throw new Error("Miss param url!");
     }
-    const items: IItem[] = [];
+    const items: AnyObject[] = [];
     const config: AxiosRequestConfig = {
       ...requestOptions,
       url: url as string,
@@ -69,7 +67,7 @@ export default class Poll implements ITriggerClassType {
     }
     // For now we just take the items and ignore everything else
     if (requestResult && requestResult.data) {
-      const itemsArray: IItem[] = items_path
+      const itemsArray: AnyObject[] = items_path
         ? get(requestResult.data, items_path)
         : requestResult.data;
       const deepClonedData = clonedeep(itemsArray);

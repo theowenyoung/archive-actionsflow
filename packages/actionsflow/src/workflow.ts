@@ -11,10 +11,9 @@ import {
   ITriggerContext,
   ITrigger,
   IWorkflow,
-  TriggerName,
   AnyObject,
   ITriggerClassTypeConstructable,
-} from "./interfaces";
+} from "actionsflow-interface";
 
 const getSupportedTriggers = (
   doc: AnyObject,
@@ -39,7 +38,7 @@ const getSupportedTriggers = (
     const onObj = doc.on as Record<string, Record<string, unknown>>;
     const keys = Object.keys(onObj);
     for (let index = 0; index < keys.length; index++) {
-      const key = keys[index] as TriggerName;
+      const key = keys[index] as string;
       if (supportTriggerIds.includes(key)) {
         // is active
         if (!(onObj[key] && onObj[key].active === false)) {

@@ -2,16 +2,15 @@ import * as Triggers from "./triggers";
 import { createContentDigest, getCache } from "./helpers";
 import log from "./log";
 import {
-  TriggerName,
   ITriggerContext,
   ITriggerResult,
-  IItem,
+  AnyObject,
   ITriggerClassTypeConstructable,
-} from "./interfaces";
-const MAX_CACHE_KEYS_COUNT = 1000;
+} from "actionsflow-interface";
+const MAX_CACHE_KEYS_COUNT = 5000;
 interface ITriggerOptions {
   trigger: {
-    name: TriggerName;
+    name: string;
     options: Record<string, unknown>;
     workflowRelativePath: string;
   };
@@ -99,7 +98,7 @@ export const run = async ({
       // duplicate
       const getItemKeyFn =
         getItemKey ||
-        ((item: IItem): string => {
+        ((item: AnyObject): string => {
           if (item.guid) return item.guid as string;
           if (item.id) return item.id as string;
           return createContentDigest(item);
@@ -131,7 +130,7 @@ export const run = async ({
       // if save to cache
       if (items.length > 0) {
         deduplicationKeys = (deduplicationKeys as string[]).concat(
-          items.map((item: IItem) => getItemKeyFn(item))
+          items.map((item: AnyObject) => getItemKeyFn(item))
         );
         deduplicationKeys = (deduplicationKeys as string[]).slice(
           -MAX_CACHE_KEYS_COUNT

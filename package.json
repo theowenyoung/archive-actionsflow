@@ -7,7 +7,7 @@
     }
   },
   "scripts": {
-    "start": "lerna run --parallel start",
+    "start": "npm run build && lerna run --parallel start",
     "clean": "lerna run --parallel clean",
     "prepare": "npm run clean && lerna run prepare",
     "build": "npm run clean && lerna run build",

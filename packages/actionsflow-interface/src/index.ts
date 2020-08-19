@@ -1,15 +1,7 @@
-export interface IObject {
-  [key: string]: unknown;
-}
 export type AnyObject = Record<string, unknown>;
 export interface IGithub {
   event: AnyObject;
   [key: string]: unknown;
-}
-
-export interface ITriggerContext extends AnyObject {
-  secrets: Record<string, string>;
-  github: IGithub;
 }
 export interface IHelpers {
   createContentDigest: (input: unknown) => string;
@@ -18,24 +10,26 @@ export interface IHelpers {
     set: (key: string, value: unknown) => Promise<unknown>;
   };
 }
+export interface ITriggerContext extends AnyObject {
+  secrets: Record<string, string>;
+  github: IGithub;
+}
+
 export interface ITriggerContructorParams {
   options: AnyObject;
   helpers: IHelpers;
   context: ITriggerContext;
 }
-export interface IItem {
-  [key: string]: unknown;
-}
+
 export interface ITriggerRunFunctionResult {
-  items: IItem[];
+  items: AnyObject[];
 }
-export type TriggerName = "rss" | "telegram_bot" | "webhook" | "poll";
 
 export interface ITriggerClassType {
-  name: TriggerName;
+  name: string;
   every?: number;
   shouldDeduplicate?: boolean;
-  getItemKey?: (item: IItem) => string;
+  getItemKey?: (item: AnyObject) => string;
   run(): Promise<ITriggerRunFunctionResult>;
 }
 export interface ITriggerClassTypeConstructable {
@@ -43,18 +37,17 @@ export interface ITriggerClassTypeConstructable {
 }
 export interface ITrigger {
   id?: string;
-  name: TriggerName;
+  name: string;
   options: AnyObject;
   payload?: AnyObject;
 }
-
+export interface ITriggerResult {
+  id: string;
+  items: AnyObject[];
+}
 export interface IWorkflow {
   path: string;
   relativePath: string;
   data: AnyObject;
   triggers: ITrigger[];
-}
-export interface ITriggerResult {
-  id: string;
-  items: IItem[];
 }

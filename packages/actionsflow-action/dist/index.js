@@ -10696,7 +10696,7 @@ const tslib_1 = __webpack_require__(403);
 const Triggers = tslib_1.__importStar(__webpack_require__(241));
 const helpers_1 = __webpack_require__(210);
 const log_1 = tslib_1.__importDefault(__webpack_require__(766));
-const MAX_CACHE_KEYS_COUNT = 1000;
+const MAX_CACHE_KEYS_COUNT = 5000;
 exports.run = ({ trigger, context, }) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     log_1.default.debug("trigger:", trigger);
     let triggerId = "";

@@ -3,20 +3,18 @@ import axios, { AxiosRequestConfig } from "axios";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  IItem,
-  TriggerName,
   ITriggerRunFunctionResult,
   AnyObject,
   IHelpers,
-} from "../interfaces";
+} from "actionsflow-interface";
 
 export default class TelegramBot implements ITriggerClassType {
-  name: TriggerName = "telegram_bot";
+  name = "telegram_bot";
   options: AnyObject;
   helpers: IHelpers;
   every = 5;
   shouldDeduplicate = true;
-  getItemKey = (item: IItem): string => {
+  getItemKey = (item: AnyObject): string => {
     if (item.update_id) return item.update_id as string;
     return this.helpers.createContentDigest(item);
   };
@@ -73,7 +71,7 @@ export default class TelegramBot implements ITriggerClassType {
     if (!events && event) {
       events = [event];
     }
-    const items: IItem[] = [];
+    const items: AnyObject[] = [];
     const url = `https://api.telegram.org/bot${token}/getUpdates`;
     const config: AxiosRequestConfig = {
       ...requestOptions,

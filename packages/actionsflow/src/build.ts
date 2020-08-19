@@ -16,7 +16,7 @@ import {
   ITrigger,
   IWorkflow,
   IGithub,
-} from "./interfaces";
+} from "actionsflow-interface";
 
 interface IBuildOptions {
   workflows?: string;

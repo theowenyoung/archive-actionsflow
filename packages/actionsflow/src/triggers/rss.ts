@@ -2,21 +2,19 @@ import Parser from "rss-parser";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  IItem,
-  TriggerName,
   ITriggerRunFunctionResult,
   IHelpers,
   AnyObject,
-} from "../interfaces";
+} from "actionsflow-interface";
 import log from "../log";
 
 export default class Rss implements ITriggerClassType {
-  name: TriggerName = "rss";
+  name = "rss";
   options: AnyObject = {};
   helpers: IHelpers;
   every = 5;
   shouldDeduplicate = true;
-  getItemKey(item: IItem): string {
+  getItemKey(item: AnyObject): string {
     // TODO adapt every cases
     if (item.guid) return item.guid as string;
     if (item.id) return item.id as string;
@@ -57,7 +55,7 @@ export default class Rss implements ITriggerClassType {
       }
       urls = [url];
     }
-    const items: IItem[] = [];
+    const items: AnyObject[] = [];
 
     for (let index = 0; index < urls.length; index++) {
       const feedUrl = urls[index];

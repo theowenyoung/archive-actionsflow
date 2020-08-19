@@ -1,0 +1,25 @@
+{
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsc -w -p tsconfig.production.json",
+    "build": "tsc -p tsconfig.production.json",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint --fix ./src && prettier --write --loglevel warn ./src",
+    "clean": "rimraf ./dist",
+    "prepare": "npm run build",
+    "hooks:pre-commit": "lint-staged"
+  },
+  "name": "actionsflow-interface",
+  "author": "Owen Young",
+  "dependencies": {}
+}

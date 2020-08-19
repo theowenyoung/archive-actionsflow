@@ -1,5 +1,5 @@
 import has from "lodash.has";
-import { AnyObject } from "./interfaces";
+import { AnyObject } from "actionsflow-interface";
 interface IOptions {
   interpolate?: RegExp;
   includeVariableRegex?: RegExp;
