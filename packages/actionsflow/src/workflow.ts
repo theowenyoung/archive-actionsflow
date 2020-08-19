@@ -90,11 +90,11 @@ export const getWorkflows = async (
     cwd: workflowsPath,
     dot: true,
   });
-  log.debug("yaml file paths:", entries);
   const workflows: IWorkflow[] = [];
   // Get document, or throw exception on error
   for (let index = 0; index < entries.length; index++) {
     const filePath = path.resolve(workflowsPath, entries[index]);
+    log.debug("yaml file path:", filePath);
     try {
       const doc = yaml.safeLoad(await fs.readFile(filePath, "utf8"));
       if (doc) {
@@ -116,7 +116,9 @@ export const getWorkflows = async (
   return workflows;
 };
 
-const getJobsDependences = (jobs: Record<string, AnyObject>) => {
+export const getJobsDependences = (
+  jobs: Record<string, AnyObject>
+): { lastJobs: string[]; firstJobs: string[] } => {
   const jobKeys = Object.keys(jobs);
   const jobsWhoHasNeeds: {
     id: string;
@@ -160,10 +162,10 @@ const getJobsDependences = (jobs: Record<string, AnyObject>) => {
   return { lastJobs, firstJobs: jobsNoNeeds };
 };
 
-const renameJobsBySuffix = (
+export const renameJobsBySuffix = (
   jobs: Record<string, AnyObject>,
   suffix: string
-) => {
+): Record<string, AnyObject> => {
   const jobKeys = Object.keys(jobs);
   const newJobs: Record<string, AnyObject> = {};
   jobKeys.forEach((jobKey) => {
