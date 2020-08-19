@@ -56,7 +56,7 @@ const variableHandle = ({
 export const template = function (
   text: string,
   context: AnyObject,
-  options: IOptions
+  options?: IOptions
 ): string {
   let includeVariableRegex = /(^on)|(^secrets)|(^toJson\(on\.?)/;
   let interpolate = /\$\{\{([\S\s]*?)\}\}/g;

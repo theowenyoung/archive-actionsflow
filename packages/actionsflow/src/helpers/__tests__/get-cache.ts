@@ -1,7 +1,9 @@
 import { getCache } from "../cache";
-
+import fs from "fs-extra";
 const CACHE_KEY = `__test__`;
-
+afterAll(() => {
+  return fs.remove("./.cache");
+});
 test(`it returns a new cache instance`, () => {
   const cache = getCache(CACHE_KEY);
 
