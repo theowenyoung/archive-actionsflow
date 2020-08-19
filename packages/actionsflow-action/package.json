@@ -1,6 +1,6 @@
 {
   "name": "actionsflow-action",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "description": "Actionsflow action",
   "keywords": [
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.4",
-    "actionsflow": "^0.0.5"
+    "actionsflow": "^0.0.6"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.22.3"

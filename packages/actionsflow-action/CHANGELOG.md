@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.5 (2020-08-19)
+
+
+### Bug Fixes
+
+* 🐛 action to ts ([7fed945](https://github.com/actionsflow/actionsflow/commit/7fed945adb79294eb804f1c05708e54a4866a1d6))
+* 🐛 trigger name get error ([5ccf2b3](https://github.com/actionsflow/actionsflow/commit/5ccf2b36ff980ccbe0d1771b1ea1e9e42f1b9977))
+
+
+### Features
+
+* 🎸 initial commit ([50ddfd6](https://github.com/actionsflow/actionsflow/commit/50ddfd64377e38a7dfa403a069138648cfb00b9c))
+* build scripts ([09afdba](https://github.com/actionsflow/actionsflow/commit/09afdbabc1ae0e356cb79c7c60243818933ea1ab))
+
+
+
+
+
 ## [0.0.4](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.0.3...actionsflow-action@0.0.4) (2020-08-18)
 
 
