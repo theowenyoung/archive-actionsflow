@@ -17,7 +17,7 @@
     "lint": "eslint --fix ./src && prettier --write --loglevel warn ./src",
     "clean": "rimraf ./dist",
     "prepare": "npm run build",
-    "hooks:pre-commit": "npm run lint"
+    "hooks:pre-commit": "lint-staged"
   },
   "name": "actionsflow",
   "author": "Owen Young",
