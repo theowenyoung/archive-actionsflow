@@ -31,12 +31,15 @@ export interface ITriggerRunFunctionResult {
   updateInterval?: number;
   getItemKey?: (item: IItem) => string;
 }
-export interface ITriggerType {
-  name: string;
-  run?(params: ITriggerRunFunction): Promise<ITriggerRunFunctionResult>;
-}
 export type TriggerName = "rss" | "telegram_bot" | "webhook" | "poll";
 
+export interface ITriggerClassType {
+  id: TriggerName;
+  run(params: ITriggerRunFunction): Promise<ITriggerRunFunctionResult>;
+}
+export interface ITriggerClassTypeConstructable {
+  new (): ITriggerClassType;
+}
 export interface ITrigger {
   id?: string;
   name: TriggerName;

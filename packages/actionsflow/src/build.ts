@@ -88,7 +88,6 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   });
   // create workflow dest dir
   await fs.ensureDir(path.resolve(destPath, "workflows"));
-
   let needHandledWorkflows = workflows.filter(
     (item) => item.triggers.length > 0
   );

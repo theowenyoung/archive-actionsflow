@@ -18,14 +18,17 @@ function buildLocalCommands(cli: yargs.Argv) {
 
   function resolveLocalCommand(command: string) {
     try {
-      const cmdPath = resolveCwd.silent(`actionsflow/lib/commands/${command}`);
+      const cmdPath = resolveCwd.silent(
+        `actionsflow/dist/src/commands/${command}`
+      );
       if (!cmdPath)
         return log.warn(
           `There was a problem loading the local ${command} command. Actionsflow may not be installed in your workflow's "node_modules" directory. Perhaps you need to run "npm install"? You might need to delete your "package-lock.json" as well.`
         );
       log.debug(`loading local command from: ${cmdPath}`);
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const cmd = require(cmdPath);
+      const cmdModule = require(cmdPath);
+      const cmd = cmdModule.default;
       if (cmd instanceof Function) {
         return cmd;
       }

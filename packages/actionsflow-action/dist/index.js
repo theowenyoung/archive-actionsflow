@@ -4398,7 +4398,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = __webpack_require__(403);
 class Webhook {
     constructor() {
-        this.name = "webhook";
+        this.id = "webhook";
     }
     run({ context, }) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -9474,7 +9474,7 @@ const rss_parser_1 = tslib_1.__importDefault(__webpack_require__(728));
 const log_1 = tslib_1.__importDefault(__webpack_require__(766));
 class Rss {
     constructor() {
-        this.name = "rss";
+        this.id = "rss";
     }
     run({ helpers, options, }) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -21482,7 +21482,7 @@ const log_1 = tslib_1.__importDefault(__webpack_require__(766));
 const axios_1 = tslib_1.__importDefault(__webpack_require__(688));
 class TelegramBot {
     constructor() {
-        this.name = "telegram_bot";
+        this.id = "telegram_bot";
     }
     run({ helpers, options, }) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -41007,7 +41007,7 @@ const lodash_clonedeep_1 = tslib_1.__importDefault(__webpack_require__(849));
 const lodash_get_1 = tslib_1.__importDefault(__webpack_require__(246));
 class Poll {
     constructor() {
-        this.name = "poll";
+        this.id = "poll";
     }
     run({ helpers, options, }) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -42756,14 +42756,20 @@ const log_1 = tslib_1.__importDefault(__webpack_require__(766));
 const util_1 = __webpack_require__(429);
 const Triggers = tslib_1.__importStar(__webpack_require__(241));
 const getSupportedTriggers = (doc, context) => {
-    const supportTriggerTypes = Object.keys(Triggers);
+    const supportTriggerKeys = Object.keys(Triggers);
+    const AllTriggers = Triggers;
+    const supportTriggerIds = supportTriggerKeys.map((triggerKey) => {
+        const Trigger = AllTriggers[triggerKey];
+        const triggerInstance = new Trigger();
+        return triggerInstance.id;
+    });
     const triggers = [];
     if (doc && doc.on) {
         const onObj = doc.on;
         const keys = Object.keys(onObj);
         for (let index = 0; index < keys.length; index++) {
             const key = keys[index];
-            if (supportTriggerTypes.includes(key)) {
+            if (supportTriggerIds.includes(key)) {
                 if (!(onObj[key] && onObj[key].active === false)) {
                     let newOptions = onObj[key];
                     if (onObj[key]) {

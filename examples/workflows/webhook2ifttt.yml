@@ -1,5 +1,6 @@
 on:
   webhook:
+    active: false
     event: test
 jobs:
   ifttt:

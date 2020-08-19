@@ -1,13 +1,13 @@
 import {
-  ITriggerType,
+  ITriggerClassType,
   ITriggerRunFunction,
   IItem,
   ITriggerRunFunctionResult,
   TriggerName,
 } from "../interfaces";
 
-export default class Webhook implements ITriggerType {
-  name: TriggerName = "webhook";
+export default class Webhook implements ITriggerClassType {
+  id: TriggerName = "webhook";
   async run({
     context,
   }: ITriggerRunFunction): Promise<ITriggerRunFunctionResult> {

@@ -12,20 +12,30 @@ import {
   IWorkflow,
   TriggerName,
   AnyObject,
+  ITriggerClassTypeConstructable,
 } from "./interfaces";
 
 const getSupportedTriggers = (
   doc: AnyObject,
   context: ITriggerContext
 ): ITrigger[] => {
-  const supportTriggerTypes = Object.keys(Triggers);
+  const supportTriggerKeys = Object.keys(Triggers);
+  const AllTriggers = Triggers as Record<
+    string,
+    ITriggerClassTypeConstructable
+  >;
+  const supportTriggerIds = supportTriggerKeys.map((triggerKey) => {
+    const Trigger = AllTriggers[triggerKey];
+    const triggerInstance = new Trigger();
+    return triggerInstance.id;
+  });
   const triggers = [];
   if (doc && doc.on) {
     const onObj = doc.on as Record<string, Record<string, unknown>>;
     const keys = Object.keys(onObj);
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index] as TriggerName;
-      if (supportTriggerTypes.includes(key)) {
+      if (supportTriggerIds.includes(key)) {
         // is active
         if (!(onObj[key] && onObj[key].active === false)) {
           // handle context expresstion

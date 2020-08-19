@@ -17,9 +17,9 @@
     "bootstrap": "lerna bootstrap",
     "lerna": "lerna",
     "cm": "npx git-cz",
-    "build:example": "cd examples && ../packages/actionsflow/lib/bin/actionsflow.js build",
-    "clean:example": "cd examples && ../packages/actionsflow/lib/bin/actionsflow.js clean",
-    "actionsflow": "./packages/actionsflow/lib/bin/actionsflow.js"
+    "build:example": "cd examples && ../packages/actionsflow/cli.js build",
+    "clean:example": "cd examples && ../packages/actionsflow/cli.js clean",
+    "actionsflow": "./packages/actionsflow/cli.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",

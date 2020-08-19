@@ -1,15 +1,22 @@
 on:
   rss:
-    url: https://hnrss.org/newest?points=300
+    event: new_item_in_multiple_feeds
+    skip_first: true
+    every: 1
+    urls:
+      - https://rss.owenyoung.com/sale/douban-pin-group.xml
+      - https://rss.owenyoung.com/sale/douban-driver-group.xml
+      - https://rss.owenyoung.com/sale/douban-dog-group.xml
+      - https://rss.owenyoung.com/douban/group/586674.xml
 jobs:
   ifttt:
     name: Make a Request to IFTTT
     runs-on: ubuntu-latest
     steps:
-      - uses: alfredosalzillo/ifttt-webhook-action@v1
+      - uses: actionsflow/ifttt-webhook-action@v1
         with:
-          event: test
+          event: notice
           key: ${{ secrets.IFTTT_KEY }}
           value1: ${{on.rss.outputs.title}}
-          value2: ${{on.rss.outputs.content}}
+          value2: ${{on.rss.outputs.contentSnippet}}
           value3: ${{on.rss.outputs.link}}

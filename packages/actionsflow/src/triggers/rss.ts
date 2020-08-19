@@ -1,6 +1,6 @@
 import Parser from "rss-parser";
 import {
-  ITriggerType,
+  ITriggerClassType,
   ITriggerRunFunction,
   IItem,
   TriggerName,
@@ -8,8 +8,8 @@ import {
 } from "../interfaces";
 import log from "../log";
 
-export default class Rss implements ITriggerType {
-  name: TriggerName = "rss";
+export default class Rss implements ITriggerClassType {
+  id: TriggerName = "rss";
   async run({
     helpers,
     options,

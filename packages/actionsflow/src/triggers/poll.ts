@@ -3,15 +3,15 @@ import axios, { AxiosRequestConfig } from "axios";
 import clonedeep from "lodash.clonedeep";
 import get from "lodash.get";
 import {
-  ITriggerType,
+  ITriggerClassType,
   ITriggerRunFunction,
   IItem,
   ITriggerRunFunctionResult,
   TriggerName,
 } from "../interfaces";
 
-export default class Poll implements ITriggerType {
-  name: TriggerName = "poll";
+export default class Poll implements ITriggerClassType {
+  id: TriggerName = "poll";
   async run({
     helpers,
     options,

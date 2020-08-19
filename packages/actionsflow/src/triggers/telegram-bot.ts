@@ -1,7 +1,7 @@
 import log from "../log";
 import axios, { AxiosRequestConfig } from "axios";
 import {
-  ITriggerType,
+  ITriggerClassType,
   ITriggerRunFunction,
   IItem,
   TriggerName,
@@ -9,8 +9,8 @@ import {
   IObject,
 } from "../interfaces";
 
-export default class TelegramBot implements ITriggerType {
-  name: TriggerName = "telegram_bot";
+export default class TelegramBot implements ITriggerClassType {
+  id: TriggerName = "telegram_bot";
   async run({
     helpers,
     options,

@@ -1,5 +1,6 @@
 on:
   telegram_bot:
+    active: false
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 jobs:
   ifttt:
