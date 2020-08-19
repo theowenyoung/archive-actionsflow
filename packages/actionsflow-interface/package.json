@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -20,6 +20,5 @@
     "hooks:pre-commit": "lint-staged"
   },
   "name": "actionsflow-interface",
-  "author": "Owen Young",
-  "dependencies": {}
+  "author": "Owen Young"
 }
