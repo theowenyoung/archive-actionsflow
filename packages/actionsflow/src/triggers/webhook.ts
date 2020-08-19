@@ -1,17 +1,20 @@
 import {
   ITriggerClassType,
-  ITriggerRunFunction,
+  ITriggerContructorParams,
   IItem,
   ITriggerRunFunctionResult,
   TriggerName,
+  ITriggerContext,
 } from "../interfaces";
 
 export default class Webhook implements ITriggerClassType {
-  id: TriggerName = "webhook";
-  async run({
-    context,
-  }: ITriggerRunFunction): Promise<ITriggerRunFunctionResult> {
-    // if need
+  name: TriggerName = "webhook";
+  context: ITriggerContext;
+  constructor({ context }: ITriggerContructorParams) {
+    this.context = context;
+  }
+  async run(): Promise<ITriggerRunFunctionResult> {
+    const context = this.context;
     let items: IItem[] = [];
     if (
       context &&

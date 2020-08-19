@@ -424,7 +424,7 @@ exports.string = string;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 /*eslint no-unused-vars:0*/
-var utils = __webpack_require__(564);
+var utils = __webpack_require__(856);
 var isObject = utils.isObject;
 
 /**
@@ -777,7 +777,7 @@ function onceStrict (fn) {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var mapCacheClear = __webpack_require__(173),
-    mapCacheDelete = __webpack_require__(184),
+    mapCacheDelete = __webpack_require__(469),
     mapCacheGet = __webpack_require__(683),
     mapCacheHas = __webpack_require__(219),
     mapCacheSet = __webpack_require__(103);
@@ -814,80 +814,64 @@ module.exports = MapCache;
 /* 30 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+var DataView = __webpack_require__(820),
+    Map = __webpack_require__(406),
+    Promise = __webpack_require__(716),
+    Set = __webpack_require__(431),
+    WeakMap = __webpack_require__(391),
+    baseGetTag = __webpack_require__(311),
+    toSource = __webpack_require__(834);
 
+/** `Object#toString` result references. */
+var mapTag = '[object Map]',
+    objectTag = '[object Object]',
+    promiseTag = '[object Promise]',
+    setTag = '[object Set]',
+    weakMapTag = '[object WeakMap]';
 
-var utils = __webpack_require__(762);
+var dataViewTag = '[object DataView]';
+
+/** Used to detect maps, sets, and weakmaps. */
+var dataViewCtorString = toSource(DataView),
+    mapCtorString = toSource(Map),
+    promiseCtorString = toSource(Promise),
+    setCtorString = toSource(Set),
+    weakMapCtorString = toSource(WeakMap);
 
 /**
- * Config-specific merge-function which creates a new config-object
- * by merging two configuration objects together.
+ * Gets the `toStringTag` of `value`.
  *
- * @param {Object} config1
- * @param {Object} config2
- * @returns {Object} New object resulting from merging config2 to config1
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
  */
-module.exports = function mergeConfig(config1, config2) {
-  // eslint-disable-next-line no-param-reassign
-  config2 = config2 || {};
-  var config = {};
+var getTag = baseGetTag;
 
-  var valueFromConfig2Keys = ['url', 'method', 'params', 'data'];
-  var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy'];
-  var defaultToConfig2Keys = [
-    'baseURL', 'url', 'transformRequest', 'transformResponse', 'paramsSerializer',
-    'timeout', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
-    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress',
-    'maxContentLength', 'validateStatus', 'maxRedirects', 'httpAgent',
-    'httpsAgent', 'cancelToken', 'socketPath'
-  ];
+// Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
+if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||
+    (Map && getTag(new Map) != mapTag) ||
+    (Promise && getTag(Promise.resolve()) != promiseTag) ||
+    (Set && getTag(new Set) != setTag) ||
+    (WeakMap && getTag(new WeakMap) != weakMapTag)) {
+  getTag = function(value) {
+    var result = baseGetTag(value),
+        Ctor = result == objectTag ? value.constructor : undefined,
+        ctorString = Ctor ? toSource(Ctor) : '';
 
-  utils.forEach(valueFromConfig2Keys, function valueFromConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
+    if (ctorString) {
+      switch (ctorString) {
+        case dataViewCtorString: return dataViewTag;
+        case mapCtorString: return mapTag;
+        case promiseCtorString: return promiseTag;
+        case setCtorString: return setTag;
+        case weakMapCtorString: return weakMapTag;
+      }
     }
-  });
+    return result;
+  };
+}
 
-  utils.forEach(mergeDeepPropertiesKeys, function mergeDeepProperties(prop) {
-    if (utils.isObject(config2[prop])) {
-      config[prop] = utils.deepMerge(config1[prop], config2[prop]);
-    } else if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (utils.isObject(config1[prop])) {
-      config[prop] = utils.deepMerge(config1[prop]);
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
-    }
-  });
-
-  utils.forEach(defaultToConfig2Keys, function defaultToConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
-    }
-  });
-
-  var axiosKeys = valueFromConfig2Keys
-    .concat(mergeDeepPropertiesKeys)
-    .concat(defaultToConfig2Keys);
-
-  var otherKeys = Object
-    .keys(config2)
-    .filter(function filterAxiosKeys(key) {
-      return axiosKeys.indexOf(key) === -1;
-    });
-
-  utils.forEach(otherKeys, function otherKeysDefaultToConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
-    }
-  });
-
-  return config;
-};
+module.exports = getTag;
 
 
 /***/ }),
@@ -896,7 +880,12 @@ module.exports = function mergeConfig(config1, config2) {
 /* 33 */,
 /* 34 */,
 /* 35 */,
-/* 36 */,
+/* 36 */
+/***/ (function(module) {
+
+module.exports = require("string_decoder");
+
+/***/ }),
 /* 37 */,
 /* 38 */,
 /* 39 */
@@ -2984,7 +2973,193 @@ module.exports = r => {
 
 
 /***/ }),
-/* 101 */,
+/* 101 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(762);
+var settle = __webpack_require__(374);
+var buildURL = __webpack_require__(250);
+var buildFullPath = __webpack_require__(80);
+var parseHeaders = __webpack_require__(313);
+var isURLSameOrigin = __webpack_require__(909);
+var createError = __webpack_require__(962);
+
+module.exports = function xhrAdapter(config) {
+  return new Promise(function dispatchXhrRequest(resolve, reject) {
+    var requestData = config.data;
+    var requestHeaders = config.headers;
+
+    if (utils.isFormData(requestData)) {
+      delete requestHeaders['Content-Type']; // Let the browser set it
+    }
+
+    var request = new XMLHttpRequest();
+
+    // HTTP basic authentication
+    if (config.auth) {
+      var username = config.auth.username || '';
+      var password = config.auth.password || '';
+      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
+    }
+
+    var fullPath = buildFullPath(config.baseURL, config.url);
+    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
+
+    // Set the request timeout in MS
+    request.timeout = config.timeout;
+
+    // Listen for ready state
+    request.onreadystatechange = function handleLoad() {
+      if (!request || request.readyState !== 4) {
+        return;
+      }
+
+      // The request errored out and we didn't get a response, this will be
+      // handled by onerror instead
+      // With one exception: request that using file: protocol, most browsers
+      // will return status as 0 even though it's a successful request
+      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
+        return;
+      }
+
+      // Prepare the response
+      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
+      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
+      var response = {
+        data: responseData,
+        status: request.status,
+        statusText: request.statusText,
+        headers: responseHeaders,
+        config: config,
+        request: request
+      };
+
+      settle(resolve, reject, response);
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle browser request cancellation (as opposed to a manual cancellation)
+    request.onabort = function handleAbort() {
+      if (!request) {
+        return;
+      }
+
+      reject(createError('Request aborted', config, 'ECONNABORTED', request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle low level network errors
+    request.onerror = function handleError() {
+      // Real errors are hidden from us by the browser
+      // onerror should only fire if it's a network error
+      reject(createError('Network Error', config, null, request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle timeout
+    request.ontimeout = function handleTimeout() {
+      var timeoutErrorMessage = 'timeout of ' + config.timeout + 'ms exceeded';
+      if (config.timeoutErrorMessage) {
+        timeoutErrorMessage = config.timeoutErrorMessage;
+      }
+      reject(createError(timeoutErrorMessage, config, 'ECONNABORTED',
+        request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Add xsrf header
+    // This is only done if running in a standard browser environment.
+    // Specifically not if we're in a web worker, or react-native.
+    if (utils.isStandardBrowserEnv()) {
+      var cookies = __webpack_require__(978);
+
+      // Add xsrf header
+      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
+        cookies.read(config.xsrfCookieName) :
+        undefined;
+
+      if (xsrfValue) {
+        requestHeaders[config.xsrfHeaderName] = xsrfValue;
+      }
+    }
+
+    // Add headers to the request
+    if ('setRequestHeader' in request) {
+      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
+        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
+          // Remove Content-Type if data is undefined
+          delete requestHeaders[key];
+        } else {
+          // Otherwise add header to the request
+          request.setRequestHeader(key, val);
+        }
+      });
+    }
+
+    // Add withCredentials to request if needed
+    if (!utils.isUndefined(config.withCredentials)) {
+      request.withCredentials = !!config.withCredentials;
+    }
+
+    // Add responseType to request if needed
+    if (config.responseType) {
+      try {
+        request.responseType = config.responseType;
+      } catch (e) {
+        // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
+        // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
+        if (config.responseType !== 'json') {
+          throw e;
+        }
+      }
+    }
+
+    // Handle progress if needed
+    if (typeof config.onDownloadProgress === 'function') {
+      request.addEventListener('progress', config.onDownloadProgress);
+    }
+
+    // Not all browsers support upload events
+    if (typeof config.onUploadProgress === 'function' && request.upload) {
+      request.upload.addEventListener('progress', config.onUploadProgress);
+    }
+
+    if (config.cancelToken) {
+      // Handle cancellation
+      config.cancelToken.promise.then(function onCanceled(cancel) {
+        if (!request) {
+          return;
+        }
+
+        request.abort();
+        reject(cancel);
+        // Clean up request
+        request = null;
+      });
+    }
+
+    if (requestData === undefined) {
+      requestData = null;
+    }
+
+    // Send the request
+    request.send(requestData);
+  });
+};
+
+
+/***/ }),
 /* 102 */,
 /* 103 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
@@ -3048,42 +3223,66 @@ module.exports = assocIndexOf;
 /* 109 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-// Generated by CoffeeScript 1.12.7
-(function() {
-  var NodeType, XMLCharacterData, XMLComment,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+var baseGetTag = __webpack_require__(311),
+    isLength = __webpack_require__(615),
+    isObjectLike = __webpack_require__(425);
 
-  NodeType = __webpack_require__(712);
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    funcTag = '[object Function]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    weakMapTag = '[object WeakMap]';
 
-  XMLCharacterData = __webpack_require__(52);
+var arrayBufferTag = '[object ArrayBuffer]',
+    dataViewTag = '[object DataView]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
 
-  module.exports = XMLComment = (function(superClass) {
-    extend(XMLComment, superClass);
+/** Used to identify `toStringTag` values of typed arrays. */
+var typedArrayTags = {};
+typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+typedArrayTags[uint32Tag] = true;
+typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
+typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
+typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
+typedArrayTags[errorTag] = typedArrayTags[funcTag] =
+typedArrayTags[mapTag] = typedArrayTags[numberTag] =
+typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
+typedArrayTags[setTag] = typedArrayTags[stringTag] =
+typedArrayTags[weakMapTag] = false;
 
-    function XMLComment(parent, text) {
-      XMLComment.__super__.constructor.call(this, parent);
-      if (text == null) {
-        throw new Error("Missing comment text. " + this.debugInfo());
-      }
-      this.name = "#comment";
-      this.type = NodeType.Comment;
-      this.value = this.stringify.comment(text);
-    }
+/**
+ * The base implementation of `_.isTypedArray` without Node.js optimizations.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+ */
+function baseIsTypedArray(value) {
+  return isObjectLike(value) &&
+    isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+}
 
-    XMLComment.prototype.clone = function() {
-      return Object.create(this);
-    };
-
-    XMLComment.prototype.toString = function(options) {
-      return this.options.writer.comment(this, this.options.writer.filterOptions(options));
-    };
-
-    return XMLComment;
-
-  })(XMLCharacterData);
-
-}).call(this);
+module.exports = baseIsTypedArray;
 
 
 /***/ }),
@@ -4397,11 +4596,13 @@ module.exports = stackClear;
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = __webpack_require__(403);
 class Webhook {
-    constructor() {
-        this.id = "webhook";
+    constructor({ context }) {
+        this.name = "webhook";
+        this.context = context;
     }
-    run({ context, }) {
+    run() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const context = this.context;
             let items = [];
             if (context &&
                 context.github &&
@@ -4594,70 +4795,7 @@ function callSuccessCallback(callback, result) {
 /* 123 */,
 /* 124 */,
 /* 125 */,
-/* 126 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var DataView = __webpack_require__(666),
-    Map = __webpack_require__(406),
-    Promise = __webpack_require__(716),
-    Set = __webpack_require__(431),
-    WeakMap = __webpack_require__(975),
-    baseGetTag = __webpack_require__(311),
-    toSource = __webpack_require__(420);
-
-/** `Object#toString` result references. */
-var mapTag = '[object Map]',
-    objectTag = '[object Object]',
-    promiseTag = '[object Promise]',
-    setTag = '[object Set]',
-    weakMapTag = '[object WeakMap]';
-
-var dataViewTag = '[object DataView]';
-
-/** Used to detect maps, sets, and weakmaps. */
-var dataViewCtorString = toSource(DataView),
-    mapCtorString = toSource(Map),
-    promiseCtorString = toSource(Promise),
-    setCtorString = toSource(Set),
-    weakMapCtorString = toSource(WeakMap);
-
-/**
- * Gets the `toStringTag` of `value`.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {string} Returns the `toStringTag`.
- */
-var getTag = baseGetTag;
-
-// Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
-if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||
-    (Map && getTag(new Map) != mapTag) ||
-    (Promise && getTag(Promise.resolve()) != promiseTag) ||
-    (Set && getTag(new Set) != setTag) ||
-    (WeakMap && getTag(new WeakMap) != weakMapTag)) {
-  getTag = function(value) {
-    var result = baseGetTag(value),
-        Ctor = result == objectTag ? value.constructor : undefined,
-        ctorString = Ctor ? toSource(Ctor) : '';
-
-    if (ctorString) {
-      switch (ctorString) {
-        case dataViewCtorString: return dataViewTag;
-        case mapCtorString: return mapTag;
-        case promiseCtorString: return promiseTag;
-        case setCtorString: return setTag;
-        case weakMapCtorString: return weakMapTag;
-      }
-    }
-    return result;
-  };
-}
-
-module.exports = getTag;
-
-
-/***/ }),
+/* 126 */,
 /* 127 */,
 /* 128 */,
 /* 129 */,
@@ -5406,7 +5544,7 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(391);
+    adapter = __webpack_require__(101);
   } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
     // For node use HTTP adapter
     adapter = __webpack_require__(46);
@@ -6407,14 +6545,93 @@ module.exports = scan;
 /***/ }),
 /* 151 */,
 /* 152 */
-/***/ (function(module) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+const utils = module.exports = {};
+const entities = __webpack_require__(538);
+const xml2js = __webpack_require__(534);
 
+utils.stripHtml = function(str) {
+  str = str.replace(/([^\n])<\/?(h|br|p|ul|ol|li|blockquote|section|table|tr|div)(?:.|\n)*?>([^\n])/gm, '$1\n$3')
+  str = str.replace(/<(?:.|\n)*?>/gm, '');
+  return str;
+}
 
-module.exports = (...arguments_) => {
-	return [...new Set([].concat(...arguments_))];
-};
+utils.getSnippet = function(str) {
+  return entities.decodeHTML(utils.stripHtml(str)).trim();
+}
+
+utils.getLink = function(links, rel, fallbackIdx) {
+  if (!links) return;
+  for (let i = 0; i < links.length; ++i) {
+    if (links[i].$.rel === rel) return links[i].$.href;
+  }
+  if (links[fallbackIdx]) return links[fallbackIdx].$.href;
+}
+
+utils.getContent = function(content) {
+  if (typeof content._ === 'string') {
+    return content._;
+  } else if (typeof content === 'object') {
+    let builder = new xml2js.Builder({headless: true, explicitRoot: true, rootName: 'div', renderOpts: {pretty: false}});
+    return builder.buildObject(content);
+  } else {
+    return content;
+  }
+}
+
+utils.copyFromXML = function(xml, dest, fields) {
+  fields.forEach(function(f) {
+    let from = f;
+    let to = f;
+    let options = {};
+    if (Array.isArray(f)) {
+      from = f[0];
+      to = f[1];
+      if (f.length > 2) {
+        options = f[2];
+      }
+    }
+    const { keepArray, includeSnippet } = options;
+    if (xml[from] !== undefined){
+      dest[to] = keepArray ? xml[from] : xml[from][0];
+    }
+    if (dest[to] && typeof dest[to]._ === 'string') {
+      dest[to]=dest[to]._;
+    }
+    if (includeSnippet && dest[to] && typeof dest[to] === 'string') {
+      dest[to + 'Snippet'] = utils.getSnippet(dest[to]);
+    }
+  })
+}
+
+utils.maybePromisify = function(callback, promise) {
+  if (!callback) return promise;
+  return promise.then(
+    data => setTimeout(() => callback(null, data)),
+    err => setTimeout(() => callback(err))
+  );
+}
+
+const DEFAULT_ENCODING = 'utf8';
+const ENCODING_REGEX = /(encoding|charset)\s*=\s*(\S+)/;
+const SUPPORTED_ENCODINGS = ['ascii', 'utf8', 'utf16le', 'ucs2', 'base64', 'latin1', 'binary', 'hex'];
+const ENCODING_ALIASES = {
+  'utf-8': 'utf8',
+  'iso-8859-1': 'latin1',
+}
+
+utils.getEncodingFromContentType = function(contentType) {
+  contentType = contentType || '';
+  let match = contentType.match(ENCODING_REGEX);
+  let encoding = (match || [])[2] || '';
+  encoding = encoding.toLowerCase();
+  encoding = ENCODING_ALIASES[encoding] || encoding;
+  if (!encoding || SUPPORTED_ENCODINGS.indexOf(encoding) === -1) {
+    encoding = DEFAULT_ENCODING;
+  }
+  return encoding;
+}
 
 
 /***/ }),
@@ -8504,143 +8721,661 @@ function wrappy (fn, cb) {
 
 /***/ }),
 /* 175 */
-/***/ (function(module) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+/** @module cacheManager/multiCaching */
+var async = __webpack_require__(448);
+var CallbackFiller = __webpack_require__(443);
+var utils = __webpack_require__(856);
+var isObject = utils.isObject;
+var parseWrapArguments = utils.parseWrapArguments;
 
-const TEMPLATE_REGEX = /(?:\\(u(?:[a-f\d]{4}|\{[a-f\d]{1,6}\})|x[a-f\d]{2}|.))|(?:\{(~)?(\w+(?:\([^)]*\))?(?:\.\w+(?:\([^)]*\))?)*)(?:[ \t]|(?=\r?\n)))|(\})|((?:.|[\r\n\f])+?)/gi;
-const STYLE_REGEX = /(?:^|\.)(\w+)(?:\(([^)]*)\))?/g;
-const STRING_REGEX = /^(['"])((?:\\.|(?!\1)[^\\])*)\1$/;
-const ESCAPE_REGEX = /\\(u(?:[a-f\d]{4}|{[a-f\d]{1,6}})|x[a-f\d]{2}|.)|([^\\])/gi;
+/**
+ * Module that lets you specify a hierarchy of caches.
+ *
+ * @param {array} caches - Array of caching objects.
+ * @param {object} [options]
+ * @param {function} [options.isCacheableValue] - A callback function which is called
+ *   with every value returned from cache or from a wrapped function. This lets you specify
+ *   which values should and should not be cached. If the function returns true, it will be
+ *   stored in cache. By default it caches everything except undefined.
+ *
+ *   If an underlying cache specifies its own isCacheableValue function, that function will
+ *   be used instead of the multiCaching's _isCacheableValue function.
+ */
+var multiCaching = function(caches, options) {
+    var self = {};
+    options = options || {};
 
-const ESCAPES = new Map([
-	['n', '\n'],
-	['r', '\r'],
-	['t', '\t'],
-	['b', '\b'],
-	['f', '\f'],
-	['v', '\v'],
-	['0', '\0'],
-	['\\', '\\'],
-	['e', '\u001B'],
-	['a', '\u0007']
-]);
+    var Promise = options.promiseDependency || global.Promise;
 
-function unescape(c) {
-	const u = c[0] === 'u';
-	const bracket = c[1] === '{';
+    if (!Array.isArray(caches)) {
+        throw new Error('multiCaching requires an array of caches');
+    }
 
-	if ((u && !bracket && c.length === 5) || (c[0] === 'x' && c.length === 3)) {
-		return String.fromCharCode(parseInt(c.slice(1), 16));
-	}
+    var callbackFiller = new CallbackFiller();
+    var backgroundQueue = new Set();
 
-	if (u && bracket) {
-		return String.fromCodePoint(parseInt(c.slice(2, -1), 16));
-	}
+    if (typeof options.isCacheableValue === 'function') {
+        self._isCacheableValue = options.isCacheableValue;
+    } else {
+        self._isCacheableValue = function(value) {
+            return value !== undefined;
+        };
+    }
 
-	return ESCAPES.get(c) || c;
-}
+    /**
+     * If the underlying cache specifies its own isCacheableValue function (such
+     * as how node-cache-manager-redis does), use that function, otherwise use
+     * self._isCacheableValue function.
+     */
+    function getIsCacheableValueFunction(cache) {
+        if (cache.store && typeof cache.store.isCacheableValue === 'function') {
+            return cache.store.isCacheableValue.bind(cache.store);
+        } else {
+            return self._isCacheableValue;
+        }
+    }
 
-function parseArguments(name, arguments_) {
-	const results = [];
-	const chunks = arguments_.trim().split(/\s*,\s*/g);
-	let matches;
+    function getFromHighestPriorityCachePromise() {
+        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
+            return typeof v !== 'undefined';
+        });
 
-	for (const chunk of chunks) {
-		const number = Number(chunk);
-		if (!Number.isNaN(number)) {
-			results.push(number);
-		} else if ((matches = chunk.match(STRING_REGEX))) {
-			results.push(matches[2].replace(ESCAPE_REGEX, (m, escape, character) => escape ? unescape(escape) : character));
-		} else {
-			throw new Error(`Invalid Chalk template style argument: ${chunk} (in style '${name}')`);
-		}
-	}
+        return new Promise(function(resolve, reject) {
+            var cb = function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            };
+            args.push(cb);
+            getFromHighestPriorityCache.apply(null, args);
+        });
+    }
 
-	return results;
-}
+    function getFromHighestPriorityCache() {
+        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
+            return typeof v !== 'undefined';
+        });
+        var cb;
+        var options = {};
 
-function parseStyle(style) {
-	STYLE_REGEX.lastIndex = 0;
+        if (typeof args[args.length - 1] === 'function') {
+            cb = args.pop();
+        }
 
-	const results = [];
-	let matches;
+        if (!cb) {
+            return getFromHighestPriorityCachePromise.apply(this, args);
+        }
 
-	while ((matches = STYLE_REGEX.exec(style)) !== null) {
-		const name = matches[1];
+        if (isObject(args[args.length - 1])) {
+            options = args.pop();
+        }
 
-		if (matches[2]) {
-			const args = parseArguments(name, matches[2]);
-			results.push([name].concat(args));
-		} else {
-			results.push([name]);
-		}
-	}
+        /**
+         * Keep a copy of the keys to retrieve
+         */
+        var keys = Array.prototype.slice.apply(args);
+        var multi = keys.length > 1;
 
-	return results;
-}
+        /**
+         * Then put back the options in the args Array
+         */
+        args.push(options);
 
-function buildStyle(chalk, styles) {
-	const enabled = {};
+        if (multi) {
+            /**
+             * Keep track of the keys left to fetch accross the caches
+             */
+            var keysToFetch = Array.prototype.slice.apply(keys);
 
-	for (const layer of styles) {
-		for (const style of layer.styles) {
-			enabled[style[0]] = layer.inverse ? null : style.slice(1);
-		}
-	}
+            /**
+             * Hash to save our multi keys result
+             */
+            var mapResult = {};
+        }
 
-	let current = chalk;
-	for (const [styleName, styles] of Object.entries(enabled)) {
-		if (!Array.isArray(styles)) {
-			continue;
-		}
+        var i = 0;
+        async.eachSeries(caches, function(cache, next) {
+            var callback = function(err, result) {
+                if (err) {
+                    return next(err);
+                }
 
-		if (!(styleName in current)) {
-			throw new Error(`Unknown Chalk style: ${styleName}`);
-		}
+                var _isCacheableValue = getIsCacheableValueFunction(cache);
 
-		current = styles.length > 0 ? current[styleName](...styles) : current[styleName];
-	}
+                if (multi) {
+                    addResultToMap(result, _isCacheableValue);
 
-	return current;
-}
+                    if (keysToFetch.length === 0 || i === caches.length - 1) {
+                        // Return an Array with the values merged from all the caches
+                        return cb(null, keys.map(function(k) {
+                            return mapResult[k] || undefined;
+                        }), i);
+                    }
+                } else if (_isCacheableValue(result)) {
+                    // break out of async loop.
+                    return cb(err, result, i);
+                }
 
-module.exports = (chalk, temporary) => {
-	const styles = [];
-	const chunks = [];
-	let chunk = [];
+                i += 1;
+                next();
+            };
 
-	// eslint-disable-next-line max-params
-	temporary.replace(TEMPLATE_REGEX, (m, escapeCharacter, inverse, style, close, character) => {
-		if (escapeCharacter) {
-			chunk.push(unescape(escapeCharacter));
-		} else if (style) {
-			const string = chunk.join('');
-			chunk = [];
-			chunks.push(styles.length === 0 ? string : buildStyle(chalk, styles)(string));
-			styles.push({inverse, styles: parseStyle(style)});
-		} else if (close) {
-			if (styles.length === 0) {
-				throw new Error('Found extraneous } in Chalk template literal');
-			}
+            if (multi) {
+                if (typeof cache.store.mget !== 'function') {
+                    /**
+                     * Silently fail for store that don't support mget()
+                     */
+                    return callback(null, []);
+                }
+                var _args = Array.prototype.slice.apply(keysToFetch);
+                _args.push(options);
+                _args.push(callback);
+                cache.store.mget.apply(cache.store, _args);
+            } else {
+                cache.store.get(args[0], options, callback);
+            }
+        }, function(err, result) {
+            return cb(err, result);
+        });
 
-			chunks.push(buildStyle(chalk, styles)(chunk.join('')));
-			chunk = [];
-			styles.pop();
-		} else {
-			chunk.push(character);
-		}
-	});
+        function addResultToMap(result, isCacheable) {
+            var key;
+            var diff = 0;
 
-	chunks.push(chunk.join(''));
+            /**
+             * We loop through the result and if the value
+             * is cacheable we add it to the mapResult hash
+             * and remove the key to fetch from the "keysToFetch" array
+             */
+            result.forEach(function(res, i) {
+                if (isCacheable(res)) {
+                    key = keysToFetch[i - diff];
 
-	if (styles.length > 0) {
-		const errMessage = `Chalk template literal is missing ${styles.length} closing bracket${styles.length === 1 ? '' : 's'} (\`}\`)`;
-		throw new Error(errMessage);
-	}
+                    // Add the result to our map
+                    mapResult[key] = res;
 
-	return chunks.join('');
+                    // delete key from our keysToFetch array
+                    keysToFetch.splice(i - diff, 1);
+                    diff += 1;
+                }
+            });
+        }
+    }
+
+    function setInMultipleCachesPromise() {
+        var args = Array.prototype.slice.apply(arguments);
+
+        return new Promise(function(resolve, reject) {
+            var cb = function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            };
+            args.push(cb);
+            setInMultipleCaches.apply(null, args);
+        });
+    }
+
+    function setInMultipleCaches() {
+        var args = Array.prototype.slice.apply(arguments);
+        var _caches = Array.isArray(args[0]) ? args.shift() : caches;
+
+        var cb;
+        var options = {};
+
+        if (typeof args[args.length - 1] === 'function') {
+            cb = args.pop();
+        }
+
+        if (!cb) {
+            return setInMultipleCachesPromise.apply(this, args);
+        }
+
+        if (args.length % 2 > 0 && isObject(args[args.length - 1])) {
+            options = args.pop();
+        }
+
+        var length = args.length;
+        var multi = length > 2;
+        var i;
+
+        async.each(_caches, function(cache, next) {
+            var _isCacheableValue = getIsCacheableValueFunction(cache);
+            var keysValues = Array.prototype.slice.apply(args);
+
+            /**
+             * We filter out the keys *not* cacheable
+             */
+            for (i = 0; i < length; i += 2) {
+                if (!_isCacheableValue(keysValues[i + 1])) {
+                    keysValues.splice(i, 2);
+                }
+            }
+
+            if (keysValues.length === 0) {
+                return next();
+            }
+
+            var cacheOptions = options;
+            if (typeof options.ttl === 'function') {
+                /**
+                 * Dynamically set the ttl by context depending of the store
+                 */
+                cacheOptions = {};
+                cacheOptions.ttl = options.ttl(keysValues, cache.store.name);
+            }
+
+            if (multi) {
+                if (typeof cache.store.mset !== 'function') {
+                    /**
+                     * Silently fail for store that don't support mset()
+                     */
+                    return next();
+                }
+                keysValues.push(cacheOptions);
+                keysValues.push(next);
+
+                cache.store.mset.apply(cache.store, keysValues);
+            } else {
+                cache.store.set(keysValues[0], keysValues[1], cacheOptions, next);
+            }
+        }, function(err, result) {
+            cb(err, result);
+        });
+    }
+
+    function getAndPassUpPromise(key) {
+        return new Promise(function(resolve, reject) {
+            self.getAndPassUp(key, function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    /**
+     * Looks for an item in cache tiers.
+     * When a key is found in a lower cache, all higher levels are updated.
+     *
+     * @param {string} key
+     * @param {function} cb
+     */
+    self.getAndPassUp = function(key, cb) {
+        if (!cb) {
+            return getAndPassUpPromise(key);
+        }
+
+        getFromHighestPriorityCache(key, function(err, result, index) {
+            if (err) {
+                return cb(err);
+            }
+
+            if (index) {
+                var cachesToUpdate = caches.slice(0, index);
+                async.each(cachesToUpdate, function(cache, next) {
+                    var _isCacheableValue = getIsCacheableValueFunction(cache);
+                    if (_isCacheableValue(result)) {
+                        // We rely on the cache module's default TTL
+                        cache.set(key, result, next);
+                    }
+                });
+            }
+
+            return cb(err, result);
+        });
+    };
+
+    function wrapPromise(key, promise, options) {
+        return new Promise(function(resolve, reject) {
+            self.wrap(key, function(cb) {
+                Promise.resolve()
+                    .then(promise)
+                    .then(function(result) {
+                        cb(null, result);
+                    })
+                    .catch(cb);
+            }, options, function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    function handleBackgroundRefresh(caches, index, key, work, options) {
+        if (caches[index].refreshThreshold && !backgroundQueue.has(key)) {
+            backgroundQueue.add(key);
+            caches[index].checkRefreshThreshold(key, function(err, isExpiring) {
+                if (err) {
+                    backgroundQueue.delete(key);
+                    return;
+                }
+                if (isExpiring) {
+                    work(function(workErr, workData) {
+                        if (workErr || !self._isCacheableValue(workData)) {
+                            backgroundQueue.delete(key);
+                            return;
+                        }
+                        var args = [caches, key, workData, options, function() {
+                            backgroundQueue.delete(key);
+                        }];
+                        setInMultipleCaches.apply(null, args);
+                    });
+                } else {
+                    backgroundQueue.delete(key);
+                }
+            });
+        }
+    }
+
+    /**
+     * Wraps a function in one or more caches.
+     * Has same API as regular caching module.
+     *
+     * If a key doesn't exist in any cache, it gets set in all caches.
+     * If a key exists in a high-priority (e.g., first) cache, it gets returned immediately
+     * without getting set in other lower-priority caches.
+     * If a key doesn't exist in a higher-priority cache but exists in a lower-priority
+     * cache, it gets set in all higher-priority caches.
+     * You can pass any number of keys as long as the wrapped function returns
+     * an array with the same number of values and in the same order.
+     *
+     * @function
+     * @name wrap
+     *
+     * @param {string} key - The cache key to use in cache operations. Can be one or many.
+     * @param {function} work - The function to wrap
+     * @param {object} [options] - options passed to `set` function
+     * @param {function} cb
+     */
+    self.wrap = function() {
+        var parsedArgs = parseWrapArguments(Array.prototype.slice.apply(arguments));
+        var keys = parsedArgs.keys;
+        var work = parsedArgs.work;
+        var options = parsedArgs.options;
+        var cb = parsedArgs.cb;
+
+        if (!cb) {
+            keys.push(work);
+            keys.push(options);
+            return wrapPromise.apply(this, keys);
+        }
+
+        if (keys.length > 1) {
+            /**
+             * Handle more than 1 key
+             */
+            return wrapMultiple(keys, work, options, cb);
+        }
+
+        var key = keys[0];
+
+        var hasKey = callbackFiller.has(key);
+        callbackFiller.add(key, {cb: cb});
+        if (hasKey) { return; }
+
+        getFromHighestPriorityCache(key, function(err, result, index) {
+            if (err) {
+                return callbackFiller.fill(key, err);
+            } else if (self._isCacheableValue(result)) {
+                handleBackgroundRefresh(caches, index, key, work, options);
+                var cachesToUpdate = caches.slice(0, index);
+                var args = [cachesToUpdate, key, result, options, function(err) {
+                    callbackFiller.fill(key, err, result);
+                }];
+
+                setInMultipleCaches.apply(null, args);
+            } else {
+                work(function(err, data) {
+                    if (err) {
+                        return callbackFiller.fill(key, err);
+                    }
+
+                    if (!self._isCacheableValue(data)) {
+                        return callbackFiller.fill(key, err, data);
+                    }
+
+                    var args = [caches, key, data, options, function(err) {
+                        callbackFiller.fill(key, err, data);
+                    }];
+
+                    setInMultipleCaches.apply(null, args);
+                });
+            }
+        });
+    };
+
+    function wrapMultiple(keys, work, options, cb) {
+        /**
+         * We create a unique key for the multiple keys
+         * by concatenating them
+         */
+        var combinedKey = keys.reduce(function(acc, k) {
+            return acc + k;
+        }, '');
+
+        var hasKey = callbackFiller.has(combinedKey);
+        callbackFiller.add(combinedKey, {cb: cb});
+        if (hasKey) { return; }
+
+        keys.push(options);
+        keys.push(onResult);
+
+        /**
+         * Get from all the caches. If multiple keys have been passed,
+         * we'll go through all the caches and merge the result
+         */
+        getFromHighestPriorityCache.apply(this, keys);
+
+        function onResult(err, result, index) {
+            if (err) {
+                return done(err);
+            }
+
+            /**
+             * If all the values returned are cacheable we don't need
+             * to call our "work" method and the values returned by the cache
+             * are valid. If one or more of the values is not cacheable
+             * the cache result is not valid.
+             */
+            var cacheOK = result.filter(function(_result) {
+                return self._isCacheableValue(_result);
+            }).length === result.length;
+
+            if (!cacheOK) {
+                /**
+                 * We need to fetch the data first
+                 */
+                return work(workCallback);
+            }
+
+            var cachesToUpdate = caches.slice(0, index);
+
+            /**
+             * Prepare arguments to set the values in
+             * higher priority caches
+             */
+            var _args = [cachesToUpdate];
+
+            /**
+             * Add the {key, value} pair
+             */
+            result.forEach(function(value, i) {
+                _args.push(keys[i]);
+                _args.push(value);
+            });
+
+            /**
+             * Add options and final callback
+             */
+            _args.push(options);
+            _args.push(function(err) {
+                done(err, result);
+            });
+
+            return setInMultipleCaches.apply(null, _args);
+
+            /**
+             * Wrapped function callback
+             */
+            function workCallback(err, data) {
+                if (err) {
+                    return done(err);
+                }
+
+                /**
+                 * Prepare arguments for "setInMultipleCaches"
+                 */
+                var _args;
+
+                _args = [];
+                data.forEach(function(value, i) {
+                    /**
+                     * Add the {key, value} pair to the args
+                     * array that we will send to mset()
+                     */
+                    if (self._isCacheableValue(value)) {
+                        _args.push(keys[i]);
+                        _args.push(value);
+                    }
+                });
+                // If no key,value --> exit
+                if (_args.length === 0) {
+                    return done(null);
+                }
+
+                /**
+                 * Add options and final callback
+                 */
+                _args.push(options);
+                _args.push(function(err) {
+                    done(err, data);
+                });
+
+                setInMultipleCaches.apply(null, _args);
+            }
+
+            /**
+             * Final callback
+             */
+            function done(err, data) {
+                callbackFiller.fill(combinedKey, err, data);
+            }
+        }
+    }
+
+    /**
+     * Set value in all caches
+     *
+     * @function
+     * @name set
+     *
+     * @param {string} key
+     * @param {*} value
+     * @param {object} [options] to pass to underlying set function.
+     * @param {function} [cb]
+     */
+    self.set = setInMultipleCaches;
+
+    /**
+     * Set multiple values in all caches
+     * Accepts an unlimited pair of {key, value}
+     *
+     * @function
+     * @name mset
+     *
+     * @param {string} key
+     * @param {*} value
+     * @param {string} [key2]
+     * @param {*} [value2]
+     * @param {object} [options] to pass to underlying set function.
+     * @param {function} [cb]
+     */
+    self.mset = setInMultipleCaches;
+
+    /**
+     * Get value from highest level cache that has stored it.
+     *
+     * @function
+     * @name get
+     *
+     * @param {string} key
+     * @param {object} [options] to pass to underlying get function.
+     * @param {function} cb
+     */
+    self.get = getFromHighestPriorityCache;
+
+    /**
+     * Get multiple value from highest level cache that has stored it.
+     * If some values are not found, the next highest cache is used
+     * until either all keys are found or all caches have been fetched.
+     * Accepts an unlimited number of keys.
+     *
+     * @function
+     * @name mget
+     *
+     * @param {string} key key to get (any number)
+     * @param {object} [options] to pass to underlying get function.
+     * @param {function} cb optional callback
+     */
+    self.mget = getFromHighestPriorityCache;
+
+    /**
+     * Delete value from all caches.
+     *
+     * @function
+     * @name del
+     *
+     * @param {string} key
+     * @param {object} [options] to pass to underlying del function.
+     * @param {function} cb
+     */
+    self.del = function() {
+        var args = Array.prototype.slice.apply(arguments);
+        var cb;
+        var options = {};
+
+        if (typeof args[args.length - 1] === 'function') {
+            cb = args.pop();
+        }
+
+        if (isObject(args[args.length - 1])) {
+            options = args.pop();
+        }
+
+        args.push(options);
+        async.each(caches, function(cache, next) {
+            var _args = Array.prototype.slice.apply(args);
+            _args.push(next);
+            cache.store.del.apply(cache.store, _args);
+        }, cb);
+    };
+
+    /**
+     * Reset all caches.
+     *
+     * @function
+     * @name reset
+     *
+     * @param {function} cb
+     */
+    self.reset = function(cb) {
+        async.each(caches, function(cache, next) {
+            cache.store.reset(next);
+        }, cb);
+    };
+
+    return self;
 };
+
+module.exports = multiCaching;
 
 
 /***/ }),
@@ -8667,72 +9402,7 @@ actionsflow_1.build({
 
 
 /***/ }),
-/* 179 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(311),
-    isLength = __webpack_require__(615),
-    isObjectLike = __webpack_require__(425);
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]',
-    arrayTag = '[object Array]',
-    boolTag = '[object Boolean]',
-    dateTag = '[object Date]',
-    errorTag = '[object Error]',
-    funcTag = '[object Function]',
-    mapTag = '[object Map]',
-    numberTag = '[object Number]',
-    objectTag = '[object Object]',
-    regexpTag = '[object RegExp]',
-    setTag = '[object Set]',
-    stringTag = '[object String]',
-    weakMapTag = '[object WeakMap]';
-
-var arrayBufferTag = '[object ArrayBuffer]',
-    dataViewTag = '[object DataView]',
-    float32Tag = '[object Float32Array]',
-    float64Tag = '[object Float64Array]',
-    int8Tag = '[object Int8Array]',
-    int16Tag = '[object Int16Array]',
-    int32Tag = '[object Int32Array]',
-    uint8Tag = '[object Uint8Array]',
-    uint8ClampedTag = '[object Uint8ClampedArray]',
-    uint16Tag = '[object Uint16Array]',
-    uint32Tag = '[object Uint32Array]';
-
-/** Used to identify `toStringTag` values of typed arrays. */
-var typedArrayTags = {};
-typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-typedArrayTags[uint32Tag] = true;
-typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
-typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
-typedArrayTags[errorTag] = typedArrayTags[funcTag] =
-typedArrayTags[mapTag] = typedArrayTags[numberTag] =
-typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
-typedArrayTags[setTag] = typedArrayTags[stringTag] =
-typedArrayTags[weakMapTag] = false;
-
-/**
- * The base implementation of `_.isTypedArray` without Node.js optimizations.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
- */
-function baseIsTypedArray(value) {
-  return isObjectLike(value) &&
-    isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
-}
-
-module.exports = baseIsTypedArray;
-
-
-/***/ }),
+/* 179 */,
 /* 180 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -8756,73 +9426,80 @@ module.exports = cloneTypedArray;
 
 /***/ }),
 /* 181 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
-// Generated by CoffeeScript 1.12.7
-(function() {
-  var XMLDOMConfiguration, XMLDOMErrorHandler, XMLDOMStringList;
+"use strict";
 
-  XMLDOMErrorHandler = __webpack_require__(256);
-
-  XMLDOMStringList = __webpack_require__(659);
-
-  module.exports = XMLDOMConfiguration = (function() {
-    function XMLDOMConfiguration() {
-      var clonedSelf;
-      this.defaultParams = {
-        "canonical-form": false,
-        "cdata-sections": false,
-        "comments": false,
-        "datatype-normalization": false,
-        "element-content-whitespace": true,
-        "entities": true,
-        "error-handler": new XMLDOMErrorHandler(),
-        "infoset": true,
-        "validate-if-schema": false,
-        "namespaces": true,
-        "namespace-declarations": true,
-        "normalize-characters": false,
-        "schema-location": '',
-        "schema-type": '',
-        "split-cdata-sections": true,
-        "validate": false,
-        "well-formed": true
-      };
-      this.params = clonedSelf = Object.create(this.defaultParams);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getCache = exports.Cache = void 0;
+const tslib_1 = __webpack_require__(403);
+const cache_manager_1 = tslib_1.__importDefault(__webpack_require__(787));
+const fs_extra_1 = tslib_1.__importDefault(__webpack_require__(607));
+const cache_manager_fs_hash_1 = tslib_1.__importDefault(__webpack_require__(904));
+const path_1 = tslib_1.__importDefault(__webpack_require__(622));
+const MAX_CACHE_SIZE = 250;
+const TTL = Number.MAX_SAFE_INTEGER;
+class Cache {
+    constructor({ name = `db`, store = cache_manager_fs_hash_1.default } = {}) {
+        this.name = name;
+        this.store = store;
     }
-
-    Object.defineProperty(XMLDOMConfiguration.prototype, 'parameterNames', {
-      get: function() {
-        return new XMLDOMStringList(Object.keys(this.defaultParams));
-      }
-    });
-
-    XMLDOMConfiguration.prototype.getParameter = function(name) {
-      if (this.params.hasOwnProperty(name)) {
-        return this.params[name];
-      } else {
-        return null;
-      }
-    };
-
-    XMLDOMConfiguration.prototype.canSetParameter = function(name, value) {
-      return true;
-    };
-
-    XMLDOMConfiguration.prototype.setParameter = function(name, value) {
-      if (value != null) {
-        return this.params[name] = value;
-      } else {
-        return delete this.params[name];
-      }
-    };
-
-    return XMLDOMConfiguration;
-
-  })();
-
-}).call(this);
-
+    get directory() {
+        return path_1.default.join(process.cwd(), `.cache/caches/${this.name}`);
+    }
+    init() {
+        fs_extra_1.default.ensureDirSync(this.directory);
+        const configs = [
+            {
+                store: `memory`,
+                max: MAX_CACHE_SIZE,
+                ttl: TTL,
+            },
+            {
+                store: this.store,
+                ttl: TTL,
+                options: {
+                    path: this.directory,
+                    ttl: TTL,
+                },
+            },
+        ];
+        const caches = configs.map((cache) => cache_manager_1.default.caching(cache));
+        this.cache = cache_manager_1.default.multiCaching(caches);
+        return this;
+    }
+    get(key) {
+        return new Promise((resolve) => {
+            if (!this.cache) {
+                throw new Error(`Cache wasn't initialised yet, please run the init method first`);
+            }
+            this.cache.get(key, (err, res) => {
+                resolve(err ? undefined : res);
+            });
+        });
+    }
+    set(key, value, args = { ttl: TTL }) {
+        return new Promise((resolve) => {
+            if (!this.cache) {
+                throw new Error(`Cache wasn't initialised yet, please run the init method first`);
+            }
+            this.cache.set(key, value, args, (err) => {
+                resolve(err ? undefined : value);
+            });
+        });
+    }
+}
+exports.Cache = Cache;
+const caches = new Map();
+exports.getCache = (name) => {
+    let cache = caches.get(name);
+    if (!cache) {
+        cache = new Cache({ name }).init();
+        caches.set(name, cache);
+    }
+    return cache;
+};
+//# sourceMappingURL=cache.js.map
 
 /***/ }),
 /* 182 */,
@@ -8830,24 +9507,12 @@ module.exports = cloneTypedArray;
 /* 184 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var getMapData = __webpack_require__(580);
+var root = __webpack_require__(348);
 
-/**
- * Removes `key` and its value from the map.
- *
- * @private
- * @name delete
- * @memberOf MapCache
- * @param {string} key The key of the value to remove.
- * @returns {boolean} Returns `true` if the entry was removed, else `false`.
- */
-function mapCacheDelete(key) {
-  var result = getMapData(this, key)['delete'](key);
-  this.size -= result ? 1 : 0;
-  return result;
-}
+/** Built-in value references. */
+var Uint8Array = root.Uint8Array;
 
-module.exports = mapCacheDelete;
+module.exports = Uint8Array;
 
 
 /***/ }),
@@ -8908,7 +9573,86 @@ function runParallel (tasks, cb) {
 /***/ }),
 /* 187 */,
 /* 188 */,
-/* 189 */,
+/* 189 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(762);
+
+/**
+ * Config-specific merge-function which creates a new config-object
+ * by merging two configuration objects together.
+ *
+ * @param {Object} config1
+ * @param {Object} config2
+ * @returns {Object} New object resulting from merging config2 to config1
+ */
+module.exports = function mergeConfig(config1, config2) {
+  // eslint-disable-next-line no-param-reassign
+  config2 = config2 || {};
+  var config = {};
+
+  var valueFromConfig2Keys = ['url', 'method', 'params', 'data'];
+  var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy'];
+  var defaultToConfig2Keys = [
+    'baseURL', 'url', 'transformRequest', 'transformResponse', 'paramsSerializer',
+    'timeout', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
+    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress',
+    'maxContentLength', 'validateStatus', 'maxRedirects', 'httpAgent',
+    'httpsAgent', 'cancelToken', 'socketPath'
+  ];
+
+  utils.forEach(valueFromConfig2Keys, function valueFromConfig2(prop) {
+    if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    }
+  });
+
+  utils.forEach(mergeDeepPropertiesKeys, function mergeDeepProperties(prop) {
+    if (utils.isObject(config2[prop])) {
+      config[prop] = utils.deepMerge(config1[prop], config2[prop]);
+    } else if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    } else if (utils.isObject(config1[prop])) {
+      config[prop] = utils.deepMerge(config1[prop]);
+    } else if (typeof config1[prop] !== 'undefined') {
+      config[prop] = config1[prop];
+    }
+  });
+
+  utils.forEach(defaultToConfig2Keys, function defaultToConfig2(prop) {
+    if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    } else if (typeof config1[prop] !== 'undefined') {
+      config[prop] = config1[prop];
+    }
+  });
+
+  var axiosKeys = valueFromConfig2Keys
+    .concat(mergeDeepPropertiesKeys)
+    .concat(defaultToConfig2Keys);
+
+  var otherKeys = Object
+    .keys(config2)
+    .filter(function filterAxiosKeys(key) {
+      return axiosKeys.indexOf(key) === -1;
+    });
+
+  utils.forEach(otherKeys, function otherKeysDefaultToConfig2(prop) {
+    if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    } else if (typeof config1[prop] !== 'undefined') {
+      config[prop] = config1[prop];
+    }
+  });
+
+  return config;
+};
+
+
+/***/ }),
 /* 190 */,
 /* 191 */
 /***/ (function(module) {
@@ -9252,10 +9996,10 @@ var Stack = __webpack_require__(339),
     cloneBuffer = __webpack_require__(349),
     copyArray = __webpack_require__(232),
     copySymbols = __webpack_require__(629),
-    copySymbolsIn = __webpack_require__(863),
+    copySymbolsIn = __webpack_require__(363),
     getAllKeys = __webpack_require__(870),
     getAllKeysIn = __webpack_require__(919),
-    getTag = __webpack_require__(126),
+    getTag = __webpack_require__(30),
     initCloneArray = __webpack_require__(892),
     initCloneByTag = __webpack_require__(515),
     initCloneObject = __webpack_require__(156),
@@ -9473,17 +10217,33 @@ const tslib_1 = __webpack_require__(403);
 const rss_parser_1 = tslib_1.__importDefault(__webpack_require__(728));
 const log_1 = tslib_1.__importDefault(__webpack_require__(766));
 class Rss {
-    constructor() {
-        this.id = "rss";
+    constructor({ helpers, options }) {
+        this.name = "rss";
+        this.options = {};
+        this.every = 5;
+        this.shouldDeduplicate = true;
+        this.options = options;
+        this.helpers = helpers;
+        if (!options.event) {
+            this.options.event = "new_item";
+        }
+        if (options.every) {
+            this.every = options.every;
+        }
     }
-    run({ helpers, options, }) {
+    getItemKey(item) {
+        if (item.guid)
+            return item.guid;
+        if (item.id)
+            return item.id;
+        return this.helpers.createContentDigest(item);
+    }
+    run() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const event = options.event || "new_item";
-            const url = options.url;
-            const updateInterval = options.every || 5;
+            const { event, url } = this.options;
             let urls = [];
             if (event === "new_item_in_multiple_feeds") {
-                const urlsParam = options.urls;
+                const urlsParam = this.options.urls;
                 if (!urlsParam) {
                     throw new Error("Miss param urls");
                 }
@@ -9523,18 +10283,8 @@ class Rss {
                     });
                 }
             }
-            const getItemKey = (item) => {
-                if (item.guid)
-                    return item.guid;
-                if (item.id)
-                    return item.id;
-                return helpers.createContentDigest(item);
-            };
             return {
-                shouldDeduplicate: true,
-                updateInterval: updateInterval,
                 items,
-                getItemKey,
             };
         });
     }
@@ -9551,7 +10301,7 @@ exports.default = Rss;
 Object.defineProperty(exports, "__esModule", { value: true });
 var create_content_digest_1 = __webpack_require__(309);
 Object.defineProperty(exports, "createContentDigest", { enumerable: true, get: function () { return create_content_digest_1.createContentDigest; } });
-var cache_1 = __webpack_require__(679);
+var cache_1 = __webpack_require__(181);
 Object.defineProperty(exports, "getCache", { enumerable: true, get: function () { return cache_1.getCache; } });
 //# sourceMappingURL=index.js.map
 
@@ -9574,7 +10324,7 @@ module.exports = require("timers");
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var arrayLikeKeys = __webpack_require__(923),
-    baseKeys = __webpack_require__(562),
+    baseKeys = __webpack_require__(429),
     isArrayLike = __webpack_require__(552);
 
 /**
@@ -9908,7 +10658,33 @@ module.exports = CancelToken;
 /***/ }),
 /* 237 */,
 /* 238 */,
-/* 239 */,
+/* 239 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(762);
+
+/**
+ * Transform the data for a request or a response
+ *
+ * @param {Object|String} data The data to be transformed
+ * @param {Array} headers The headers for the request or response
+ * @param {Array|Function} fns A single function or Array of functions
+ * @returns {*} The resulting transformed data
+ */
+module.exports = function transformData(data, headers, fns) {
+  /*eslint no-param-reassign:0*/
+  utils.forEach(fns, function transform(fn) {
+    data = fn(data, headers);
+  });
+
+  return data;
+};
+
+
+/***/ }),
 /* 240 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -9917,16 +10693,10 @@ module.exports = CancelToken;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.run = void 0;
 const tslib_1 = __webpack_require__(403);
-const triggers_1 = __webpack_require__(241);
+const Triggers = tslib_1.__importStar(__webpack_require__(241));
 const helpers_1 = __webpack_require__(210);
 const log_1 = tslib_1.__importDefault(__webpack_require__(766));
 const MAX_CACHE_KEYS_COUNT = 1000;
-const triggerNameMap = {
-    rss: triggers_1.Rss,
-    poll: triggers_1.Poll,
-    webhook: triggers_1.Webhook,
-    telegram_bot: triggers_1.TelegramBot,
-};
 exports.run = ({ trigger, context, }) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     log_1.default.debug("trigger:", trigger);
     let triggerId = "";
@@ -9943,7 +10713,18 @@ exports.run = ({ trigger, context, }) => tslib_1.__awaiter(void 0, void 0, void 
         id: triggerId,
         items: [],
     };
-    if (triggerNameMap[trigger.name]) {
+    const AllTriggers = Triggers;
+    const triggersKeys = Object.keys(AllTriggers);
+    const TriggerMap = {};
+    triggersKeys.forEach((triggerKey) => {
+        const triggerInstance = new AllTriggers[triggerKey]({
+            options: {},
+            context: context,
+            helpers: { createContentDigest: helpers_1.createContentDigest, cache: helpers_1.getCache(`trigger-temp`) },
+        });
+        TriggerMap[triggerInstance.name] = AllTriggers[triggerKey];
+    });
+    if (TriggerMap[trigger.name]) {
         const triggerHelpers = {
             createContentDigest: helpers_1.createContentDigest,
             cache: helpers_1.getCache(`trigger-${triggerId}`),
@@ -9953,10 +10734,10 @@ exports.run = ({ trigger, context, }) => tslib_1.__awaiter(void 0, void 0, void 
             options: trigger.options,
             context: context,
         };
-        const Trigger = triggerNameMap[trigger.name];
-        const triggerInstance = new Trigger();
-        const triggerResult = yield triggerInstance.run(triggerOptions);
-        const { shouldDeduplicate, getItemKey, updateInterval } = triggerResult;
+        const Trigger = TriggerMap[trigger.name];
+        const triggerInstance = new Trigger(triggerOptions);
+        const triggerResult = yield triggerInstance.run();
+        const { shouldDeduplicate, getItemKey, every } = triggerInstance;
         let { items } = triggerResult;
         const maxItemsCount = trigger.options.max_items_count;
         const skipFirst = trigger.options.skip_first || false;
@@ -9965,8 +10746,8 @@ exports.run = ({ trigger, context, }) => tslib_1.__awaiter(void 0, void 0, void 
         }
         const lastUpdatedAt = (yield triggerHelpers.cache.get("lastUpdatedAt")) || 0;
         log_1.default.debug("lastUpdatedAt: ", lastUpdatedAt);
-        if (updateInterval) {
-            const shouldUpdateUtil = lastUpdatedAt + updateInterval * 60 * 1000;
+        if (every) {
+            const shouldUpdateUtil = lastUpdatedAt + every * 60 * 1000;
             const now = Date.now();
             const shouldUpdate = shouldUpdateUtil - now <= 0;
             log_1.default.debug("shouldUpdate:", shouldUpdate);
@@ -10040,7 +10821,7 @@ const Poll_1 = tslib_1.__importDefault(__webpack_require__(859));
 exports.Poll = Poll_1.default;
 const Webhook_1 = tslib_1.__importDefault(__webpack_require__(118));
 exports.Webhook = Webhook_1.default;
-const telegram_bot_1 = tslib_1.__importDefault(__webpack_require__(469));
+const telegram_bot_1 = tslib_1.__importDefault(__webpack_require__(780));
 exports.TelegramBot = telegram_bot_1.default;
 //# sourceMappingURL=index.js.map
 
@@ -11369,39 +12150,7 @@ exports.delete = async function (path, options) {
 };
 
 /***/ }),
-/* 253 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var baseIsTypedArray = __webpack_require__(179),
-    baseUnary = __webpack_require__(988),
-    nodeUtil = __webpack_require__(551);
-
-/* Node.js helper references. */
-var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
-
-/**
- * Checks if `value` is classified as a typed array.
- *
- * @static
- * @memberOf _
- * @since 3.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
- * @example
- *
- * _.isTypedArray(new Uint8Array);
- * // => true
- *
- * _.isTypedArray([]);
- * // => false
- */
-var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
-
-module.exports = isTypedArray;
-
-
-/***/ }),
+/* 253 */,
 /* 254 */,
 /* 255 */,
 /* 256 */
@@ -11891,7 +12640,48 @@ function expand(str, isTop) {
 
 
 /***/ }),
-/* 267 */,
+/* 267 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+// Generated by CoffeeScript 1.12.7
+(function() {
+  var NodeType, XMLCharacterData, XMLComment,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  NodeType = __webpack_require__(712);
+
+  XMLCharacterData = __webpack_require__(52);
+
+  module.exports = XMLComment = (function(superClass) {
+    extend(XMLComment, superClass);
+
+    function XMLComment(parent, text) {
+      XMLComment.__super__.constructor.call(this, parent);
+      if (text == null) {
+        throw new Error("Missing comment text. " + this.debugInfo());
+      }
+      this.name = "#comment";
+      this.type = NodeType.Comment;
+      this.value = this.stringify.comment(text);
+    }
+
+    XMLComment.prototype.clone = function() {
+      return Object.create(this);
+    };
+
+    XMLComment.prototype.toString = function(options) {
+      return this.options.writer.comment(this, this.options.writer.filterOptions(options));
+    };
+
+    return XMLComment;
+
+  })(XMLCharacterData);
+
+}).call(this);
+
+
+/***/ }),
 /* 268 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -12126,7 +12916,76 @@ exports.default = EntryTransformer;
 
 /***/ }),
 /* 275 */,
-/* 276 */,
+/* 276 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+// Generated by CoffeeScript 1.12.7
+(function() {
+  var XMLDOMConfiguration, XMLDOMErrorHandler, XMLDOMStringList;
+
+  XMLDOMErrorHandler = __webpack_require__(256);
+
+  XMLDOMStringList = __webpack_require__(659);
+
+  module.exports = XMLDOMConfiguration = (function() {
+    function XMLDOMConfiguration() {
+      var clonedSelf;
+      this.defaultParams = {
+        "canonical-form": false,
+        "cdata-sections": false,
+        "comments": false,
+        "datatype-normalization": false,
+        "element-content-whitespace": true,
+        "entities": true,
+        "error-handler": new XMLDOMErrorHandler(),
+        "infoset": true,
+        "validate-if-schema": false,
+        "namespaces": true,
+        "namespace-declarations": true,
+        "normalize-characters": false,
+        "schema-location": '',
+        "schema-type": '',
+        "split-cdata-sections": true,
+        "validate": false,
+        "well-formed": true
+      };
+      this.params = clonedSelf = Object.create(this.defaultParams);
+    }
+
+    Object.defineProperty(XMLDOMConfiguration.prototype, 'parameterNames', {
+      get: function() {
+        return new XMLDOMStringList(Object.keys(this.defaultParams));
+      }
+    });
+
+    XMLDOMConfiguration.prototype.getParameter = function(name) {
+      if (this.params.hasOwnProperty(name)) {
+        return this.params[name];
+      } else {
+        return null;
+      }
+    };
+
+    XMLDOMConfiguration.prototype.canSetParameter = function(name, value) {
+      return true;
+    };
+
+    XMLDOMConfiguration.prototype.setParameter = function(name, value) {
+      if (value != null) {
+        return this.params[name] = value;
+      } else {
+        return delete this.params[name];
+      }
+    };
+
+    return XMLDOMConfiguration;
+
+  })();
+
+}).call(this);
+
+
+/***/ }),
 /* 277 */,
 /* 278 */,
 /* 279 */
@@ -12384,9 +13243,9 @@ Object.defineProperty(module, 'exports', {
       if (!XMLElement) {
         XMLElement = __webpack_require__(734);
         XMLCData = __webpack_require__(138);
-        XMLComment = __webpack_require__(109);
+        XMLComment = __webpack_require__(267);
         XMLDeclaration = __webpack_require__(676);
-        XMLDocType = __webpack_require__(856);
+        XMLDocType = __webpack_require__(331);
         XMLRaw = __webpack_require__(426);
         XMLText = __webpack_require__(626);
         XMLProcessingInstruction = __webpack_require__(314);
@@ -13469,7 +14328,27 @@ module.exports = {
 /* 304 */
 /***/ (function(module) {
 
-module.exports = require("string_decoder");
+/**
+ * Appends the elements of `values` to `array`.
+ *
+ * @private
+ * @param {Array} array The array to modify.
+ * @param {Array} values The values to append.
+ * @returns {Array} Returns `array`.
+ */
+function arrayPush(array, values) {
+  var index = -1,
+      length = values.length,
+      offset = array.length;
+
+  while (++index < length) {
+    array[offset + index] = values[index];
+  }
+  return array;
+}
+
+module.exports = arrayPush;
+
 
 /***/ }),
 /* 305 */
@@ -13944,7 +14823,7 @@ module.exports = function parseHeaders(headers) {
 "use strict";
 
 const fs = __webpack_require__(747);
-const arrayUnion = __webpack_require__(152);
+const arrayUnion = __webpack_require__(341);
 const merge2 = __webpack_require__(6);
 const glob = __webpack_require__(606);
 const fastGlob = __webpack_require__(344);
@@ -14187,7 +15066,7 @@ exports.fromPromise = function (fn) {
 var isFunction = __webpack_require__(567),
     isMasked = __webpack_require__(351),
     isObject = __webpack_require__(540),
-    toSource = __webpack_require__(420);
+    toSource = __webpack_require__(834);
 
 /**
  * Used to match `RegExp`
@@ -14463,7 +15342,198 @@ module.exports = objectSorter;
 
 /***/ }),
 /* 330 */,
-/* 331 */,
+/* 331 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+// Generated by CoffeeScript 1.12.7
+(function() {
+  var NodeType, XMLDTDAttList, XMLDTDElement, XMLDTDEntity, XMLDTDNotation, XMLDocType, XMLNamedNodeMap, XMLNode, isObject,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  isObject = __webpack_require__(73).isObject;
+
+  XMLNode = __webpack_require__(290);
+
+  NodeType = __webpack_require__(712);
+
+  XMLDTDAttList = __webpack_require__(665);
+
+  XMLDTDEntity = __webpack_require__(805);
+
+  XMLDTDElement = __webpack_require__(206);
+
+  XMLDTDNotation = __webpack_require__(705);
+
+  XMLNamedNodeMap = __webpack_require__(797);
+
+  module.exports = XMLDocType = (function(superClass) {
+    extend(XMLDocType, superClass);
+
+    function XMLDocType(parent, pubID, sysID) {
+      var child, i, len, ref, ref1, ref2;
+      XMLDocType.__super__.constructor.call(this, parent);
+      this.type = NodeType.DocType;
+      if (parent.children) {
+        ref = parent.children;
+        for (i = 0, len = ref.length; i < len; i++) {
+          child = ref[i];
+          if (child.type === NodeType.Element) {
+            this.name = child.name;
+            break;
+          }
+        }
+      }
+      this.documentObject = parent;
+      if (isObject(pubID)) {
+        ref1 = pubID, pubID = ref1.pubID, sysID = ref1.sysID;
+      }
+      if (sysID == null) {
+        ref2 = [pubID, sysID], sysID = ref2[0], pubID = ref2[1];
+      }
+      if (pubID != null) {
+        this.pubID = this.stringify.dtdPubID(pubID);
+      }
+      if (sysID != null) {
+        this.sysID = this.stringify.dtdSysID(sysID);
+      }
+    }
+
+    Object.defineProperty(XMLDocType.prototype, 'entities', {
+      get: function() {
+        var child, i, len, nodes, ref;
+        nodes = {};
+        ref = this.children;
+        for (i = 0, len = ref.length; i < len; i++) {
+          child = ref[i];
+          if ((child.type === NodeType.EntityDeclaration) && !child.pe) {
+            nodes[child.name] = child;
+          }
+        }
+        return new XMLNamedNodeMap(nodes);
+      }
+    });
+
+    Object.defineProperty(XMLDocType.prototype, 'notations', {
+      get: function() {
+        var child, i, len, nodes, ref;
+        nodes = {};
+        ref = this.children;
+        for (i = 0, len = ref.length; i < len; i++) {
+          child = ref[i];
+          if (child.type === NodeType.NotationDeclaration) {
+            nodes[child.name] = child;
+          }
+        }
+        return new XMLNamedNodeMap(nodes);
+      }
+    });
+
+    Object.defineProperty(XMLDocType.prototype, 'publicId', {
+      get: function() {
+        return this.pubID;
+      }
+    });
+
+    Object.defineProperty(XMLDocType.prototype, 'systemId', {
+      get: function() {
+        return this.sysID;
+      }
+    });
+
+    Object.defineProperty(XMLDocType.prototype, 'internalSubset', {
+      get: function() {
+        throw new Error("This DOM method is not implemented." + this.debugInfo());
+      }
+    });
+
+    XMLDocType.prototype.element = function(name, value) {
+      var child;
+      child = new XMLDTDElement(this, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.attList = function(elementName, attributeName, attributeType, defaultValueType, defaultValue) {
+      var child;
+      child = new XMLDTDAttList(this, elementName, attributeName, attributeType, defaultValueType, defaultValue);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.entity = function(name, value) {
+      var child;
+      child = new XMLDTDEntity(this, false, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.pEntity = function(name, value) {
+      var child;
+      child = new XMLDTDEntity(this, true, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.notation = function(name, value) {
+      var child;
+      child = new XMLDTDNotation(this, name, value);
+      this.children.push(child);
+      return this;
+    };
+
+    XMLDocType.prototype.toString = function(options) {
+      return this.options.writer.docType(this, this.options.writer.filterOptions(options));
+    };
+
+    XMLDocType.prototype.ele = function(name, value) {
+      return this.element(name, value);
+    };
+
+    XMLDocType.prototype.att = function(elementName, attributeName, attributeType, defaultValueType, defaultValue) {
+      return this.attList(elementName, attributeName, attributeType, defaultValueType, defaultValue);
+    };
+
+    XMLDocType.prototype.ent = function(name, value) {
+      return this.entity(name, value);
+    };
+
+    XMLDocType.prototype.pent = function(name, value) {
+      return this.pEntity(name, value);
+    };
+
+    XMLDocType.prototype.not = function(name, value) {
+      return this.notation(name, value);
+    };
+
+    XMLDocType.prototype.up = function() {
+      return this.root() || this.documentObject;
+    };
+
+    XMLDocType.prototype.isEqualNode = function(node) {
+      if (!XMLDocType.__super__.isEqualNode.apply(this, arguments).isEqualNode(node)) {
+        return false;
+      }
+      if (node.name !== this.name) {
+        return false;
+      }
+      if (node.publicId !== this.publicId) {
+        return false;
+      }
+      if (node.systemId !== this.systemId) {
+        return false;
+      }
+      return true;
+    };
+
+    return XMLDocType;
+
+  })(XMLNode);
+
+}).call(this);
+
+
+/***/ }),
 /* 332 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -14484,20 +15554,12 @@ if (typeof Map === 'function' && !process.env.TEST_PSEUDOMAP) {
 /* 335 */,
 /* 336 */,
 /* 337 */
-/***/ (function(__unusedmodule, exports) {
+/***/ (function(module) {
 
-// Generated by CoffeeScript 1.12.7
-(function() {
-  "use strict";
-  exports.stripBOM = function(str) {
-    if (str[0] === '\uFEFF') {
-      return str.substring(1);
-    } else {
-      return str;
-    }
-  };
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
 
-}).call(this);
+module.exports = freeGlobal;
 
 
 /***/ }),
@@ -14536,7 +15598,18 @@ module.exports = Stack;
 
 /***/ }),
 /* 340 */,
-/* 341 */,
+/* 341 */
+/***/ (function(module) {
+
+"use strict";
+
+
+module.exports = (...arguments_) => {
+	return [...new Set([].concat(...arguments_))];
+};
+
+
+/***/ }),
 /* 342 */
 /***/ (function(module) {
 
@@ -14708,7 +15781,7 @@ function slice (args) {
 /* 348 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(996);
+var freeGlobal = __webpack_require__(337);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -15675,1573 +16748,24 @@ module.exports = function bind(fn, thisArg) {
 /***/ }),
 /* 362 */,
 /* 363 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-;(function (sax) { // wrapper for non-node envs
-  sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
-  sax.SAXParser = SAXParser
-  sax.SAXStream = SAXStream
-  sax.createStream = createStream
-
-  // When we pass the MAX_BUFFER_LENGTH position, start checking for buffer overruns.
-  // When we check, schedule the next check for MAX_BUFFER_LENGTH - (max(buffer lengths)),
-  // since that's the earliest that a buffer overrun could occur.  This way, checks are
-  // as rare as required, but as often as necessary to ensure never crossing this bound.
-  // Furthermore, buffers are only tested at most once per write(), so passing a very
-  // large string into write() might have undesirable effects, but this is manageable by
-  // the caller, so it is assumed to be safe.  Thus, a call to write() may, in the extreme
-  // edge case, result in creating at most one complete copy of the string passed in.
-  // Set to Infinity to have unlimited buffers.
-  sax.MAX_BUFFER_LENGTH = 64 * 1024
-
-  var buffers = [
-    'comment', 'sgmlDecl', 'textNode', 'tagName', 'doctype',
-    'procInstName', 'procInstBody', 'entity', 'attribName',
-    'attribValue', 'cdata', 'script'
-  ]
-
-  sax.EVENTS = [
-    'text',
-    'processinginstruction',
-    'sgmldeclaration',
-    'doctype',
-    'comment',
-    'opentagstart',
-    'attribute',
-    'opentag',
-    'closetag',
-    'opencdata',
-    'cdata',
-    'closecdata',
-    'error',
-    'end',
-    'ready',
-    'script',
-    'opennamespace',
-    'closenamespace'
-  ]
-
-  function SAXParser (strict, opt) {
-    if (!(this instanceof SAXParser)) {
-      return new SAXParser(strict, opt)
-    }
-
-    var parser = this
-    clearBuffers(parser)
-    parser.q = parser.c = ''
-    parser.bufferCheckPosition = sax.MAX_BUFFER_LENGTH
-    parser.opt = opt || {}
-    parser.opt.lowercase = parser.opt.lowercase || parser.opt.lowercasetags
-    parser.looseCase = parser.opt.lowercase ? 'toLowerCase' : 'toUpperCase'
-    parser.tags = []
-    parser.closed = parser.closedRoot = parser.sawRoot = false
-    parser.tag = parser.error = null
-    parser.strict = !!strict
-    parser.noscript = !!(strict || parser.opt.noscript)
-    parser.state = S.BEGIN
-    parser.strictEntities = parser.opt.strictEntities
-    parser.ENTITIES = parser.strictEntities ? Object.create(sax.XML_ENTITIES) : Object.create(sax.ENTITIES)
-    parser.attribList = []
-
-    // namespaces form a prototype chain.
-    // it always points at the current tag,
-    // which protos to its parent tag.
-    if (parser.opt.xmlns) {
-      parser.ns = Object.create(rootNS)
-    }
-
-    // mostly just for error reporting
-    parser.trackPosition = parser.opt.position !== false
-    if (parser.trackPosition) {
-      parser.position = parser.line = parser.column = 0
-    }
-    emit(parser, 'onready')
-  }
-
-  if (!Object.create) {
-    Object.create = function (o) {
-      function F () {}
-      F.prototype = o
-      var newf = new F()
-      return newf
-    }
-  }
-
-  if (!Object.keys) {
-    Object.keys = function (o) {
-      var a = []
-      for (var i in o) if (o.hasOwnProperty(i)) a.push(i)
-      return a
-    }
-  }
-
-  function checkBufferLength (parser) {
-    var maxAllowed = Math.max(sax.MAX_BUFFER_LENGTH, 10)
-    var maxActual = 0
-    for (var i = 0, l = buffers.length; i < l; i++) {
-      var len = parser[buffers[i]].length
-      if (len > maxAllowed) {
-        // Text/cdata nodes can get big, and since they're buffered,
-        // we can get here under normal conditions.
-        // Avoid issues by emitting the text node now,
-        // so at least it won't get any bigger.
-        switch (buffers[i]) {
-          case 'textNode':
-            closeText(parser)
-            break
-
-          case 'cdata':
-            emitNode(parser, 'oncdata', parser.cdata)
-            parser.cdata = ''
-            break
-
-          case 'script':
-            emitNode(parser, 'onscript', parser.script)
-            parser.script = ''
-            break
-
-          default:
-            error(parser, 'Max buffer length exceeded: ' + buffers[i])
-        }
-      }
-      maxActual = Math.max(maxActual, len)
-    }
-    // schedule the next check for the earliest possible buffer overrun.
-    var m = sax.MAX_BUFFER_LENGTH - maxActual
-    parser.bufferCheckPosition = m + parser.position
-  }
-
-  function clearBuffers (parser) {
-    for (var i = 0, l = buffers.length; i < l; i++) {
-      parser[buffers[i]] = ''
-    }
-  }
-
-  function flushBuffers (parser) {
-    closeText(parser)
-    if (parser.cdata !== '') {
-      emitNode(parser, 'oncdata', parser.cdata)
-      parser.cdata = ''
-    }
-    if (parser.script !== '') {
-      emitNode(parser, 'onscript', parser.script)
-      parser.script = ''
-    }
-  }
-
-  SAXParser.prototype = {
-    end: function () { end(this) },
-    write: write,
-    resume: function () { this.error = null; return this },
-    close: function () { return this.write(null) },
-    flush: function () { flushBuffers(this) }
-  }
-
-  var Stream
-  try {
-    Stream = __webpack_require__(413).Stream
-  } catch (ex) {
-    Stream = function () {}
-  }
-
-  var streamWraps = sax.EVENTS.filter(function (ev) {
-    return ev !== 'error' && ev !== 'end'
-  })
-
-  function createStream (strict, opt) {
-    return new SAXStream(strict, opt)
-  }
-
-  function SAXStream (strict, opt) {
-    if (!(this instanceof SAXStream)) {
-      return new SAXStream(strict, opt)
-    }
-
-    Stream.apply(this)
-
-    this._parser = new SAXParser(strict, opt)
-    this.writable = true
-    this.readable = true
-
-    var me = this
-
-    this._parser.onend = function () {
-      me.emit('end')
-    }
-
-    this._parser.onerror = function (er) {
-      me.emit('error', er)
-
-      // if didn't throw, then means error was handled.
-      // go ahead and clear error, so we can write again.
-      me._parser.error = null
-    }
-
-    this._decoder = null
-
-    streamWraps.forEach(function (ev) {
-      Object.defineProperty(me, 'on' + ev, {
-        get: function () {
-          return me._parser['on' + ev]
-        },
-        set: function (h) {
-          if (!h) {
-            me.removeAllListeners(ev)
-            me._parser['on' + ev] = h
-            return h
-          }
-          me.on(ev, h)
-        },
-        enumerable: true,
-        configurable: false
-      })
-    })
-  }
-
-  SAXStream.prototype = Object.create(Stream.prototype, {
-    constructor: {
-      value: SAXStream
-    }
-  })
-
-  SAXStream.prototype.write = function (data) {
-    if (typeof Buffer === 'function' &&
-      typeof Buffer.isBuffer === 'function' &&
-      Buffer.isBuffer(data)) {
-      if (!this._decoder) {
-        var SD = __webpack_require__(304).StringDecoder
-        this._decoder = new SD('utf8')
-      }
-      data = this._decoder.write(data)
-    }
-
-    this._parser.write(data.toString())
-    this.emit('data', data)
-    return true
-  }
-
-  SAXStream.prototype.end = function (chunk) {
-    if (chunk && chunk.length) {
-      this.write(chunk)
-    }
-    this._parser.end()
-    return true
-  }
-
-  SAXStream.prototype.on = function (ev, handler) {
-    var me = this
-    if (!me._parser['on' + ev] && streamWraps.indexOf(ev) !== -1) {
-      me._parser['on' + ev] = function () {
-        var args = arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments)
-        args.splice(0, 0, ev)
-        me.emit.apply(me, args)
-      }
-    }
-
-    return Stream.prototype.on.call(me, ev, handler)
-  }
-
-  // this really needs to be replaced with character classes.
-  // XML allows all manner of ridiculous numbers and digits.
-  var CDATA = '[CDATA['
-  var DOCTYPE = 'DOCTYPE'
-  var XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace'
-  var XMLNS_NAMESPACE = 'http://www.w3.org/2000/xmlns/'
-  var rootNS = { xml: XML_NAMESPACE, xmlns: XMLNS_NAMESPACE }
-
-  // http://www.w3.org/TR/REC-xml/#NT-NameStartChar
-  // This implementation works on strings, a single character at a time
-  // as such, it cannot ever support astral-plane characters (10000-EFFFF)
-  // without a significant breaking change to either this  parser, or the
-  // JavaScript language.  Implementation of an emoji-capable xml parser
-  // is left as an exercise for the reader.
-  var nameStart = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/
-
-  var nameBody = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u00B7\u0300-\u036F\u203F-\u2040.\d-]/
-
-  var entityStart = /[#:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/
-  var entityBody = /[#:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u00B7\u0300-\u036F\u203F-\u2040.\d-]/
-
-  function isWhitespace (c) {
-    return c === ' ' || c === '\n' || c === '\r' || c === '\t'
-  }
-
-  function isQuote (c) {
-    return c === '"' || c === '\''
-  }
-
-  function isAttribEnd (c) {
-    return c === '>' || isWhitespace(c)
-  }
-
-  function isMatch (regex, c) {
-    return regex.test(c)
-  }
-
-  function notMatch (regex, c) {
-    return !isMatch(regex, c)
-  }
-
-  var S = 0
-  sax.STATE = {
-    BEGIN: S++, // leading byte order mark or whitespace
-    BEGIN_WHITESPACE: S++, // leading whitespace
-    TEXT: S++, // general stuff
-    TEXT_ENTITY: S++, // &amp and such.
-    OPEN_WAKA: S++, // <
-    SGML_DECL: S++, // <!BLARG
-    SGML_DECL_QUOTED: S++, // <!BLARG foo "bar
-    DOCTYPE: S++, // <!DOCTYPE
-    DOCTYPE_QUOTED: S++, // <!DOCTYPE "//blah
-    DOCTYPE_DTD: S++, // <!DOCTYPE "//blah" [ ...
-    DOCTYPE_DTD_QUOTED: S++, // <!DOCTYPE "//blah" [ "foo
-    COMMENT_STARTING: S++, // <!-
-    COMMENT: S++, // <!--
-    COMMENT_ENDING: S++, // <!-- blah -
-    COMMENT_ENDED: S++, // <!-- blah --
-    CDATA: S++, // <![CDATA[ something
-    CDATA_ENDING: S++, // ]
-    CDATA_ENDING_2: S++, // ]]
-    PROC_INST: S++, // <?hi
-    PROC_INST_BODY: S++, // <?hi there
-    PROC_INST_ENDING: S++, // <?hi "there" ?
-    OPEN_TAG: S++, // <strong
-    OPEN_TAG_SLASH: S++, // <strong /
-    ATTRIB: S++, // <a
-    ATTRIB_NAME: S++, // <a foo
-    ATTRIB_NAME_SAW_WHITE: S++, // <a foo _
-    ATTRIB_VALUE: S++, // <a foo=
-    ATTRIB_VALUE_QUOTED: S++, // <a foo="bar
-    ATTRIB_VALUE_CLOSED: S++, // <a foo="bar"
-    ATTRIB_VALUE_UNQUOTED: S++, // <a foo=bar
-    ATTRIB_VALUE_ENTITY_Q: S++, // <foo bar="&quot;"
-    ATTRIB_VALUE_ENTITY_U: S++, // <foo bar=&quot
-    CLOSE_TAG: S++, // </a
-    CLOSE_TAG_SAW_WHITE: S++, // </a   >
-    SCRIPT: S++, // <script> ...
-    SCRIPT_ENDING: S++ // <script> ... <
-  }
-
-  sax.XML_ENTITIES = {
-    'amp': '&',
-    'gt': '>',
-    'lt': '<',
-    'quot': '"',
-    'apos': "'"
-  }
-
-  sax.ENTITIES = {
-    'amp': '&',
-    'gt': '>',
-    'lt': '<',
-    'quot': '"',
-    'apos': "'",
-    'AElig': 198,
-    'Aacute': 193,
-    'Acirc': 194,
-    'Agrave': 192,
-    'Aring': 197,
-    'Atilde': 195,
-    'Auml': 196,
-    'Ccedil': 199,
-    'ETH': 208,
-    'Eacute': 201,
-    'Ecirc': 202,
-    'Egrave': 200,
-    'Euml': 203,
-    'Iacute': 205,
-    'Icirc': 206,
-    'Igrave': 204,
-    'Iuml': 207,
-    'Ntilde': 209,
-    'Oacute': 211,
-    'Ocirc': 212,
-    'Ograve': 210,
-    'Oslash': 216,
-    'Otilde': 213,
-    'Ouml': 214,
-    'THORN': 222,
-    'Uacute': 218,
-    'Ucirc': 219,
-    'Ugrave': 217,
-    'Uuml': 220,
-    'Yacute': 221,
-    'aacute': 225,
-    'acirc': 226,
-    'aelig': 230,
-    'agrave': 224,
-    'aring': 229,
-    'atilde': 227,
-    'auml': 228,
-    'ccedil': 231,
-    'eacute': 233,
-    'ecirc': 234,
-    'egrave': 232,
-    'eth': 240,
-    'euml': 235,
-    'iacute': 237,
-    'icirc': 238,
-    'igrave': 236,
-    'iuml': 239,
-    'ntilde': 241,
-    'oacute': 243,
-    'ocirc': 244,
-    'ograve': 242,
-    'oslash': 248,
-    'otilde': 245,
-    'ouml': 246,
-    'szlig': 223,
-    'thorn': 254,
-    'uacute': 250,
-    'ucirc': 251,
-    'ugrave': 249,
-    'uuml': 252,
-    'yacute': 253,
-    'yuml': 255,
-    'copy': 169,
-    'reg': 174,
-    'nbsp': 160,
-    'iexcl': 161,
-    'cent': 162,
-    'pound': 163,
-    'curren': 164,
-    'yen': 165,
-    'brvbar': 166,
-    'sect': 167,
-    'uml': 168,
-    'ordf': 170,
-    'laquo': 171,
-    'not': 172,
-    'shy': 173,
-    'macr': 175,
-    'deg': 176,
-    'plusmn': 177,
-    'sup1': 185,
-    'sup2': 178,
-    'sup3': 179,
-    'acute': 180,
-    'micro': 181,
-    'para': 182,
-    'middot': 183,
-    'cedil': 184,
-    'ordm': 186,
-    'raquo': 187,
-    'frac14': 188,
-    'frac12': 189,
-    'frac34': 190,
-    'iquest': 191,
-    'times': 215,
-    'divide': 247,
-    'OElig': 338,
-    'oelig': 339,
-    'Scaron': 352,
-    'scaron': 353,
-    'Yuml': 376,
-    'fnof': 402,
-    'circ': 710,
-    'tilde': 732,
-    'Alpha': 913,
-    'Beta': 914,
-    'Gamma': 915,
-    'Delta': 916,
-    'Epsilon': 917,
-    'Zeta': 918,
-    'Eta': 919,
-    'Theta': 920,
-    'Iota': 921,
-    'Kappa': 922,
-    'Lambda': 923,
-    'Mu': 924,
-    'Nu': 925,
-    'Xi': 926,
-    'Omicron': 927,
-    'Pi': 928,
-    'Rho': 929,
-    'Sigma': 931,
-    'Tau': 932,
-    'Upsilon': 933,
-    'Phi': 934,
-    'Chi': 935,
-    'Psi': 936,
-    'Omega': 937,
-    'alpha': 945,
-    'beta': 946,
-    'gamma': 947,
-    'delta': 948,
-    'epsilon': 949,
-    'zeta': 950,
-    'eta': 951,
-    'theta': 952,
-    'iota': 953,
-    'kappa': 954,
-    'lambda': 955,
-    'mu': 956,
-    'nu': 957,
-    'xi': 958,
-    'omicron': 959,
-    'pi': 960,
-    'rho': 961,
-    'sigmaf': 962,
-    'sigma': 963,
-    'tau': 964,
-    'upsilon': 965,
-    'phi': 966,
-    'chi': 967,
-    'psi': 968,
-    'omega': 969,
-    'thetasym': 977,
-    'upsih': 978,
-    'piv': 982,
-    'ensp': 8194,
-    'emsp': 8195,
-    'thinsp': 8201,
-    'zwnj': 8204,
-    'zwj': 8205,
-    'lrm': 8206,
-    'rlm': 8207,
-    'ndash': 8211,
-    'mdash': 8212,
-    'lsquo': 8216,
-    'rsquo': 8217,
-    'sbquo': 8218,
-    'ldquo': 8220,
-    'rdquo': 8221,
-    'bdquo': 8222,
-    'dagger': 8224,
-    'Dagger': 8225,
-    'bull': 8226,
-    'hellip': 8230,
-    'permil': 8240,
-    'prime': 8242,
-    'Prime': 8243,
-    'lsaquo': 8249,
-    'rsaquo': 8250,
-    'oline': 8254,
-    'frasl': 8260,
-    'euro': 8364,
-    'image': 8465,
-    'weierp': 8472,
-    'real': 8476,
-    'trade': 8482,
-    'alefsym': 8501,
-    'larr': 8592,
-    'uarr': 8593,
-    'rarr': 8594,
-    'darr': 8595,
-    'harr': 8596,
-    'crarr': 8629,
-    'lArr': 8656,
-    'uArr': 8657,
-    'rArr': 8658,
-    'dArr': 8659,
-    'hArr': 8660,
-    'forall': 8704,
-    'part': 8706,
-    'exist': 8707,
-    'empty': 8709,
-    'nabla': 8711,
-    'isin': 8712,
-    'notin': 8713,
-    'ni': 8715,
-    'prod': 8719,
-    'sum': 8721,
-    'minus': 8722,
-    'lowast': 8727,
-    'radic': 8730,
-    'prop': 8733,
-    'infin': 8734,
-    'ang': 8736,
-    'and': 8743,
-    'or': 8744,
-    'cap': 8745,
-    'cup': 8746,
-    'int': 8747,
-    'there4': 8756,
-    'sim': 8764,
-    'cong': 8773,
-    'asymp': 8776,
-    'ne': 8800,
-    'equiv': 8801,
-    'le': 8804,
-    'ge': 8805,
-    'sub': 8834,
-    'sup': 8835,
-    'nsub': 8836,
-    'sube': 8838,
-    'supe': 8839,
-    'oplus': 8853,
-    'otimes': 8855,
-    'perp': 8869,
-    'sdot': 8901,
-    'lceil': 8968,
-    'rceil': 8969,
-    'lfloor': 8970,
-    'rfloor': 8971,
-    'lang': 9001,
-    'rang': 9002,
-    'loz': 9674,
-    'spades': 9824,
-    'clubs': 9827,
-    'hearts': 9829,
-    'diams': 9830
-  }
-
-  Object.keys(sax.ENTITIES).forEach(function (key) {
-    var e = sax.ENTITIES[key]
-    var s = typeof e === 'number' ? String.fromCharCode(e) : e
-    sax.ENTITIES[key] = s
-  })
-
-  for (var s in sax.STATE) {
-    sax.STATE[sax.STATE[s]] = s
-  }
-
-  // shorthand
-  S = sax.STATE
-
-  function emit (parser, event, data) {
-    parser[event] && parser[event](data)
-  }
-
-  function emitNode (parser, nodeType, data) {
-    if (parser.textNode) closeText(parser)
-    emit(parser, nodeType, data)
-  }
-
-  function closeText (parser) {
-    parser.textNode = textopts(parser.opt, parser.textNode)
-    if (parser.textNode) emit(parser, 'ontext', parser.textNode)
-    parser.textNode = ''
-  }
-
-  function textopts (opt, text) {
-    if (opt.trim) text = text.trim()
-    if (opt.normalize) text = text.replace(/\s+/g, ' ')
-    return text
-  }
-
-  function error (parser, er) {
-    closeText(parser)
-    if (parser.trackPosition) {
-      er += '\nLine: ' + parser.line +
-        '\nColumn: ' + parser.column +
-        '\nChar: ' + parser.c
-    }
-    er = new Error(er)
-    parser.error = er
-    emit(parser, 'onerror', er)
-    return parser
-  }
-
-  function end (parser) {
-    if (parser.sawRoot && !parser.closedRoot) strictFail(parser, 'Unclosed root tag')
-    if ((parser.state !== S.BEGIN) &&
-      (parser.state !== S.BEGIN_WHITESPACE) &&
-      (parser.state !== S.TEXT)) {
-      error(parser, 'Unexpected end')
-    }
-    closeText(parser)
-    parser.c = ''
-    parser.closed = true
-    emit(parser, 'onend')
-    SAXParser.call(parser, parser.strict, parser.opt)
-    return parser
-  }
-
-  function strictFail (parser, message) {
-    if (typeof parser !== 'object' || !(parser instanceof SAXParser)) {
-      throw new Error('bad call to strictFail')
-    }
-    if (parser.strict) {
-      error(parser, message)
-    }
-  }
-
-  function newTag (parser) {
-    if (!parser.strict) parser.tagName = parser.tagName[parser.looseCase]()
-    var parent = parser.tags[parser.tags.length - 1] || parser
-    var tag = parser.tag = { name: parser.tagName, attributes: {} }
-
-    // will be overridden if tag contails an xmlns="foo" or xmlns:foo="bar"
-    if (parser.opt.xmlns) {
-      tag.ns = parent.ns
-    }
-    parser.attribList.length = 0
-    emitNode(parser, 'onopentagstart', tag)
-  }
-
-  function qname (name, attribute) {
-    var i = name.indexOf(':')
-    var qualName = i < 0 ? [ '', name ] : name.split(':')
-    var prefix = qualName[0]
-    var local = qualName[1]
-
-    // <x "xmlns"="http://foo">
-    if (attribute && name === 'xmlns') {
-      prefix = 'xmlns'
-      local = ''
-    }
-
-    return { prefix: prefix, local: local }
-  }
-
-  function attrib (parser) {
-    if (!parser.strict) {
-      parser.attribName = parser.attribName[parser.looseCase]()
-    }
-
-    if (parser.attribList.indexOf(parser.attribName) !== -1 ||
-      parser.tag.attributes.hasOwnProperty(parser.attribName)) {
-      parser.attribName = parser.attribValue = ''
-      return
-    }
-
-    if (parser.opt.xmlns) {
-      var qn = qname(parser.attribName, true)
-      var prefix = qn.prefix
-      var local = qn.local
-
-      if (prefix === 'xmlns') {
-        // namespace binding attribute. push the binding into scope
-        if (local === 'xml' && parser.attribValue !== XML_NAMESPACE) {
-          strictFail(parser,
-            'xml: prefix must be bound to ' + XML_NAMESPACE + '\n' +
-            'Actual: ' + parser.attribValue)
-        } else if (local === 'xmlns' && parser.attribValue !== XMLNS_NAMESPACE) {
-          strictFail(parser,
-            'xmlns: prefix must be bound to ' + XMLNS_NAMESPACE + '\n' +
-            'Actual: ' + parser.attribValue)
-        } else {
-          var tag = parser.tag
-          var parent = parser.tags[parser.tags.length - 1] || parser
-          if (tag.ns === parent.ns) {
-            tag.ns = Object.create(parent.ns)
-          }
-          tag.ns[local] = parser.attribValue
-        }
-      }
-
-      // defer onattribute events until all attributes have been seen
-      // so any new bindings can take effect. preserve attribute order
-      // so deferred events can be emitted in document order
-      parser.attribList.push([parser.attribName, parser.attribValue])
-    } else {
-      // in non-xmlns mode, we can emit the event right away
-      parser.tag.attributes[parser.attribName] = parser.attribValue
-      emitNode(parser, 'onattribute', {
-        name: parser.attribName,
-        value: parser.attribValue
-      })
-    }
-
-    parser.attribName = parser.attribValue = ''
-  }
-
-  function openTag (parser, selfClosing) {
-    if (parser.opt.xmlns) {
-      // emit namespace binding events
-      var tag = parser.tag
-
-      // add namespace info to tag
-      var qn = qname(parser.tagName)
-      tag.prefix = qn.prefix
-      tag.local = qn.local
-      tag.uri = tag.ns[qn.prefix] || ''
-
-      if (tag.prefix && !tag.uri) {
-        strictFail(parser, 'Unbound namespace prefix: ' +
-          JSON.stringify(parser.tagName))
-        tag.uri = qn.prefix
-      }
-
-      var parent = parser.tags[parser.tags.length - 1] || parser
-      if (tag.ns && parent.ns !== tag.ns) {
-        Object.keys(tag.ns).forEach(function (p) {
-          emitNode(parser, 'onopennamespace', {
-            prefix: p,
-            uri: tag.ns[p]
-          })
-        })
-      }
-
-      // handle deferred onattribute events
-      // Note: do not apply default ns to attributes:
-      //   http://www.w3.org/TR/REC-xml-names/#defaulting
-      for (var i = 0, l = parser.attribList.length; i < l; i++) {
-        var nv = parser.attribList[i]
-        var name = nv[0]
-        var value = nv[1]
-        var qualName = qname(name, true)
-        var prefix = qualName.prefix
-        var local = qualName.local
-        var uri = prefix === '' ? '' : (tag.ns[prefix] || '')
-        var a = {
-          name: name,
-          value: value,
-          prefix: prefix,
-          local: local,
-          uri: uri
-        }
-
-        // if there's any attributes with an undefined namespace,
-        // then fail on them now.
-        if (prefix && prefix !== 'xmlns' && !uri) {
-          strictFail(parser, 'Unbound namespace prefix: ' +
-            JSON.stringify(prefix))
-          a.uri = prefix
-        }
-        parser.tag.attributes[name] = a
-        emitNode(parser, 'onattribute', a)
-      }
-      parser.attribList.length = 0
-    }
-
-    parser.tag.isSelfClosing = !!selfClosing
-
-    // process the tag
-    parser.sawRoot = true
-    parser.tags.push(parser.tag)
-    emitNode(parser, 'onopentag', parser.tag)
-    if (!selfClosing) {
-      // special case for <script> in non-strict mode.
-      if (!parser.noscript && parser.tagName.toLowerCase() === 'script') {
-        parser.state = S.SCRIPT
-      } else {
-        parser.state = S.TEXT
-      }
-      parser.tag = null
-      parser.tagName = ''
-    }
-    parser.attribName = parser.attribValue = ''
-    parser.attribList.length = 0
-  }
-
-  function closeTag (parser) {
-    if (!parser.tagName) {
-      strictFail(parser, 'Weird empty close tag.')
-      parser.textNode += '</>'
-      parser.state = S.TEXT
-      return
-    }
-
-    if (parser.script) {
-      if (parser.tagName !== 'script') {
-        parser.script += '</' + parser.tagName + '>'
-        parser.tagName = ''
-        parser.state = S.SCRIPT
-        return
-      }
-      emitNode(parser, 'onscript', parser.script)
-      parser.script = ''
-    }
-
-    // first make sure that the closing tag actually exists.
-    // <a><b></c></b></a> will close everything, otherwise.
-    var t = parser.tags.length
-    var tagName = parser.tagName
-    if (!parser.strict) {
-      tagName = tagName[parser.looseCase]()
-    }
-    var closeTo = tagName
-    while (t--) {
-      var close = parser.tags[t]
-      if (close.name !== closeTo) {
-        // fail the first time in strict mode
-        strictFail(parser, 'Unexpected close tag')
-      } else {
-        break
-      }
-    }
-
-    // didn't find it.  we already failed for strict, so just abort.
-    if (t < 0) {
-      strictFail(parser, 'Unmatched closing tag: ' + parser.tagName)
-      parser.textNode += '</' + parser.tagName + '>'
-      parser.state = S.TEXT
-      return
-    }
-    parser.tagName = tagName
-    var s = parser.tags.length
-    while (s-- > t) {
-      var tag = parser.tag = parser.tags.pop()
-      parser.tagName = parser.tag.name
-      emitNode(parser, 'onclosetag', parser.tagName)
-
-      var x = {}
-      for (var i in tag.ns) {
-        x[i] = tag.ns[i]
-      }
-
-      var parent = parser.tags[parser.tags.length - 1] || parser
-      if (parser.opt.xmlns && tag.ns !== parent.ns) {
-        // remove namespace bindings introduced by tag
-        Object.keys(tag.ns).forEach(function (p) {
-          var n = tag.ns[p]
-          emitNode(parser, 'onclosenamespace', { prefix: p, uri: n })
-        })
-      }
-    }
-    if (t === 0) parser.closedRoot = true
-    parser.tagName = parser.attribValue = parser.attribName = ''
-    parser.attribList.length = 0
-    parser.state = S.TEXT
-  }
-
-  function parseEntity (parser) {
-    var entity = parser.entity
-    var entityLC = entity.toLowerCase()
-    var num
-    var numStr = ''
-
-    if (parser.ENTITIES[entity]) {
-      return parser.ENTITIES[entity]
-    }
-    if (parser.ENTITIES[entityLC]) {
-      return parser.ENTITIES[entityLC]
-    }
-    entity = entityLC
-    if (entity.charAt(0) === '#') {
-      if (entity.charAt(1) === 'x') {
-        entity = entity.slice(2)
-        num = parseInt(entity, 16)
-        numStr = num.toString(16)
-      } else {
-        entity = entity.slice(1)
-        num = parseInt(entity, 10)
-        numStr = num.toString(10)
-      }
-    }
-    entity = entity.replace(/^0+/, '')
-    if (isNaN(num) || numStr.toLowerCase() !== entity) {
-      strictFail(parser, 'Invalid character entity')
-      return '&' + parser.entity + ';'
-    }
-
-    return String.fromCodePoint(num)
-  }
-
-  function beginWhiteSpace (parser, c) {
-    if (c === '<') {
-      parser.state = S.OPEN_WAKA
-      parser.startTagPosition = parser.position
-    } else if (!isWhitespace(c)) {
-      // have to process this as a text node.
-      // weird, but happens.
-      strictFail(parser, 'Non-whitespace before first tag.')
-      parser.textNode = c
-      parser.state = S.TEXT
-    }
-  }
-
-  function charAt (chunk, i) {
-    var result = ''
-    if (i < chunk.length) {
-      result = chunk.charAt(i)
-    }
-    return result
-  }
-
-  function write (chunk) {
-    var parser = this
-    if (this.error) {
-      throw this.error
-    }
-    if (parser.closed) {
-      return error(parser,
-        'Cannot write after close. Assign an onready handler.')
-    }
-    if (chunk === null) {
-      return end(parser)
-    }
-    if (typeof chunk === 'object') {
-      chunk = chunk.toString()
-    }
-    var i = 0
-    var c = ''
-    while (true) {
-      c = charAt(chunk, i++)
-      parser.c = c
-
-      if (!c) {
-        break
-      }
-
-      if (parser.trackPosition) {
-        parser.position++
-        if (c === '\n') {
-          parser.line++
-          parser.column = 0
-        } else {
-          parser.column++
-        }
-      }
-
-      switch (parser.state) {
-        case S.BEGIN:
-          parser.state = S.BEGIN_WHITESPACE
-          if (c === '\uFEFF') {
-            continue
-          }
-          beginWhiteSpace(parser, c)
-          continue
-
-        case S.BEGIN_WHITESPACE:
-          beginWhiteSpace(parser, c)
-          continue
-
-        case S.TEXT:
-          if (parser.sawRoot && !parser.closedRoot) {
-            var starti = i - 1
-            while (c && c !== '<' && c !== '&') {
-              c = charAt(chunk, i++)
-              if (c && parser.trackPosition) {
-                parser.position++
-                if (c === '\n') {
-                  parser.line++
-                  parser.column = 0
-                } else {
-                  parser.column++
-                }
-              }
-            }
-            parser.textNode += chunk.substring(starti, i - 1)
-          }
-          if (c === '<' && !(parser.sawRoot && parser.closedRoot && !parser.strict)) {
-            parser.state = S.OPEN_WAKA
-            parser.startTagPosition = parser.position
-          } else {
-            if (!isWhitespace(c) && (!parser.sawRoot || parser.closedRoot)) {
-              strictFail(parser, 'Text data outside of root node.')
-            }
-            if (c === '&') {
-              parser.state = S.TEXT_ENTITY
-            } else {
-              parser.textNode += c
-            }
-          }
-          continue
-
-        case S.SCRIPT:
-          // only non-strict
-          if (c === '<') {
-            parser.state = S.SCRIPT_ENDING
-          } else {
-            parser.script += c
-          }
-          continue
-
-        case S.SCRIPT_ENDING:
-          if (c === '/') {
-            parser.state = S.CLOSE_TAG
-          } else {
-            parser.script += '<' + c
-            parser.state = S.SCRIPT
-          }
-          continue
-
-        case S.OPEN_WAKA:
-          // either a /, ?, !, or text is coming next.
-          if (c === '!') {
-            parser.state = S.SGML_DECL
-            parser.sgmlDecl = ''
-          } else if (isWhitespace(c)) {
-            // wait for it...
-          } else if (isMatch(nameStart, c)) {
-            parser.state = S.OPEN_TAG
-            parser.tagName = c
-          } else if (c === '/') {
-            parser.state = S.CLOSE_TAG
-            parser.tagName = ''
-          } else if (c === '?') {
-            parser.state = S.PROC_INST
-            parser.procInstName = parser.procInstBody = ''
-          } else {
-            strictFail(parser, 'Unencoded <')
-            // if there was some whitespace, then add that in.
-            if (parser.startTagPosition + 1 < parser.position) {
-              var pad = parser.position - parser.startTagPosition
-              c = new Array(pad).join(' ') + c
-            }
-            parser.textNode += '<' + c
-            parser.state = S.TEXT
-          }
-          continue
-
-        case S.SGML_DECL:
-          if ((parser.sgmlDecl + c).toUpperCase() === CDATA) {
-            emitNode(parser, 'onopencdata')
-            parser.state = S.CDATA
-            parser.sgmlDecl = ''
-            parser.cdata = ''
-          } else if (parser.sgmlDecl + c === '--') {
-            parser.state = S.COMMENT
-            parser.comment = ''
-            parser.sgmlDecl = ''
-          } else if ((parser.sgmlDecl + c).toUpperCase() === DOCTYPE) {
-            parser.state = S.DOCTYPE
-            if (parser.doctype || parser.sawRoot) {
-              strictFail(parser,
-                'Inappropriately located doctype declaration')
-            }
-            parser.doctype = ''
-            parser.sgmlDecl = ''
-          } else if (c === '>') {
-            emitNode(parser, 'onsgmldeclaration', parser.sgmlDecl)
-            parser.sgmlDecl = ''
-            parser.state = S.TEXT
-          } else if (isQuote(c)) {
-            parser.state = S.SGML_DECL_QUOTED
-            parser.sgmlDecl += c
-          } else {
-            parser.sgmlDecl += c
-          }
-          continue
-
-        case S.SGML_DECL_QUOTED:
-          if (c === parser.q) {
-            parser.state = S.SGML_DECL
-            parser.q = ''
-          }
-          parser.sgmlDecl += c
-          continue
-
-        case S.DOCTYPE:
-          if (c === '>') {
-            parser.state = S.TEXT
-            emitNode(parser, 'ondoctype', parser.doctype)
-            parser.doctype = true // just remember that we saw it.
-          } else {
-            parser.doctype += c
-            if (c === '[') {
-              parser.state = S.DOCTYPE_DTD
-            } else if (isQuote(c)) {
-              parser.state = S.DOCTYPE_QUOTED
-              parser.q = c
-            }
-          }
-          continue
-
-        case S.DOCTYPE_QUOTED:
-          parser.doctype += c
-          if (c === parser.q) {
-            parser.q = ''
-            parser.state = S.DOCTYPE
-          }
-          continue
-
-        case S.DOCTYPE_DTD:
-          parser.doctype += c
-          if (c === ']') {
-            parser.state = S.DOCTYPE
-          } else if (isQuote(c)) {
-            parser.state = S.DOCTYPE_DTD_QUOTED
-            parser.q = c
-          }
-          continue
-
-        case S.DOCTYPE_DTD_QUOTED:
-          parser.doctype += c
-          if (c === parser.q) {
-            parser.state = S.DOCTYPE_DTD
-            parser.q = ''
-          }
-          continue
-
-        case S.COMMENT:
-          if (c === '-') {
-            parser.state = S.COMMENT_ENDING
-          } else {
-            parser.comment += c
-          }
-          continue
-
-        case S.COMMENT_ENDING:
-          if (c === '-') {
-            parser.state = S.COMMENT_ENDED
-            parser.comment = textopts(parser.opt, parser.comment)
-            if (parser.comment) {
-              emitNode(parser, 'oncomment', parser.comment)
-            }
-            parser.comment = ''
-          } else {
-            parser.comment += '-' + c
-            parser.state = S.COMMENT
-          }
-          continue
-
-        case S.COMMENT_ENDED:
-          if (c !== '>') {
-            strictFail(parser, 'Malformed comment')
-            // allow <!-- blah -- bloo --> in non-strict mode,
-            // which is a comment of " blah -- bloo "
-            parser.comment += '--' + c
-            parser.state = S.COMMENT
-          } else {
-            parser.state = S.TEXT
-          }
-          continue
-
-        case S.CDATA:
-          if (c === ']') {
-            parser.state = S.CDATA_ENDING
-          } else {
-            parser.cdata += c
-          }
-          continue
-
-        case S.CDATA_ENDING:
-          if (c === ']') {
-            parser.state = S.CDATA_ENDING_2
-          } else {
-            parser.cdata += ']' + c
-            parser.state = S.CDATA
-          }
-          continue
-
-        case S.CDATA_ENDING_2:
-          if (c === '>') {
-            if (parser.cdata) {
-              emitNode(parser, 'oncdata', parser.cdata)
-            }
-            emitNode(parser, 'onclosecdata')
-            parser.cdata = ''
-            parser.state = S.TEXT
-          } else if (c === ']') {
-            parser.cdata += ']'
-          } else {
-            parser.cdata += ']]' + c
-            parser.state = S.CDATA
-          }
-          continue
-
-        case S.PROC_INST:
-          if (c === '?') {
-            parser.state = S.PROC_INST_ENDING
-          } else if (isWhitespace(c)) {
-            parser.state = S.PROC_INST_BODY
-          } else {
-            parser.procInstName += c
-          }
-          continue
-
-        case S.PROC_INST_BODY:
-          if (!parser.procInstBody && isWhitespace(c)) {
-            continue
-          } else if (c === '?') {
-            parser.state = S.PROC_INST_ENDING
-          } else {
-            parser.procInstBody += c
-          }
-          continue
-
-        case S.PROC_INST_ENDING:
-          if (c === '>') {
-            emitNode(parser, 'onprocessinginstruction', {
-              name: parser.procInstName,
-              body: parser.procInstBody
-            })
-            parser.procInstName = parser.procInstBody = ''
-            parser.state = S.TEXT
-          } else {
-            parser.procInstBody += '?' + c
-            parser.state = S.PROC_INST_BODY
-          }
-          continue
-
-        case S.OPEN_TAG:
-          if (isMatch(nameBody, c)) {
-            parser.tagName += c
-          } else {
-            newTag(parser)
-            if (c === '>') {
-              openTag(parser)
-            } else if (c === '/') {
-              parser.state = S.OPEN_TAG_SLASH
-            } else {
-              if (!isWhitespace(c)) {
-                strictFail(parser, 'Invalid character in tag name')
-              }
-              parser.state = S.ATTRIB
-            }
-          }
-          continue
-
-        case S.OPEN_TAG_SLASH:
-          if (c === '>') {
-            openTag(parser, true)
-            closeTag(parser)
-          } else {
-            strictFail(parser, 'Forward-slash in opening tag not followed by >')
-            parser.state = S.ATTRIB
-          }
-          continue
-
-        case S.ATTRIB:
-          // haven't read the attribute name yet.
-          if (isWhitespace(c)) {
-            continue
-          } else if (c === '>') {
-            openTag(parser)
-          } else if (c === '/') {
-            parser.state = S.OPEN_TAG_SLASH
-          } else if (isMatch(nameStart, c)) {
-            parser.attribName = c
-            parser.attribValue = ''
-            parser.state = S.ATTRIB_NAME
-          } else {
-            strictFail(parser, 'Invalid attribute name')
-          }
-          continue
-
-        case S.ATTRIB_NAME:
-          if (c === '=') {
-            parser.state = S.ATTRIB_VALUE
-          } else if (c === '>') {
-            strictFail(parser, 'Attribute without value')
-            parser.attribValue = parser.attribName
-            attrib(parser)
-            openTag(parser)
-          } else if (isWhitespace(c)) {
-            parser.state = S.ATTRIB_NAME_SAW_WHITE
-          } else if (isMatch(nameBody, c)) {
-            parser.attribName += c
-          } else {
-            strictFail(parser, 'Invalid attribute name')
-          }
-          continue
-
-        case S.ATTRIB_NAME_SAW_WHITE:
-          if (c === '=') {
-            parser.state = S.ATTRIB_VALUE
-          } else if (isWhitespace(c)) {
-            continue
-          } else {
-            strictFail(parser, 'Attribute without value')
-            parser.tag.attributes[parser.attribName] = ''
-            parser.attribValue = ''
-            emitNode(parser, 'onattribute', {
-              name: parser.attribName,
-              value: ''
-            })
-            parser.attribName = ''
-            if (c === '>') {
-              openTag(parser)
-            } else if (isMatch(nameStart, c)) {
-              parser.attribName = c
-              parser.state = S.ATTRIB_NAME
-            } else {
-              strictFail(parser, 'Invalid attribute name')
-              parser.state = S.ATTRIB
-            }
-          }
-          continue
-
-        case S.ATTRIB_VALUE:
-          if (isWhitespace(c)) {
-            continue
-          } else if (isQuote(c)) {
-            parser.q = c
-            parser.state = S.ATTRIB_VALUE_QUOTED
-          } else {
-            strictFail(parser, 'Unquoted attribute value')
-            parser.state = S.ATTRIB_VALUE_UNQUOTED
-            parser.attribValue = c
-          }
-          continue
-
-        case S.ATTRIB_VALUE_QUOTED:
-          if (c !== parser.q) {
-            if (c === '&') {
-              parser.state = S.ATTRIB_VALUE_ENTITY_Q
-            } else {
-              parser.attribValue += c
-            }
-            continue
-          }
-          attrib(parser)
-          parser.q = ''
-          parser.state = S.ATTRIB_VALUE_CLOSED
-          continue
-
-        case S.ATTRIB_VALUE_CLOSED:
-          if (isWhitespace(c)) {
-            parser.state = S.ATTRIB
-          } else if (c === '>') {
-            openTag(parser)
-          } else if (c === '/') {
-            parser.state = S.OPEN_TAG_SLASH
-          } else if (isMatch(nameStart, c)) {
-            strictFail(parser, 'No whitespace between attributes')
-            parser.attribName = c
-            parser.attribValue = ''
-            parser.state = S.ATTRIB_NAME
-          } else {
-            strictFail(parser, 'Invalid attribute name')
-          }
-          continue
-
-        case S.ATTRIB_VALUE_UNQUOTED:
-          if (!isAttribEnd(c)) {
-            if (c === '&') {
-              parser.state = S.ATTRIB_VALUE_ENTITY_U
-            } else {
-              parser.attribValue += c
-            }
-            continue
-          }
-          attrib(parser)
-          if (c === '>') {
-            openTag(parser)
-          } else {
-            parser.state = S.ATTRIB
-          }
-          continue
-
-        case S.CLOSE_TAG:
-          if (!parser.tagName) {
-            if (isWhitespace(c)) {
-              continue
-            } else if (notMatch(nameStart, c)) {
-              if (parser.script) {
-                parser.script += '</' + c
-                parser.state = S.SCRIPT
-              } else {
-                strictFail(parser, 'Invalid tagname in closing tag.')
-              }
-            } else {
-              parser.tagName = c
-            }
-          } else if (c === '>') {
-            closeTag(parser)
-          } else if (isMatch(nameBody, c)) {
-            parser.tagName += c
-          } else if (parser.script) {
-            parser.script += '</' + parser.tagName
-            parser.tagName = ''
-            parser.state = S.SCRIPT
-          } else {
-            if (!isWhitespace(c)) {
-              strictFail(parser, 'Invalid tagname in closing tag')
-            }
-            parser.state = S.CLOSE_TAG_SAW_WHITE
-          }
-          continue
-
-        case S.CLOSE_TAG_SAW_WHITE:
-          if (isWhitespace(c)) {
-            continue
-          }
-          if (c === '>') {
-            closeTag(parser)
-          } else {
-            strictFail(parser, 'Invalid characters in closing tag')
-          }
-          continue
-
-        case S.TEXT_ENTITY:
-        case S.ATTRIB_VALUE_ENTITY_Q:
-        case S.ATTRIB_VALUE_ENTITY_U:
-          var returnState
-          var buffer
-          switch (parser.state) {
-            case S.TEXT_ENTITY:
-              returnState = S.TEXT
-              buffer = 'textNode'
-              break
-
-            case S.ATTRIB_VALUE_ENTITY_Q:
-              returnState = S.ATTRIB_VALUE_QUOTED
-              buffer = 'attribValue'
-              break
-
-            case S.ATTRIB_VALUE_ENTITY_U:
-              returnState = S.ATTRIB_VALUE_UNQUOTED
-              buffer = 'attribValue'
-              break
-          }
-
-          if (c === ';') {
-            parser[buffer] += parseEntity(parser)
-            parser.entity = ''
-            parser.state = returnState
-          } else if (isMatch(parser.entity.length ? entityBody : entityStart, c)) {
-            parser.entity += c
-          } else {
-            strictFail(parser, 'Invalid character in entity name')
-            parser[buffer] += '&' + parser.entity + c
-            parser.entity = ''
-            parser.state = returnState
-          }
-
-          continue
-
-        default:
-          throw new Error(parser, 'Unknown state: ' + parser.state)
-      }
-    } // while
-
-    if (parser.position >= parser.bufferCheckPosition) {
-      checkBufferLength(parser)
-    }
-    return parser
-  }
-
-  /*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
-  /* istanbul ignore next */
-  if (!String.fromCodePoint) {
-    (function () {
-      var stringFromCharCode = String.fromCharCode
-      var floor = Math.floor
-      var fromCodePoint = function () {
-        var MAX_SIZE = 0x4000
-        var codeUnits = []
-        var highSurrogate
-        var lowSurrogate
-        var index = -1
-        var length = arguments.length
-        if (!length) {
-          return ''
-        }
-        var result = ''
-        while (++index < length) {
-          var codePoint = Number(arguments[index])
-          if (
-            !isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
-            codePoint < 0 || // not a valid Unicode code point
-            codePoint > 0x10FFFF || // not a valid Unicode code point
-            floor(codePoint) !== codePoint // not an integer
-          ) {
-            throw RangeError('Invalid code point: ' + codePoint)
-          }
-          if (codePoint <= 0xFFFF) { // BMP code point
-            codeUnits.push(codePoint)
-          } else { // Astral code point; split in surrogate halves
-            // http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
-            codePoint -= 0x10000
-            highSurrogate = (codePoint >> 10) + 0xD800
-            lowSurrogate = (codePoint % 0x400) + 0xDC00
-            codeUnits.push(highSurrogate, lowSurrogate)
-          }
-          if (index + 1 === length || codeUnits.length > MAX_SIZE) {
-            result += stringFromCharCode.apply(null, codeUnits)
-            codeUnits.length = 0
-          }
-        }
-        return result
-      }
-      /* istanbul ignore next */
-      if (Object.defineProperty) {
-        Object.defineProperty(String, 'fromCodePoint', {
-          value: fromCodePoint,
-          configurable: true,
-          writable: true
-        })
-      } else {
-        String.fromCodePoint = fromCodePoint
-      }
-    }())
-  }
-})( false ? undefined : exports)
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+var copyObject = __webpack_require__(910),
+    getSymbolsIn = __webpack_require__(670);
+
+/**
+ * Copies own and inherited symbols of `source` to `object`.
+ *
+ * @private
+ * @param {Object} source The object to copy symbols from.
+ * @param {Object} [object={}] The object to copy symbols to.
+ * @returns {Object} Returns `object`.
+ */
+function copySymbolsIn(source, object) {
+  return copyObject(source, getSymbolsIn(source), object);
+}
+
+module.exports = copySymbolsIn;
 
 
 /***/ }),
@@ -17342,7 +16866,7 @@ module.exports = function settle(resolve, reject, response) {
 var utils = __webpack_require__(762);
 var bind = __webpack_require__(360);
 var Axios = __webpack_require__(575);
-var mergeConfig = __webpack_require__(30);
+var mergeConfig = __webpack_require__(189);
 var defaults = __webpack_require__(134);
 
 /**
@@ -17620,7 +17144,7 @@ const chalkTag = (chalk, ...strings) => {
 	}
 
 	if (template === undefined) {
-		template = __webpack_require__(175);
+		template = __webpack_require__(709);
 	}
 
 	return template(chalk, parts.join(''));
@@ -17641,187 +17165,13 @@ module.exports = chalk;
 /* 391 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+var getNative = __webpack_require__(698),
+    root = __webpack_require__(348);
 
+/* Built-in method references that are verified to be native. */
+var WeakMap = getNative(root, 'WeakMap');
 
-var utils = __webpack_require__(762);
-var settle = __webpack_require__(374);
-var buildURL = __webpack_require__(250);
-var buildFullPath = __webpack_require__(80);
-var parseHeaders = __webpack_require__(313);
-var isURLSameOrigin = __webpack_require__(909);
-var createError = __webpack_require__(962);
-
-module.exports = function xhrAdapter(config) {
-  return new Promise(function dispatchXhrRequest(resolve, reject) {
-    var requestData = config.data;
-    var requestHeaders = config.headers;
-
-    if (utils.isFormData(requestData)) {
-      delete requestHeaders['Content-Type']; // Let the browser set it
-    }
-
-    var request = new XMLHttpRequest();
-
-    // HTTP basic authentication
-    if (config.auth) {
-      var username = config.auth.username || '';
-      var password = config.auth.password || '';
-      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
-    }
-
-    var fullPath = buildFullPath(config.baseURL, config.url);
-    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
-
-    // Set the request timeout in MS
-    request.timeout = config.timeout;
-
-    // Listen for ready state
-    request.onreadystatechange = function handleLoad() {
-      if (!request || request.readyState !== 4) {
-        return;
-      }
-
-      // The request errored out and we didn't get a response, this will be
-      // handled by onerror instead
-      // With one exception: request that using file: protocol, most browsers
-      // will return status as 0 even though it's a successful request
-      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-        return;
-      }
-
-      // Prepare the response
-      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
-      var response = {
-        data: responseData,
-        status: request.status,
-        statusText: request.statusText,
-        headers: responseHeaders,
-        config: config,
-        request: request
-      };
-
-      settle(resolve, reject, response);
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle browser request cancellation (as opposed to a manual cancellation)
-    request.onabort = function handleAbort() {
-      if (!request) {
-        return;
-      }
-
-      reject(createError('Request aborted', config, 'ECONNABORTED', request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle low level network errors
-    request.onerror = function handleError() {
-      // Real errors are hidden from us by the browser
-      // onerror should only fire if it's a network error
-      reject(createError('Network Error', config, null, request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle timeout
-    request.ontimeout = function handleTimeout() {
-      var timeoutErrorMessage = 'timeout of ' + config.timeout + 'ms exceeded';
-      if (config.timeoutErrorMessage) {
-        timeoutErrorMessage = config.timeoutErrorMessage;
-      }
-      reject(createError(timeoutErrorMessage, config, 'ECONNABORTED',
-        request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Add xsrf header
-    // This is only done if running in a standard browser environment.
-    // Specifically not if we're in a web worker, or react-native.
-    if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(978);
-
-      // Add xsrf header
-      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
-        cookies.read(config.xsrfCookieName) :
-        undefined;
-
-      if (xsrfValue) {
-        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-      }
-    }
-
-    // Add headers to the request
-    if ('setRequestHeader' in request) {
-      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-          // Remove Content-Type if data is undefined
-          delete requestHeaders[key];
-        } else {
-          // Otherwise add header to the request
-          request.setRequestHeader(key, val);
-        }
-      });
-    }
-
-    // Add withCredentials to request if needed
-    if (!utils.isUndefined(config.withCredentials)) {
-      request.withCredentials = !!config.withCredentials;
-    }
-
-    // Add responseType to request if needed
-    if (config.responseType) {
-      try {
-        request.responseType = config.responseType;
-      } catch (e) {
-        // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
-        // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
-        if (config.responseType !== 'json') {
-          throw e;
-        }
-      }
-    }
-
-    // Handle progress if needed
-    if (typeof config.onDownloadProgress === 'function') {
-      request.addEventListener('progress', config.onDownloadProgress);
-    }
-
-    // Not all browsers support upload events
-    if (typeof config.onUploadProgress === 'function' && request.upload) {
-      request.upload.addEventListener('progress', config.onUploadProgress);
-    }
-
-    if (config.cancelToken) {
-      // Handle cancellation
-      config.cancelToken.promise.then(function onCanceled(cancel) {
-        if (!request) {
-          return;
-        }
-
-        request.abort();
-        reject(cancel);
-        // Clean up request
-        request = null;
-      });
-    }
-
-    if (requestData === undefined) {
-      requestData = null;
-    }
-
-    // Send the request
-    request.send(requestData);
-  });
-};
+module.exports = WeakMap;
 
 
 /***/ }),
@@ -18525,38 +17875,7 @@ function plural(ms, n, name) {
 
 /***/ }),
 /* 419 */,
-/* 420 */
-/***/ (function(module) {
-
-/** Used for built-in method references. */
-var funcProto = Function.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var funcToString = funcProto.toString;
-
-/**
- * Converts `func` to its source code.
- *
- * @private
- * @param {Function} func The function to convert.
- * @returns {string} Returns the source code.
- */
-function toSource(func) {
-  if (func != null) {
-    try {
-      return funcToString.call(func);
-    } catch (e) {}
-    try {
-      return (func + '');
-    } catch (e) {}
-  }
-  return '';
-}
-
-module.exports = toSource;
-
-
-/***/ }),
+/* 420 */,
 /* 421 */,
 /* 422 */,
 /* 423 */,
@@ -18640,95 +17959,39 @@ module.exports = isObjectLike;
 /* 427 */,
 /* 428 */,
 /* 429 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+var isPrototype = __webpack_require__(964),
+    nativeKeys = __webpack_require__(917);
 
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.template = void 0;
-const tslib_1 = __webpack_require__(403);
-const lodash_has_1 = tslib_1.__importDefault(__webpack_require__(574));
-const variableHandle = ({ text, regex, regexResult, currentIndex, shouldReplaceUndefinedToEmpty, context, }) => {
-    if (shouldReplaceUndefinedToEmpty) {
-        const functionRegex = /toJson\(([\S\s]*?)\)/;
-        const matched = functionRegex.exec(regexResult[1]);
-        let variableName = regexResult[1];
-        if (matched) {
-            variableName = matched[1];
-        }
-        variableName = variableName.trim();
-        if (lodash_has_1.default(context, variableName)) {
-            return [
-                JSON.stringify(text.slice(currentIndex, regex.lastIndex - regexResult[0].length)),
-                "(" + regexResult[1] + ")",
-            ];
-        }
-        else {
-            return [
-                JSON.stringify(text.slice(currentIndex, regex.lastIndex - regexResult[0].length)),
-            ];
-        }
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ */
+function baseKeys(object) {
+  if (!isPrototype(object)) {
+    return nativeKeys(object);
+  }
+  var result = [];
+  for (var key in Object(object)) {
+    if (hasOwnProperty.call(object, key) && key != 'constructor') {
+      result.push(key);
     }
-    else {
-        return [
-            JSON.stringify(text.slice(currentIndex, regex.lastIndex - regexResult[0].length)),
-            "(" + regexResult[1] + ")",
-        ];
-    }
-};
-exports.template = function (text, context, options) {
-    let includeVariableRegex = /(^on)|(^secrets)|(^toJson\(on\.?)/;
-    let interpolate = /\$\{\{([\S\s]*?)\}\}/g;
-    let shouldReplaceUndefinedToEmpty = false;
-    if (options) {
-        if (options.interpolate) {
-            interpolate = options.interpolate;
-        }
-        if (options.includeVariableRegex) {
-            includeVariableRegex = options.includeVariableRegex;
-        }
-        if (typeof options.shouldReplaceUndefinedToEmpty !== "undefined") {
-            shouldReplaceUndefinedToEmpty = options.shouldReplaceUndefinedToEmpty;
-        }
-    }
-    const stringify = JSON.stringify;
-    const re = interpolate;
-    let evaluate = [], i = 0, m;
-    while ((m = re.exec(text))) {
-        if (includeVariableRegex) {
-            if (includeVariableRegex.exec(m[1].trim())) {
-                evaluate = evaluate.concat(variableHandle({
-                    regex: re,
-                    currentIndex: i,
-                    regexResult: m,
-                    shouldReplaceUndefinedToEmpty,
-                    text,
-                    context,
-                }));
-                i = re.lastIndex;
-            }
-            else {
-                evaluate.push(stringify(text.slice(i, re.lastIndex)));
-                i = re.lastIndex;
-            }
-        }
-        else {
-            evaluate = evaluate.concat(variableHandle({
-                regex: re,
-                currentIndex: i,
-                regexResult: m,
-                shouldReplaceUndefinedToEmpty,
-                text,
-                context,
-            }));
-            i = re.lastIndex;
-        }
-    }
-    evaluate.push(stringify(text.slice(i)));
-    return Function("var toJson = function(obj){return JSON.stringify(obj,null,2)};with(this)return" +
-        evaluate.join("+")).call(context);
-};
-//# sourceMappingURL=util.js.map
+  }
+  return result;
+}
+
+module.exports = baseKeys;
+
 
 /***/ }),
 /* 430 */,
@@ -19619,18 +18882,7 @@ module.exports = moveSync
 
 
 /***/ }),
-/* 445 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var root = __webpack_require__(348);
-
-/** Built-in value references. */
-var Uint8Array = root.Uint8Array;
-
-module.exports = Uint8Array;
-
-
-/***/ }),
+/* 445 */,
 /* 446 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -19642,11 +18894,11 @@ module.exports = Uint8Array;
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  sax = __webpack_require__(363);
+  sax = __webpack_require__(915);
 
   events = __webpack_require__(614);
 
-  bom = __webpack_require__(337);
+  bom = __webpack_require__(633);
 
   processors = __webpack_require__(441);
 
@@ -21472,108 +20724,27 @@ module.exports = AggregateError;
 /* 467 */,
 /* 468 */,
 /* 469 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+var getMapData = __webpack_require__(580);
 
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = __webpack_require__(403);
-const log_1 = tslib_1.__importDefault(__webpack_require__(766));
-const axios_1 = tslib_1.__importDefault(__webpack_require__(688));
-class TelegramBot {
-    constructor() {
-        this.id = "telegram_bot";
-    }
-    run({ helpers, options, }) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const _messageTypes = [
-                "text",
-                "animation",
-                "audio",
-                "channel_chat_created",
-                "contact",
-                "delete_chat_photo",
-                "dice",
-                "document",
-                "game",
-                "group_chat_created",
-                "invoice",
-                "left_chat_member",
-                "location",
-                "migrate_from_chat_id",
-                "migrate_to_chat_id",
-                "new_chat_members",
-                "new_chat_photo",
-                "new_chat_title",
-                "passport_data",
-                "photo",
-                "pinned_message",
-                "poll",
-                "sticker",
-                "successful_payment",
-                "supergroup_chat_created",
-                "video",
-                "video_note",
-                "voice",
-            ];
-            const _a = options, { token, every, event } = _a, requestOptions = tslib_1.__rest(_a, ["token", "every", "event"]);
-            let { events } = options;
-            const updateInterval = every || 5;
-            if (!token) {
-                throw new Error("Miss param token!");
-            }
-            if (!events && event) {
-                events = [event];
-            }
-            const items = [];
-            const url = `https://api.telegram.org/bot${token}/getUpdates`;
-            const config = Object.assign(Object.assign({}, requestOptions), { url });
-            let requestResult;
-            try {
-                requestResult = yield axios_1.default(config);
-            }
-            catch (e) {
-                if (e.code === "ECONNREFUSED") {
-                    throw new Error(`It was not possible to connect to the URL. Please make sure the URL "${url}" it is valid!`);
-                }
-                log_1.default.error(`fetch ${url} error: `, e);
-            }
-            if (requestResult &&
-                requestResult.data &&
-                Array.isArray(requestResult.data.result)) {
-                const itemsArray = requestResult.data.result;
-                itemsArray.forEach((item) => {
-                    const message = item.message;
-                    message.update_id = item.update_id;
-                    const messageType = _messageTypes.find((messageType) => {
-                        return message[messageType];
-                    });
-                    if (events) {
-                        if (messageType && events.includes(messageType)) {
-                            items.push(message);
-                        }
-                    }
-                    else {
-                        items.push(message);
-                    }
-                });
-            }
-            const getItemKey = (item) => {
-                if (item.update_id)
-                    return item.update_id;
-                return helpers.createContentDigest(item);
-            };
-            return {
-                shouldDeduplicate: true,
-                updateInterval: updateInterval,
-                items,
-                getItemKey,
-            };
-        });
-    }
+/**
+ * Removes `key` and its value from the map.
+ *
+ * @private
+ * @name delete
+ * @memberOf MapCache
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+ */
+function mapCacheDelete(key) {
+  var result = getMapData(this, key)['delete'](key);
+  this.size -= result ? 1 : 0;
+  return result;
 }
-exports.default = TelegramBot;
-//# sourceMappingURL=telegram-bot.js.map
+
+module.exports = mapCacheDelete;
+
 
 /***/ }),
 /* 470 */,
@@ -22157,7 +21328,7 @@ module.exports = keysIn;
 
   XMLCData = __webpack_require__(138);
 
-  XMLComment = __webpack_require__(109);
+  XMLComment = __webpack_require__(267);
 
   XMLRaw = __webpack_require__(426);
 
@@ -22167,11 +21338,11 @@ module.exports = keysIn;
 
   XMLDeclaration = __webpack_require__(676);
 
-  XMLDocType = __webpack_require__(856);
+  XMLDocType = __webpack_require__(331);
 
   XMLDTDAttList = __webpack_require__(665);
 
-  XMLDTDEntity = __webpack_require__(834);
+  XMLDTDEntity = __webpack_require__(805);
 
   XMLDTDElement = __webpack_require__(206);
 
@@ -23165,7 +22336,7 @@ module.exports = picomatch;
 /* 497 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var getTag = __webpack_require__(126),
+var getTag = __webpack_require__(30),
     isObjectLike = __webpack_require__(425);
 
 /** `Object#toString` result references. */
@@ -24402,7 +23573,7 @@ module.exports = nativeCreate;
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
-var freeGlobal = __webpack_require__(996);
+var freeGlobal = __webpack_require__(337);
 
 /** Detect free variable `exports`. */
 var freeExports =  true && exports && !exports.nodeType && exports;
@@ -24479,91 +23650,33 @@ module.exports = isArrayLike;
 /* 555 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const utils = module.exports = {};
-const entities = __webpack_require__(538);
-const xml2js = __webpack_require__(534);
+var baseIsTypedArray = __webpack_require__(109),
+    baseUnary = __webpack_require__(988),
+    nodeUtil = __webpack_require__(551);
 
-utils.stripHtml = function(str) {
-  str = str.replace(/([^\n])<\/?(h|br|p|ul|ol|li|blockquote|section|table|tr|div)(?:.|\n)*?>([^\n])/gm, '$1\n$3')
-  str = str.replace(/<(?:.|\n)*?>/gm, '');
-  return str;
-}
+/* Node.js helper references. */
+var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
 
-utils.getSnippet = function(str) {
-  return entities.decodeHTML(utils.stripHtml(str)).trim();
-}
+/**
+ * Checks if `value` is classified as a typed array.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+ * @example
+ *
+ * _.isTypedArray(new Uint8Array);
+ * // => true
+ *
+ * _.isTypedArray([]);
+ * // => false
+ */
+var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
 
-utils.getLink = function(links, rel, fallbackIdx) {
-  if (!links) return;
-  for (let i = 0; i < links.length; ++i) {
-    if (links[i].$.rel === rel) return links[i].$.href;
-  }
-  if (links[fallbackIdx]) return links[fallbackIdx].$.href;
-}
-
-utils.getContent = function(content) {
-  if (typeof content._ === 'string') {
-    return content._;
-  } else if (typeof content === 'object') {
-    let builder = new xml2js.Builder({headless: true, explicitRoot: true, rootName: 'div', renderOpts: {pretty: false}});
-    return builder.buildObject(content);
-  } else {
-    return content;
-  }
-}
-
-utils.copyFromXML = function(xml, dest, fields) {
-  fields.forEach(function(f) {
-    let from = f;
-    let to = f;
-    let options = {};
-    if (Array.isArray(f)) {
-      from = f[0];
-      to = f[1];
-      if (f.length > 2) {
-        options = f[2];
-      }
-    }
-    const { keepArray, includeSnippet } = options;
-    if (xml[from] !== undefined){
-      dest[to] = keepArray ? xml[from] : xml[from][0];
-    }
-    if (dest[to] && typeof dest[to]._ === 'string') {
-      dest[to]=dest[to]._;
-    }
-    if (includeSnippet && dest[to] && typeof dest[to] === 'string') {
-      dest[to + 'Snippet'] = utils.getSnippet(dest[to]);
-    }
-  })
-}
-
-utils.maybePromisify = function(callback, promise) {
-  if (!callback) return promise;
-  return promise.then(
-    data => setTimeout(() => callback(null, data)),
-    err => setTimeout(() => callback(err))
-  );
-}
-
-const DEFAULT_ENCODING = 'utf8';
-const ENCODING_REGEX = /(encoding|charset)\s*=\s*(\S+)/;
-const SUPPORTED_ENCODINGS = ['ascii', 'utf8', 'utf16le', 'ucs2', 'base64', 'latin1', 'binary', 'hex'];
-const ENCODING_ALIASES = {
-  'utf-8': 'utf8',
-  'iso-8859-1': 'latin1',
-}
-
-utils.getEncodingFromContentType = function(contentType) {
-  contentType = contentType || '';
-  let match = contentType.match(ENCODING_REGEX);
-  let encoding = (match || [])[2] || '';
-  encoding = encoding.toLowerCase();
-  encoding = ENCODING_ALIASES[encoding] || encoding;
-  if (!encoding || SUPPORTED_ENCODINGS.indexOf(encoding) === -1) {
-    encoding = DEFAULT_ENCODING;
-  }
-  return encoding;
-}
+module.exports = isTypedArray;
 
 
 /***/ }),
@@ -24788,91 +23901,9 @@ exports.default = Settings;
 
 
 /***/ }),
-/* 562 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var isPrototype = __webpack_require__(964),
-    nativeKeys = __webpack_require__(917);
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- */
-function baseKeys(object) {
-  if (!isPrototype(object)) {
-    return nativeKeys(object);
-  }
-  var result = [];
-  for (var key in Object(object)) {
-    if (hasOwnProperty.call(object, key) && key != 'constructor') {
-      result.push(key);
-    }
-  }
-  return result;
-}
-
-module.exports = baseKeys;
-
-
-/***/ }),
+/* 562 */,
 /* 563 */,
-/* 564 */
-/***/ (function(module) {
-
-var isObject = function isObject(value) {
-    return value instanceof Object && value.constructor === Object;
-};
-
-var parseWrapArguments = function parseWrapArguments(args) {
-    var length = args.length;
-    var work;
-    var options = {};
-    var cb;
-
-    /**
-     * As we can receive an unlimited number of keys
-     * we find the index of the first function which is
-     * the "work" handler to fetch the keys.
-     */
-    for (var i = 0; i < length; i += 1) {
-        if (typeof args[i] === 'function') {
-            if (typeof args[i + 2] === 'function') {
-                cb = args.pop();
-            } else if (typeof args[i + 1] === 'function') {
-                cb = args.pop();
-            }
-            if (isObject(args[i + 1])) {
-                options = args.pop();
-            }
-            work = args.pop();
-            break;
-        }
-    }
-
-    return {
-        keys: args,
-        work: work,
-        options: options,
-        cb: cb
-    };
-};
-
-module.exports = {
-    isObject: isObject,
-    parseWrapArguments: parseWrapArguments
-};
-
-
-/***/ }),
+/* 564 */,
 /* 565 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -26190,7 +25221,7 @@ var utils = __webpack_require__(762);
 var buildURL = __webpack_require__(250);
 var InterceptorManager = __webpack_require__(116);
 var dispatchRequest = __webpack_require__(732);
-var mergeConfig = __webpack_require__(30);
+var mergeConfig = __webpack_require__(189);
 
 /**
  * Create a new instance of Axios
@@ -26498,7 +25529,7 @@ var origRealpathSync = fs.realpathSync
 
 var version = process.version
 var ok = /^v[0-5]\./.test(version)
-var old = __webpack_require__(938)
+var old = __webpack_require__(863)
 
 function newError (er) {
   return er && er.syscall === 'realpath' && (
@@ -27174,11 +26205,11 @@ DiskStore.prototype._getFilePathByKey = function (key) {
 
   XMLDeclaration = __webpack_require__(676);
 
-  XMLDocType = __webpack_require__(856);
+  XMLDocType = __webpack_require__(331);
 
   XMLCData = __webpack_require__(138);
 
-  XMLComment = __webpack_require__(109);
+  XMLComment = __webpack_require__(267);
 
   XMLElement = __webpack_require__(734);
 
@@ -27194,7 +26225,7 @@ DiskStore.prototype._getFilePathByKey = function (key) {
 
   XMLDTDElement = __webpack_require__(206);
 
-  XMLDTDEntity = __webpack_require__(834);
+  XMLDTDEntity = __webpack_require__(805);
 
   XMLDTDNotation = __webpack_require__(705);
 
@@ -29072,7 +28103,24 @@ module.exports = copySymbols;
 /* 630 */,
 /* 631 */,
 /* 632 */,
-/* 633 */,
+/* 633 */
+/***/ (function(__unusedmodule, exports) {
+
+// Generated by CoffeeScript 1.12.7
+(function() {
+  "use strict";
+  exports.stripBOM = function(str) {
+    if (str[0] === '\uFEFF') {
+      return str.substring(1);
+    } else {
+      return str;
+    }
+  };
+
+}).call(this);
+
+
+/***/ }),
 /* 634 */,
 /* 635 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
@@ -30093,19 +29141,7 @@ rimraf.sync = rimrafSync
 
 
 /***/ }),
-/* 666 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var getNative = __webpack_require__(698),
-    root = __webpack_require__(348);
-
-/* Built-in method references that are verified to be native. */
-var DataView = getNative(root, 'DataView');
-
-module.exports = DataView;
-
-
-/***/ }),
+/* 666 */,
 /* 667 */,
 /* 668 */,
 /* 669 */
@@ -30117,7 +29153,7 @@ module.exports = require("util");
 /* 670 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var arrayPush = __webpack_require__(906),
+var arrayPush = __webpack_require__(304),
     getPrototype = __webpack_require__(628),
     getSymbols = __webpack_require__(750),
     stubArray = __webpack_require__(704);
@@ -31871,83 +30907,7 @@ module.exports.safeLoad    = safeLoad;
 
 
 /***/ }),
-/* 679 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCache = exports.Cache = void 0;
-const tslib_1 = __webpack_require__(403);
-const cache_manager_1 = tslib_1.__importDefault(__webpack_require__(787));
-const fs_extra_1 = tslib_1.__importDefault(__webpack_require__(607));
-const cache_manager_fs_hash_1 = tslib_1.__importDefault(__webpack_require__(904));
-const path_1 = tslib_1.__importDefault(__webpack_require__(622));
-const MAX_CACHE_SIZE = 250;
-const TTL = Number.MAX_SAFE_INTEGER;
-class Cache {
-    constructor({ name = `db`, store = cache_manager_fs_hash_1.default } = {}) {
-        this.name = name;
-        this.store = store;
-    }
-    get directory() {
-        return path_1.default.join(process.cwd(), `.cache/caches/${this.name}`);
-    }
-    init() {
-        fs_extra_1.default.ensureDirSync(this.directory);
-        const configs = [
-            {
-                store: `memory`,
-                max: MAX_CACHE_SIZE,
-                ttl: TTL,
-            },
-            {
-                store: this.store,
-                ttl: TTL,
-                options: {
-                    path: this.directory,
-                    ttl: TTL,
-                },
-            },
-        ];
-        const caches = configs.map((cache) => cache_manager_1.default.caching(cache));
-        this.cache = cache_manager_1.default.multiCaching(caches);
-        return this;
-    }
-    get(key) {
-        return new Promise((resolve) => {
-            if (!this.cache) {
-                throw new Error(`Cache wasn't initialised yet, please run the init method first`);
-            }
-            this.cache.get(key, (err, res) => {
-                resolve(err ? undefined : res);
-            });
-        });
-    }
-    set(key, value, args = { ttl: TTL }) {
-        return new Promise((resolve) => {
-            if (!this.cache) {
-                throw new Error(`Cache wasn't initialised yet, please run the init method first`);
-            }
-            this.cache.set(key, value, args, (err) => {
-                resolve(err ? undefined : value);
-            });
-        });
-    }
-}
-exports.Cache = Cache;
-const caches = new Map();
-exports.getCache = (name) => {
-    let cache = caches.get(name);
-    if (!cache) {
-        cache = new Cache({ name }).init();
-        caches.set(name, cache);
-    }
-    return cache;
-};
-//# sourceMappingURL=cache.js.map
-
-/***/ }),
+/* 679 */,
 /* 680 */,
 /* 681 */
 /***/ (function(module) {
@@ -33337,7 +32297,147 @@ module.exports = {
 
 /***/ }),
 /* 708 */,
-/* 709 */,
+/* 709 */
+/***/ (function(module) {
+
+"use strict";
+
+const TEMPLATE_REGEX = /(?:\\(u(?:[a-f\d]{4}|\{[a-f\d]{1,6}\})|x[a-f\d]{2}|.))|(?:\{(~)?(\w+(?:\([^)]*\))?(?:\.\w+(?:\([^)]*\))?)*)(?:[ \t]|(?=\r?\n)))|(\})|((?:.|[\r\n\f])+?)/gi;
+const STYLE_REGEX = /(?:^|\.)(\w+)(?:\(([^)]*)\))?/g;
+const STRING_REGEX = /^(['"])((?:\\.|(?!\1)[^\\])*)\1$/;
+const ESCAPE_REGEX = /\\(u(?:[a-f\d]{4}|{[a-f\d]{1,6}})|x[a-f\d]{2}|.)|([^\\])/gi;
+
+const ESCAPES = new Map([
+	['n', '\n'],
+	['r', '\r'],
+	['t', '\t'],
+	['b', '\b'],
+	['f', '\f'],
+	['v', '\v'],
+	['0', '\0'],
+	['\\', '\\'],
+	['e', '\u001B'],
+	['a', '\u0007']
+]);
+
+function unescape(c) {
+	const u = c[0] === 'u';
+	const bracket = c[1] === '{';
+
+	if ((u && !bracket && c.length === 5) || (c[0] === 'x' && c.length === 3)) {
+		return String.fromCharCode(parseInt(c.slice(1), 16));
+	}
+
+	if (u && bracket) {
+		return String.fromCodePoint(parseInt(c.slice(2, -1), 16));
+	}
+
+	return ESCAPES.get(c) || c;
+}
+
+function parseArguments(name, arguments_) {
+	const results = [];
+	const chunks = arguments_.trim().split(/\s*,\s*/g);
+	let matches;
+
+	for (const chunk of chunks) {
+		const number = Number(chunk);
+		if (!Number.isNaN(number)) {
+			results.push(number);
+		} else if ((matches = chunk.match(STRING_REGEX))) {
+			results.push(matches[2].replace(ESCAPE_REGEX, (m, escape, character) => escape ? unescape(escape) : character));
+		} else {
+			throw new Error(`Invalid Chalk template style argument: ${chunk} (in style '${name}')`);
+		}
+	}
+
+	return results;
+}
+
+function parseStyle(style) {
+	STYLE_REGEX.lastIndex = 0;
+
+	const results = [];
+	let matches;
+
+	while ((matches = STYLE_REGEX.exec(style)) !== null) {
+		const name = matches[1];
+
+		if (matches[2]) {
+			const args = parseArguments(name, matches[2]);
+			results.push([name].concat(args));
+		} else {
+			results.push([name]);
+		}
+	}
+
+	return results;
+}
+
+function buildStyle(chalk, styles) {
+	const enabled = {};
+
+	for (const layer of styles) {
+		for (const style of layer.styles) {
+			enabled[style[0]] = layer.inverse ? null : style.slice(1);
+		}
+	}
+
+	let current = chalk;
+	for (const [styleName, styles] of Object.entries(enabled)) {
+		if (!Array.isArray(styles)) {
+			continue;
+		}
+
+		if (!(styleName in current)) {
+			throw new Error(`Unknown Chalk style: ${styleName}`);
+		}
+
+		current = styles.length > 0 ? current[styleName](...styles) : current[styleName];
+	}
+
+	return current;
+}
+
+module.exports = (chalk, temporary) => {
+	const styles = [];
+	const chunks = [];
+	let chunk = [];
+
+	// eslint-disable-next-line max-params
+	temporary.replace(TEMPLATE_REGEX, (m, escapeCharacter, inverse, style, close, character) => {
+		if (escapeCharacter) {
+			chunk.push(unescape(escapeCharacter));
+		} else if (style) {
+			const string = chunk.join('');
+			chunk = [];
+			chunks.push(styles.length === 0 ? string : buildStyle(chalk, styles)(string));
+			styles.push({inverse, styles: parseStyle(style)});
+		} else if (close) {
+			if (styles.length === 0) {
+				throw new Error('Found extraneous } in Chalk template literal');
+			}
+
+			chunks.push(buildStyle(chalk, styles)(chunk.join('')));
+			chunk = [];
+			styles.pop();
+		} else {
+			chunk.push(character);
+		}
+	});
+
+	chunks.push(chunk.join(''));
+
+	if (styles.length > 0) {
+		const errMessage = `Chalk template literal is missing ${styles.length} closing bracket${styles.length === 1 ? '' : 's'} (\`}\`)`;
+		throw new Error(errMessage);
+	}
+
+	return chunks.join('');
+};
+
+
+/***/ }),
 /* 710 */,
 /* 711 */,
 /* 712 */
@@ -33589,7 +32689,7 @@ exports.joinPathSegments = joinPathSegments;
 /* 721 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var Uint8Array = __webpack_require__(445);
+var Uint8Array = __webpack_require__(184);
 
 /**
  * Creates a clone of `arrayBuffer`.
@@ -34018,7 +33118,7 @@ exports.createDirentFromStats = createDirentFromStats;
 
 
 var utils = __webpack_require__(762);
-var transformData = __webpack_require__(820);
+var transformData = __webpack_require__(239);
 var isCancel = __webpack_require__(956);
 var defaults = __webpack_require__(134);
 
@@ -34627,7 +33727,7 @@ function __ncc_wildcard$0 (arg) {
   else if (arg === "none") return __webpack_require__(18);
 }
 var CallbackFiller = __webpack_require__(443);
-var utils = __webpack_require__(564);
+var utils = __webpack_require__(856);
 var parseWrapArguments = utils.parseWrapArguments;
 
 /**
@@ -35159,7 +34259,7 @@ module.exports = baseTimes;
 /*eslint no-unused-vars:0*/
 var Lru = __webpack_require__(355);
 var cloneDeep = __webpack_require__(781);
-var utils = __webpack_require__(564);
+var utils = __webpack_require__(856);
 var isObject = utils.isObject;
 
 function clone(object) {
@@ -35995,7 +35095,7 @@ module.exports = Mark;
 /* 768 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var arrayPush = __webpack_require__(906),
+var arrayPush = __webpack_require__(304),
     isArray = __webpack_require__(922);
 
 /**
@@ -36119,7 +35219,114 @@ module.exports = {
 
 /***/ }),
 /* 779 */,
-/* 780 */,
+/* 780 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = __webpack_require__(403);
+const log_1 = tslib_1.__importDefault(__webpack_require__(766));
+const axios_1 = tslib_1.__importDefault(__webpack_require__(688));
+class TelegramBot {
+    constructor({ helpers, options }) {
+        this.name = "telegram_bot";
+        this.every = 5;
+        this.shouldDeduplicate = true;
+        this.getItemKey = (item) => {
+            if (item.update_id)
+                return item.update_id;
+            return this.helpers.createContentDigest(item);
+        };
+        this.options = options;
+        this.helpers = helpers;
+        if (options.every) {
+            this.every = options.every;
+        }
+    }
+    run() {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const _messageTypes = [
+                "text",
+                "animation",
+                "audio",
+                "channel_chat_created",
+                "contact",
+                "delete_chat_photo",
+                "dice",
+                "document",
+                "game",
+                "group_chat_created",
+                "invoice",
+                "left_chat_member",
+                "location",
+                "migrate_from_chat_id",
+                "migrate_to_chat_id",
+                "new_chat_members",
+                "new_chat_photo",
+                "new_chat_title",
+                "passport_data",
+                "photo",
+                "pinned_message",
+                "poll",
+                "sticker",
+                "successful_payment",
+                "supergroup_chat_created",
+                "video",
+                "video_note",
+                "voice",
+            ];
+            const _a = this.options, { token, event } = _a, requestOptions = tslib_1.__rest(_a, ["token", "event"]);
+            let { events } = this.options;
+            if (!token) {
+                throw new Error("Miss param token!");
+            }
+            if (!events && event) {
+                events = [event];
+            }
+            const items = [];
+            const url = `https://api.telegram.org/bot${token}/getUpdates`;
+            const config = Object.assign(Object.assign({}, requestOptions), { url });
+            let requestResult;
+            try {
+                requestResult = yield axios_1.default(config);
+            }
+            catch (e) {
+                if (e.code === "ECONNREFUSED") {
+                    throw new Error(`It was not possible to connect to the URL. Please make sure the URL "${url}" it is valid!`);
+                }
+                log_1.default.error(`fetch ${url} error: `, e);
+            }
+            if (requestResult &&
+                requestResult.data &&
+                Array.isArray(requestResult.data.result)) {
+                const itemsArray = requestResult.data.result;
+                itemsArray.forEach((item) => {
+                    const message = item.message;
+                    message.update_id = item.update_id;
+                    const messageType = _messageTypes.find((messageType) => {
+                        return message[messageType];
+                    });
+                    if (events) {
+                        if (messageType && events.includes(messageType)) {
+                            items.push(message);
+                        }
+                    }
+                    else {
+                        items.push(message);
+                    }
+                });
+            }
+            return {
+                items,
+            };
+        });
+    }
+}
+exports.default = TelegramBot;
+//# sourceMappingURL=telegram-bot.js.map
+
+/***/ }),
 /* 781 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -36763,7 +35970,109 @@ module.exports = (flag, argv = process.argv) => {
 
 
 /***/ }),
-/* 805 */,
+/* 805 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+// Generated by CoffeeScript 1.12.7
+(function() {
+  var NodeType, XMLDTDEntity, XMLNode, isObject,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  isObject = __webpack_require__(73).isObject;
+
+  XMLNode = __webpack_require__(290);
+
+  NodeType = __webpack_require__(712);
+
+  module.exports = XMLDTDEntity = (function(superClass) {
+    extend(XMLDTDEntity, superClass);
+
+    function XMLDTDEntity(parent, pe, name, value) {
+      XMLDTDEntity.__super__.constructor.call(this, parent);
+      if (name == null) {
+        throw new Error("Missing DTD entity name. " + this.debugInfo(name));
+      }
+      if (value == null) {
+        throw new Error("Missing DTD entity value. " + this.debugInfo(name));
+      }
+      this.pe = !!pe;
+      this.name = this.stringify.name(name);
+      this.type = NodeType.EntityDeclaration;
+      if (!isObject(value)) {
+        this.value = this.stringify.dtdEntityValue(value);
+        this.internal = true;
+      } else {
+        if (!value.pubID && !value.sysID) {
+          throw new Error("Public and/or system identifiers are required for an external entity. " + this.debugInfo(name));
+        }
+        if (value.pubID && !value.sysID) {
+          throw new Error("System identifier is required for a public external entity. " + this.debugInfo(name));
+        }
+        this.internal = false;
+        if (value.pubID != null) {
+          this.pubID = this.stringify.dtdPubID(value.pubID);
+        }
+        if (value.sysID != null) {
+          this.sysID = this.stringify.dtdSysID(value.sysID);
+        }
+        if (value.nData != null) {
+          this.nData = this.stringify.dtdNData(value.nData);
+        }
+        if (this.pe && this.nData) {
+          throw new Error("Notation declaration is not allowed in a parameter entity. " + this.debugInfo(name));
+        }
+      }
+    }
+
+    Object.defineProperty(XMLDTDEntity.prototype, 'publicId', {
+      get: function() {
+        return this.pubID;
+      }
+    });
+
+    Object.defineProperty(XMLDTDEntity.prototype, 'systemId', {
+      get: function() {
+        return this.sysID;
+      }
+    });
+
+    Object.defineProperty(XMLDTDEntity.prototype, 'notationName', {
+      get: function() {
+        return this.nData || null;
+      }
+    });
+
+    Object.defineProperty(XMLDTDEntity.prototype, 'inputEncoding', {
+      get: function() {
+        return null;
+      }
+    });
+
+    Object.defineProperty(XMLDTDEntity.prototype, 'xmlEncoding', {
+      get: function() {
+        return null;
+      }
+    });
+
+    Object.defineProperty(XMLDTDEntity.prototype, 'xmlVersion', {
+      get: function() {
+        return null;
+      }
+    });
+
+    XMLDTDEntity.prototype.toString = function(options) {
+      return this.options.writer.dtdEntity(this, this.options.writer.filterOptions(options));
+    };
+
+    return XMLDTDEntity;
+
+  })(XMLNode);
+
+}).call(this);
+
+
+/***/ }),
 /* 806 */,
 /* 807 */,
 /* 808 */
@@ -37064,27 +36373,13 @@ module.exports = Hash;
 /* 820 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-"use strict";
+var getNative = __webpack_require__(698),
+    root = __webpack_require__(348);
 
+/* Built-in method references that are verified to be native. */
+var DataView = getNative(root, 'DataView');
 
-var utils = __webpack_require__(762);
-
-/**
- * Transform the data for a request or a response
- *
- * @param {Object|String} data The data to be transformed
- * @param {Array} headers The headers for the request or response
- * @param {Array|Function} fns A single function or Array of functions
- * @returns {*} The resulting transformed data
- */
-module.exports = function transformData(data, headers, fns) {
-  /*eslint no-param-reassign:0*/
-  utils.forEach(fns, function transform(fn) {
-    data = fn(data, headers);
-  });
-
-  return data;
-};
+module.exports = DataView;
 
 
 /***/ }),
@@ -37363,105 +36658,34 @@ exports.default = SyncProvider;
 /* 832 */,
 /* 833 */,
 /* 834 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(module) {
 
-// Generated by CoffeeScript 1.12.7
-(function() {
-  var NodeType, XMLDTDEntity, XMLNode, isObject,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+/** Used for built-in method references. */
+var funcProto = Function.prototype;
 
-  isObject = __webpack_require__(73).isObject;
+/** Used to resolve the decompiled source of functions. */
+var funcToString = funcProto.toString;
 
-  XMLNode = __webpack_require__(290);
+/**
+ * Converts `func` to its source code.
+ *
+ * @private
+ * @param {Function} func The function to convert.
+ * @returns {string} Returns the source code.
+ */
+function toSource(func) {
+  if (func != null) {
+    try {
+      return funcToString.call(func);
+    } catch (e) {}
+    try {
+      return (func + '');
+    } catch (e) {}
+  }
+  return '';
+}
 
-  NodeType = __webpack_require__(712);
-
-  module.exports = XMLDTDEntity = (function(superClass) {
-    extend(XMLDTDEntity, superClass);
-
-    function XMLDTDEntity(parent, pe, name, value) {
-      XMLDTDEntity.__super__.constructor.call(this, parent);
-      if (name == null) {
-        throw new Error("Missing DTD entity name. " + this.debugInfo(name));
-      }
-      if (value == null) {
-        throw new Error("Missing DTD entity value. " + this.debugInfo(name));
-      }
-      this.pe = !!pe;
-      this.name = this.stringify.name(name);
-      this.type = NodeType.EntityDeclaration;
-      if (!isObject(value)) {
-        this.value = this.stringify.dtdEntityValue(value);
-        this.internal = true;
-      } else {
-        if (!value.pubID && !value.sysID) {
-          throw new Error("Public and/or system identifiers are required for an external entity. " + this.debugInfo(name));
-        }
-        if (value.pubID && !value.sysID) {
-          throw new Error("System identifier is required for a public external entity. " + this.debugInfo(name));
-        }
-        this.internal = false;
-        if (value.pubID != null) {
-          this.pubID = this.stringify.dtdPubID(value.pubID);
-        }
-        if (value.sysID != null) {
-          this.sysID = this.stringify.dtdSysID(value.sysID);
-        }
-        if (value.nData != null) {
-          this.nData = this.stringify.dtdNData(value.nData);
-        }
-        if (this.pe && this.nData) {
-          throw new Error("Notation declaration is not allowed in a parameter entity. " + this.debugInfo(name));
-        }
-      }
-    }
-
-    Object.defineProperty(XMLDTDEntity.prototype, 'publicId', {
-      get: function() {
-        return this.pubID;
-      }
-    });
-
-    Object.defineProperty(XMLDTDEntity.prototype, 'systemId', {
-      get: function() {
-        return this.sysID;
-      }
-    });
-
-    Object.defineProperty(XMLDTDEntity.prototype, 'notationName', {
-      get: function() {
-        return this.nData || null;
-      }
-    });
-
-    Object.defineProperty(XMLDTDEntity.prototype, 'inputEncoding', {
-      get: function() {
-        return null;
-      }
-    });
-
-    Object.defineProperty(XMLDTDEntity.prototype, 'xmlEncoding', {
-      get: function() {
-        return null;
-      }
-    });
-
-    Object.defineProperty(XMLDTDEntity.prototype, 'xmlVersion', {
-      get: function() {
-        return null;
-      }
-    });
-
-    XMLDTDEntity.prototype.toString = function(options) {
-      return this.options.writer.dtdEntity(this, this.options.writer.filterOptions(options));
-    };
-
-    return XMLDTDEntity;
-
-  })(XMLNode);
-
-}).call(this);
+module.exports = toSource;
 
 
 /***/ }),
@@ -37715,7 +36939,7 @@ const xml2js = __webpack_require__(534);
 const url = __webpack_require__(414);
 
 const fields = __webpack_require__(942);
-const utils = __webpack_require__(555);
+const utils = __webpack_require__(152);
 
 const DEFAULT_HEADERS = {
   'User-Agent': 'rss-parser',
@@ -40199,194 +39423,50 @@ module.exports = hashSet;
 /***/ }),
 /* 855 */,
 /* 856 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(module) {
 
-// Generated by CoffeeScript 1.12.7
-(function() {
-  var NodeType, XMLDTDAttList, XMLDTDElement, XMLDTDEntity, XMLDTDNotation, XMLDocType, XMLNamedNodeMap, XMLNode, isObject,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+var isObject = function isObject(value) {
+    return value instanceof Object && value.constructor === Object;
+};
 
-  isObject = __webpack_require__(73).isObject;
+var parseWrapArguments = function parseWrapArguments(args) {
+    var length = args.length;
+    var work;
+    var options = {};
+    var cb;
 
-  XMLNode = __webpack_require__(290);
-
-  NodeType = __webpack_require__(712);
-
-  XMLDTDAttList = __webpack_require__(665);
-
-  XMLDTDEntity = __webpack_require__(834);
-
-  XMLDTDElement = __webpack_require__(206);
-
-  XMLDTDNotation = __webpack_require__(705);
-
-  XMLNamedNodeMap = __webpack_require__(797);
-
-  module.exports = XMLDocType = (function(superClass) {
-    extend(XMLDocType, superClass);
-
-    function XMLDocType(parent, pubID, sysID) {
-      var child, i, len, ref, ref1, ref2;
-      XMLDocType.__super__.constructor.call(this, parent);
-      this.type = NodeType.DocType;
-      if (parent.children) {
-        ref = parent.children;
-        for (i = 0, len = ref.length; i < len; i++) {
-          child = ref[i];
-          if (child.type === NodeType.Element) {
-            this.name = child.name;
+    /**
+     * As we can receive an unlimited number of keys
+     * we find the index of the first function which is
+     * the "work" handler to fetch the keys.
+     */
+    for (var i = 0; i < length; i += 1) {
+        if (typeof args[i] === 'function') {
+            if (typeof args[i + 2] === 'function') {
+                cb = args.pop();
+            } else if (typeof args[i + 1] === 'function') {
+                cb = args.pop();
+            }
+            if (isObject(args[i + 1])) {
+                options = args.pop();
+            }
+            work = args.pop();
             break;
-          }
         }
-      }
-      this.documentObject = parent;
-      if (isObject(pubID)) {
-        ref1 = pubID, pubID = ref1.pubID, sysID = ref1.sysID;
-      }
-      if (sysID == null) {
-        ref2 = [pubID, sysID], sysID = ref2[0], pubID = ref2[1];
-      }
-      if (pubID != null) {
-        this.pubID = this.stringify.dtdPubID(pubID);
-      }
-      if (sysID != null) {
-        this.sysID = this.stringify.dtdSysID(sysID);
-      }
     }
 
-    Object.defineProperty(XMLDocType.prototype, 'entities', {
-      get: function() {
-        var child, i, len, nodes, ref;
-        nodes = {};
-        ref = this.children;
-        for (i = 0, len = ref.length; i < len; i++) {
-          child = ref[i];
-          if ((child.type === NodeType.EntityDeclaration) && !child.pe) {
-            nodes[child.name] = child;
-          }
-        }
-        return new XMLNamedNodeMap(nodes);
-      }
-    });
-
-    Object.defineProperty(XMLDocType.prototype, 'notations', {
-      get: function() {
-        var child, i, len, nodes, ref;
-        nodes = {};
-        ref = this.children;
-        for (i = 0, len = ref.length; i < len; i++) {
-          child = ref[i];
-          if (child.type === NodeType.NotationDeclaration) {
-            nodes[child.name] = child;
-          }
-        }
-        return new XMLNamedNodeMap(nodes);
-      }
-    });
-
-    Object.defineProperty(XMLDocType.prototype, 'publicId', {
-      get: function() {
-        return this.pubID;
-      }
-    });
-
-    Object.defineProperty(XMLDocType.prototype, 'systemId', {
-      get: function() {
-        return this.sysID;
-      }
-    });
-
-    Object.defineProperty(XMLDocType.prototype, 'internalSubset', {
-      get: function() {
-        throw new Error("This DOM method is not implemented." + this.debugInfo());
-      }
-    });
-
-    XMLDocType.prototype.element = function(name, value) {
-      var child;
-      child = new XMLDTDElement(this, name, value);
-      this.children.push(child);
-      return this;
+    return {
+        keys: args,
+        work: work,
+        options: options,
+        cb: cb
     };
+};
 
-    XMLDocType.prototype.attList = function(elementName, attributeName, attributeType, defaultValueType, defaultValue) {
-      var child;
-      child = new XMLDTDAttList(this, elementName, attributeName, attributeType, defaultValueType, defaultValue);
-      this.children.push(child);
-      return this;
-    };
-
-    XMLDocType.prototype.entity = function(name, value) {
-      var child;
-      child = new XMLDTDEntity(this, false, name, value);
-      this.children.push(child);
-      return this;
-    };
-
-    XMLDocType.prototype.pEntity = function(name, value) {
-      var child;
-      child = new XMLDTDEntity(this, true, name, value);
-      this.children.push(child);
-      return this;
-    };
-
-    XMLDocType.prototype.notation = function(name, value) {
-      var child;
-      child = new XMLDTDNotation(this, name, value);
-      this.children.push(child);
-      return this;
-    };
-
-    XMLDocType.prototype.toString = function(options) {
-      return this.options.writer.docType(this, this.options.writer.filterOptions(options));
-    };
-
-    XMLDocType.prototype.ele = function(name, value) {
-      return this.element(name, value);
-    };
-
-    XMLDocType.prototype.att = function(elementName, attributeName, attributeType, defaultValueType, defaultValue) {
-      return this.attList(elementName, attributeName, attributeType, defaultValueType, defaultValue);
-    };
-
-    XMLDocType.prototype.ent = function(name, value) {
-      return this.entity(name, value);
-    };
-
-    XMLDocType.prototype.pent = function(name, value) {
-      return this.pEntity(name, value);
-    };
-
-    XMLDocType.prototype.not = function(name, value) {
-      return this.notation(name, value);
-    };
-
-    XMLDocType.prototype.up = function() {
-      return this.root() || this.documentObject;
-    };
-
-    XMLDocType.prototype.isEqualNode = function(node) {
-      if (!XMLDocType.__super__.isEqualNode.apply(this, arguments).isEqualNode(node)) {
-        return false;
-      }
-      if (node.name !== this.name) {
-        return false;
-      }
-      if (node.publicId !== this.publicId) {
-        return false;
-      }
-      if (node.systemId !== this.systemId) {
-        return false;
-      }
-      return true;
-    };
-
-    return XMLDocType;
-
-  })(XMLNode);
-
-}).call(this);
+module.exports = {
+    isObject: isObject,
+    parseWrapArguments: parseWrapArguments
+};
 
 
 /***/ }),
@@ -41006,13 +40086,33 @@ const axios_1 = tslib_1.__importDefault(__webpack_require__(688));
 const lodash_clonedeep_1 = tslib_1.__importDefault(__webpack_require__(849));
 const lodash_get_1 = tslib_1.__importDefault(__webpack_require__(246));
 class Poll {
-    constructor() {
-        this.id = "poll";
+    constructor({ helpers, options }) {
+        this.name = "poll";
+        this.options = {};
+        this.every = 5;
+        this.shouldDeduplicate = true;
+        this.options = options;
+        this.helpers = helpers;
+        if (options.every) {
+            this.every = options.every;
+        }
     }
-    run({ helpers, options, }) {
+    getItemKey(item) {
+        const deduplication_key = this.options.deduplication_key;
+        if (deduplication_key) {
+            return item[deduplication_key];
+        }
+        if (item.id)
+            return item.id;
+        if (item.guid)
+            return item.guid;
+        if (item.key)
+            return item.key;
+        return this.helpers.createContentDigest(item);
+    }
+    run() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const _a = options, { url, items_path, deduplication_key, every } = _a, requestOptions = tslib_1.__rest(_a, ["url", "items_path", "deduplication_key", "every"]);
-            const updateInterval = every || 5;
+            const _a = this.options, { url, items_path } = _a, requestOptions = tslib_1.__rest(_a, ["url", "items_path"]);
             if (!url) {
                 throw new Error("Miss param url!");
             }
@@ -41038,23 +40138,8 @@ class Poll {
                     items.push(item);
                 });
             }
-            const getItemKey = (item) => {
-                if (deduplication_key) {
-                    return item[deduplication_key];
-                }
-                if (item.id)
-                    return item.id;
-                if (item.guid)
-                    return item.guid;
-                if (item.key)
-                    return item.key;
-                return helpers.createContentDigest(item);
-            };
             return {
-                shouldDeduplicate: true,
-                updateInterval: updateInterval,
                 items,
-                getItemKey,
             };
         });
     }
@@ -41067,24 +40152,311 @@ exports.default = Poll;
 /* 861 */,
 /* 862 */,
 /* 863 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(910),
-    getSymbolsIn = __webpack_require__(670);
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/**
- * Copies own and inherited symbols of `source` to `object`.
- *
- * @private
- * @param {Object} source The object to copy symbols from.
- * @param {Object} [object={}] The object to copy symbols to.
- * @returns {Object} Returns `object`.
- */
-function copySymbolsIn(source, object) {
-  return copyObject(source, getSymbolsIn(source), object);
+var pathModule = __webpack_require__(622);
+var isWindows = process.platform === 'win32';
+var fs = __webpack_require__(747);
+
+// JavaScript implementation of realpath, ported from node pre-v6
+
+var DEBUG = process.env.NODE_DEBUG && /fs/.test(process.env.NODE_DEBUG);
+
+function rethrow() {
+  // Only enable in debug mode. A backtrace uses ~1000 bytes of heap space and
+  // is fairly slow to generate.
+  var callback;
+  if (DEBUG) {
+    var backtrace = new Error;
+    callback = debugCallback;
+  } else
+    callback = missingCallback;
+
+  return callback;
+
+  function debugCallback(err) {
+    if (err) {
+      backtrace.message = err.message;
+      err = backtrace;
+      missingCallback(err);
+    }
+  }
+
+  function missingCallback(err) {
+    if (err) {
+      if (process.throwDeprecation)
+        throw err;  // Forgot a callback but don't know where? Use NODE_DEBUG=fs
+      else if (!process.noDeprecation) {
+        var msg = 'fs: missing callback ' + (err.stack || err.message);
+        if (process.traceDeprecation)
+          console.trace(msg);
+        else
+          console.error(msg);
+      }
+    }
+  }
 }
 
-module.exports = copySymbolsIn;
+function maybeCallback(cb) {
+  return typeof cb === 'function' ? cb : rethrow();
+}
+
+var normalize = pathModule.normalize;
+
+// Regexp that finds the next partion of a (partial) path
+// result is [base_with_slash, base], e.g. ['somedir/', 'somedir']
+if (isWindows) {
+  var nextPartRe = /(.*?)(?:[\/\\]+|$)/g;
+} else {
+  var nextPartRe = /(.*?)(?:[\/]+|$)/g;
+}
+
+// Regex to find the device root, including trailing slash. E.g. 'c:\\'.
+if (isWindows) {
+  var splitRootRe = /^(?:[a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/][^\\\/]+)?[\\\/]*/;
+} else {
+  var splitRootRe = /^[\/]*/;
+}
+
+exports.realpathSync = function realpathSync(p, cache) {
+  // make p is absolute
+  p = pathModule.resolve(p);
+
+  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
+    return cache[p];
+  }
+
+  var original = p,
+      seenLinks = {},
+      knownHard = {};
+
+  // current character position in p
+  var pos;
+  // the partial path so far, including a trailing slash if any
+  var current;
+  // the partial path without a trailing slash (except when pointing at a root)
+  var base;
+  // the partial path scanned in the previous round, with slash
+  var previous;
+
+  start();
+
+  function start() {
+    // Skip over roots
+    var m = splitRootRe.exec(p);
+    pos = m[0].length;
+    current = m[0];
+    base = m[0];
+    previous = '';
+
+    // On windows, check that the root exists. On unix there is no need.
+    if (isWindows && !knownHard[base]) {
+      fs.lstatSync(base);
+      knownHard[base] = true;
+    }
+  }
+
+  // walk down the path, swapping out linked pathparts for their real
+  // values
+  // NB: p.length changes.
+  while (pos < p.length) {
+    // find the next part
+    nextPartRe.lastIndex = pos;
+    var result = nextPartRe.exec(p);
+    previous = current;
+    current += result[0];
+    base = previous + result[1];
+    pos = nextPartRe.lastIndex;
+
+    // continue if not a symlink
+    if (knownHard[base] || (cache && cache[base] === base)) {
+      continue;
+    }
+
+    var resolvedLink;
+    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
+      // some known symbolic link.  no need to stat again.
+      resolvedLink = cache[base];
+    } else {
+      var stat = fs.lstatSync(base);
+      if (!stat.isSymbolicLink()) {
+        knownHard[base] = true;
+        if (cache) cache[base] = base;
+        continue;
+      }
+
+      // read the link if it wasn't read before
+      // dev/ino always return 0 on windows, so skip the check.
+      var linkTarget = null;
+      if (!isWindows) {
+        var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
+        if (seenLinks.hasOwnProperty(id)) {
+          linkTarget = seenLinks[id];
+        }
+      }
+      if (linkTarget === null) {
+        fs.statSync(base);
+        linkTarget = fs.readlinkSync(base);
+      }
+      resolvedLink = pathModule.resolve(previous, linkTarget);
+      // track this, if given a cache.
+      if (cache) cache[base] = resolvedLink;
+      if (!isWindows) seenLinks[id] = linkTarget;
+    }
+
+    // resolve the link, then start over
+    p = pathModule.resolve(resolvedLink, p.slice(pos));
+    start();
+  }
+
+  if (cache) cache[original] = p;
+
+  return p;
+};
+
+
+exports.realpath = function realpath(p, cache, cb) {
+  if (typeof cb !== 'function') {
+    cb = maybeCallback(cache);
+    cache = null;
+  }
+
+  // make p is absolute
+  p = pathModule.resolve(p);
+
+  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
+    return process.nextTick(cb.bind(null, null, cache[p]));
+  }
+
+  var original = p,
+      seenLinks = {},
+      knownHard = {};
+
+  // current character position in p
+  var pos;
+  // the partial path so far, including a trailing slash if any
+  var current;
+  // the partial path without a trailing slash (except when pointing at a root)
+  var base;
+  // the partial path scanned in the previous round, with slash
+  var previous;
+
+  start();
+
+  function start() {
+    // Skip over roots
+    var m = splitRootRe.exec(p);
+    pos = m[0].length;
+    current = m[0];
+    base = m[0];
+    previous = '';
+
+    // On windows, check that the root exists. On unix there is no need.
+    if (isWindows && !knownHard[base]) {
+      fs.lstat(base, function(err) {
+        if (err) return cb(err);
+        knownHard[base] = true;
+        LOOP();
+      });
+    } else {
+      process.nextTick(LOOP);
+    }
+  }
+
+  // walk down the path, swapping out linked pathparts for their real
+  // values
+  function LOOP() {
+    // stop if scanned past end of path
+    if (pos >= p.length) {
+      if (cache) cache[original] = p;
+      return cb(null, p);
+    }
+
+    // find the next part
+    nextPartRe.lastIndex = pos;
+    var result = nextPartRe.exec(p);
+    previous = current;
+    current += result[0];
+    base = previous + result[1];
+    pos = nextPartRe.lastIndex;
+
+    // continue if not a symlink
+    if (knownHard[base] || (cache && cache[base] === base)) {
+      return process.nextTick(LOOP);
+    }
+
+    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
+      // known symbolic link.  no need to stat again.
+      return gotResolvedLink(cache[base]);
+    }
+
+    return fs.lstat(base, gotStat);
+  }
+
+  function gotStat(err, stat) {
+    if (err) return cb(err);
+
+    // if not a symlink, skip to the next path part
+    if (!stat.isSymbolicLink()) {
+      knownHard[base] = true;
+      if (cache) cache[base] = base;
+      return process.nextTick(LOOP);
+    }
+
+    // stat & read the link if not read before
+    // call gotTarget as soon as the link target is known
+    // dev/ino always return 0 on windows, so skip the check.
+    if (!isWindows) {
+      var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
+      if (seenLinks.hasOwnProperty(id)) {
+        return gotTarget(null, seenLinks[id], base);
+      }
+    }
+    fs.stat(base, function(err) {
+      if (err) return cb(err);
+
+      fs.readlink(base, function(err, target) {
+        if (!isWindows) seenLinks[id] = target;
+        gotTarget(err, target);
+      });
+    });
+  }
+
+  function gotTarget(err, target, base) {
+    if (err) return cb(err);
+
+    var resolvedLink = pathModule.resolve(previous, target);
+    if (cache) cache[base] = resolvedLink;
+    gotResolvedLink(resolvedLink);
+  }
+
+  function gotResolvedLink(resolvedLink) {
+    // resolve the link, then start over
+    p = pathModule.resolve(resolvedLink, p.slice(pos));
+    start();
+  }
+};
 
 
 /***/ }),
@@ -42437,7 +41809,7 @@ module.exports = initCloneArray;
 /* 895 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-var getTag = __webpack_require__(126),
+var getTag = __webpack_require__(30),
     isObjectLike = __webpack_require__(425);
 
 /** `Object#toString` result references. */
@@ -42523,32 +41895,7 @@ module.exports = __webpack_require__(601);
 
 /***/ }),
 /* 905 */,
-/* 906 */
-/***/ (function(module) {
-
-/**
- * Appends the elements of `values` to `array`.
- *
- * @private
- * @param {Array} array The array to modify.
- * @param {Array} values The values to append.
- * @returns {Array} Returns `array`.
- */
-function arrayPush(array, values) {
-  var index = -1,
-      length = values.length,
-      offset = array.length;
-
-  while (++index < length) {
-    array[offset + index] = values[index];
-  }
-  return array;
-}
-
-module.exports = arrayPush;
-
-
-/***/ }),
+/* 906 */,
 /* 907 */,
 /* 908 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
@@ -42738,7 +42085,1577 @@ module.exports = cloneDataView;
 
 /***/ }),
 /* 914 */,
-/* 915 */,
+/* 915 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+;(function (sax) { // wrapper for non-node envs
+  sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
+  sax.SAXParser = SAXParser
+  sax.SAXStream = SAXStream
+  sax.createStream = createStream
+
+  // When we pass the MAX_BUFFER_LENGTH position, start checking for buffer overruns.
+  // When we check, schedule the next check for MAX_BUFFER_LENGTH - (max(buffer lengths)),
+  // since that's the earliest that a buffer overrun could occur.  This way, checks are
+  // as rare as required, but as often as necessary to ensure never crossing this bound.
+  // Furthermore, buffers are only tested at most once per write(), so passing a very
+  // large string into write() might have undesirable effects, but this is manageable by
+  // the caller, so it is assumed to be safe.  Thus, a call to write() may, in the extreme
+  // edge case, result in creating at most one complete copy of the string passed in.
+  // Set to Infinity to have unlimited buffers.
+  sax.MAX_BUFFER_LENGTH = 64 * 1024
+
+  var buffers = [
+    'comment', 'sgmlDecl', 'textNode', 'tagName', 'doctype',
+    'procInstName', 'procInstBody', 'entity', 'attribName',
+    'attribValue', 'cdata', 'script'
+  ]
+
+  sax.EVENTS = [
+    'text',
+    'processinginstruction',
+    'sgmldeclaration',
+    'doctype',
+    'comment',
+    'opentagstart',
+    'attribute',
+    'opentag',
+    'closetag',
+    'opencdata',
+    'cdata',
+    'closecdata',
+    'error',
+    'end',
+    'ready',
+    'script',
+    'opennamespace',
+    'closenamespace'
+  ]
+
+  function SAXParser (strict, opt) {
+    if (!(this instanceof SAXParser)) {
+      return new SAXParser(strict, opt)
+    }
+
+    var parser = this
+    clearBuffers(parser)
+    parser.q = parser.c = ''
+    parser.bufferCheckPosition = sax.MAX_BUFFER_LENGTH
+    parser.opt = opt || {}
+    parser.opt.lowercase = parser.opt.lowercase || parser.opt.lowercasetags
+    parser.looseCase = parser.opt.lowercase ? 'toLowerCase' : 'toUpperCase'
+    parser.tags = []
+    parser.closed = parser.closedRoot = parser.sawRoot = false
+    parser.tag = parser.error = null
+    parser.strict = !!strict
+    parser.noscript = !!(strict || parser.opt.noscript)
+    parser.state = S.BEGIN
+    parser.strictEntities = parser.opt.strictEntities
+    parser.ENTITIES = parser.strictEntities ? Object.create(sax.XML_ENTITIES) : Object.create(sax.ENTITIES)
+    parser.attribList = []
+
+    // namespaces form a prototype chain.
+    // it always points at the current tag,
+    // which protos to its parent tag.
+    if (parser.opt.xmlns) {
+      parser.ns = Object.create(rootNS)
+    }
+
+    // mostly just for error reporting
+    parser.trackPosition = parser.opt.position !== false
+    if (parser.trackPosition) {
+      parser.position = parser.line = parser.column = 0
+    }
+    emit(parser, 'onready')
+  }
+
+  if (!Object.create) {
+    Object.create = function (o) {
+      function F () {}
+      F.prototype = o
+      var newf = new F()
+      return newf
+    }
+  }
+
+  if (!Object.keys) {
+    Object.keys = function (o) {
+      var a = []
+      for (var i in o) if (o.hasOwnProperty(i)) a.push(i)
+      return a
+    }
+  }
+
+  function checkBufferLength (parser) {
+    var maxAllowed = Math.max(sax.MAX_BUFFER_LENGTH, 10)
+    var maxActual = 0
+    for (var i = 0, l = buffers.length; i < l; i++) {
+      var len = parser[buffers[i]].length
+      if (len > maxAllowed) {
+        // Text/cdata nodes can get big, and since they're buffered,
+        // we can get here under normal conditions.
+        // Avoid issues by emitting the text node now,
+        // so at least it won't get any bigger.
+        switch (buffers[i]) {
+          case 'textNode':
+            closeText(parser)
+            break
+
+          case 'cdata':
+            emitNode(parser, 'oncdata', parser.cdata)
+            parser.cdata = ''
+            break
+
+          case 'script':
+            emitNode(parser, 'onscript', parser.script)
+            parser.script = ''
+            break
+
+          default:
+            error(parser, 'Max buffer length exceeded: ' + buffers[i])
+        }
+      }
+      maxActual = Math.max(maxActual, len)
+    }
+    // schedule the next check for the earliest possible buffer overrun.
+    var m = sax.MAX_BUFFER_LENGTH - maxActual
+    parser.bufferCheckPosition = m + parser.position
+  }
+
+  function clearBuffers (parser) {
+    for (var i = 0, l = buffers.length; i < l; i++) {
+      parser[buffers[i]] = ''
+    }
+  }
+
+  function flushBuffers (parser) {
+    closeText(parser)
+    if (parser.cdata !== '') {
+      emitNode(parser, 'oncdata', parser.cdata)
+      parser.cdata = ''
+    }
+    if (parser.script !== '') {
+      emitNode(parser, 'onscript', parser.script)
+      parser.script = ''
+    }
+  }
+
+  SAXParser.prototype = {
+    end: function () { end(this) },
+    write: write,
+    resume: function () { this.error = null; return this },
+    close: function () { return this.write(null) },
+    flush: function () { flushBuffers(this) }
+  }
+
+  var Stream
+  try {
+    Stream = __webpack_require__(413).Stream
+  } catch (ex) {
+    Stream = function () {}
+  }
+
+  var streamWraps = sax.EVENTS.filter(function (ev) {
+    return ev !== 'error' && ev !== 'end'
+  })
+
+  function createStream (strict, opt) {
+    return new SAXStream(strict, opt)
+  }
+
+  function SAXStream (strict, opt) {
+    if (!(this instanceof SAXStream)) {
+      return new SAXStream(strict, opt)
+    }
+
+    Stream.apply(this)
+
+    this._parser = new SAXParser(strict, opt)
+    this.writable = true
+    this.readable = true
+
+    var me = this
+
+    this._parser.onend = function () {
+      me.emit('end')
+    }
+
+    this._parser.onerror = function (er) {
+      me.emit('error', er)
+
+      // if didn't throw, then means error was handled.
+      // go ahead and clear error, so we can write again.
+      me._parser.error = null
+    }
+
+    this._decoder = null
+
+    streamWraps.forEach(function (ev) {
+      Object.defineProperty(me, 'on' + ev, {
+        get: function () {
+          return me._parser['on' + ev]
+        },
+        set: function (h) {
+          if (!h) {
+            me.removeAllListeners(ev)
+            me._parser['on' + ev] = h
+            return h
+          }
+          me.on(ev, h)
+        },
+        enumerable: true,
+        configurable: false
+      })
+    })
+  }
+
+  SAXStream.prototype = Object.create(Stream.prototype, {
+    constructor: {
+      value: SAXStream
+    }
+  })
+
+  SAXStream.prototype.write = function (data) {
+    if (typeof Buffer === 'function' &&
+      typeof Buffer.isBuffer === 'function' &&
+      Buffer.isBuffer(data)) {
+      if (!this._decoder) {
+        var SD = __webpack_require__(36).StringDecoder
+        this._decoder = new SD('utf8')
+      }
+      data = this._decoder.write(data)
+    }
+
+    this._parser.write(data.toString())
+    this.emit('data', data)
+    return true
+  }
+
+  SAXStream.prototype.end = function (chunk) {
+    if (chunk && chunk.length) {
+      this.write(chunk)
+    }
+    this._parser.end()
+    return true
+  }
+
+  SAXStream.prototype.on = function (ev, handler) {
+    var me = this
+    if (!me._parser['on' + ev] && streamWraps.indexOf(ev) !== -1) {
+      me._parser['on' + ev] = function () {
+        var args = arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments)
+        args.splice(0, 0, ev)
+        me.emit.apply(me, args)
+      }
+    }
+
+    return Stream.prototype.on.call(me, ev, handler)
+  }
+
+  // this really needs to be replaced with character classes.
+  // XML allows all manner of ridiculous numbers and digits.
+  var CDATA = '[CDATA['
+  var DOCTYPE = 'DOCTYPE'
+  var XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace'
+  var XMLNS_NAMESPACE = 'http://www.w3.org/2000/xmlns/'
+  var rootNS = { xml: XML_NAMESPACE, xmlns: XMLNS_NAMESPACE }
+
+  // http://www.w3.org/TR/REC-xml/#NT-NameStartChar
+  // This implementation works on strings, a single character at a time
+  // as such, it cannot ever support astral-plane characters (10000-EFFFF)
+  // without a significant breaking change to either this  parser, or the
+  // JavaScript language.  Implementation of an emoji-capable xml parser
+  // is left as an exercise for the reader.
+  var nameStart = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/
+
+  var nameBody = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u00B7\u0300-\u036F\u203F-\u2040.\d-]/
+
+  var entityStart = /[#:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/
+  var entityBody = /[#:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u00B7\u0300-\u036F\u203F-\u2040.\d-]/
+
+  function isWhitespace (c) {
+    return c === ' ' || c === '\n' || c === '\r' || c === '\t'
+  }
+
+  function isQuote (c) {
+    return c === '"' || c === '\''
+  }
+
+  function isAttribEnd (c) {
+    return c === '>' || isWhitespace(c)
+  }
+
+  function isMatch (regex, c) {
+    return regex.test(c)
+  }
+
+  function notMatch (regex, c) {
+    return !isMatch(regex, c)
+  }
+
+  var S = 0
+  sax.STATE = {
+    BEGIN: S++, // leading byte order mark or whitespace
+    BEGIN_WHITESPACE: S++, // leading whitespace
+    TEXT: S++, // general stuff
+    TEXT_ENTITY: S++, // &amp and such.
+    OPEN_WAKA: S++, // <
+    SGML_DECL: S++, // <!BLARG
+    SGML_DECL_QUOTED: S++, // <!BLARG foo "bar
+    DOCTYPE: S++, // <!DOCTYPE
+    DOCTYPE_QUOTED: S++, // <!DOCTYPE "//blah
+    DOCTYPE_DTD: S++, // <!DOCTYPE "//blah" [ ...
+    DOCTYPE_DTD_QUOTED: S++, // <!DOCTYPE "//blah" [ "foo
+    COMMENT_STARTING: S++, // <!-
+    COMMENT: S++, // <!--
+    COMMENT_ENDING: S++, // <!-- blah -
+    COMMENT_ENDED: S++, // <!-- blah --
+    CDATA: S++, // <![CDATA[ something
+    CDATA_ENDING: S++, // ]
+    CDATA_ENDING_2: S++, // ]]
+    PROC_INST: S++, // <?hi
+    PROC_INST_BODY: S++, // <?hi there
+    PROC_INST_ENDING: S++, // <?hi "there" ?
+    OPEN_TAG: S++, // <strong
+    OPEN_TAG_SLASH: S++, // <strong /
+    ATTRIB: S++, // <a
+    ATTRIB_NAME: S++, // <a foo
+    ATTRIB_NAME_SAW_WHITE: S++, // <a foo _
+    ATTRIB_VALUE: S++, // <a foo=
+    ATTRIB_VALUE_QUOTED: S++, // <a foo="bar
+    ATTRIB_VALUE_CLOSED: S++, // <a foo="bar"
+    ATTRIB_VALUE_UNQUOTED: S++, // <a foo=bar
+    ATTRIB_VALUE_ENTITY_Q: S++, // <foo bar="&quot;"
+    ATTRIB_VALUE_ENTITY_U: S++, // <foo bar=&quot
+    CLOSE_TAG: S++, // </a
+    CLOSE_TAG_SAW_WHITE: S++, // </a   >
+    SCRIPT: S++, // <script> ...
+    SCRIPT_ENDING: S++ // <script> ... <
+  }
+
+  sax.XML_ENTITIES = {
+    'amp': '&',
+    'gt': '>',
+    'lt': '<',
+    'quot': '"',
+    'apos': "'"
+  }
+
+  sax.ENTITIES = {
+    'amp': '&',
+    'gt': '>',
+    'lt': '<',
+    'quot': '"',
+    'apos': "'",
+    'AElig': 198,
+    'Aacute': 193,
+    'Acirc': 194,
+    'Agrave': 192,
+    'Aring': 197,
+    'Atilde': 195,
+    'Auml': 196,
+    'Ccedil': 199,
+    'ETH': 208,
+    'Eacute': 201,
+    'Ecirc': 202,
+    'Egrave': 200,
+    'Euml': 203,
+    'Iacute': 205,
+    'Icirc': 206,
+    'Igrave': 204,
+    'Iuml': 207,
+    'Ntilde': 209,
+    'Oacute': 211,
+    'Ocirc': 212,
+    'Ograve': 210,
+    'Oslash': 216,
+    'Otilde': 213,
+    'Ouml': 214,
+    'THORN': 222,
+    'Uacute': 218,
+    'Ucirc': 219,
+    'Ugrave': 217,
+    'Uuml': 220,
+    'Yacute': 221,
+    'aacute': 225,
+    'acirc': 226,
+    'aelig': 230,
+    'agrave': 224,
+    'aring': 229,
+    'atilde': 227,
+    'auml': 228,
+    'ccedil': 231,
+    'eacute': 233,
+    'ecirc': 234,
+    'egrave': 232,
+    'eth': 240,
+    'euml': 235,
+    'iacute': 237,
+    'icirc': 238,
+    'igrave': 236,
+    'iuml': 239,
+    'ntilde': 241,
+    'oacute': 243,
+    'ocirc': 244,
+    'ograve': 242,
+    'oslash': 248,
+    'otilde': 245,
+    'ouml': 246,
+    'szlig': 223,
+    'thorn': 254,
+    'uacute': 250,
+    'ucirc': 251,
+    'ugrave': 249,
+    'uuml': 252,
+    'yacute': 253,
+    'yuml': 255,
+    'copy': 169,
+    'reg': 174,
+    'nbsp': 160,
+    'iexcl': 161,
+    'cent': 162,
+    'pound': 163,
+    'curren': 164,
+    'yen': 165,
+    'brvbar': 166,
+    'sect': 167,
+    'uml': 168,
+    'ordf': 170,
+    'laquo': 171,
+    'not': 172,
+    'shy': 173,
+    'macr': 175,
+    'deg': 176,
+    'plusmn': 177,
+    'sup1': 185,
+    'sup2': 178,
+    'sup3': 179,
+    'acute': 180,
+    'micro': 181,
+    'para': 182,
+    'middot': 183,
+    'cedil': 184,
+    'ordm': 186,
+    'raquo': 187,
+    'frac14': 188,
+    'frac12': 189,
+    'frac34': 190,
+    'iquest': 191,
+    'times': 215,
+    'divide': 247,
+    'OElig': 338,
+    'oelig': 339,
+    'Scaron': 352,
+    'scaron': 353,
+    'Yuml': 376,
+    'fnof': 402,
+    'circ': 710,
+    'tilde': 732,
+    'Alpha': 913,
+    'Beta': 914,
+    'Gamma': 915,
+    'Delta': 916,
+    'Epsilon': 917,
+    'Zeta': 918,
+    'Eta': 919,
+    'Theta': 920,
+    'Iota': 921,
+    'Kappa': 922,
+    'Lambda': 923,
+    'Mu': 924,
+    'Nu': 925,
+    'Xi': 926,
+    'Omicron': 927,
+    'Pi': 928,
+    'Rho': 929,
+    'Sigma': 931,
+    'Tau': 932,
+    'Upsilon': 933,
+    'Phi': 934,
+    'Chi': 935,
+    'Psi': 936,
+    'Omega': 937,
+    'alpha': 945,
+    'beta': 946,
+    'gamma': 947,
+    'delta': 948,
+    'epsilon': 949,
+    'zeta': 950,
+    'eta': 951,
+    'theta': 952,
+    'iota': 953,
+    'kappa': 954,
+    'lambda': 955,
+    'mu': 956,
+    'nu': 957,
+    'xi': 958,
+    'omicron': 959,
+    'pi': 960,
+    'rho': 961,
+    'sigmaf': 962,
+    'sigma': 963,
+    'tau': 964,
+    'upsilon': 965,
+    'phi': 966,
+    'chi': 967,
+    'psi': 968,
+    'omega': 969,
+    'thetasym': 977,
+    'upsih': 978,
+    'piv': 982,
+    'ensp': 8194,
+    'emsp': 8195,
+    'thinsp': 8201,
+    'zwnj': 8204,
+    'zwj': 8205,
+    'lrm': 8206,
+    'rlm': 8207,
+    'ndash': 8211,
+    'mdash': 8212,
+    'lsquo': 8216,
+    'rsquo': 8217,
+    'sbquo': 8218,
+    'ldquo': 8220,
+    'rdquo': 8221,
+    'bdquo': 8222,
+    'dagger': 8224,
+    'Dagger': 8225,
+    'bull': 8226,
+    'hellip': 8230,
+    'permil': 8240,
+    'prime': 8242,
+    'Prime': 8243,
+    'lsaquo': 8249,
+    'rsaquo': 8250,
+    'oline': 8254,
+    'frasl': 8260,
+    'euro': 8364,
+    'image': 8465,
+    'weierp': 8472,
+    'real': 8476,
+    'trade': 8482,
+    'alefsym': 8501,
+    'larr': 8592,
+    'uarr': 8593,
+    'rarr': 8594,
+    'darr': 8595,
+    'harr': 8596,
+    'crarr': 8629,
+    'lArr': 8656,
+    'uArr': 8657,
+    'rArr': 8658,
+    'dArr': 8659,
+    'hArr': 8660,
+    'forall': 8704,
+    'part': 8706,
+    'exist': 8707,
+    'empty': 8709,
+    'nabla': 8711,
+    'isin': 8712,
+    'notin': 8713,
+    'ni': 8715,
+    'prod': 8719,
+    'sum': 8721,
+    'minus': 8722,
+    'lowast': 8727,
+    'radic': 8730,
+    'prop': 8733,
+    'infin': 8734,
+    'ang': 8736,
+    'and': 8743,
+    'or': 8744,
+    'cap': 8745,
+    'cup': 8746,
+    'int': 8747,
+    'there4': 8756,
+    'sim': 8764,
+    'cong': 8773,
+    'asymp': 8776,
+    'ne': 8800,
+    'equiv': 8801,
+    'le': 8804,
+    'ge': 8805,
+    'sub': 8834,
+    'sup': 8835,
+    'nsub': 8836,
+    'sube': 8838,
+    'supe': 8839,
+    'oplus': 8853,
+    'otimes': 8855,
+    'perp': 8869,
+    'sdot': 8901,
+    'lceil': 8968,
+    'rceil': 8969,
+    'lfloor': 8970,
+    'rfloor': 8971,
+    'lang': 9001,
+    'rang': 9002,
+    'loz': 9674,
+    'spades': 9824,
+    'clubs': 9827,
+    'hearts': 9829,
+    'diams': 9830
+  }
+
+  Object.keys(sax.ENTITIES).forEach(function (key) {
+    var e = sax.ENTITIES[key]
+    var s = typeof e === 'number' ? String.fromCharCode(e) : e
+    sax.ENTITIES[key] = s
+  })
+
+  for (var s in sax.STATE) {
+    sax.STATE[sax.STATE[s]] = s
+  }
+
+  // shorthand
+  S = sax.STATE
+
+  function emit (parser, event, data) {
+    parser[event] && parser[event](data)
+  }
+
+  function emitNode (parser, nodeType, data) {
+    if (parser.textNode) closeText(parser)
+    emit(parser, nodeType, data)
+  }
+
+  function closeText (parser) {
+    parser.textNode = textopts(parser.opt, parser.textNode)
+    if (parser.textNode) emit(parser, 'ontext', parser.textNode)
+    parser.textNode = ''
+  }
+
+  function textopts (opt, text) {
+    if (opt.trim) text = text.trim()
+    if (opt.normalize) text = text.replace(/\s+/g, ' ')
+    return text
+  }
+
+  function error (parser, er) {
+    closeText(parser)
+    if (parser.trackPosition) {
+      er += '\nLine: ' + parser.line +
+        '\nColumn: ' + parser.column +
+        '\nChar: ' + parser.c
+    }
+    er = new Error(er)
+    parser.error = er
+    emit(parser, 'onerror', er)
+    return parser
+  }
+
+  function end (parser) {
+    if (parser.sawRoot && !parser.closedRoot) strictFail(parser, 'Unclosed root tag')
+    if ((parser.state !== S.BEGIN) &&
+      (parser.state !== S.BEGIN_WHITESPACE) &&
+      (parser.state !== S.TEXT)) {
+      error(parser, 'Unexpected end')
+    }
+    closeText(parser)
+    parser.c = ''
+    parser.closed = true
+    emit(parser, 'onend')
+    SAXParser.call(parser, parser.strict, parser.opt)
+    return parser
+  }
+
+  function strictFail (parser, message) {
+    if (typeof parser !== 'object' || !(parser instanceof SAXParser)) {
+      throw new Error('bad call to strictFail')
+    }
+    if (parser.strict) {
+      error(parser, message)
+    }
+  }
+
+  function newTag (parser) {
+    if (!parser.strict) parser.tagName = parser.tagName[parser.looseCase]()
+    var parent = parser.tags[parser.tags.length - 1] || parser
+    var tag = parser.tag = { name: parser.tagName, attributes: {} }
+
+    // will be overridden if tag contails an xmlns="foo" or xmlns:foo="bar"
+    if (parser.opt.xmlns) {
+      tag.ns = parent.ns
+    }
+    parser.attribList.length = 0
+    emitNode(parser, 'onopentagstart', tag)
+  }
+
+  function qname (name, attribute) {
+    var i = name.indexOf(':')
+    var qualName = i < 0 ? [ '', name ] : name.split(':')
+    var prefix = qualName[0]
+    var local = qualName[1]
+
+    // <x "xmlns"="http://foo">
+    if (attribute && name === 'xmlns') {
+      prefix = 'xmlns'
+      local = ''
+    }
+
+    return { prefix: prefix, local: local }
+  }
+
+  function attrib (parser) {
+    if (!parser.strict) {
+      parser.attribName = parser.attribName[parser.looseCase]()
+    }
+
+    if (parser.attribList.indexOf(parser.attribName) !== -1 ||
+      parser.tag.attributes.hasOwnProperty(parser.attribName)) {
+      parser.attribName = parser.attribValue = ''
+      return
+    }
+
+    if (parser.opt.xmlns) {
+      var qn = qname(parser.attribName, true)
+      var prefix = qn.prefix
+      var local = qn.local
+
+      if (prefix === 'xmlns') {
+        // namespace binding attribute. push the binding into scope
+        if (local === 'xml' && parser.attribValue !== XML_NAMESPACE) {
+          strictFail(parser,
+            'xml: prefix must be bound to ' + XML_NAMESPACE + '\n' +
+            'Actual: ' + parser.attribValue)
+        } else if (local === 'xmlns' && parser.attribValue !== XMLNS_NAMESPACE) {
+          strictFail(parser,
+            'xmlns: prefix must be bound to ' + XMLNS_NAMESPACE + '\n' +
+            'Actual: ' + parser.attribValue)
+        } else {
+          var tag = parser.tag
+          var parent = parser.tags[parser.tags.length - 1] || parser
+          if (tag.ns === parent.ns) {
+            tag.ns = Object.create(parent.ns)
+          }
+          tag.ns[local] = parser.attribValue
+        }
+      }
+
+      // defer onattribute events until all attributes have been seen
+      // so any new bindings can take effect. preserve attribute order
+      // so deferred events can be emitted in document order
+      parser.attribList.push([parser.attribName, parser.attribValue])
+    } else {
+      // in non-xmlns mode, we can emit the event right away
+      parser.tag.attributes[parser.attribName] = parser.attribValue
+      emitNode(parser, 'onattribute', {
+        name: parser.attribName,
+        value: parser.attribValue
+      })
+    }
+
+    parser.attribName = parser.attribValue = ''
+  }
+
+  function openTag (parser, selfClosing) {
+    if (parser.opt.xmlns) {
+      // emit namespace binding events
+      var tag = parser.tag
+
+      // add namespace info to tag
+      var qn = qname(parser.tagName)
+      tag.prefix = qn.prefix
+      tag.local = qn.local
+      tag.uri = tag.ns[qn.prefix] || ''
+
+      if (tag.prefix && !tag.uri) {
+        strictFail(parser, 'Unbound namespace prefix: ' +
+          JSON.stringify(parser.tagName))
+        tag.uri = qn.prefix
+      }
+
+      var parent = parser.tags[parser.tags.length - 1] || parser
+      if (tag.ns && parent.ns !== tag.ns) {
+        Object.keys(tag.ns).forEach(function (p) {
+          emitNode(parser, 'onopennamespace', {
+            prefix: p,
+            uri: tag.ns[p]
+          })
+        })
+      }
+
+      // handle deferred onattribute events
+      // Note: do not apply default ns to attributes:
+      //   http://www.w3.org/TR/REC-xml-names/#defaulting
+      for (var i = 0, l = parser.attribList.length; i < l; i++) {
+        var nv = parser.attribList[i]
+        var name = nv[0]
+        var value = nv[1]
+        var qualName = qname(name, true)
+        var prefix = qualName.prefix
+        var local = qualName.local
+        var uri = prefix === '' ? '' : (tag.ns[prefix] || '')
+        var a = {
+          name: name,
+          value: value,
+          prefix: prefix,
+          local: local,
+          uri: uri
+        }
+
+        // if there's any attributes with an undefined namespace,
+        // then fail on them now.
+        if (prefix && prefix !== 'xmlns' && !uri) {
+          strictFail(parser, 'Unbound namespace prefix: ' +
+            JSON.stringify(prefix))
+          a.uri = prefix
+        }
+        parser.tag.attributes[name] = a
+        emitNode(parser, 'onattribute', a)
+      }
+      parser.attribList.length = 0
+    }
+
+    parser.tag.isSelfClosing = !!selfClosing
+
+    // process the tag
+    parser.sawRoot = true
+    parser.tags.push(parser.tag)
+    emitNode(parser, 'onopentag', parser.tag)
+    if (!selfClosing) {
+      // special case for <script> in non-strict mode.
+      if (!parser.noscript && parser.tagName.toLowerCase() === 'script') {
+        parser.state = S.SCRIPT
+      } else {
+        parser.state = S.TEXT
+      }
+      parser.tag = null
+      parser.tagName = ''
+    }
+    parser.attribName = parser.attribValue = ''
+    parser.attribList.length = 0
+  }
+
+  function closeTag (parser) {
+    if (!parser.tagName) {
+      strictFail(parser, 'Weird empty close tag.')
+      parser.textNode += '</>'
+      parser.state = S.TEXT
+      return
+    }
+
+    if (parser.script) {
+      if (parser.tagName !== 'script') {
+        parser.script += '</' + parser.tagName + '>'
+        parser.tagName = ''
+        parser.state = S.SCRIPT
+        return
+      }
+      emitNode(parser, 'onscript', parser.script)
+      parser.script = ''
+    }
+
+    // first make sure that the closing tag actually exists.
+    // <a><b></c></b></a> will close everything, otherwise.
+    var t = parser.tags.length
+    var tagName = parser.tagName
+    if (!parser.strict) {
+      tagName = tagName[parser.looseCase]()
+    }
+    var closeTo = tagName
+    while (t--) {
+      var close = parser.tags[t]
+      if (close.name !== closeTo) {
+        // fail the first time in strict mode
+        strictFail(parser, 'Unexpected close tag')
+      } else {
+        break
+      }
+    }
+
+    // didn't find it.  we already failed for strict, so just abort.
+    if (t < 0) {
+      strictFail(parser, 'Unmatched closing tag: ' + parser.tagName)
+      parser.textNode += '</' + parser.tagName + '>'
+      parser.state = S.TEXT
+      return
+    }
+    parser.tagName = tagName
+    var s = parser.tags.length
+    while (s-- > t) {
+      var tag = parser.tag = parser.tags.pop()
+      parser.tagName = parser.tag.name
+      emitNode(parser, 'onclosetag', parser.tagName)
+
+      var x = {}
+      for (var i in tag.ns) {
+        x[i] = tag.ns[i]
+      }
+
+      var parent = parser.tags[parser.tags.length - 1] || parser
+      if (parser.opt.xmlns && tag.ns !== parent.ns) {
+        // remove namespace bindings introduced by tag
+        Object.keys(tag.ns).forEach(function (p) {
+          var n = tag.ns[p]
+          emitNode(parser, 'onclosenamespace', { prefix: p, uri: n })
+        })
+      }
+    }
+    if (t === 0) parser.closedRoot = true
+    parser.tagName = parser.attribValue = parser.attribName = ''
+    parser.attribList.length = 0
+    parser.state = S.TEXT
+  }
+
+  function parseEntity (parser) {
+    var entity = parser.entity
+    var entityLC = entity.toLowerCase()
+    var num
+    var numStr = ''
+
+    if (parser.ENTITIES[entity]) {
+      return parser.ENTITIES[entity]
+    }
+    if (parser.ENTITIES[entityLC]) {
+      return parser.ENTITIES[entityLC]
+    }
+    entity = entityLC
+    if (entity.charAt(0) === '#') {
+      if (entity.charAt(1) === 'x') {
+        entity = entity.slice(2)
+        num = parseInt(entity, 16)
+        numStr = num.toString(16)
+      } else {
+        entity = entity.slice(1)
+        num = parseInt(entity, 10)
+        numStr = num.toString(10)
+      }
+    }
+    entity = entity.replace(/^0+/, '')
+    if (isNaN(num) || numStr.toLowerCase() !== entity) {
+      strictFail(parser, 'Invalid character entity')
+      return '&' + parser.entity + ';'
+    }
+
+    return String.fromCodePoint(num)
+  }
+
+  function beginWhiteSpace (parser, c) {
+    if (c === '<') {
+      parser.state = S.OPEN_WAKA
+      parser.startTagPosition = parser.position
+    } else if (!isWhitespace(c)) {
+      // have to process this as a text node.
+      // weird, but happens.
+      strictFail(parser, 'Non-whitespace before first tag.')
+      parser.textNode = c
+      parser.state = S.TEXT
+    }
+  }
+
+  function charAt (chunk, i) {
+    var result = ''
+    if (i < chunk.length) {
+      result = chunk.charAt(i)
+    }
+    return result
+  }
+
+  function write (chunk) {
+    var parser = this
+    if (this.error) {
+      throw this.error
+    }
+    if (parser.closed) {
+      return error(parser,
+        'Cannot write after close. Assign an onready handler.')
+    }
+    if (chunk === null) {
+      return end(parser)
+    }
+    if (typeof chunk === 'object') {
+      chunk = chunk.toString()
+    }
+    var i = 0
+    var c = ''
+    while (true) {
+      c = charAt(chunk, i++)
+      parser.c = c
+
+      if (!c) {
+        break
+      }
+
+      if (parser.trackPosition) {
+        parser.position++
+        if (c === '\n') {
+          parser.line++
+          parser.column = 0
+        } else {
+          parser.column++
+        }
+      }
+
+      switch (parser.state) {
+        case S.BEGIN:
+          parser.state = S.BEGIN_WHITESPACE
+          if (c === '\uFEFF') {
+            continue
+          }
+          beginWhiteSpace(parser, c)
+          continue
+
+        case S.BEGIN_WHITESPACE:
+          beginWhiteSpace(parser, c)
+          continue
+
+        case S.TEXT:
+          if (parser.sawRoot && !parser.closedRoot) {
+            var starti = i - 1
+            while (c && c !== '<' && c !== '&') {
+              c = charAt(chunk, i++)
+              if (c && parser.trackPosition) {
+                parser.position++
+                if (c === '\n') {
+                  parser.line++
+                  parser.column = 0
+                } else {
+                  parser.column++
+                }
+              }
+            }
+            parser.textNode += chunk.substring(starti, i - 1)
+          }
+          if (c === '<' && !(parser.sawRoot && parser.closedRoot && !parser.strict)) {
+            parser.state = S.OPEN_WAKA
+            parser.startTagPosition = parser.position
+          } else {
+            if (!isWhitespace(c) && (!parser.sawRoot || parser.closedRoot)) {
+              strictFail(parser, 'Text data outside of root node.')
+            }
+            if (c === '&') {
+              parser.state = S.TEXT_ENTITY
+            } else {
+              parser.textNode += c
+            }
+          }
+          continue
+
+        case S.SCRIPT:
+          // only non-strict
+          if (c === '<') {
+            parser.state = S.SCRIPT_ENDING
+          } else {
+            parser.script += c
+          }
+          continue
+
+        case S.SCRIPT_ENDING:
+          if (c === '/') {
+            parser.state = S.CLOSE_TAG
+          } else {
+            parser.script += '<' + c
+            parser.state = S.SCRIPT
+          }
+          continue
+
+        case S.OPEN_WAKA:
+          // either a /, ?, !, or text is coming next.
+          if (c === '!') {
+            parser.state = S.SGML_DECL
+            parser.sgmlDecl = ''
+          } else if (isWhitespace(c)) {
+            // wait for it...
+          } else if (isMatch(nameStart, c)) {
+            parser.state = S.OPEN_TAG
+            parser.tagName = c
+          } else if (c === '/') {
+            parser.state = S.CLOSE_TAG
+            parser.tagName = ''
+          } else if (c === '?') {
+            parser.state = S.PROC_INST
+            parser.procInstName = parser.procInstBody = ''
+          } else {
+            strictFail(parser, 'Unencoded <')
+            // if there was some whitespace, then add that in.
+            if (parser.startTagPosition + 1 < parser.position) {
+              var pad = parser.position - parser.startTagPosition
+              c = new Array(pad).join(' ') + c
+            }
+            parser.textNode += '<' + c
+            parser.state = S.TEXT
+          }
+          continue
+
+        case S.SGML_DECL:
+          if ((parser.sgmlDecl + c).toUpperCase() === CDATA) {
+            emitNode(parser, 'onopencdata')
+            parser.state = S.CDATA
+            parser.sgmlDecl = ''
+            parser.cdata = ''
+          } else if (parser.sgmlDecl + c === '--') {
+            parser.state = S.COMMENT
+            parser.comment = ''
+            parser.sgmlDecl = ''
+          } else if ((parser.sgmlDecl + c).toUpperCase() === DOCTYPE) {
+            parser.state = S.DOCTYPE
+            if (parser.doctype || parser.sawRoot) {
+              strictFail(parser,
+                'Inappropriately located doctype declaration')
+            }
+            parser.doctype = ''
+            parser.sgmlDecl = ''
+          } else if (c === '>') {
+            emitNode(parser, 'onsgmldeclaration', parser.sgmlDecl)
+            parser.sgmlDecl = ''
+            parser.state = S.TEXT
+          } else if (isQuote(c)) {
+            parser.state = S.SGML_DECL_QUOTED
+            parser.sgmlDecl += c
+          } else {
+            parser.sgmlDecl += c
+          }
+          continue
+
+        case S.SGML_DECL_QUOTED:
+          if (c === parser.q) {
+            parser.state = S.SGML_DECL
+            parser.q = ''
+          }
+          parser.sgmlDecl += c
+          continue
+
+        case S.DOCTYPE:
+          if (c === '>') {
+            parser.state = S.TEXT
+            emitNode(parser, 'ondoctype', parser.doctype)
+            parser.doctype = true // just remember that we saw it.
+          } else {
+            parser.doctype += c
+            if (c === '[') {
+              parser.state = S.DOCTYPE_DTD
+            } else if (isQuote(c)) {
+              parser.state = S.DOCTYPE_QUOTED
+              parser.q = c
+            }
+          }
+          continue
+
+        case S.DOCTYPE_QUOTED:
+          parser.doctype += c
+          if (c === parser.q) {
+            parser.q = ''
+            parser.state = S.DOCTYPE
+          }
+          continue
+
+        case S.DOCTYPE_DTD:
+          parser.doctype += c
+          if (c === ']') {
+            parser.state = S.DOCTYPE
+          } else if (isQuote(c)) {
+            parser.state = S.DOCTYPE_DTD_QUOTED
+            parser.q = c
+          }
+          continue
+
+        case S.DOCTYPE_DTD_QUOTED:
+          parser.doctype += c
+          if (c === parser.q) {
+            parser.state = S.DOCTYPE_DTD
+            parser.q = ''
+          }
+          continue
+
+        case S.COMMENT:
+          if (c === '-') {
+            parser.state = S.COMMENT_ENDING
+          } else {
+            parser.comment += c
+          }
+          continue
+
+        case S.COMMENT_ENDING:
+          if (c === '-') {
+            parser.state = S.COMMENT_ENDED
+            parser.comment = textopts(parser.opt, parser.comment)
+            if (parser.comment) {
+              emitNode(parser, 'oncomment', parser.comment)
+            }
+            parser.comment = ''
+          } else {
+            parser.comment += '-' + c
+            parser.state = S.COMMENT
+          }
+          continue
+
+        case S.COMMENT_ENDED:
+          if (c !== '>') {
+            strictFail(parser, 'Malformed comment')
+            // allow <!-- blah -- bloo --> in non-strict mode,
+            // which is a comment of " blah -- bloo "
+            parser.comment += '--' + c
+            parser.state = S.COMMENT
+          } else {
+            parser.state = S.TEXT
+          }
+          continue
+
+        case S.CDATA:
+          if (c === ']') {
+            parser.state = S.CDATA_ENDING
+          } else {
+            parser.cdata += c
+          }
+          continue
+
+        case S.CDATA_ENDING:
+          if (c === ']') {
+            parser.state = S.CDATA_ENDING_2
+          } else {
+            parser.cdata += ']' + c
+            parser.state = S.CDATA
+          }
+          continue
+
+        case S.CDATA_ENDING_2:
+          if (c === '>') {
+            if (parser.cdata) {
+              emitNode(parser, 'oncdata', parser.cdata)
+            }
+            emitNode(parser, 'onclosecdata')
+            parser.cdata = ''
+            parser.state = S.TEXT
+          } else if (c === ']') {
+            parser.cdata += ']'
+          } else {
+            parser.cdata += ']]' + c
+            parser.state = S.CDATA
+          }
+          continue
+
+        case S.PROC_INST:
+          if (c === '?') {
+            parser.state = S.PROC_INST_ENDING
+          } else if (isWhitespace(c)) {
+            parser.state = S.PROC_INST_BODY
+          } else {
+            parser.procInstName += c
+          }
+          continue
+
+        case S.PROC_INST_BODY:
+          if (!parser.procInstBody && isWhitespace(c)) {
+            continue
+          } else if (c === '?') {
+            parser.state = S.PROC_INST_ENDING
+          } else {
+            parser.procInstBody += c
+          }
+          continue
+
+        case S.PROC_INST_ENDING:
+          if (c === '>') {
+            emitNode(parser, 'onprocessinginstruction', {
+              name: parser.procInstName,
+              body: parser.procInstBody
+            })
+            parser.procInstName = parser.procInstBody = ''
+            parser.state = S.TEXT
+          } else {
+            parser.procInstBody += '?' + c
+            parser.state = S.PROC_INST_BODY
+          }
+          continue
+
+        case S.OPEN_TAG:
+          if (isMatch(nameBody, c)) {
+            parser.tagName += c
+          } else {
+            newTag(parser)
+            if (c === '>') {
+              openTag(parser)
+            } else if (c === '/') {
+              parser.state = S.OPEN_TAG_SLASH
+            } else {
+              if (!isWhitespace(c)) {
+                strictFail(parser, 'Invalid character in tag name')
+              }
+              parser.state = S.ATTRIB
+            }
+          }
+          continue
+
+        case S.OPEN_TAG_SLASH:
+          if (c === '>') {
+            openTag(parser, true)
+            closeTag(parser)
+          } else {
+            strictFail(parser, 'Forward-slash in opening tag not followed by >')
+            parser.state = S.ATTRIB
+          }
+          continue
+
+        case S.ATTRIB:
+          // haven't read the attribute name yet.
+          if (isWhitespace(c)) {
+            continue
+          } else if (c === '>') {
+            openTag(parser)
+          } else if (c === '/') {
+            parser.state = S.OPEN_TAG_SLASH
+          } else if (isMatch(nameStart, c)) {
+            parser.attribName = c
+            parser.attribValue = ''
+            parser.state = S.ATTRIB_NAME
+          } else {
+            strictFail(parser, 'Invalid attribute name')
+          }
+          continue
+
+        case S.ATTRIB_NAME:
+          if (c === '=') {
+            parser.state = S.ATTRIB_VALUE
+          } else if (c === '>') {
+            strictFail(parser, 'Attribute without value')
+            parser.attribValue = parser.attribName
+            attrib(parser)
+            openTag(parser)
+          } else if (isWhitespace(c)) {
+            parser.state = S.ATTRIB_NAME_SAW_WHITE
+          } else if (isMatch(nameBody, c)) {
+            parser.attribName += c
+          } else {
+            strictFail(parser, 'Invalid attribute name')
+          }
+          continue
+
+        case S.ATTRIB_NAME_SAW_WHITE:
+          if (c === '=') {
+            parser.state = S.ATTRIB_VALUE
+          } else if (isWhitespace(c)) {
+            continue
+          } else {
+            strictFail(parser, 'Attribute without value')
+            parser.tag.attributes[parser.attribName] = ''
+            parser.attribValue = ''
+            emitNode(parser, 'onattribute', {
+              name: parser.attribName,
+              value: ''
+            })
+            parser.attribName = ''
+            if (c === '>') {
+              openTag(parser)
+            } else if (isMatch(nameStart, c)) {
+              parser.attribName = c
+              parser.state = S.ATTRIB_NAME
+            } else {
+              strictFail(parser, 'Invalid attribute name')
+              parser.state = S.ATTRIB
+            }
+          }
+          continue
+
+        case S.ATTRIB_VALUE:
+          if (isWhitespace(c)) {
+            continue
+          } else if (isQuote(c)) {
+            parser.q = c
+            parser.state = S.ATTRIB_VALUE_QUOTED
+          } else {
+            strictFail(parser, 'Unquoted attribute value')
+            parser.state = S.ATTRIB_VALUE_UNQUOTED
+            parser.attribValue = c
+          }
+          continue
+
+        case S.ATTRIB_VALUE_QUOTED:
+          if (c !== parser.q) {
+            if (c === '&') {
+              parser.state = S.ATTRIB_VALUE_ENTITY_Q
+            } else {
+              parser.attribValue += c
+            }
+            continue
+          }
+          attrib(parser)
+          parser.q = ''
+          parser.state = S.ATTRIB_VALUE_CLOSED
+          continue
+
+        case S.ATTRIB_VALUE_CLOSED:
+          if (isWhitespace(c)) {
+            parser.state = S.ATTRIB
+          } else if (c === '>') {
+            openTag(parser)
+          } else if (c === '/') {
+            parser.state = S.OPEN_TAG_SLASH
+          } else if (isMatch(nameStart, c)) {
+            strictFail(parser, 'No whitespace between attributes')
+            parser.attribName = c
+            parser.attribValue = ''
+            parser.state = S.ATTRIB_NAME
+          } else {
+            strictFail(parser, 'Invalid attribute name')
+          }
+          continue
+
+        case S.ATTRIB_VALUE_UNQUOTED:
+          if (!isAttribEnd(c)) {
+            if (c === '&') {
+              parser.state = S.ATTRIB_VALUE_ENTITY_U
+            } else {
+              parser.attribValue += c
+            }
+            continue
+          }
+          attrib(parser)
+          if (c === '>') {
+            openTag(parser)
+          } else {
+            parser.state = S.ATTRIB
+          }
+          continue
+
+        case S.CLOSE_TAG:
+          if (!parser.tagName) {
+            if (isWhitespace(c)) {
+              continue
+            } else if (notMatch(nameStart, c)) {
+              if (parser.script) {
+                parser.script += '</' + c
+                parser.state = S.SCRIPT
+              } else {
+                strictFail(parser, 'Invalid tagname in closing tag.')
+              }
+            } else {
+              parser.tagName = c
+            }
+          } else if (c === '>') {
+            closeTag(parser)
+          } else if (isMatch(nameBody, c)) {
+            parser.tagName += c
+          } else if (parser.script) {
+            parser.script += '</' + parser.tagName
+            parser.tagName = ''
+            parser.state = S.SCRIPT
+          } else {
+            if (!isWhitespace(c)) {
+              strictFail(parser, 'Invalid tagname in closing tag')
+            }
+            parser.state = S.CLOSE_TAG_SAW_WHITE
+          }
+          continue
+
+        case S.CLOSE_TAG_SAW_WHITE:
+          if (isWhitespace(c)) {
+            continue
+          }
+          if (c === '>') {
+            closeTag(parser)
+          } else {
+            strictFail(parser, 'Invalid characters in closing tag')
+          }
+          continue
+
+        case S.TEXT_ENTITY:
+        case S.ATTRIB_VALUE_ENTITY_Q:
+        case S.ATTRIB_VALUE_ENTITY_U:
+          var returnState
+          var buffer
+          switch (parser.state) {
+            case S.TEXT_ENTITY:
+              returnState = S.TEXT
+              buffer = 'textNode'
+              break
+
+            case S.ATTRIB_VALUE_ENTITY_Q:
+              returnState = S.ATTRIB_VALUE_QUOTED
+              buffer = 'attribValue'
+              break
+
+            case S.ATTRIB_VALUE_ENTITY_U:
+              returnState = S.ATTRIB_VALUE_UNQUOTED
+              buffer = 'attribValue'
+              break
+          }
+
+          if (c === ';') {
+            parser[buffer] += parseEntity(parser)
+            parser.entity = ''
+            parser.state = returnState
+          } else if (isMatch(parser.entity.length ? entityBody : entityStart, c)) {
+            parser.entity += c
+          } else {
+            strictFail(parser, 'Invalid character in entity name')
+            parser[buffer] += '&' + parser.entity + c
+            parser.entity = ''
+            parser.state = returnState
+          }
+
+          continue
+
+        default:
+          throw new Error(parser, 'Unknown state: ' + parser.state)
+      }
+    } // while
+
+    if (parser.position >= parser.bufferCheckPosition) {
+      checkBufferLength(parser)
+    }
+    return parser
+  }
+
+  /*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
+  /* istanbul ignore next */
+  if (!String.fromCodePoint) {
+    (function () {
+      var stringFromCharCode = String.fromCharCode
+      var floor = Math.floor
+      var fromCodePoint = function () {
+        var MAX_SIZE = 0x4000
+        var codeUnits = []
+        var highSurrogate
+        var lowSurrogate
+        var index = -1
+        var length = arguments.length
+        if (!length) {
+          return ''
+        }
+        var result = ''
+        while (++index < length) {
+          var codePoint = Number(arguments[index])
+          if (
+            !isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
+            codePoint < 0 || // not a valid Unicode code point
+            codePoint > 0x10FFFF || // not a valid Unicode code point
+            floor(codePoint) !== codePoint // not an integer
+          ) {
+            throw RangeError('Invalid code point: ' + codePoint)
+          }
+          if (codePoint <= 0xFFFF) { // BMP code point
+            codeUnits.push(codePoint)
+          } else { // Astral code point; split in surrogate halves
+            // http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+            codePoint -= 0x10000
+            highSurrogate = (codePoint >> 10) + 0xD800
+            lowSurrogate = (codePoint % 0x400) + 0xDC00
+            codeUnits.push(highSurrogate, lowSurrogate)
+          }
+          if (index + 1 === length || codeUnits.length > MAX_SIZE) {
+            result += stringFromCharCode.apply(null, codeUnits)
+            codeUnits.length = 0
+          }
+        }
+        return result
+      }
+      /* istanbul ignore next */
+      if (Object.defineProperty) {
+        Object.defineProperty(String, 'fromCodePoint', {
+          value: fromCodePoint,
+          configurable: true,
+          writable: true
+        })
+      } else {
+        String.fromCodePoint = fromCodePoint
+      }
+    }())
+  }
+})( false ? undefined : exports)
+
+
+/***/ }),
 /* 916 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -42751,17 +43668,22 @@ const path_1 = tslib_1.__importDefault(__webpack_require__(622));
 const fast_glob_1 = tslib_1.__importDefault(__webpack_require__(344));
 const js_yaml_1 = tslib_1.__importDefault(__webpack_require__(251));
 const map_obj_1 = tslib_1.__importDefault(__webpack_require__(327));
+const helpers_1 = __webpack_require__(210);
 const fs_extra_1 = tslib_1.__importDefault(__webpack_require__(607));
 const log_1 = tslib_1.__importDefault(__webpack_require__(766));
-const util_1 = __webpack_require__(429);
+const util_1 = __webpack_require__(945);
 const Triggers = tslib_1.__importStar(__webpack_require__(241));
 const getSupportedTriggers = (doc, context) => {
     const supportTriggerKeys = Object.keys(Triggers);
     const AllTriggers = Triggers;
     const supportTriggerIds = supportTriggerKeys.map((triggerKey) => {
         const Trigger = AllTriggers[triggerKey];
-        const triggerInstance = new Trigger();
-        return triggerInstance.id;
+        const triggerInstance = new Trigger({
+            options: {},
+            context: context,
+            helpers: { createContentDigest: helpers_1.createContentDigest, cache: helpers_1.getCache(`trigger-temp`) },
+        });
+        return triggerInstance.name;
     });
     const triggers = [];
     if (doc && doc.on) {
@@ -43108,7 +44030,7 @@ var baseTimes = __webpack_require__(752),
     isArray = __webpack_require__(922),
     isBuffer = __webpack_require__(92),
     isIndex = __webpack_require__(342),
-    isTypedArray = __webpack_require__(253);
+    isTypedArray = __webpack_require__(555);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -43169,7 +44091,7 @@ module.exports = arrayLikeKeys;
 
   XMLDOMImplementation = __webpack_require__(274);
 
-  XMLDOMConfiguration = __webpack_require__(181);
+  XMLDOMConfiguration = __webpack_require__(276);
 
   XMLNode = __webpack_require__(290);
 
@@ -43924,315 +44846,7 @@ module.exports = new Schema({
 
 
 /***/ }),
-/* 938 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var pathModule = __webpack_require__(622);
-var isWindows = process.platform === 'win32';
-var fs = __webpack_require__(747);
-
-// JavaScript implementation of realpath, ported from node pre-v6
-
-var DEBUG = process.env.NODE_DEBUG && /fs/.test(process.env.NODE_DEBUG);
-
-function rethrow() {
-  // Only enable in debug mode. A backtrace uses ~1000 bytes of heap space and
-  // is fairly slow to generate.
-  var callback;
-  if (DEBUG) {
-    var backtrace = new Error;
-    callback = debugCallback;
-  } else
-    callback = missingCallback;
-
-  return callback;
-
-  function debugCallback(err) {
-    if (err) {
-      backtrace.message = err.message;
-      err = backtrace;
-      missingCallback(err);
-    }
-  }
-
-  function missingCallback(err) {
-    if (err) {
-      if (process.throwDeprecation)
-        throw err;  // Forgot a callback but don't know where? Use NODE_DEBUG=fs
-      else if (!process.noDeprecation) {
-        var msg = 'fs: missing callback ' + (err.stack || err.message);
-        if (process.traceDeprecation)
-          console.trace(msg);
-        else
-          console.error(msg);
-      }
-    }
-  }
-}
-
-function maybeCallback(cb) {
-  return typeof cb === 'function' ? cb : rethrow();
-}
-
-var normalize = pathModule.normalize;
-
-// Regexp that finds the next partion of a (partial) path
-// result is [base_with_slash, base], e.g. ['somedir/', 'somedir']
-if (isWindows) {
-  var nextPartRe = /(.*?)(?:[\/\\]+|$)/g;
-} else {
-  var nextPartRe = /(.*?)(?:[\/]+|$)/g;
-}
-
-// Regex to find the device root, including trailing slash. E.g. 'c:\\'.
-if (isWindows) {
-  var splitRootRe = /^(?:[a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/][^\\\/]+)?[\\\/]*/;
-} else {
-  var splitRootRe = /^[\/]*/;
-}
-
-exports.realpathSync = function realpathSync(p, cache) {
-  // make p is absolute
-  p = pathModule.resolve(p);
-
-  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
-    return cache[p];
-  }
-
-  var original = p,
-      seenLinks = {},
-      knownHard = {};
-
-  // current character position in p
-  var pos;
-  // the partial path so far, including a trailing slash if any
-  var current;
-  // the partial path without a trailing slash (except when pointing at a root)
-  var base;
-  // the partial path scanned in the previous round, with slash
-  var previous;
-
-  start();
-
-  function start() {
-    // Skip over roots
-    var m = splitRootRe.exec(p);
-    pos = m[0].length;
-    current = m[0];
-    base = m[0];
-    previous = '';
-
-    // On windows, check that the root exists. On unix there is no need.
-    if (isWindows && !knownHard[base]) {
-      fs.lstatSync(base);
-      knownHard[base] = true;
-    }
-  }
-
-  // walk down the path, swapping out linked pathparts for their real
-  // values
-  // NB: p.length changes.
-  while (pos < p.length) {
-    // find the next part
-    nextPartRe.lastIndex = pos;
-    var result = nextPartRe.exec(p);
-    previous = current;
-    current += result[0];
-    base = previous + result[1];
-    pos = nextPartRe.lastIndex;
-
-    // continue if not a symlink
-    if (knownHard[base] || (cache && cache[base] === base)) {
-      continue;
-    }
-
-    var resolvedLink;
-    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
-      // some known symbolic link.  no need to stat again.
-      resolvedLink = cache[base];
-    } else {
-      var stat = fs.lstatSync(base);
-      if (!stat.isSymbolicLink()) {
-        knownHard[base] = true;
-        if (cache) cache[base] = base;
-        continue;
-      }
-
-      // read the link if it wasn't read before
-      // dev/ino always return 0 on windows, so skip the check.
-      var linkTarget = null;
-      if (!isWindows) {
-        var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
-        if (seenLinks.hasOwnProperty(id)) {
-          linkTarget = seenLinks[id];
-        }
-      }
-      if (linkTarget === null) {
-        fs.statSync(base);
-        linkTarget = fs.readlinkSync(base);
-      }
-      resolvedLink = pathModule.resolve(previous, linkTarget);
-      // track this, if given a cache.
-      if (cache) cache[base] = resolvedLink;
-      if (!isWindows) seenLinks[id] = linkTarget;
-    }
-
-    // resolve the link, then start over
-    p = pathModule.resolve(resolvedLink, p.slice(pos));
-    start();
-  }
-
-  if (cache) cache[original] = p;
-
-  return p;
-};
-
-
-exports.realpath = function realpath(p, cache, cb) {
-  if (typeof cb !== 'function') {
-    cb = maybeCallback(cache);
-    cache = null;
-  }
-
-  // make p is absolute
-  p = pathModule.resolve(p);
-
-  if (cache && Object.prototype.hasOwnProperty.call(cache, p)) {
-    return process.nextTick(cb.bind(null, null, cache[p]));
-  }
-
-  var original = p,
-      seenLinks = {},
-      knownHard = {};
-
-  // current character position in p
-  var pos;
-  // the partial path so far, including a trailing slash if any
-  var current;
-  // the partial path without a trailing slash (except when pointing at a root)
-  var base;
-  // the partial path scanned in the previous round, with slash
-  var previous;
-
-  start();
-
-  function start() {
-    // Skip over roots
-    var m = splitRootRe.exec(p);
-    pos = m[0].length;
-    current = m[0];
-    base = m[0];
-    previous = '';
-
-    // On windows, check that the root exists. On unix there is no need.
-    if (isWindows && !knownHard[base]) {
-      fs.lstat(base, function(err) {
-        if (err) return cb(err);
-        knownHard[base] = true;
-        LOOP();
-      });
-    } else {
-      process.nextTick(LOOP);
-    }
-  }
-
-  // walk down the path, swapping out linked pathparts for their real
-  // values
-  function LOOP() {
-    // stop if scanned past end of path
-    if (pos >= p.length) {
-      if (cache) cache[original] = p;
-      return cb(null, p);
-    }
-
-    // find the next part
-    nextPartRe.lastIndex = pos;
-    var result = nextPartRe.exec(p);
-    previous = current;
-    current += result[0];
-    base = previous + result[1];
-    pos = nextPartRe.lastIndex;
-
-    // continue if not a symlink
-    if (knownHard[base] || (cache && cache[base] === base)) {
-      return process.nextTick(LOOP);
-    }
-
-    if (cache && Object.prototype.hasOwnProperty.call(cache, base)) {
-      // known symbolic link.  no need to stat again.
-      return gotResolvedLink(cache[base]);
-    }
-
-    return fs.lstat(base, gotStat);
-  }
-
-  function gotStat(err, stat) {
-    if (err) return cb(err);
-
-    // if not a symlink, skip to the next path part
-    if (!stat.isSymbolicLink()) {
-      knownHard[base] = true;
-      if (cache) cache[base] = base;
-      return process.nextTick(LOOP);
-    }
-
-    // stat & read the link if not read before
-    // call gotTarget as soon as the link target is known
-    // dev/ino always return 0 on windows, so skip the check.
-    if (!isWindows) {
-      var id = stat.dev.toString(32) + ':' + stat.ino.toString(32);
-      if (seenLinks.hasOwnProperty(id)) {
-        return gotTarget(null, seenLinks[id], base);
-      }
-    }
-    fs.stat(base, function(err) {
-      if (err) return cb(err);
-
-      fs.readlink(base, function(err, target) {
-        if (!isWindows) seenLinks[id] = target;
-        gotTarget(err, target);
-      });
-    });
-  }
-
-  function gotTarget(err, target, base) {
-    if (err) return cb(err);
-
-    var resolvedLink = pathModule.resolve(previous, target);
-    if (cache) cache[base] = resolvedLink;
-    gotResolvedLink(resolvedLink);
-  }
-
-  function gotResolvedLink(resolvedLink) {
-    // resolve the link, then start over
-    p = pathModule.resolve(resolvedLink, p.slice(pos));
-    start();
-  }
-};
-
-
-/***/ }),
+/* 938 */,
 /* 939 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -44668,7 +45282,98 @@ exports.default = SyncReader;
 
 
 /***/ }),
-/* 945 */,
+/* 945 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.template = void 0;
+const tslib_1 = __webpack_require__(403);
+const lodash_has_1 = tslib_1.__importDefault(__webpack_require__(574));
+const variableHandle = ({ text, regex, regexResult, currentIndex, shouldReplaceUndefinedToEmpty, context, }) => {
+    if (shouldReplaceUndefinedToEmpty) {
+        const functionRegex = /toJson\(([\S\s]*?)\)/;
+        const matched = functionRegex.exec(regexResult[1]);
+        let variableName = regexResult[1];
+        if (matched) {
+            variableName = matched[1];
+        }
+        variableName = variableName.trim();
+        if (lodash_has_1.default(context, variableName)) {
+            return [
+                JSON.stringify(text.slice(currentIndex, regex.lastIndex - regexResult[0].length)),
+                "(" + regexResult[1] + ")",
+            ];
+        }
+        else {
+            return [
+                JSON.stringify(text.slice(currentIndex, regex.lastIndex - regexResult[0].length)),
+            ];
+        }
+    }
+    else {
+        return [
+            JSON.stringify(text.slice(currentIndex, regex.lastIndex - regexResult[0].length)),
+            "(" + regexResult[1] + ")",
+        ];
+    }
+};
+exports.template = function (text, context, options) {
+    let includeVariableRegex = /(^on)|(^secrets)|(^toJson\(on\.?)/;
+    let interpolate = /\$\{\{([\S\s]*?)\}\}/g;
+    let shouldReplaceUndefinedToEmpty = false;
+    if (options) {
+        if (options.interpolate) {
+            interpolate = options.interpolate;
+        }
+        if (options.includeVariableRegex) {
+            includeVariableRegex = options.includeVariableRegex;
+        }
+        if (typeof options.shouldReplaceUndefinedToEmpty !== "undefined") {
+            shouldReplaceUndefinedToEmpty = options.shouldReplaceUndefinedToEmpty;
+        }
+    }
+    const stringify = JSON.stringify;
+    const re = interpolate;
+    let evaluate = [], i = 0, m;
+    while ((m = re.exec(text))) {
+        if (includeVariableRegex) {
+            if (includeVariableRegex.exec(m[1].trim())) {
+                evaluate = evaluate.concat(variableHandle({
+                    regex: re,
+                    currentIndex: i,
+                    regexResult: m,
+                    shouldReplaceUndefinedToEmpty,
+                    text,
+                    context,
+                }));
+                i = re.lastIndex;
+            }
+            else {
+                evaluate.push(stringify(text.slice(i, re.lastIndex)));
+                i = re.lastIndex;
+            }
+        }
+        else {
+            evaluate = evaluate.concat(variableHandle({
+                regex: re,
+                currentIndex: i,
+                regexResult: m,
+                shouldReplaceUndefinedToEmpty,
+                text,
+                context,
+            }));
+            i = re.lastIndex;
+        }
+    }
+    evaluate.push(stringify(text.slice(i)));
+    return Function("var toJson = function(obj){return JSON.stringify(obj,null,2)};with(this)return" +
+        evaluate.join("+")).call(context);
+};
+//# sourceMappingURL=util.js.map
+
+/***/ }),
 /* 946 */,
 /* 947 */,
 /* 948 */
@@ -44726,665 +45431,7 @@ module.exports = path_ => {
 
 
 /***/ }),
-/* 951 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-/** @module cacheManager/multiCaching */
-var async = __webpack_require__(448);
-var CallbackFiller = __webpack_require__(443);
-var utils = __webpack_require__(564);
-var isObject = utils.isObject;
-var parseWrapArguments = utils.parseWrapArguments;
-
-/**
- * Module that lets you specify a hierarchy of caches.
- *
- * @param {array} caches - Array of caching objects.
- * @param {object} [options]
- * @param {function} [options.isCacheableValue] - A callback function which is called
- *   with every value returned from cache or from a wrapped function. This lets you specify
- *   which values should and should not be cached. If the function returns true, it will be
- *   stored in cache. By default it caches everything except undefined.
- *
- *   If an underlying cache specifies its own isCacheableValue function, that function will
- *   be used instead of the multiCaching's _isCacheableValue function.
- */
-var multiCaching = function(caches, options) {
-    var self = {};
-    options = options || {};
-
-    var Promise = options.promiseDependency || global.Promise;
-
-    if (!Array.isArray(caches)) {
-        throw new Error('multiCaching requires an array of caches');
-    }
-
-    var callbackFiller = new CallbackFiller();
-    var backgroundQueue = new Set();
-
-    if (typeof options.isCacheableValue === 'function') {
-        self._isCacheableValue = options.isCacheableValue;
-    } else {
-        self._isCacheableValue = function(value) {
-            return value !== undefined;
-        };
-    }
-
-    /**
-     * If the underlying cache specifies its own isCacheableValue function (such
-     * as how node-cache-manager-redis does), use that function, otherwise use
-     * self._isCacheableValue function.
-     */
-    function getIsCacheableValueFunction(cache) {
-        if (cache.store && typeof cache.store.isCacheableValue === 'function') {
-            return cache.store.isCacheableValue.bind(cache.store);
-        } else {
-            return self._isCacheableValue;
-        }
-    }
-
-    function getFromHighestPriorityCachePromise() {
-        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
-            return typeof v !== 'undefined';
-        });
-
-        return new Promise(function(resolve, reject) {
-            var cb = function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            };
-            args.push(cb);
-            getFromHighestPriorityCache.apply(null, args);
-        });
-    }
-
-    function getFromHighestPriorityCache() {
-        var args = Array.prototype.slice.apply(arguments).filter(function(v) {
-            return typeof v !== 'undefined';
-        });
-        var cb;
-        var options = {};
-
-        if (typeof args[args.length - 1] === 'function') {
-            cb = args.pop();
-        }
-
-        if (!cb) {
-            return getFromHighestPriorityCachePromise.apply(this, args);
-        }
-
-        if (isObject(args[args.length - 1])) {
-            options = args.pop();
-        }
-
-        /**
-         * Keep a copy of the keys to retrieve
-         */
-        var keys = Array.prototype.slice.apply(args);
-        var multi = keys.length > 1;
-
-        /**
-         * Then put back the options in the args Array
-         */
-        args.push(options);
-
-        if (multi) {
-            /**
-             * Keep track of the keys left to fetch accross the caches
-             */
-            var keysToFetch = Array.prototype.slice.apply(keys);
-
-            /**
-             * Hash to save our multi keys result
-             */
-            var mapResult = {};
-        }
-
-        var i = 0;
-        async.eachSeries(caches, function(cache, next) {
-            var callback = function(err, result) {
-                if (err) {
-                    return next(err);
-                }
-
-                var _isCacheableValue = getIsCacheableValueFunction(cache);
-
-                if (multi) {
-                    addResultToMap(result, _isCacheableValue);
-
-                    if (keysToFetch.length === 0 || i === caches.length - 1) {
-                        // Return an Array with the values merged from all the caches
-                        return cb(null, keys.map(function(k) {
-                            return mapResult[k] || undefined;
-                        }), i);
-                    }
-                } else if (_isCacheableValue(result)) {
-                    // break out of async loop.
-                    return cb(err, result, i);
-                }
-
-                i += 1;
-                next();
-            };
-
-            if (multi) {
-                if (typeof cache.store.mget !== 'function') {
-                    /**
-                     * Silently fail for store that don't support mget()
-                     */
-                    return callback(null, []);
-                }
-                var _args = Array.prototype.slice.apply(keysToFetch);
-                _args.push(options);
-                _args.push(callback);
-                cache.store.mget.apply(cache.store, _args);
-            } else {
-                cache.store.get(args[0], options, callback);
-            }
-        }, function(err, result) {
-            return cb(err, result);
-        });
-
-        function addResultToMap(result, isCacheable) {
-            var key;
-            var diff = 0;
-
-            /**
-             * We loop through the result and if the value
-             * is cacheable we add it to the mapResult hash
-             * and remove the key to fetch from the "keysToFetch" array
-             */
-            result.forEach(function(res, i) {
-                if (isCacheable(res)) {
-                    key = keysToFetch[i - diff];
-
-                    // Add the result to our map
-                    mapResult[key] = res;
-
-                    // delete key from our keysToFetch array
-                    keysToFetch.splice(i - diff, 1);
-                    diff += 1;
-                }
-            });
-        }
-    }
-
-    function setInMultipleCachesPromise() {
-        var args = Array.prototype.slice.apply(arguments);
-
-        return new Promise(function(resolve, reject) {
-            var cb = function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            };
-            args.push(cb);
-            setInMultipleCaches.apply(null, args);
-        });
-    }
-
-    function setInMultipleCaches() {
-        var args = Array.prototype.slice.apply(arguments);
-        var _caches = Array.isArray(args[0]) ? args.shift() : caches;
-
-        var cb;
-        var options = {};
-
-        if (typeof args[args.length - 1] === 'function') {
-            cb = args.pop();
-        }
-
-        if (!cb) {
-            return setInMultipleCachesPromise.apply(this, args);
-        }
-
-        if (args.length % 2 > 0 && isObject(args[args.length - 1])) {
-            options = args.pop();
-        }
-
-        var length = args.length;
-        var multi = length > 2;
-        var i;
-
-        async.each(_caches, function(cache, next) {
-            var _isCacheableValue = getIsCacheableValueFunction(cache);
-            var keysValues = Array.prototype.slice.apply(args);
-
-            /**
-             * We filter out the keys *not* cacheable
-             */
-            for (i = 0; i < length; i += 2) {
-                if (!_isCacheableValue(keysValues[i + 1])) {
-                    keysValues.splice(i, 2);
-                }
-            }
-
-            if (keysValues.length === 0) {
-                return next();
-            }
-
-            var cacheOptions = options;
-            if (typeof options.ttl === 'function') {
-                /**
-                 * Dynamically set the ttl by context depending of the store
-                 */
-                cacheOptions = {};
-                cacheOptions.ttl = options.ttl(keysValues, cache.store.name);
-            }
-
-            if (multi) {
-                if (typeof cache.store.mset !== 'function') {
-                    /**
-                     * Silently fail for store that don't support mset()
-                     */
-                    return next();
-                }
-                keysValues.push(cacheOptions);
-                keysValues.push(next);
-
-                cache.store.mset.apply(cache.store, keysValues);
-            } else {
-                cache.store.set(keysValues[0], keysValues[1], cacheOptions, next);
-            }
-        }, function(err, result) {
-            cb(err, result);
-        });
-    }
-
-    function getAndPassUpPromise(key) {
-        return new Promise(function(resolve, reject) {
-            self.getAndPassUp(key, function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
-    }
-
-    /**
-     * Looks for an item in cache tiers.
-     * When a key is found in a lower cache, all higher levels are updated.
-     *
-     * @param {string} key
-     * @param {function} cb
-     */
-    self.getAndPassUp = function(key, cb) {
-        if (!cb) {
-            return getAndPassUpPromise(key);
-        }
-
-        getFromHighestPriorityCache(key, function(err, result, index) {
-            if (err) {
-                return cb(err);
-            }
-
-            if (index) {
-                var cachesToUpdate = caches.slice(0, index);
-                async.each(cachesToUpdate, function(cache, next) {
-                    var _isCacheableValue = getIsCacheableValueFunction(cache);
-                    if (_isCacheableValue(result)) {
-                        // We rely on the cache module's default TTL
-                        cache.set(key, result, next);
-                    }
-                });
-            }
-
-            return cb(err, result);
-        });
-    };
-
-    function wrapPromise(key, promise, options) {
-        return new Promise(function(resolve, reject) {
-            self.wrap(key, function(cb) {
-                Promise.resolve()
-                    .then(promise)
-                    .then(function(result) {
-                        cb(null, result);
-                    })
-                    .catch(cb);
-            }, options, function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(result);
-            });
-        });
-    }
-
-    function handleBackgroundRefresh(caches, index, key, work, options) {
-        if (caches[index].refreshThreshold && !backgroundQueue.has(key)) {
-            backgroundQueue.add(key);
-            caches[index].checkRefreshThreshold(key, function(err, isExpiring) {
-                if (err) {
-                    backgroundQueue.delete(key);
-                    return;
-                }
-                if (isExpiring) {
-                    work(function(workErr, workData) {
-                        if (workErr || !self._isCacheableValue(workData)) {
-                            backgroundQueue.delete(key);
-                            return;
-                        }
-                        var args = [caches, key, workData, options, function() {
-                            backgroundQueue.delete(key);
-                        }];
-                        setInMultipleCaches.apply(null, args);
-                    });
-                } else {
-                    backgroundQueue.delete(key);
-                }
-            });
-        }
-    }
-
-    /**
-     * Wraps a function in one or more caches.
-     * Has same API as regular caching module.
-     *
-     * If a key doesn't exist in any cache, it gets set in all caches.
-     * If a key exists in a high-priority (e.g., first) cache, it gets returned immediately
-     * without getting set in other lower-priority caches.
-     * If a key doesn't exist in a higher-priority cache but exists in a lower-priority
-     * cache, it gets set in all higher-priority caches.
-     * You can pass any number of keys as long as the wrapped function returns
-     * an array with the same number of values and in the same order.
-     *
-     * @function
-     * @name wrap
-     *
-     * @param {string} key - The cache key to use in cache operations. Can be one or many.
-     * @param {function} work - The function to wrap
-     * @param {object} [options] - options passed to `set` function
-     * @param {function} cb
-     */
-    self.wrap = function() {
-        var parsedArgs = parseWrapArguments(Array.prototype.slice.apply(arguments));
-        var keys = parsedArgs.keys;
-        var work = parsedArgs.work;
-        var options = parsedArgs.options;
-        var cb = parsedArgs.cb;
-
-        if (!cb) {
-            keys.push(work);
-            keys.push(options);
-            return wrapPromise.apply(this, keys);
-        }
-
-        if (keys.length > 1) {
-            /**
-             * Handle more than 1 key
-             */
-            return wrapMultiple(keys, work, options, cb);
-        }
-
-        var key = keys[0];
-
-        var hasKey = callbackFiller.has(key);
-        callbackFiller.add(key, {cb: cb});
-        if (hasKey) { return; }
-
-        getFromHighestPriorityCache(key, function(err, result, index) {
-            if (err) {
-                return callbackFiller.fill(key, err);
-            } else if (self._isCacheableValue(result)) {
-                handleBackgroundRefresh(caches, index, key, work, options);
-                var cachesToUpdate = caches.slice(0, index);
-                var args = [cachesToUpdate, key, result, options, function(err) {
-                    callbackFiller.fill(key, err, result);
-                }];
-
-                setInMultipleCaches.apply(null, args);
-            } else {
-                work(function(err, data) {
-                    if (err) {
-                        return callbackFiller.fill(key, err);
-                    }
-
-                    if (!self._isCacheableValue(data)) {
-                        return callbackFiller.fill(key, err, data);
-                    }
-
-                    var args = [caches, key, data, options, function(err) {
-                        callbackFiller.fill(key, err, data);
-                    }];
-
-                    setInMultipleCaches.apply(null, args);
-                });
-            }
-        });
-    };
-
-    function wrapMultiple(keys, work, options, cb) {
-        /**
-         * We create a unique key for the multiple keys
-         * by concatenating them
-         */
-        var combinedKey = keys.reduce(function(acc, k) {
-            return acc + k;
-        }, '');
-
-        var hasKey = callbackFiller.has(combinedKey);
-        callbackFiller.add(combinedKey, {cb: cb});
-        if (hasKey) { return; }
-
-        keys.push(options);
-        keys.push(onResult);
-
-        /**
-         * Get from all the caches. If multiple keys have been passed,
-         * we'll go through all the caches and merge the result
-         */
-        getFromHighestPriorityCache.apply(this, keys);
-
-        function onResult(err, result, index) {
-            if (err) {
-                return done(err);
-            }
-
-            /**
-             * If all the values returned are cacheable we don't need
-             * to call our "work" method and the values returned by the cache
-             * are valid. If one or more of the values is not cacheable
-             * the cache result is not valid.
-             */
-            var cacheOK = result.filter(function(_result) {
-                return self._isCacheableValue(_result);
-            }).length === result.length;
-
-            if (!cacheOK) {
-                /**
-                 * We need to fetch the data first
-                 */
-                return work(workCallback);
-            }
-
-            var cachesToUpdate = caches.slice(0, index);
-
-            /**
-             * Prepare arguments to set the values in
-             * higher priority caches
-             */
-            var _args = [cachesToUpdate];
-
-            /**
-             * Add the {key, value} pair
-             */
-            result.forEach(function(value, i) {
-                _args.push(keys[i]);
-                _args.push(value);
-            });
-
-            /**
-             * Add options and final callback
-             */
-            _args.push(options);
-            _args.push(function(err) {
-                done(err, result);
-            });
-
-            return setInMultipleCaches.apply(null, _args);
-
-            /**
-             * Wrapped function callback
-             */
-            function workCallback(err, data) {
-                if (err) {
-                    return done(err);
-                }
-
-                /**
-                 * Prepare arguments for "setInMultipleCaches"
-                 */
-                var _args;
-
-                _args = [];
-                data.forEach(function(value, i) {
-                    /**
-                     * Add the {key, value} pair to the args
-                     * array that we will send to mset()
-                     */
-                    if (self._isCacheableValue(value)) {
-                        _args.push(keys[i]);
-                        _args.push(value);
-                    }
-                });
-                // If no key,value --> exit
-                if (_args.length === 0) {
-                    return done(null);
-                }
-
-                /**
-                 * Add options and final callback
-                 */
-                _args.push(options);
-                _args.push(function(err) {
-                    done(err, data);
-                });
-
-                setInMultipleCaches.apply(null, _args);
-            }
-
-            /**
-             * Final callback
-             */
-            function done(err, data) {
-                callbackFiller.fill(combinedKey, err, data);
-            }
-        }
-    }
-
-    /**
-     * Set value in all caches
-     *
-     * @function
-     * @name set
-     *
-     * @param {string} key
-     * @param {*} value
-     * @param {object} [options] to pass to underlying set function.
-     * @param {function} [cb]
-     */
-    self.set = setInMultipleCaches;
-
-    /**
-     * Set multiple values in all caches
-     * Accepts an unlimited pair of {key, value}
-     *
-     * @function
-     * @name mset
-     *
-     * @param {string} key
-     * @param {*} value
-     * @param {string} [key2]
-     * @param {*} [value2]
-     * @param {object} [options] to pass to underlying set function.
-     * @param {function} [cb]
-     */
-    self.mset = setInMultipleCaches;
-
-    /**
-     * Get value from highest level cache that has stored it.
-     *
-     * @function
-     * @name get
-     *
-     * @param {string} key
-     * @param {object} [options] to pass to underlying get function.
-     * @param {function} cb
-     */
-    self.get = getFromHighestPriorityCache;
-
-    /**
-     * Get multiple value from highest level cache that has stored it.
-     * If some values are not found, the next highest cache is used
-     * until either all keys are found or all caches have been fetched.
-     * Accepts an unlimited number of keys.
-     *
-     * @function
-     * @name mget
-     *
-     * @param {string} key key to get (any number)
-     * @param {object} [options] to pass to underlying get function.
-     * @param {function} cb optional callback
-     */
-    self.mget = getFromHighestPriorityCache;
-
-    /**
-     * Delete value from all caches.
-     *
-     * @function
-     * @name del
-     *
-     * @param {string} key
-     * @param {object} [options] to pass to underlying del function.
-     * @param {function} cb
-     */
-    self.del = function() {
-        var args = Array.prototype.slice.apply(arguments);
-        var cb;
-        var options = {};
-
-        if (typeof args[args.length - 1] === 'function') {
-            cb = args.pop();
-        }
-
-        if (isObject(args[args.length - 1])) {
-            options = args.pop();
-        }
-
-        args.push(options);
-        async.each(caches, function(cache, next) {
-            var _args = Array.prototype.slice.apply(args);
-            _args.push(next);
-            cache.store.del.apply(cache.store, _args);
-        }, cb);
-    };
-
-    /**
-     * Reset all caches.
-     *
-     * @function
-     * @name reset
-     *
-     * @param {function} cb
-     */
-    self.reset = function(cb) {
-        async.each(caches, function(cache, next) {
-            cache.store.reset(next);
-        }, cb);
-    };
-
-    return self;
-};
-
-module.exports = multiCaching;
-
-
-/***/ }),
+/* 951 */,
 /* 952 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -46444,19 +46491,7 @@ module.exports.safeDump = safeDump;
 
 
 /***/ }),
-/* 975 */
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-var getNative = __webpack_require__(698),
-    root = __webpack_require__(348);
-
-/* Built-in method references that are verified to be native. */
-var WeakMap = getNative(root, 'WeakMap');
-
-module.exports = WeakMap;
-
-
-/***/ }),
+/* 975 */,
 /* 976 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -46571,7 +46606,7 @@ module.exports = (
 /** @namespace cacheManager */
 var cacheManager = {
     caching: __webpack_require__(741),
-    multiCaching: __webpack_require__(951)
+    multiCaching: __webpack_require__(175)
 };
 
 module.exports = cacheManager;
@@ -46786,20 +46821,6 @@ module.exports = new Type('tag:yaml.org,2002:map', {
   kind: 'mapping',
   construct: function (data) { return data !== null ? data : {}; }
 });
-
-
-/***/ }),
-/* 992 */,
-/* 993 */,
-/* 994 */,
-/* 995 */,
-/* 996 */
-/***/ (function(module) {
-
-/** Detect free variable `global` from Node.js. */
-var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
-
-module.exports = freeGlobal;
 
 
 /***/ })

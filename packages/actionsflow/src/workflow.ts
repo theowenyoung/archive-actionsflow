@@ -2,6 +2,7 @@ import path from "path";
 import fg from "fast-glob";
 import yaml from "js-yaml";
 import mapObj from "map-obj";
+import { createContentDigest, getCache } from "./helpers";
 import fs from "fs-extra";
 import log from "./log";
 import { template } from "./util";
@@ -26,8 +27,12 @@ const getSupportedTriggers = (
   >;
   const supportTriggerIds = supportTriggerKeys.map((triggerKey) => {
     const Trigger = AllTriggers[triggerKey];
-    const triggerInstance = new Trigger();
-    return triggerInstance.id;
+    const triggerInstance = new Trigger({
+      options: {},
+      context: context,
+      helpers: { createContentDigest, cache: getCache(`trigger-temp`) },
+    });
+    return triggerInstance.name;
   });
   const triggers = [];
   if (doc && doc.on) {

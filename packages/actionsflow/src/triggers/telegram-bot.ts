@@ -2,19 +2,32 @@ import log from "../log";
 import axios, { AxiosRequestConfig } from "axios";
 import {
   ITriggerClassType,
-  ITriggerRunFunction,
+  ITriggerContructorParams,
   IItem,
   TriggerName,
   ITriggerRunFunctionResult,
-  IObject,
+  AnyObject,
+  IHelpers,
 } from "../interfaces";
 
 export default class TelegramBot implements ITriggerClassType {
-  id: TriggerName = "telegram_bot";
-  async run({
-    helpers,
-    options,
-  }: ITriggerRunFunction): Promise<ITriggerRunFunctionResult> {
+  name: TriggerName = "telegram_bot";
+  options: AnyObject;
+  helpers: IHelpers;
+  every = 5;
+  shouldDeduplicate = true;
+  getItemKey = (item: IItem): string => {
+    if (item.update_id) return item.update_id as string;
+    return this.helpers.createContentDigest(item);
+  };
+  constructor({ helpers, options }: ITriggerContructorParams) {
+    this.options = options;
+    this.helpers = helpers;
+    if (options.every) {
+      this.every = options.every as number;
+    }
+  }
+  async run(): Promise<ITriggerRunFunctionResult> {
     const _messageTypes = [
       "text",
       "animation",
@@ -45,15 +58,14 @@ export default class TelegramBot implements ITriggerClassType {
       "video_note",
       "voice",
     ];
-    const { token, every, event, ...requestOptions } = options as {
+    const { token, event, ...requestOptions } = this.options as {
       token?: string;
       every?: number;
       event?: string;
     };
-    let { events } = options as {
+    let { events } = this.options as {
       events?: string[];
     };
-    const updateInterval = every || 5;
 
     if (!token) {
       throw new Error("Miss param token!");
@@ -89,7 +101,7 @@ export default class TelegramBot implements ITriggerClassType {
       Array.isArray(requestResult.data.result)
     ) {
       const itemsArray = requestResult.data.result;
-      itemsArray.forEach((item: IObject) => {
+      itemsArray.forEach((item: AnyObject) => {
         const message = item.message as {
           update_id: string;
           [key: string]: unknown;
@@ -110,18 +122,9 @@ export default class TelegramBot implements ITriggerClassType {
       });
     }
 
-    const getItemKey = (item: IItem): string => {
-      if (item.update_id) return item.update_id as string;
-
-      return helpers.createContentDigest(item);
-    };
-
     // if need
     return {
-      shouldDeduplicate: true,
-      updateInterval: updateInterval,
       items,
-      getItemKey,
     };
   }
 }

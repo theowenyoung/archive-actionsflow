@@ -1,5 +1,5 @@
 import has from "lodash.has";
-import { IObject, AnyObject } from "./interfaces";
+import { AnyObject } from "./interfaces";
 interface IOptions {
   interpolate?: RegExp;
   includeVariableRegex?: RegExp;
@@ -11,7 +11,7 @@ interface IVariableHandleOptions {
   regexResult: RegExpExecArray;
   currentIndex: number;
   shouldReplaceUndefinedToEmpty: boolean;
-  context: IObject;
+  context: AnyObject;
 }
 const variableHandle = ({
   text,

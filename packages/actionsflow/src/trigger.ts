@@ -1,4 +1,4 @@
-import { Rss, TelegramBot, Webhook, Poll } from "./triggers";
+import * as Triggers from "./triggers";
 import { createContentDigest, getCache } from "./helpers";
 import log from "./log";
 import {
@@ -6,19 +6,9 @@ import {
   ITriggerContext,
   ITriggerResult,
   IItem,
+  ITriggerClassTypeConstructable,
 } from "./interfaces";
 const MAX_CACHE_KEYS_COUNT = 1000;
-type TriggerMapType = Record<
-  TriggerName,
-  typeof Rss | typeof TelegramBot | typeof Webhook | typeof Poll
->;
-
-const triggerNameMap: TriggerMapType = {
-  rss: Rss,
-  poll: Poll,
-  webhook: Webhook,
-  telegram_bot: TelegramBot,
-};
 interface ITriggerOptions {
   trigger: {
     name: TriggerName;
@@ -47,7 +37,23 @@ export const run = async ({
     id: triggerId,
     items: [],
   };
-  if (triggerNameMap[trigger.name]) {
+
+  const AllTriggers = Triggers as Record<
+    string,
+    ITriggerClassTypeConstructable
+  >;
+  const triggersKeys = Object.keys(AllTriggers);
+  const TriggerMap: Record<string, ITriggerClassTypeConstructable> = {};
+  triggersKeys.forEach((triggerKey) => {
+    const triggerInstance = new AllTriggers[triggerKey]({
+      options: {},
+      context: context,
+      helpers: { createContentDigest, cache: getCache(`trigger-temp`) },
+    });
+    TriggerMap[triggerInstance.name] = AllTriggers[triggerKey];
+  });
+
+  if (TriggerMap[trigger.name]) {
     const triggerHelpers = {
       createContentDigest,
       cache: getCache(`trigger-${triggerId}`),
@@ -57,11 +63,11 @@ export const run = async ({
       options: trigger.options,
       context: context,
     };
-    const Trigger = triggerNameMap[trigger.name];
-    const triggerInstance = new Trigger();
+    const Trigger = TriggerMap[trigger.name];
+    const triggerInstance = new Trigger(triggerOptions);
 
-    const triggerResult = await triggerInstance.run(triggerOptions);
-    const { shouldDeduplicate, getItemKey, updateInterval } = triggerResult;
+    const triggerResult = await triggerInstance.run();
+    const { shouldDeduplicate, getItemKey, every } = triggerInstance;
     let { items } = triggerResult;
     const maxItemsCount = trigger.options.max_items_count as number;
     const skipFirst = trigger.options.skip_first || false;
@@ -74,12 +80,11 @@ export const run = async ({
       (await triggerHelpers.cache.get("lastUpdatedAt")) || 0;
     log.debug("lastUpdatedAt: ", lastUpdatedAt);
 
-    if (updateInterval) {
+    if (every) {
       // check if should update
       // unit minutes
       // get latest update time
-      const shouldUpdateUtil =
-        (lastUpdatedAt as number) + updateInterval * 60 * 1000;
+      const shouldUpdateUtil = (lastUpdatedAt as number) + every * 60 * 1000;
       const now = Date.now();
       const shouldUpdate = shouldUpdateUtil - now <= 0;
       log.debug("shouldUpdate:", shouldUpdate);

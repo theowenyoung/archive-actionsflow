@@ -1,26 +1,46 @@
 import Parser from "rss-parser";
 import {
   ITriggerClassType,
-  ITriggerRunFunction,
+  ITriggerContructorParams,
   IItem,
   TriggerName,
   ITriggerRunFunctionResult,
+  IHelpers,
+  AnyObject,
 } from "../interfaces";
 import log from "../log";
 
 export default class Rss implements ITriggerClassType {
-  id: TriggerName = "rss";
-  async run({
-    helpers,
-    options,
-  }: ITriggerRunFunction): Promise<ITriggerRunFunctionResult> {
-    const event = options.event || "new_item";
-    const url = options.url;
-    const updateInterval: number = (options.every as number) || 5;
+  name: TriggerName = "rss";
+  options: AnyObject = {};
+  helpers: IHelpers;
+  every = 5;
+  shouldDeduplicate = true;
+  getItemKey(item: IItem): string {
+    // TODO adapt every cases
+    if (item.guid) return item.guid as string;
+    if (item.id) return item.id as string;
+    return this.helpers.createContentDigest(item);
+  }
+  constructor({ helpers, options }: ITriggerContructorParams) {
+    this.options = options;
+    this.helpers = helpers;
+
+    if (!options.event) {
+      this.options.event = "new_item";
+    }
+
+    if (options.every) {
+      this.every = options.every as number;
+    }
+  }
+
+  async run(): Promise<ITriggerRunFunctionResult> {
+    const { event, url } = this.options;
     let urls = [];
 
     if (event === "new_item_in_multiple_feeds") {
-      const urlsParam = options.urls;
+      const urlsParam = this.options.urls;
       if (!urlsParam) {
         throw new Error("Miss param urls");
       }
@@ -64,19 +84,9 @@ export default class Rss implements ITriggerClassType {
       }
     }
 
-    const getItemKey = (item: IItem): string => {
-      // TODO adapt every cases
-      if (item.guid) return item.guid as string;
-      if (item.id) return item.id as string;
-      return helpers.createContentDigest(item);
-    };
-
     // if need
     return {
-      shouldDeduplicate: true,
-      updateInterval: updateInterval,
       items,
-      getItemKey,
     };
   }
 }
