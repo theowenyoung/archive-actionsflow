@@ -99,6 +99,7 @@ export default class TelegramBot implements ITriggerClassType {
       Array.isArray(requestResult.data.result)
     ) {
       const itemsArray = requestResult.data.result;
+      log.debug("telegram updates items:", JSON.stringify(itemsArray, null, 2));
       itemsArray.forEach((item: AnyObject) => {
         const message = item.message as {
           update_id: string;

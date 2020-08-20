@@ -49,5 +49,5 @@ export interface IWorkflow {
   path: string;
   relativePath: string;
   data: AnyObject;
-  triggers: ITrigger[];
+  rawTriggers: ITrigger[];
 }

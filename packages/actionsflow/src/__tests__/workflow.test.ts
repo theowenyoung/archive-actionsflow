@@ -7,12 +7,8 @@ import {
   buildSingleWorkflow,
 } from "../workflow";
 import path from "path";
-import { readJson, remove, readFile } from "fs-extra";
+import { readJson, readFile } from "fs-extra";
 import yaml from "js-yaml";
-
-afterAll(() => {
-  return remove("./.cache");
-});
 
 test("get workflows", async () => {
   const workflows = await getWorkflows({

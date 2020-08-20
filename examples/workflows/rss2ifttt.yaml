@@ -1,5 +1,6 @@
 on:
   rss:
+    active: false
     event: new_item_in_multiple_feeds
     skip_first: false
     every: 1

@@ -22607,10 +22607,10 @@ const build = (options = {}) => tslib_1.__awaiter(void 0, void 0, void 0, functi
         context,
     });
     yield fs_extra_1.default.ensureDir(path_1.default.resolve(destPath, "workflows"));
-    let needHandledWorkflows = workflows.filter((item) => item.triggers.length > 0);
+    let needHandledWorkflows = workflows.filter((item) => item.rawTriggers.length > 0);
     if (isWebhookEvent) {
         needHandledWorkflows = needHandledWorkflows.filter((item) => {
-            const triggers = item.triggers;
+            const triggers = item.rawTriggers;
             let isMatchedWebhookEvent = false;
             for (let index = 0; index < triggers.length; index++) {
                 const trigger = triggers[index];
@@ -22629,37 +22629,40 @@ const build = (options = {}) => tslib_1.__awaiter(void 0, void 0, void 0, functi
         });
     }
     log_1.default.debug("needHandledWorkflows", JSON.stringify(needHandledWorkflows.map((item) => {
-        return { relativePath: item.relativePath, triggers: item.triggers };
+        return {
+            relativePath: item.relativePath,
+            rawTriggers: item.rawTriggers,
+        };
     }), null, 2));
     const workflowTodos = [];
     let triggerIndex = 0;
     for (let i = 0; i < needHandledWorkflows.length; i++) {
         const workflow = needHandledWorkflows[i];
-        const triggers = workflow.triggers || [];
+        const rawTriggers = workflow.rawTriggers || [];
         const workflowTodo = {
             dest: destPath,
             workflow: workflow,
             context: context,
             triggers: [],
         };
-        for (let j = 0; j < triggers.length; j++) {
-            const trigger = triggers[j];
+        for (let j = 0; j < rawTriggers.length; j++) {
+            const rawTrigger = rawTriggers[j];
             let triggerResult = {
                 id: `default_id_${j}`,
                 items: [],
             };
             triggerResult = yield trigger_1.run({
-                trigger: Object.assign(Object.assign({}, trigger), { workflowRelativePath: workflow.relativePath }),
+                trigger: Object.assign(Object.assign({}, rawTrigger), { workflowRelativePath: workflow.relativePath }),
                 context,
             });
-            log_1.default.debug("triggerResult", triggerResult);
+            log_1.default.debug("triggerResult", JSON.stringify(triggerResult, null, 2));
             if (triggerResult.items.length > 0) {
                 for (let index = 0; index < triggerResult.items.length; index++) {
                     const element = triggerResult.items[index];
                     workflowTodo.triggers.push({
-                        id: `${triggerIndex}-${triggerResult.id}-${trigger.name}`,
-                        name: trigger.name,
-                        options: trigger.options,
+                        id: `${triggerIndex}-${triggerResult.id}-${rawTrigger.name}`,
+                        name: rawTrigger.name,
+                        options: rawTrigger.options,
                         payload: element,
                     });
                     triggerIndex++;
@@ -35301,6 +35304,7 @@ class TelegramBot {
                 requestResult.data &&
                 Array.isArray(requestResult.data.result)) {
                 const itemsArray = requestResult.data.result;
+                log_1.default.debug("telegram updates items:", JSON.stringify(itemsArray, null, 2));
                 itemsArray.forEach((item) => {
                     const message = item.message;
                     message.update_id = item.update_id;
@@ -43662,7 +43666,7 @@ module.exports = cloneDataView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildNativeSecrets = exports.buildNativeEvent = exports.buildSingleWorkflow = exports.getWorkflows = void 0;
+exports.buildNativeSecrets = exports.buildNativeEvent = exports.buildSingleWorkflow = exports.renameJobsBySuffix = exports.getJobsDependences = exports.getWorkflows = void 0;
 const tslib_1 = __webpack_require__(403);
 const path_1 = tslib_1.__importDefault(__webpack_require__(622));
 const fast_glob_1 = tslib_1.__importDefault(__webpack_require__(344));
@@ -43726,10 +43730,10 @@ exports.getWorkflows = (options) => tslib_1.__awaiter(void 0, void 0, void 0, fu
         cwd: workflowsPath,
         dot: true,
     });
-    log_1.default.debug("yaml file paths:", entries);
     const workflows = [];
     for (let index = 0; index < entries.length; index++) {
         const filePath = path_1.default.resolve(workflowsPath, entries[index]);
+        log_1.default.debug("yaml file path:", filePath);
         try {
             const doc = js_yaml_1.default.safeLoad(yield fs_extra_1.default.readFile(filePath, "utf8"));
             if (doc) {
@@ -43738,7 +43742,7 @@ exports.getWorkflows = (options) => tslib_1.__awaiter(void 0, void 0, void 0, fu
                     path: filePath,
                     relativePath: entries[index],
                     data: doc,
-                    triggers: triggers,
+                    rawTriggers: triggers,
                 });
             }
             else {
@@ -43751,7 +43755,7 @@ exports.getWorkflows = (options) => tslib_1.__awaiter(void 0, void 0, void 0, fu
     }
     return workflows;
 });
-const getJobsDependences = (jobs) => {
+exports.getJobsDependences = (jobs) => {
     const jobKeys = Object.keys(jobs);
     const jobsWhoHasNeeds = [];
     const jobsNoNeeds = [];
@@ -43788,7 +43792,7 @@ const getJobsDependences = (jobs) => {
     }
     return { lastJobs, firstJobs: jobsNoNeeds };
 };
-const renameJobsBySuffix = (jobs, suffix) => {
+exports.renameJobsBySuffix = (jobs, suffix) => {
     const jobKeys = Object.keys(jobs);
     const newJobs = {};
     jobKeys.forEach((jobKey) => {
@@ -43836,8 +43840,8 @@ exports.buildSingleWorkflow = (options) => tslib_1.__awaiter(void 0, void 0, voi
         }, {
             deep: true,
         });
-        const jobs = renameJobsBySuffix(newJobs, `_${index}`);
-        const jobsDependences = getJobsDependences(jobs);
+        const jobs = exports.renameJobsBySuffix(newJobs, `_${index}`);
+        const jobsDependences = exports.getJobsDependences(jobs);
         jobsGroups.push({
             lastJobs: jobsDependences.lastJobs,
             firstJobs: jobsDependences.firstJobs,
@@ -43875,7 +43879,12 @@ exports.buildSingleWorkflow = (options) => tslib_1.__awaiter(void 0, void 0, voi
     const finalJobKeys = Object.keys(finalJobs);
     finalJobKeys.forEach((jobKey, index) => {
         const job = finalJobs[jobKey];
-        job.name = `${job.name} ${index}`;
+        if (job.name) {
+            job.name = `${job.name} ${index}`;
+        }
+        else {
+            job.name = `job ${index}`;
+        }
         finalJobs[jobKey] = job;
     });
     newWorkflowData.on = {

@@ -1,13 +1,12 @@
 on:
   telegram_bot:
-    active: false
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 jobs:
   ifttt:
     name: Make a Request to IFTTT
     runs-on: ubuntu-latest
     steps:
-      - uses: alfredosalzillo/ifttt-webhook-action@v1
+      - uses: actionsflow/ifttt-webhook-action@v1
         with:
           event: test
           key: ${{ secrets.IFTTT_KEY }}

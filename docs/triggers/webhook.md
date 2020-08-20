@@ -13,7 +13,7 @@ jobs:
     name: Make a Request to IFTTT
     runs-on: ubuntu-latest
     steps:
-      - uses: alfredosalzillo/ifttt-webhook-action@v1
+      - uses: actionsflow/ifttt-webhook-action@v1
         with:
           event: test
           key: ${{ secrets.IFTTT_KEY }}

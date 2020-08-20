@@ -89,14 +89,14 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   // create workflow dest dir
   await fs.ensureDir(path.resolve(destPath, "workflows"));
   let needHandledWorkflows = workflows.filter(
-    (item) => item.triggers.length > 0
+    (item) => item.rawTriggers.length > 0
   );
 
   //
   if (isWebhookEvent) {
     // only handle webhook event
     needHandledWorkflows = needHandledWorkflows.filter((item) => {
-      const triggers = item.triggers;
+      const triggers = item.rawTriggers;
       let isMatchedWebhookEvent = false;
       for (let index = 0; index < triggers.length; index++) {
         const trigger = triggers[index];
@@ -118,7 +118,10 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     "needHandledWorkflows",
     JSON.stringify(
       needHandledWorkflows.map((item) => {
-        return { relativePath: item.relativePath, triggers: item.triggers };
+        return {
+          relativePath: item.relativePath,
+          rawTriggers: item.rawTriggers,
+        };
       }),
       null,
       2
@@ -155,7 +158,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         },
         context,
       });
-      log.debug("triggerResult", triggerResult);
+      log.debug("triggerResult", JSON.stringify(triggerResult, null, 2));
 
       if (triggerResult.items.length > 0) {
         // check is need to run workflowTodos

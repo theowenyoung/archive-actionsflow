@@ -10,7 +10,13 @@ export const getTriggerConstructorParams = (
     },
     context: {
       github: {
-        event: {},
+        event_name: "repository_dispatch",
+        event: {
+          action: "test",
+          client_payload: {
+            test: 1,
+          },
+        },
       },
       secrets: {},
     },
