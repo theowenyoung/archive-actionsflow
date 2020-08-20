@@ -129,7 +129,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   let triggerIndex = 0;
   for (let i = 0; i < needHandledWorkflows.length; i++) {
     const workflow = needHandledWorkflows[i];
-    const triggers = workflow.triggers || [];
+    const rawTriggers = workflow.rawTriggers || [];
     const workflowTodo: {
       dest: string;
       workflow: IWorkflow;
@@ -142,15 +142,15 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
       triggers: [],
     };
     // manual run trigger
-    for (let j = 0; j < triggers.length; j++) {
-      const trigger = triggers[j];
+    for (let j = 0; j < rawTriggers.length; j++) {
+      const rawTrigger = rawTriggers[j];
       let triggerResult: ITriggerResult = {
         id: `default_id_${j}`,
         items: [],
       };
       triggerResult = await runTrigger({
         trigger: {
-          ...trigger,
+          ...rawTrigger,
           workflowRelativePath: workflow.relativePath,
         },
         context,
@@ -162,9 +162,9 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         for (let index = 0; index < triggerResult.items.length; index++) {
           const element = triggerResult.items[index];
           workflowTodo.triggers.push({
-            id: `${triggerIndex}-${triggerResult.id}-${trigger.name}`,
-            name: trigger.name,
-            options: trigger.options,
+            id: `${triggerIndex}-${triggerResult.id}-${rawTrigger.name}`,
+            name: rawTrigger.name,
+            options: rawTrigger.options,
             payload: element,
           });
           triggerIndex++;

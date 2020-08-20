@@ -8,5 +8,5 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   roots: pkgs,
-  testPathIgnorePatterns: [`__tests__/fixtures`],
+  testPathIgnorePatterns: [`__tests__/fixtures`, ".util.ts"],
 };

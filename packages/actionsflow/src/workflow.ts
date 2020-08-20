@@ -103,7 +103,7 @@ export const getWorkflows = async (
           path: filePath,
           relativePath: entries[index],
           data: doc as AnyObject,
-          triggers: triggers,
+          rawTriggers: triggers,
         });
       } else {
         log.debug("skip empty file", filePath);
@@ -292,7 +292,11 @@ export const buildSingleWorkflow = async (
   const finalJobKeys = Object.keys(finalJobs);
   finalJobKeys.forEach((jobKey, index) => {
     const job = finalJobs[jobKey];
-    job.name = `${job.name} ${index}`;
+    if (job.name) {
+      job.name = `${job.name} ${index}`;
+    } else {
+      job.name = `job ${index}`;
+    }
     finalJobs[jobKey] = job;
   });
   newWorkflowData.on = {
