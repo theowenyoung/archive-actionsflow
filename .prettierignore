@@ -15,3 +15,4 @@ packages/**/*.js
 # coverage
 coverage
 
+.yarn
