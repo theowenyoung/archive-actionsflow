@@ -107,7 +107,7 @@ You can use IFTTT webhook as a `then` action to trigger the webhook, here is an 
 }
 ```
 
-> Tips: if your field content need to be escaped, you should surround it with "<<<>>>"
+> Tips: if your field content need to be escaped, you should surround it with `<<<>>>`
 
 ## Options
 
