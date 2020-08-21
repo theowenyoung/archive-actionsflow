@@ -4588,46 +4588,7 @@ module.exports = stackClear;
 
 
 /***/ }),
-/* 118 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = __webpack_require__(403);
-class Webhook {
-    constructor({ context }) {
-        this.name = "webhook";
-        this.context = context;
-    }
-    run() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const context = this.context;
-            let items = [];
-            if (context &&
-                context.github &&
-                context.github.event_name === "repository_dispatch") {
-                const githubObj = context.github;
-                const item = {
-                    payload: githubObj.event.client_payload,
-                    event: githubObj.event.action,
-                    body: {
-                        event_type: githubObj.event.action,
-                        client_payload: githubObj.event.client_payload,
-                    },
-                };
-                items = [item];
-            }
-            return {
-                items: items,
-            };
-        });
-    }
-}
-exports.default = Webhook;
-//# sourceMappingURL=Webhook.js.map
-
-/***/ }),
+/* 118 */,
 /* 119 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -10244,92 +10205,7 @@ module.exports = baseClone;
 /***/ }),
 /* 207 */,
 /* 208 */,
-/* 209 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = __webpack_require__(403);
-const rss_parser_1 = tslib_1.__importDefault(__webpack_require__(728));
-const log_1 = tslib_1.__importDefault(__webpack_require__(766));
-class Rss {
-    constructor({ helpers, options }) {
-        this.name = "rss";
-        this.options = {};
-        this.every = 5;
-        this.shouldDeduplicate = true;
-        this.options = options;
-        this.helpers = helpers;
-        if (!options.event) {
-            this.options.event = "new_item";
-        }
-        if (options.every) {
-            this.every = options.every;
-        }
-    }
-    getItemKey(item) {
-        if (item.guid)
-            return item.guid;
-        if (item.id)
-            return item.id;
-        return this.helpers.createContentDigest(item);
-    }
-    run() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { event, url } = this.options;
-            let urls = [];
-            if (event === "new_item_in_multiple_feeds") {
-                const urlsParam = this.options.urls;
-                if (!urlsParam) {
-                    throw new Error("Miss param urls");
-                }
-                if (typeof urlsParam === "string") {
-                    urls = [urlsParam];
-                }
-                else if (Array.isArray(urlsParam)) {
-                    urls = urlsParam;
-                }
-                else {
-                    throw new Error("Param urls is invalid!");
-                }
-            }
-            else {
-                if (!url) {
-                    throw new Error("Miss required param url");
-                }
-                urls = [url];
-            }
-            const items = [];
-            for (let index = 0; index < urls.length; index++) {
-                const feedUrl = urls[index];
-                const parser = new rss_parser_1.default();
-                let feed;
-                try {
-                    feed = yield parser.parseURL(feedUrl);
-                }
-                catch (e) {
-                    if (e.code === "ECONNREFUSED") {
-                        throw new Error(`It was not possible to connect to the URL. Please make sure the URL "${url}" it is valid!`);
-                    }
-                    log_1.default.error("fetch rss feed error: ", e);
-                }
-                if (feed && feed.items) {
-                    feed.items.forEach((item) => {
-                        items.push(item);
-                    });
-                }
-            }
-            return {
-                items,
-            };
-        });
-    }
-}
-exports.default = Rss;
-//# sourceMappingURL=Rss.js.map
-
-/***/ }),
+/* 209 */,
 /* 210 */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -10853,12 +10729,12 @@ exports.run = ({ trigger, context, }) => tslib_1.__awaiter(void 0, void 0, void 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TelegramBot = exports.Webhook = exports.Poll = exports.Rss = void 0;
 const tslib_1 = __webpack_require__(403);
-const Rss_1 = tslib_1.__importDefault(__webpack_require__(209));
-exports.Rss = Rss_1.default;
-const Poll_1 = tslib_1.__importDefault(__webpack_require__(859));
-exports.Poll = Poll_1.default;
-const Webhook_1 = tslib_1.__importDefault(__webpack_require__(118));
-exports.Webhook = Webhook_1.default;
+const rss_1 = tslib_1.__importDefault(__webpack_require__(982));
+exports.Rss = rss_1.default;
+const poll_1 = tslib_1.__importDefault(__webpack_require__(283));
+exports.Poll = poll_1.default;
+const webhook_1 = tslib_1.__importDefault(__webpack_require__(462));
+exports.Webhook = webhook_1.default;
 const telegram_bot_1 = tslib_1.__importDefault(__webpack_require__(780));
 exports.TelegramBot = telegram_bot_1.default;
 //# sourceMappingURL=index.js.map
@@ -13055,7 +12931,80 @@ module.exports = nativeKeysIn;
 /* 280 */,
 /* 281 */,
 /* 282 */,
-/* 283 */,
+/* 283 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = __webpack_require__(403);
+const log_1 = tslib_1.__importDefault(__webpack_require__(766));
+const axios_1 = tslib_1.__importDefault(__webpack_require__(688));
+const lodash_clonedeep_1 = tslib_1.__importDefault(__webpack_require__(849));
+const lodash_get_1 = tslib_1.__importDefault(__webpack_require__(246));
+class Poll {
+    constructor({ helpers, options }) {
+        this.name = "poll";
+        this.options = {};
+        this.every = 5;
+        this.shouldDeduplicate = true;
+        this.options = options;
+        this.helpers = helpers;
+        if (options.every) {
+            this.every = options.every;
+        }
+    }
+    getItemKey(item) {
+        const deduplication_key = this.options.deduplication_key;
+        if (deduplication_key) {
+            return item[deduplication_key];
+        }
+        if (item.id)
+            return item.id;
+        if (item.guid)
+            return item.guid;
+        if (item.key)
+            return item.key;
+        return this.helpers.createContentDigest(item);
+    }
+    run() {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const _a = this.options, { url, items_path } = _a, requestOptions = tslib_1.__rest(_a, ["url", "items_path"]);
+            if (!url) {
+                throw new Error("Miss param url!");
+            }
+            const items = [];
+            const config = Object.assign(Object.assign({}, requestOptions), { url: url });
+            let requestResult;
+            try {
+                requestResult = yield axios_1.default(config);
+            }
+            catch (e) {
+                if (e.code === "ECONNREFUSED") {
+                    throw new Error(`It was not possible to connect to the URL. Please make sure the URL "${url}" it is valid!`);
+                }
+                log_1.default.error(`fetch ${url} error: `, e);
+            }
+            if (requestResult && requestResult.data) {
+                const itemsArray = items_path
+                    ? lodash_get_1.default(requestResult.data, items_path)
+                    : requestResult.data;
+                const deepClonedData = lodash_clonedeep_1.default(itemsArray);
+                itemsArray.forEach((item) => {
+                    item.raw__body = deepClonedData;
+                    items.push(item);
+                });
+            }
+            return {
+                items,
+            };
+        });
+    }
+}
+exports.default = Poll;
+//# sourceMappingURL=poll.js.map
+
+/***/ }),
 /* 284 */,
 /* 285 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
@@ -20701,7 +20650,46 @@ module.exports = new Type('tag:yaml.org,2002:js/undefined', {
 /* 459 */,
 /* 460 */,
 /* 461 */,
-/* 462 */,
+/* 462 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = __webpack_require__(403);
+class Webhook {
+    constructor({ context }) {
+        this.name = "webhook";
+        this.context = context;
+    }
+    run() {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const context = this.context;
+            let items = [];
+            if (context &&
+                context.github &&
+                context.github.event_name === "repository_dispatch") {
+                const githubObj = context.github;
+                const item = {
+                    payload: githubObj.event.client_payload,
+                    event: githubObj.event.action,
+                    body: {
+                        event_type: githubObj.event.action,
+                        client_payload: githubObj.event.client_payload,
+                    },
+                };
+                items = [item];
+            }
+            return {
+                items: items,
+            };
+        });
+    }
+}
+exports.default = Webhook;
+//# sourceMappingURL=webhook.js.map
+
+/***/ }),
 /* 463 */,
 /* 464 */,
 /* 465 */,
@@ -40117,80 +40105,7 @@ if (
 
 
 /***/ }),
-/* 859 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = __webpack_require__(403);
-const log_1 = tslib_1.__importDefault(__webpack_require__(766));
-const axios_1 = tslib_1.__importDefault(__webpack_require__(688));
-const lodash_clonedeep_1 = tslib_1.__importDefault(__webpack_require__(849));
-const lodash_get_1 = tslib_1.__importDefault(__webpack_require__(246));
-class Poll {
-    constructor({ helpers, options }) {
-        this.name = "poll";
-        this.options = {};
-        this.every = 5;
-        this.shouldDeduplicate = true;
-        this.options = options;
-        this.helpers = helpers;
-        if (options.every) {
-            this.every = options.every;
-        }
-    }
-    getItemKey(item) {
-        const deduplication_key = this.options.deduplication_key;
-        if (deduplication_key) {
-            return item[deduplication_key];
-        }
-        if (item.id)
-            return item.id;
-        if (item.guid)
-            return item.guid;
-        if (item.key)
-            return item.key;
-        return this.helpers.createContentDigest(item);
-    }
-    run() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const _a = this.options, { url, items_path } = _a, requestOptions = tslib_1.__rest(_a, ["url", "items_path"]);
-            if (!url) {
-                throw new Error("Miss param url!");
-            }
-            const items = [];
-            const config = Object.assign(Object.assign({}, requestOptions), { url: url });
-            let requestResult;
-            try {
-                requestResult = yield axios_1.default(config);
-            }
-            catch (e) {
-                if (e.code === "ECONNREFUSED") {
-                    throw new Error(`It was not possible to connect to the URL. Please make sure the URL "${url}" it is valid!`);
-                }
-                log_1.default.error(`fetch ${url} error: `, e);
-            }
-            if (requestResult && requestResult.data) {
-                const itemsArray = items_path
-                    ? lodash_get_1.default(requestResult.data, items_path)
-                    : requestResult.data;
-                const deepClonedData = lodash_clonedeep_1.default(itemsArray);
-                itemsArray.forEach((item) => {
-                    item.raw__body = deepClonedData;
-                    items.push(item);
-                });
-            }
-            return {
-                items,
-            };
-        });
-    }
-}
-exports.default = Poll;
-//# sourceMappingURL=Poll.js.map
-
-/***/ }),
+/* 859 */,
 /* 860 */,
 /* 861 */,
 /* 862 */,
@@ -46662,7 +46577,92 @@ module.exports = cacheManager;
 
 /***/ }),
 /* 981 */,
-/* 982 */,
+/* 982 */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = __webpack_require__(403);
+const rss_parser_1 = tslib_1.__importDefault(__webpack_require__(728));
+const log_1 = tslib_1.__importDefault(__webpack_require__(766));
+class Rss {
+    constructor({ helpers, options }) {
+        this.name = "rss";
+        this.options = {};
+        this.every = 5;
+        this.shouldDeduplicate = true;
+        this.options = options;
+        this.helpers = helpers;
+        if (!options.event) {
+            this.options.event = "new_item";
+        }
+        if (options.every) {
+            this.every = options.every;
+        }
+    }
+    getItemKey(item) {
+        if (item.guid)
+            return item.guid;
+        if (item.id)
+            return item.id;
+        return this.helpers.createContentDigest(item);
+    }
+    run() {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const { event, url } = this.options;
+            let urls = [];
+            if (event === "new_item_in_multiple_feeds") {
+                const urlsParam = this.options.urls;
+                if (!urlsParam) {
+                    throw new Error("Miss param urls");
+                }
+                if (typeof urlsParam === "string") {
+                    urls = [urlsParam];
+                }
+                else if (Array.isArray(urlsParam)) {
+                    urls = urlsParam;
+                }
+                else {
+                    throw new Error("Param urls is invalid!");
+                }
+            }
+            else {
+                if (!url) {
+                    throw new Error("Miss required param url");
+                }
+                urls = [url];
+            }
+            const items = [];
+            for (let index = 0; index < urls.length; index++) {
+                const feedUrl = urls[index];
+                const parser = new rss_parser_1.default();
+                let feed;
+                try {
+                    feed = yield parser.parseURL(feedUrl);
+                }
+                catch (e) {
+                    if (e.code === "ECONNREFUSED") {
+                        throw new Error(`It was not possible to connect to the URL. Please make sure the URL "${url}" it is valid!`);
+                    }
+                    log_1.default.error("fetch rss feed error: ", e);
+                }
+                if (feed && feed.items) {
+                    feed.items.forEach((item) => {
+                        items.push(item);
+                    });
+                }
+            }
+            return {
+                items,
+            };
+        });
+    }
+}
+exports.default = Rss;
+//# sourceMappingURL=rss.js.map
+
+/***/ }),
 /* 983 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
