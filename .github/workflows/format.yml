@@ -1,0 +1,29 @@
+name: "Format Code"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: "12.x"
+      - name: yarn install
+        run: yarn
+        env:
+          CI: true
+      - name: yarn format
+        run: yarn format
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "ci: yarn format"
+          branch: ${{ github.head_ref }}
+          push_options: --force
