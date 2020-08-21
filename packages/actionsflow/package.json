@@ -25,7 +25,6 @@
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.has": "^4.5.6",
-    "@types/xml2js": "^0.4.5",
     "actionsflow-cli": "^0.0.6",
     "actionsflow-interface": "^0.0.2",
     "axios": "^0.19.2",
@@ -45,7 +44,11 @@
     "loglevel-plugin-prefix": "^0.8.4",
     "map-obj": "^4.1.0",
     "node-object-hash": "^2.0.0",
-    "rss-parser": "^3.9.0"
+    "rss-parser": "^3.9.0",
+    "tslib": "^2.0.1"
   },
-  "gitHead": "c0fa784300ff8ccb860c84b9c507f9532f80f2fd"
+  "gitHead": "c0fa784300ff8ccb860c84b9c507f9532f80f2fd",
+  "devDependencies": {
+    "@types/jest": "^26.0.10"
+  }
 }

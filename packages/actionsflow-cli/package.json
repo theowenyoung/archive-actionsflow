@@ -47,8 +47,13 @@
     "loglevel-plugin-prefix": "^0.8.4",
     "resolve-cwd": "^3.0.0",
     "semver": "^7.3.2",
+    "tslib": "^2.0.1",
     "update-notifier": "^4.1.0",
     "yargs": "^15.4.1"
   },
-  "gitHead": "c0fa784300ff8ccb860c84b9c507f9532f80f2fd"
+  "gitHead": "c0fa784300ff8ccb860c84b9c507f9532f80f2fd",
+  "devDependencies": {
+    "@types/node": "^14.6.0",
+    "@types/yargs": "^15.0.5"
+  }
 }

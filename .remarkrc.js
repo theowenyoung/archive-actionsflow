@@ -25,5 +25,7 @@ module.exports = {
     "remark-preset-lint-recommended",
     "remark-preset-lint-markdown-style-guide",
     ["remark-lint-maximum-line-length", false],
+    ["remark-lint-maximum-heading-length", false],
+    ["remark-lint-list-item-indent", false],
   ],
 };

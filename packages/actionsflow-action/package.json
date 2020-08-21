@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "tsc -w -p tsconfig.production.json",
-    "build": "ncc build src/index.ts",
+    "build": "yarn run ncc build src/index.ts",
     "test": "jest --passWithNoTests",
     "lint": "eslint --fix ./src && prettier --write  --loglevel warn ./src",
     "prepare": "npm run build",
@@ -38,6 +38,6 @@
     "actionsflow": "^0.0.7"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.22.3"
+    "@vercel/ncc": "^0.23.0"
   }
 }

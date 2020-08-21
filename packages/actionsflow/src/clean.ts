@@ -1,7 +1,7 @@
 import "./env";
 import del from "del";
 import log from "./log";
-import Log from "loglevel";
+import * as Log from "loglevel";
 export default (options: {
   dest?: string;
   base?: string;
