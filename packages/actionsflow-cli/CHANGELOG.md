@@ -5,42 +5,26 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 0.0.6 (2020-08-19)
 
-
 ### Bug Fixes
 
-* 🐛 action to ts ([7fed945](https://github.com/actionsflow/actionsflow/commit/7fed945adb79294eb804f1c05708e54a4866a1d6))
-* 🐛 trigger name get error ([5ccf2b3](https://github.com/actionsflow/actionsflow/commit/5ccf2b36ff980ccbe0d1771b1ea1e9e42f1b9977))
-
+- 🐛 action to ts ([7fed945](https://github.com/actionsflow/actionsflow/commit/7fed945adb79294eb804f1c05708e54a4866a1d6))
+- 🐛 trigger name get error ([5ccf2b3](https://github.com/actionsflow/actionsflow/commit/5ccf2b36ff980ccbe0d1771b1ea1e9e42f1b9977))
 
 ### Features
 
-* 🎸 initial commit ([50ddfd6](https://github.com/actionsflow/actionsflow/commit/50ddfd64377e38a7dfa403a069138648cfb00b9c))
-
-
-
-
+- 🎸 initial commit ([50ddfd6](https://github.com/actionsflow/actionsflow/commit/50ddfd64377e38a7dfa403a069138648cfb00b9c))
 
 ## [0.0.5](https://github.com/actionsflow/actionsflow/compare/actionsflow-cli@0.0.4...actionsflow-cli@0.0.5) (2020-08-18)
 
-
 ### Features
 
-* change name ([e83e5a7](https://github.com/actionsflow/actionsflow/commit/e83e5a7840b5ad71752f0acc961f637d6da480ab))
-
-
-
-
+- change name ([e83e5a7](https://github.com/actionsflow/actionsflow/commit/e83e5a7840b5ad71752f0acc961f637d6da480ab))
 
 ## 0.0.4 (2020-08-18)
 
-
 ### Features
 
-* change name ([b1a7b65](https://github.com/actionsflow/actionsflow/commit/b1a7b65170aab81bc4e86dfe005648e5cd3ee02d))
-
-
-
-
+- change name ([b1a7b65](https://github.com/actionsflow/actionsflow/commit/b1a7b65170aab81bc4e86dfe005648e5cd3ee02d))
 
 ## 0.0.3 (2020-08-17)
 

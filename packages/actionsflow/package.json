@@ -13,10 +13,8 @@
   "scripts": {
     "start": "tsc -w -p tsconfig.production.json",
     "build": "tsc -p tsconfig.production.json",
-    "lint": "eslint --fix ./src && prettier --write --loglevel warn ./src",
     "clean": "rimraf ./dist",
-    "prepare": "npm run build",
-    "hooks:pre-commit": "lint-staged"
+    "prepare": "npm run build"
   },
   "name": "actionsflow",
   "author": "Owen Young",

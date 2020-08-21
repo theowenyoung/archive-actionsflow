@@ -14,10 +14,8 @@
     "start": "tsc -w -p tsconfig.production.json",
     "build": "tsc -p tsconfig.production.json",
     "test": "jest --passWithNoTests",
-    "lint": "eslint --fix ./src && prettier --write --loglevel warn ./src",
     "clean": "rimraf ./dist",
-    "prepare": "npm run build",
-    "hooks:pre-commit": "lint-staged"
+    "prepare": "npm run build"
   },
   "name": "actionsflow-interface",
   "author": "Owen Young"

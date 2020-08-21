@@ -8,6 +8,8 @@ export interface IHelpers {
   cache: {
     get: (key: string) => Promise<unknown>;
     set: (key: string, value: unknown) => Promise<unknown>;
+    del: (key: string) => Promise<void>;
+    reset: () => Promise<void>;
   };
 }
 export interface ITriggerContext extends AnyObject {
