@@ -23,7 +23,7 @@
     "lint:other": "npm run prettier -- --check",
     "format:other": "npm run prettier -- --write",
     "format:code": "npm run lint:code -- --fix",
-    "prettier": "prettier --loglevel warn \"**/*.{md,json,js,ts,yaml,yml}\"",
+    "prettier": "prettier \"**/*.{md,json,js,ts,yaml,yml}\"",
     "bootstrap": "lerna bootstrap",
     "lerna": "lerna",
     "build:example": "cd examples && ../packages/actionsflow/cli.js build",
