@@ -6,7 +6,11 @@ export default class Parser {
       items: [
         {
           title: "test",
-          guid: "https://hnrss.org/newest?points=300",
+          guid: "https://news.ycombinator.com/item?id=24227340",
+        },
+        {
+          title: "test2",
+          guid: "https://news.ycombinator.com/item?id=24224882",
         },
       ],
     };

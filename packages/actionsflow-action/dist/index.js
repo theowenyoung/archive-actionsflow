@@ -9431,7 +9431,7 @@ module.exports = cloneTypedArray;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCache = exports.Cache = void 0;
+exports.removeCache = exports.getCache = exports.Cache = void 0;
 const tslib_1 = __webpack_require__(403);
 const cache_manager_1 = tslib_1.__importDefault(__webpack_require__(787));
 const fs_extra_1 = tslib_1.__importDefault(__webpack_require__(607));
@@ -9488,6 +9488,32 @@ class Cache {
             });
         });
     }
+    del(key) {
+        return new Promise((resolve) => {
+            if (!this.cache) {
+                throw new Error(`Cache wasn't initialised yet, please run the init method first`);
+            }
+            this.cache.del(key, (err) => {
+                resolve(err ? undefined : undefined);
+            });
+        });
+    }
+    reset() {
+        return new Promise((resolve) => {
+            if (!this.cache) {
+                throw new Error(`Cache wasn't initialised yet, please run the init method first`);
+            }
+            this.cache.reset(() => {
+                fs_extra_1.default.remove(this.directory)
+                    .then(() => {
+                    resolve();
+                })
+                    .catch(() => {
+                    resolve();
+                });
+            });
+        });
+    }
 }
 exports.Cache = Cache;
 const caches = new Map();
@@ -9499,6 +9525,17 @@ exports.getCache = (name) => {
     }
     return cache;
 };
+exports.removeCache = (name) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const cache = caches.get(name);
+    if (!cache) {
+        return;
+    }
+    else {
+        yield cache.reset();
+        caches.delete(name);
+        return;
+    }
+});
 //# sourceMappingURL=cache.js.map
 
 /***/ }),
@@ -10734,6 +10771,7 @@ exports.run = ({ trigger, context, }) => tslib_1.__awaiter(void 0, void 0, void 
             options: trigger.options,
             context: context,
         };
+        finalResult.helpers = triggerHelpers;
         const Trigger = TriggerMap[trigger.name];
         const triggerInstance = new Trigger(triggerOptions);
         const triggerResult = yield triggerInstance.run();
@@ -22576,6 +22614,7 @@ const build = (options = {}) => tslib_1.__awaiter(void 0, void 0, void 0, functi
     const { base, workflows: workflowPath, dest } = options;
     const workflowsPath = path_1.default.resolve(base, workflowPath);
     const destPath = path_1.default.resolve(base, dest);
+    log_1.default.debug("destPath:", destPath);
     let secretObj = {};
     try {
         if (process.env.JSON_SECRETS) {

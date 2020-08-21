@@ -44,6 +44,7 @@ export interface ITrigger {
 export interface ITriggerResult {
   id: string;
   items: AnyObject[];
+  helpers?: IHelpers;
 }
 export interface IWorkflow {
   path: string;

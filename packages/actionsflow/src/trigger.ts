@@ -62,6 +62,7 @@ export const run = async ({
       options: trigger.options,
       context: context,
     };
+    finalResult.helpers = triggerHelpers;
     const Trigger = TriggerMap[trigger.name];
     const triggerInstance = new Trigger(triggerOptions);
 

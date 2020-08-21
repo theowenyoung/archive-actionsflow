@@ -9,4 +9,5 @@ module.exports = {
   testEnvironment: "node",
   roots: pkgs,
   testPathIgnorePatterns: [`__tests__/fixtures`, ".util.ts"],
+  verbose: true,
 };

@@ -9,5 +9,5 @@ test("rss trigger", async () => {
   );
   const triggerResults = await rss.run();
 
-  expect(triggerResults.items.length).toBe(1);
+  expect(triggerResults.items.length).toBe(2);
 });

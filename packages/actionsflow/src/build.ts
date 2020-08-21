@@ -53,6 +53,8 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   const { base, workflows: workflowPath, dest } = options;
   const workflowsPath = path.resolve(base as string, workflowPath as string);
   const destPath = path.resolve(base as string, dest as string);
+  log.debug("destPath:", destPath);
+
   let secretObj: Record<string, string> = {};
   try {
     if (process.env.JSON_SECRETS) {

@@ -85,6 +85,38 @@ export class Cache {
       });
     });
   }
+  del<T = unknown>(key: string): Promise<T | undefined> {
+    return new Promise((resolve) => {
+      if (!this.cache) {
+        throw new Error(
+          `Cache wasn't initialised yet, please run the init method first`
+        );
+      }
+      this.cache.del(key, (err) => {
+        resolve(err ? undefined : undefined);
+      });
+    });
+  }
+
+  reset<T = unknown>(): Promise<T | undefined> {
+    return new Promise((resolve) => {
+      if (!this.cache) {
+        throw new Error(
+          `Cache wasn't initialised yet, please run the init method first`
+        );
+      }
+      this.cache.reset(() => {
+        // delete directory
+        fs.remove(this.directory)
+          .then(() => {
+            resolve();
+          })
+          .catch(() => {
+            resolve();
+          });
+      });
+    });
+  }
 }
 
 const caches = new Map<string, Cache>();
@@ -96,4 +128,15 @@ export const getCache = (name: string): Cache => {
     caches.set(name, cache);
   }
   return cache;
+};
+
+export const removeCache = async (name: string): Promise<void> => {
+  const cache = caches.get(name);
+  if (!cache) {
+    return;
+  } else {
+    await cache.reset();
+    caches.delete(name);
+    return;
+  }
 };
