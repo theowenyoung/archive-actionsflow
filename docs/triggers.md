@@ -12,4 +12,4 @@ Triggers are how your workflows can start automated workflows whenever they add 
 - [Webhook](/docs/triggers/webhook.md)
 - [Telegram Bot](/docs/triggers/telegram-bot.md)
 
-A Actionsflow workflow can include multiple triggers, you can use the trigger's outputs at the [jobs](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobs)
+An Actionsflow workflow can include multiple triggers, you can use the trigger's outputs at the [jobs](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobs)
