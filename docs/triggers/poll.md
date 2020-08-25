@@ -1,19 +1,75 @@
 ---
 title: "Poll"
-metaTitle: "This is the title tag of this page"
-metaDescription: "This is the meta description"
+metaTitle: "Actionsflow Poll trigger"
+metaDescription: "Poll trigger is triggered when new items of a rest API are detected."
 ---
 
-# Poll
+# Events
 
-## Events
-
-### New Item in JSON API
+## New item in JSON API
 
 ```yaml
 on:
   poll:
-    url: https://jsonplaceholder.typicode.com/posts
+    URL: https://jsonplaceholder.typicode.com/posts
+```
+
+Event `new_item` watched a single feed URL.
+
+### Params
+
+- `URL`, required, the RSS feed URL, for example: <https://hnrss.org/newest?points=300>
+- `results_path`, optional, if the API's returned JSON is not a list and is instead an object (maybe paginated), you should configure `results_path` as the key that contains the results. Example: `results`, `items`, `data.items`, etc... Default value is `undefined`, which means the API's response should be a list.
+- `deduplication_key`, optional. Poll trigger deduplicates the array we see each poll against the id key. If the id key does not exist, you should specify an alternative unique key to deduplicate off of. If neither are supplied, we fallback to looking for `guid`, `key`, if neither are supplied, we will hash the item, and generate a unique key
+- `every`, optional, RSS fetch interval, the unit is minute, default value is `5`
+- `skip_first`, optional, if RSS fetch should skip the first items, default value is `false`
+- `max_items_count`, optional, the feed items max length, default value is `undefined`, it will trigger all feed items
+
+#### More params
+
+We use [Axios](https://github.com/axios/axios) for polling data, so your can pass all params that [axios supported](https://github.com/axios/axios#request-config). For example:
+
+```yaml
+on:
+  poll:
+    URL: https://jsonplaceholder.typicode.com/posts
+    method: POST
+    headers:
+      Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+```
+
+### Outputs
+
+Poll trigger's outputs will be the item of the API results, and `raw__body` for the whole raw body
+
+An outputs example:
+
+```json
+{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
+  "raw__body": [
+    {
+      "userId": 1,
+      "id": 1,
+      "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    },
+    {
+      "userId": 1,
+      "id": 2,
+      "title": "qui est esse",
+      "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+    }
+  ]
+}
+```
+
+You can use the outputs like this:
+
+```yaml
 jobs:
   ifttt:
     name: Make a Request to IFTTT
@@ -26,20 +82,3 @@ jobs:
           value1: ${{ on.poll.outputs.id }}
           value2: ${{ toJson(on.poll.outputs) }}
 ```
-
-## Options
-
-| Param             | Type    | Required | Examples                                     | Description                                                                                                                                                                                                                                                                                     | Default                     |
-| ----------------- | ------- | -------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| url               | string  | true     | <https://jsonplaceholder.typicode.com/posts> | Rest API url                                                                                                                                                                                                                                                                                    |                             |
-| results_path      | string  | false    | data                                         | If the returned JSON is not a list and is instead an object (maybe paginated), enter the key that contains the results. Example: "results", "items", "objects", etc... (children via dot syntax supported)                                                                                      |                             |
-| deduplication_key | string  | false    | id                                           | Poll trigger deduplicates the array we see each poll against the id key. If the id key does not exist, you should specify an alternative unique key to deduplicate off of. If neither are supplied, we fallback to looking for the shortest key with id in it otherwise we will raise an error. | id/guid/key/itemContenthash |
-| every             | number  | false    | 5                                            | rss fetch interval, unit: minutes                                                                                                                                                                                                                                                               | 5                           |
-| max_items_count   | number  | false    | 15                                           | The feed items max length, default is none, it will response all feed items                                                                                                                                                                                                                     |
-| skip_first        | boolean | false    | true                                         | If should skip first fetch items                                                                                                                                                                                                                                                                | false                       |
-
-And, We use [Axios](https://github.com/axios/axios) for poll data, so your can pass all params that axios supported.
-
-## Outputs
-
-The item of the API results, and `raw__body` for the whole raw body

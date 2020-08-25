@@ -1,45 +1,122 @@
 ---
 title: "RSS"
 metaTitle: "Actionsflow RSS trigger"
-metaDescription: "When getting a new item, "
+metaDescription: "RSS trigger is triggered when new items are detected. This trigger supports one or multiple RSS sources"
 ---
 
-# RSS trigger
+RSS trigger is triggered when new items are detected. This trigger supports one(`event: new_item`) or multiple RSS sources((`event: new_item_in_multiple_feeds`)).
 
-## Events
+# Events
 
-### New Item in Feed
+## New item in feed
 
 ```yaml
 on:
   rss:
     event: new_item
-    url: https://hnrss.org/newest?points=300
+    URL: https://hnrss.org/newest?points=300
 ```
 
-### New Item in Multiple Feeds
+Event `new_item` watched a single feed URL.
+
+### Params
+
+- `event`, optional, the value must be `new_item`, default value is `new_item`, so you can ignore it also.
+- `url`, required, the RSS feed URL, for example: <https://hnrss.org/newest?points=300>
+  items
+
+only
+
+### Outputs
+
+Actionsflow use [rss-parser](https://github.com/rbren/rss-parser) for parse RSS file, the outputs are same as [rss-parser](https://github.com/rbren/rss-parser)
+
+An outputs example:
+
+```json
+{
+  "title": "The water is too deep, so he improvises",
+  "link": "https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/",
+  "pubDate": "Thu, 12 Nov 2015 21:16:39 +0000",
+  "content": "<table> <tr><td> <a href=\"https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/\"><img src=\"https://b.thumbs.redditmedia.com/z4zzFBqZ54WT-rFfKXVor4EraZtJVw7AodDvOZ7kitQ.jpg\" alt=\"The water is too deep, so he improvises\" title=\"The water is too deep, so he improvises\" /></a> </td><td> submitted by <a href=\"https://www.reddit.com/user/cakebeerandmorebeer\"> cakebeerandmorebeer </a> to <a href=\"https://www.reddit.com/r/funny/\"> funny</a> <br/> <a href=\"http://i.imgur.com/U407R75.gifv\">[link]</a> <a href=\"https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/\">[275 comments]</a> </td></tr></table>",
+  "contentSnippet": "submitted by  cakebeerandmorebeer  to  funny \n [link] [275 comments]",
+  "guid": "https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/",
+  "categories": ["funny"],
+  "isoDate": "2015-11-12T21:16:39.000Z"
+}
+```
+
+You can use the outputs like this:
+
+```yaml
+jobs:
+  ifttt:
+    name: Make a Request to IFTTT
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actionsflow/ifttt-webhook-action@v1
+        with:
+          event: notice
+          key: ${{ secrets.IFTTT_KEY }}
+          value1: ${{ on.rss.outputs.title }}
+          value2: ${{ on.rss.outputs.contentSnippet }}
+          value3: ${{ on.rss.outputs.link }}
+```
+
+### New item in multiple feeds
 
 ```yaml
 on:
   rss:
     event: new_item_in_multiple_feeds
-    urls:
+    URLs:
       - https://hnrss.org/newest?points=300
       - https://www.buzzfeed.com/world.xml
     max_items_count: 15
 ```
 
-## Options
+Event `new_item_in_multiple_feeds` can watch multiple feeds, any of these feeds' updates will be triggered.
 
-| Param           | Type            | Required | Examples                                                                       | Description                                                                       | Default  |
-| --------------- | --------------- | -------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | -------- |
-| event           | string          | false    | new_item,new_item_in_multiple_feeds                                            | rss event type                                                                    | new_item |
-| url             | string          | false    | <https://hnrss.org/newest?points=300>                                          | rss feed url,if `type` == "new_item", `url` param is required                     |          |
-| urls            | `array<string>` | false    | `['https://hnrss.org/newest?points=300','https://www.buzzfeed.com/world.xml']` | rss feed urls,if `type` == "new_item_in_multiple_feeds", `urls` param is required |          |
-| every           | number          | false    | 5                                                                              | rss fetch interval, unit: minutes                                                 | 5        |
-| max_items_count | number          | false    | 15                                                                             | The feed items max length, default is none, it will response all feed items       |
-| skip_first      | boolean         | false    | true                                                                           | If should skip first fetch items                                                  | false    |
+### Params
 
-## Outputs
+- `event`, required, the value must be `new_item_in_multiple_feeds`
+- `URLs`, required, a URL array, the RSS feed URLs
+- `every`, optional, RSS fetch interval, the unit is minute, default value is `5`
+- `skip_first`, optional, if RSS fetch should skip the first items, default value is `false`
+- `max_items_count`, optional, the feed items max length, default value is `undefined`, it will trigger all feed items
 
-See [rss-parser](https://github.com/rbren/rss-parser), The outputs will be the feed item
+### Outputs
+
+Actionsflow use [rss-parser](https://github.com/rbren/rss-parser) for parse RSS file, the outputs are same as [rss-parser](https://github.com/rbren/rss-parser)
+
+An outputs example:
+
+```json
+{
+  "title": "The water is too deep, so he improvises",
+  "link": "https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/",
+  "pubDate": "Thu, 12 Nov 2015 21:16:39 +0000",
+  "content": "<table> <tr><td> <a href=\"https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/\"><img src=\"https://b.thumbs.redditmedia.com/z4zzFBqZ54WT-rFfKXVor4EraZtJVw7AodDvOZ7kitQ.jpg\" alt=\"The water is too deep, so he improvises\" title=\"The water is too deep, so he improvises\" /></a> </td><td> submitted by <a href=\"https://www.reddit.com/user/cakebeerandmorebeer\"> cakebeerandmorebeer </a> to <a href=\"https://www.reddit.com/r/funny/\"> funny</a> <br/> <a href=\"http://i.imgur.com/U407R75.gifv\">[link]</a> <a href=\"https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/\">[275 comments]</a> </td></tr></table>",
+  "contentSnippet": "submitted by  cakebeerandmorebeer  to  funny \n [link] [275 comments]",
+  "guid": "https://www.reddit.com/r/funny/comments/3skxqc/the_water_is_too_deep_so_he_improvises/",
+  "categories": ["funny"],
+  "isoDate": "2015-11-12T21:16:39.000Z"
+}
+```
+
+You can use the outputs like this:
+
+```yaml
+jobs:
+  ifttt:
+    name: Make a Request to IFTTT
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actionsflow/ifttt-webhook-action@v1
+        with:
+          event: notice
+          key: ${{ secrets.IFTTT_KEY }}
+          value1: ${{ on.rss.outputs.title }}
+          value2: ${{ on.rss.outputs.contentSnippet }}
+          value3: ${{ on.rss.outputs.link }}
+```

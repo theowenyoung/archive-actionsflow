@@ -32,7 +32,7 @@ jobs:
           value3: ${{on.rss.outputs.link}}
 ```
 
-For more information about quick start, see [Getting Started](/docs/getting-started.md)
+For more information about quick started, see [Getting Started](/docs/getting-started.md)
 
 For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
 
@@ -40,3 +40,5 @@ For more information about the Actionsflow workflow file, see the
 [Actionsflow workflow reference](/docs/reference.md).
 
 You can learn more about use cases in [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
+
+For more questions about Actionsflow, see [FAQs](/docs/faqs.md)

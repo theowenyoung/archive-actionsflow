@@ -4,9 +4,9 @@ metaTitle: "Actionsflow introduction"
 ---
 
 Actionsflow is a tool for developers to build and run workflows. Like [IFTTT](https://ifttt.com/), [Zapier](https://zapier.com/), with [Actionsflow](https://github.com/actionsflow/actionsflow)
-you can run a workflow that is triggered by RSS, Webhook, Poll, Telegram Bot, and the other triggers that Actionsflow supported. we implemented it by using [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow) ) to build your workflows. It's easy to configure, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your actions.
+you can run a workflow that is triggered by RSS, Webhook, Poll, Telegram Bot, and the other triggers that Actionsflow supported. we implemented it by using [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow) ) to build your workflows. It's easy to configure, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your job's steps.
 
-You can see core concepts of Actionsflow at [here](/docs/concepts.md).
+You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 
 # Features
 
@@ -44,7 +44,7 @@ jobs:
           value3: ${{on.rss.outputs.link}}
 ```
 
-For more information about quick start, see [Getting Started](/docs/getting-started.md)
+For more information about quick started, see [Getting Started](/docs/getting-started.md)
 
 For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
 
@@ -54,3 +54,7 @@ For more information about the Actionsflow workflow file, see the
 You can learn more about use cases in [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
 
 For more questions about Actionsflow, see [FAQs](/docs/faqs.md)
+
+# How Actionsflow worked
+
+Actionsflow setup a Github scheduled action with running every 5 minutes, Actionsflow will check if there are any updates with the triggers in the workflows, if Actionsflow found an updated item, it will generate a standard Github actions workflow file with the item payload, and call [act](https://github.com/nektos/act) to run the built workflow.

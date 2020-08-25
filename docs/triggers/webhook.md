@@ -4,31 +4,17 @@ metaTitle: "This is the title tag of this page"
 metaDescription: "This is the meta description"
 ---
 
-# Webhook
+# Events
 
-## Events
-
-### New Webhook Event
+## New Webhook Event
 
 ```yaml
 on:
   webhook:
     event: test
-jobs:
-  ifttt:
-    name: Make a Request to IFTTT
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: test
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{ on.webhook.outputs.event }}
-          value2: ${{ toJson(on.webhook.outputs.payload) }}
-          value3: ${{ toJson(on.webhook.outputs.body) }}
 ```
 
-### Trigger webhook
+## Trigger webhook
 
 We use github `repository_dispatch` event as webhook event, So you need to make a `POST` request to `https://<github-user-name>:<github-personal-token>@api.github.com/repos/<github-user-name>/<github-repo-name>/dispatches`, with headers `Content-Type: application/json`, with JSON body:
 
@@ -42,7 +28,7 @@ We use github `repository_dispatch` event as webhook event, So you need to make 
 }
 ```
 
-### Curl example
+## Curl example
 
 ```bash
 curl --location --request POST 'https://<github-user-name>:<github-personal-token>@api.github.com/repos/<github-user-name>/<github-repo-name>/dispatches' \
@@ -109,16 +95,43 @@ You can use IFTTT webhook as a `then` action to trigger the webhook, here is an 
 
 > Tips: if your field content need to be escaped, you should surround it with `<<<>>>`
 
-## Options
+## Params
 
-| Param | Type   | Required | Examples    | Description                                                                                                       | Default |
-| ----- | ------ | -------- | ----------- | ----------------------------------------------------------------------------------------------------------------- | ------- |
-| event | string | false    | test1,test2 | will be triigerd when post body `event_type` === `event`,if not providered, all events will trigger this workflow |         |
+- `event`, optional, it will be trigger when post body `event_type` === `event`,if not provided, all events will trigger this workflow
 
 ## Outputs
 
-| Field   | Type   | Examples                                                                    | Description                              |     |
-| ------- | ------ | --------------------------------------------------------------------------- | ---------------------------------------- | --- |
-| event   | string | test                                                                        | will be post body `event_type` value     |
-| payload | object | `{"event_type": "test","client_payload": {"value1": "xxx","key": "value"}}` | will be post body `client_payload` value |
-| body    | object | `{"event_type":"test","client_payload":{"value1":"xxx","key":"value"}}`     | the body you posted                      |
+| Field   | Type   | Examples                                                                     | Description                              |     |
+| ------- | ------ | ---------------------------------------------------------------------------- | ---------------------------------------- | --- |
+| event   | string | test                                                                         | will be post body `event_type` value     |
+| payload | object | `{"key1": "value1","key2": "value2"}`                                        | will be post body `client_payload` value |
+| body    | object | `{"event_type":"test","client_payload":{"key1": "value1","key2": "value2"}}` | the body you posted                      |
+
+An outputs example:
+
+```json
+{
+  "event": "test",
+  "payload": { "key1": "value1", "key2": "value2" },
+  "body": {
+    "event": "test"
+  }
+}
+```
+
+You can use the outputs like this:
+
+```yaml
+jobs:
+  ifttt:
+    name: Make a Request to IFTTT
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actionsflow/ifttt-webhook-action@v1
+        with:
+          event: test
+          key: ${{ secrets.IFTTT_KEY }}
+          value1: ${{ on.webhook.outputs.event }}
+          value2: ${{ toJson(on.webhook.outputs.payload) }}
+          value3: ${{ toJson(on.webhook.outputs.body) }}
+```
