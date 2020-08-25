@@ -7,10 +7,8 @@ metaTitle: "Actionsflow Getting Started"
 
 Actionsflow is basically a three-step process:
 
-1. Create a Github repositoy by this [link](https://github.com/actionsflow/workflow/generate),
-
+1. Create a Github repository by this [link](https://github.com/actionsflow/workflow/generate),
 1. Define your workflow files at `workflows` directory.
-
 1. push your updates to Github
 
 A workflow file `xxx.yml` looks like this:

@@ -5,4 +5,5 @@ module.exports = {
     "git add",
   ],
   "*.{md,yaml,yml,json}": ["prettier --write", "git add"],
+  "*.{md,mdx}": ["remark --quiet --frail"],
 };
