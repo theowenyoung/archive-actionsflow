@@ -1,10 +1,10 @@
 ---
-title: "Introduction rss"
-metaTitle: "This is the title tag of this page"
-metaDescription: "This is the meta description"
+title: "RSS"
+metaTitle: "Actionsflow RSS trigger"
+metaDescription: "When getting a new item, "
 ---
 
-# RSS
+# RSS trigger
 
 ## Events
 
@@ -13,19 +13,8 @@ metaDescription: "This is the meta description"
 ```yaml
 on:
   rss:
+    event: new_item
     url: https://hnrss.org/newest?points=300
-jobs:
-  ifttt:
-    name: Make a Request to IFTTT
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: test
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{on.rss.outputs.title}}
-          value2: ${{on.rss.outputs.content}}
-          value3: ${{on.rss.outputs.link}}
 ```
 
 ### New Item in Multiple Feeds
@@ -38,18 +27,6 @@ on:
       - https://hnrss.org/newest?points=300
       - https://www.buzzfeed.com/world.xml
     max_items_count: 15
-jobs:
-  ifttt:
-    name: Make a Request to IFTTT
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: test
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{on.rss.outputs.title}}
-          value2: ${{on.rss.outputs.contentSnippet}}
-          value3: ${{on.rss.outputs.link}}
 ```
 
 ## Options
