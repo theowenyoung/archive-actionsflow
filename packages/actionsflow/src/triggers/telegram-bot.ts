@@ -10,7 +10,7 @@ import {
 
 export default class TelegramBot implements ITriggerClassType {
   name = "telegram_bot";
-  options: AnyObject;
+  options: AnyObject = {};
   helpers: IHelpers;
   every = 5;
   shouldDeduplicate = true;
@@ -19,7 +19,9 @@ export default class TelegramBot implements ITriggerClassType {
     return this.helpers.createContentDigest(item);
   };
   constructor({ helpers, options }: ITriggerContructorParams) {
-    this.options = options;
+    if (options) {
+      this.options = options;
+    }
     this.helpers = helpers;
     if (options.every) {
       this.every = options.every as number;

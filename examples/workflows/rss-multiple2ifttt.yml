@@ -1,6 +1,5 @@
 on:
   rss:
-    active: false
     event: new_item_in_multiple_feeds
     urls:
       - https://hnrss.org/newest?points=300

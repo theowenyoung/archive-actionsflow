@@ -1,14 +1,6 @@
 on:
   rss:
-    active: false
-    event: new_item_in_multiple_feeds
-    skip_first: false
-    every: 1
-    urls:
-      - https://rss.owenyoung.com/sale/douban-pin-group.xml
-      - https://rss.owenyoung.com/sale/douban-driver-group.xml
-      - https://rss.owenyoung.com/sale/douban-dog-group.xml
-      - https://rss.owenyoung.com/douban/group/586674.xml
+    url: https://hnrss.org/newest?points=300
 jobs:
   ifttt:
     name: Make a Request to IFTTT

@@ -21,7 +21,9 @@ export default class Rss implements ITriggerClassType {
     return this.helpers.createContentDigest(item);
   }
   constructor({ helpers, options }: ITriggerContructorParams) {
-    this.options = options;
+    if (options) {
+      this.options = options;
+    }
     this.helpers = helpers;
 
     if (!options.event) {

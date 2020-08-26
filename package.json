@@ -28,6 +28,7 @@
     "bootstrap": "lerna bootstrap",
     "lerna": "lerna",
     "build:example": "cd examples && ../packages/actionsflow/cli.js build",
+    "run:example": "act -W ./examples/dist/workflows --secret-file ./examples/dist/.secrets -e ./examples/dist/event.json",
     "clean:example": "cd examples && ../packages/actionsflow/cli.js clean",
     "actionsflow": "./packages/actionsflow/cli.js",
     "hooks:uninstall": "node node_modules/husky/husky.js uninstall",

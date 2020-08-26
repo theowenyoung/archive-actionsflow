@@ -63,7 +63,7 @@ export const run = async ({
     };
     const triggerOptions = {
       helpers: triggerHelpers,
-      options: trigger.options,
+      options: trigger.options || {},
       context: context,
     };
     finalResult.helpers = triggerHelpers;
@@ -71,7 +71,7 @@ export const run = async ({
     const triggerInstance = new Trigger(triggerOptions);
 
     const triggerResult = await triggerInstance.run();
-    const { shouldDeduplicate, getItemKey, every } = triggerInstance;
+    const { shouldDeduplicate, every } = triggerInstance;
     let { items } = triggerResult;
     const maxItemsCount = trigger.options.max_items_count as number;
     const skipFirst = trigger.options.skip_first || false;
@@ -101,13 +101,11 @@ export const run = async ({
     // duplicate
     if (shouldDeduplicate === true && !forceUpdate) {
       // duplicate
-      const getItemKeyFn =
-        getItemKey ||
-        ((item: AnyObject): string => {
-          if (item.guid) return item.guid as string;
-          if (item.id) return item.id as string;
-          return createContentDigest(item);
-        });
+      const getItemKeyFn = (item: AnyObject): string => {
+        if (item.guid) return item.guid as string;
+        if (item.id) return item.id as string;
+        return createContentDigest(item);
+      };
 
       // deduplicate
       // get cache
@@ -116,12 +114,21 @@ export const run = async ({
       log.debug("get cached deduplicationKeys", deduplicationKeys);
       const itemsKeyMaps = new Map();
       items.forEach((item) => {
-        itemsKeyMaps.set(getItemKeyFn(item), item);
+        if (triggerInstance.getItemKey) {
+          itemsKeyMaps.set(triggerInstance.getItemKey(item), item);
+        } else {
+          itemsKeyMaps.set(getItemKeyFn(item), item);
+        }
       });
       items = [...itemsKeyMaps.values()];
 
       items = items.filter((result) => {
-        const key = getItemKeyFn(result);
+        let key = "";
+        if (triggerInstance.getItemKey) {
+          key = triggerInstance.getItemKey(result);
+        } else {
+          key = getItemKeyFn(result);
+        }
         if ((deduplicationKeys as string[]).includes(key)) {
           return false;
         } else {

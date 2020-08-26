@@ -1,6 +1,5 @@
 on:
   poll:
-    active: false
     url: https://jsonplaceholder.typicode.com/posts
     max_items_count: 5
 jobs:

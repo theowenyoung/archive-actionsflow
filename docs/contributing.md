@@ -89,6 +89,12 @@ build workflows:
 yarn build:example
 ```
 
+run `act` for run workflows local, you should install [act](https://github.com/nektos/act) first.
+
+```bash
+yarn run:example
+```
+
 clean build files:
 
 ```bash
