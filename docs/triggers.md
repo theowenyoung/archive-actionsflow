@@ -18,6 +18,12 @@ For now, Actionsflow supports:
 
 An Actionsflow workflow can include multiple triggers, you can use the trigger's outputs at the [job steps](/docs/steps.md)
 
+# Common params for triggers
+
+All triggers support follow params:
+
+- `active`, optional, `boolean`, if trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
+
 # Context and expression syntax for Actionsflow triggers
 
 You can access context information in workflow triggers, you need to use specific syntax to tell Actionsflow to evaluate a variable rather than treat it as a string.

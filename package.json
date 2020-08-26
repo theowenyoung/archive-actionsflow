@@ -19,7 +19,7 @@
     "jest": "jest",
     "test:watch": "jest --watch",
     "lint:code": "eslint --cache --ext .js,.ts .",
-    "lint:docs": "remark --quiet --frail \"./docs/\"",
+    "lint:docs": "remark --quiet --frail \"./docs\"",
     "lint:other": "npm run prettier -- --check",
     "format:other": "npm run prettier -- --write",
     "format:code": "npm run lint:code -- --fix",

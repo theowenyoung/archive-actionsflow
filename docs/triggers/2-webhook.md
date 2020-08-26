@@ -14,9 +14,9 @@ on:
     event: test
 ```
 
-## Trigger webhook
+## Trigger Webhook
 
-We use github `repository_dispatch` event as webhook event, So you need to make a `POST` request to `https://<github-user-name>:<github-personal-token>@api.github.com/repos/<github-user-name>/<github-repo-name>/dispatches`, with headers `Content-Type: application/json`, with JSON body:
+We implement Webhook feature by using Github's [`repository_dispatch`](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch), So you need to make a `POST` request to `https://<github-user-name>:<github-personal-token>@api.github.com/repos/<github-user-name>/<github-repo-name>/dispatches`, with headers `Content-Type: application/json`, with JSON body:
 
 ```json
 {
@@ -28,7 +28,9 @@ We use github `repository_dispatch` event as webhook event, So you need to make 
 }
 ```
 
-## Curl example
+You need to generate a personal access tokens with `repo` scope at [Github settings](https://github.com/settings/tokens)
+
+### Curl example
 
 ```bash
 curl --location --request POST 'https://<github-user-name>:<github-personal-token>@api.github.com/repos/<github-user-name>/<github-repo-name>/dispatches' \
@@ -74,7 +76,7 @@ axios(config)
 
 > !!Note, for some reason, IFTTT can not post github API directly, always response 403 status code, I don't know the reason yet, I suspect it's a github API problem, but I'm not sure. if you know why, please let me know!
 
-So, I create a webhook relay API for forward IFTTT request to other service. So you can use it like this:
+I create a webhook relay API for forward IFTTT's request to github service temporarily. So you can use it like this:
 
 You can use IFTTT webhook as a `then` action to trigger the webhook, here is an example:
 
@@ -100,12 +102,6 @@ You can use IFTTT webhook as a `then` action to trigger the webhook, here is an 
 - `event`, optional, it will be trigger when post body `event_type` === `event`,if not provided, all events will trigger this workflow
 
 ## Outputs
-
-| Field   | Type   | Examples                                                                     | Description                              |     |
-| ------- | ------ | ---------------------------------------------------------------------------- | ---------------------------------------- | --- |
-| event   | string | test                                                                         | will be post body `event_type` value     |
-| payload | object | `{"key1": "value1","key2": "value2"}`                                        | will be post body `client_payload` value |
-| body    | object | `{"event_type":"test","client_payload":{"key1": "value1","key2": "value2"}}` | the body you posted                      |
 
 An outputs example:
 

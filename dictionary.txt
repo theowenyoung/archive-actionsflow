@@ -18,3 +18,8 @@ deduplicate
 deduplicates
 BotFather
 config
+Zapier
+CI
+repo
+UI
+CLI
