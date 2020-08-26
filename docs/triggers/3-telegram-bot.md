@@ -1,7 +1,6 @@
 ---
 title: "Telegram Bot"
 metaTitle: "Telegram Bot trigger"
-metaDescription: ""
 ---
 
 Telegram Bot trigger is triggered when new messages of telegram bot are detected. This trigger supports to specify one message type or multiple message types
