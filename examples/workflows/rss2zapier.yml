@@ -8,6 +8,6 @@ jobs:
     steps:
       - uses: actionsflow/axios@v1
         with:
-          url: https://hooks.zapier.com/hooks/catch/123456/test/
+          url: https://hooks.zapier.com/hooks/catch/xxx
           method: POST
           body: '{ "name": "breeze",  "title": "${{on.rss.outputs.title}}" }'
