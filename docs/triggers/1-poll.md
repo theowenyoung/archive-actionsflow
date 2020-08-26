@@ -19,7 +19,7 @@ Event `new_item` watched a single feed URL.
 ### Params
 
 - `URL`, required, the RSS feed URL, for example: <https://hnrss.org/newest?points=300>
-- `results_path`, optional, if the API's returned JSON is not a list and is instead an object (maybe paginated), you should configure `results_path` as the key that contains the results. Example: `results`, `items`, `data.items`, etc... Default value is `undefined`, which means the API's response should be a list.
+- `items_path`, optional, if the API's returned JSON is not a list and is instead an object (maybe paginated), you should configure `items_path` as the key that contains the results. Example: `results`, `items`, `data.items`, etc... Default value is `undefined`, which means the API's response should be a list.
 - `deduplication_key`, optional. Poll trigger deduplicates the array we see each poll against the id key. If the id key does not exist, you should specify an alternative unique key to deduplicate off of. If neither are supplied, we fallback to looking for `guid`, `key`, if neither are supplied, we will hash the item, and generate a unique key
 - `every`, optional, RSS fetch interval, the unit is minute, default value is `5`
 - `skip_first`, optional, if RSS fetch should skip the first items, default value is `false`

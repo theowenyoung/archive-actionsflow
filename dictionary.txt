@@ -17,3 +17,4 @@ YAML
 deduplicate
 deduplicates
 BotFather
+config

@@ -17,13 +17,37 @@ You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 
 # Quick Started
 
-Actionsflow is basically a three-step process:
+Build an Actionsflow workflows is basically a three-step process:
 
-1. Create a Github repository by this [link](https://github.com/actionsflow/workflow/generate),
-1. Define your workflow files at `workflows` directory.
-1. push your updates to Github
+1. Create a public Github repository by this [link](https://github.com/actionsflow/workflow/generate)
+1. Define your [workflow files](/docs/reference/0-workflow-syntax.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
+1. commit and push your updates to Github
 
-A workflow file `xxx.yml` looks like this:
+Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
+
+For more information about quick started, see [Getting Started](/docs/getting-started.md)
+
+# Structure
+
+A typical Actionsflow repository structure looks like this:
+
+```sh
+.
+├── .github
+│   └── workflows
+│       └── actionsflow-jobs.yml
+├── .gitignore
+├── README.md
+└── workflows
+    └── rss2ifttt.yml
+    └── webhook2ifttt.yml
+```
+
+Take a look with the Actionsflow [official template repository](https://github.com/actionsflow/workflow)
+
+# Workflow File
+
+A typical workflow file `xxx.yml` looks like this:
 
 ```yaml
 on:
@@ -44,14 +68,12 @@ jobs:
           value3: ${{on.rss.outputs.link}}
 ```
 
-For more information about quick started, see [Getting Started](/docs/getting-started.md)
-
-For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
-
 For more information about the Actionsflow workflow file, see the
 [Actionsflow workflow reference](/docs/reference.md).
 
-You can learn more about use cases in [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
+For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
+
+For more information about use cases, see [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
 
 For more questions about Actionsflow, see [FAQs](/docs/faqs.md)
 
