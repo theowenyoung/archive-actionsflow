@@ -22,10 +22,7 @@ Event `new_item` watched a single feed URL.
 ### Params
 
 - `event`, optional, the value must be `new_item`, default value is `new_item`, so you can ignore it also.
-- `url`, required, the RSS feed URL, for example: <https://hnrss.org/newest?points=300>
-  items
-
-only
+- `url`, required, the RSS feed URL, for example: <https://hnrss.org/newest?points=300> items
 
 ### Outputs
 
