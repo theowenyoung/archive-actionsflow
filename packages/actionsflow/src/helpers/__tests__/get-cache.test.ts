@@ -1,15 +1,9 @@
 import { getCache, removeCache } from "../cache";
-import { remove } from "fs-extra";
 
 const CACHE_KEY = `__test__`;
-beforeAll(async () => {
-  await remove("./.cache");
-});
+
 afterEach(async () => {
   await removeCache(CACHE_KEY);
-});
-afterAll(async () => {
-  await remove("./.cache");
 });
 
 test(`it returns a new cache instance`, () => {

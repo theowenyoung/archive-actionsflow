@@ -24,6 +24,7 @@ export const run = async ({
   log.debug("trigger:", trigger);
   // get unique id
   let triggerId = "";
+  let forceUpdate = false;
   if (trigger && trigger.options && trigger.options.id) {
     triggerId = trigger.options.id as string;
   } else {
@@ -31,6 +32,9 @@ export const run = async ({
       name: trigger.name,
       path: trigger.workflowRelativePath,
     });
+  }
+  if (trigger && trigger.options && trigger.options.force_update) {
+    forceUpdate = true;
   }
   const finalResult: ITriggerResult = {
     id: triggerId,
@@ -47,7 +51,7 @@ export const run = async ({
     const triggerInstance = new AllTriggers[triggerKey]({
       options: {},
       context: context,
-      helpers: { createContentDigest, cache: getCache(`trigger-temp`) },
+      helpers: { createContentDigest, cache: getCache(`__trigger-temp`) },
     });
     TriggerMap[triggerInstance.name] = AllTriggers[triggerKey];
   });
@@ -86,7 +90,7 @@ export const run = async ({
       // get latest update time
       const shouldUpdateUtil = (lastUpdatedAt as number) + every * 60 * 1000;
       const now = Date.now();
-      const shouldUpdate = shouldUpdateUtil - now <= 0;
+      const shouldUpdate = forceUpdate || shouldUpdateUtil - now <= 0;
       log.debug("shouldUpdate:", shouldUpdate);
       // write to cache
       await triggerHelpers.cache.set("lastUpdatedAt", now);
@@ -95,7 +99,7 @@ export const run = async ({
       }
     }
     // duplicate
-    if (shouldDeduplicate === true) {
+    if (shouldDeduplicate === true && !forceUpdate) {
       // duplicate
       const getItemKeyFn =
         getItemKey ||
@@ -145,7 +149,7 @@ export const run = async ({
       }
     }
 
-    if (skipFirst && lastUpdatedAt === 0) {
+    if (skipFirst && lastUpdatedAt === 0 && !forceUpdate) {
       return finalResult;
     }
     finalResult.items = items;

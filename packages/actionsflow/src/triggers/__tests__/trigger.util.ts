@@ -1,11 +1,15 @@
 import { ITriggerContructorParams, AnyObject } from "actionsflow-interface";
 import { getCache, createContentDigest } from "../../helpers";
-export const getTriggerConstructorParams = (
-  options: AnyObject
-): ITriggerContructorParams => {
+export const getTriggerConstructorParams = ({
+  options,
+  name,
+}: {
+  options: AnyObject;
+  name: string;
+}): ITriggerContructorParams => {
   const triggerParams: ITriggerContructorParams = {
     helpers: {
-      cache: getCache("test-trigger-cache"),
+      cache: getCache(`test-trigger-cache-${name}`),
       createContentDigest,
     },
     context: {

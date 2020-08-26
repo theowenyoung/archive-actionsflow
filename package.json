@@ -13,6 +13,7 @@
     "build": "npm run clean && lerna run build",
     "release": "lerna publish",
     "test": "npm-run-all -s lint jest",
+    "coverage": "jest --coverage",
     "lint": "npm-run-all --continue-on-error -p lint:code lint:docs lint:other",
     "format": "npm run format:code && npm run format:other",
     "cm": "npx git-cz",

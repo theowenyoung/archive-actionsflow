@@ -104,7 +104,7 @@ automatically build your code, rebuild on every change you make.
 1.  hack, hack, hack
 1.  Create tests
 1.  Run all tests, `yarn test`
-1.  Commit code and create pull request
+1.  Commit code and create pull request(you can use `yarn cm` to commit)
 
 ## Create Trigger
 

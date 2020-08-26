@@ -2,7 +2,9 @@ import axios from "axios";
 import TelegramBot from "../telegram-bot";
 jest.mock("axios");
 import { getTriggerConstructorParams } from "./trigger.util";
+
 const TELEGRAM_TOKEN = "test";
+
 test("telegram bot trigger", async () => {
   const resp = {
     data: {
@@ -58,10 +60,18 @@ test("telegram bot trigger", async () => {
 
   const telegramBot = new TelegramBot(
     getTriggerConstructorParams({
-      token: TELEGRAM_TOKEN,
+      options: {
+        token: TELEGRAM_TOKEN,
+        every: 10,
+        event: "text",
+      },
+      name: "telegram_bot",
     })
   );
+  expect(telegramBot.every).toBe(10);
   const triggerResults = await telegramBot.run();
 
   expect(triggerResults.items.length).toBe(2);
+
+  expect(telegramBot.getItemKey(triggerResults.items[0])).toBe(791185170);
 });

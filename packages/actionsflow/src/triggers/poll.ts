@@ -23,7 +23,6 @@ export default class Poll implements ITriggerClassType {
       return item[deduplication_key as string] as string;
     }
     if (item.id) return item.id as string;
-    if (item.guid) return item.guid as string;
     if (item.key) return item.key as string;
     return this.helpers.createContentDigest(item);
   }
