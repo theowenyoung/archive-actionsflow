@@ -7,6 +7,8 @@ Great that you are here and you want to contribute to [Actionsflow](https://gith
 
 # Docs Contributions
 
+> I appreciate that you want to contribute to the docs, I have to say that I'm not a native English speaker, so maybe there are some grammar errors on the docs, I really appreciate it if you can improve this document.
+
 When working on the Actionsflow documentation, you can choose between two major styles of working:
 
 - Work directly in the [GitHub UI](https://github.com/actionsflow/actionsflow/tree/master/docs), using the “Edit this File” and commit capabilities without having to clone the repository. This is useful for quick documentation updates, typo fixes, and lightweight Markdown changes.
