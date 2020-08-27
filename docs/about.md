@@ -12,3 +12,5 @@ Here are some useful links:
 - [Workflow syntax for Actionsflow](/docs/reference.md)
 - [Actionsflow Triggers](/docs/triggers.md)
 - [FAQs](/docs/faqs.md)
+
+I ❤️ building Actionsflow and hope it simplifies your next project or business.
