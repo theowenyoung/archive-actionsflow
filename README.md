@@ -18,7 +18,7 @@
 ---
 
 <p align="center">
-<strong>The best <a href="https://ifttt.com/">IFTTT</a>/<a href="https://zapier.com/">Zapier</a> free alternative for developers to automate your workflows based on Github actions<strong>
+<strong>The best <a href="https://ifttt.com/">IFTTT</a>/<a href="https://zapier.com/">Zapier</a> free alternative for developers to automate your workflows based on Github actions</strong>
 <br>
 </p>
 
