@@ -7,7 +7,7 @@
 
 <div align="center">
 
-[![Build](https://github.com/actionsflow/actionsflow/workflows/Build/badge.svg)]()
+[![Build](https://github.com/actionsflow/actionsflow/workflows/Build/badge.svg)](https://github.com/actionsflow/actionsflow/actions?query=workflow%3ABuild)
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
 [![GitHub Issues](https://img.shields.io/github/issues/actionsflow/actionsflow.svg)](https://github.com/actionsflow/actionsflow/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/actionsflow/actionsflow.svg)](https://github.com/actionsflow/actionsflow/pulls)
