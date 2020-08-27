@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="" rel="noopener">
+  <a href="https://actionsflow.github.io" rel="noopener">
  <img width=200px height=200px src="./docs/assets/logo.svg" alt="Project logo"></a>
 </p>
 
@@ -25,7 +25,7 @@
 ## 📝 Table of Contents
 
 - [About](#about)
-- [Document](#Document)
+- [Document](#document)
 - [How Actionsflow Worked](#howactiionsflowworked)
 - [Getting Started](#getting_started)
 - [Contributing](../CONTRIBUTING.md)
@@ -43,7 +43,7 @@ Full documentation for Actionsflow lives [on the website](https://actionsflow.gi
 
 You can also [view it at Github](/docs/index.md) if you prefer.
 
-## How Actionsflow worked <a name = "howactiionsflowworked"></a>
+## 👀 How Actionsflow worked <a name = "howactiionsflowworked"></a>
 
 Actionsflow setup a Github scheduled action with running every 5 minutes, Actionsflow will check if there are any updates with the triggers in the workflows, if Actionsflow found an updated item, it will generate a standard Github actions workflow file with the item payload, and call [act](https://github.com/nektos/act) to run the built workflow.
 
