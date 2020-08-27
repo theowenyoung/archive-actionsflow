@@ -18,8 +18,8 @@
 ---
 
 <p align="center">
-  IFTTT/Zapier for developers by using github actions
-    <br> 
+<strong>The best <a href="https://ifttt.com/">IFTTT</a>/<a href="https://zapier.com/">Zapier</a> free alternative for developers to automate your workflows based on Github actions<strong>
+<br>
 </p>
 
 ## 📝 Table of Contents
@@ -33,7 +33,7 @@
 
 ## 🧐 About <a name = "about"></a>
 
-[Actionsflow](https://github.com/actionsflow/actionsflow) is a tool for developers to build and run workflows. Like [IFTTT](https://ifttt.com/), [Zapier](https://zapier.com/), with [Actionsflow](https://github.com/actionsflow/actionsflow), you can run a workflow that is triggered by RSS, Webhook, Poll, Telegram Bot, and the other triggers that Actionsflow supported. we implemented it by using [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow) ) to build your workflows. It's easy to configure, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your job's steps.
+[Actionsflow](https://github.com/actionsflow/actionsflow) helps you to automate workflows, it's the best [IFTTT](https://ifttt.com/)/[Zapier](https://zapier.com/) free alternative for developers. With [Actionsflow](https://github.com/actionsflow/actionsflow), you can connect your favorite apps, data, and APIs, receive notifications of actions as they occur, sync files, collect data, and more. , We implemented it based on [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow) ) to build your workflows. It's easy to configure, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your job's steps.
 
 You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 
