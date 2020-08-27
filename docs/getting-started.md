@@ -3,6 +3,8 @@ title: "Getting Started"
 metaTitle: "Actionsflow Getting Started"
 ---
 
+Get started with Actionsflow, the free, open source tool for building powerful workflows.
+
 Build an Actionsflow workflows is basically a three-step process:
 
 # 1. Create a Github repository
