@@ -49,7 +49,7 @@ You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 
 Full documentation for Actionsflow lives [on the website](https://actionsflow.github.io/docs/).
 
-You can also [view it at Github](/docs/index.md) if you prefer.
+You can also [view it at Github](https://github.com/actionsflow/actionsflow/blob/master/docs/index.md) if you prefer.
 
 ## 👀 How Actionsflow worked <a name = "howactiionsflowworked"></a>
 
@@ -60,12 +60,12 @@ Actionsflow setup a Github scheduled action with running every 5 minutes, Action
 Build an Actionsflow workflows is basically a three-step process:
 
 1. Create a public Github repository by this [link](https://github.com/actionsflow/workflow/generate)
-1. Define your [workflow files](/docs/reference.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
+1. Define your [workflow files](https://actionsflow.github.io/docs/reference.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
 1. commit and push your updates to Github
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
 
-For more information about quick started, see [Getting Started](/docs/getting-started.md)
+For more information about quick started, see [Getting Started](https://actionsflow.github.io/docs/getting-started.md)
 
 ### Structure
 
@@ -109,19 +109,19 @@ jobs:
 ```
 
 For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](/docs/reference.md).
+[Actionsflow workflow reference](https://actionsflow.github.io/docs/reference.md).
 
-For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
+For more information about the Actionsflow triggers, see [Triggers](https://actionsflow.github.io/docs/triggers.md)
 
 For more information about use cases, see [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
 
-For more questions about Actionsflow, see [FAQs](./docs/faqs.md)
+For more questions about Actionsflow, see [FAQs](https://actionsflow.github.io/docs/faqs.md)
 
 ## 🤝 How to Contribute <a name = "contributing"></a>
 
 Whether you're helping us fix bugs, improve the docs, or spread the word, we'd love to have you as part of the Actionsflow community! 💪💜
 
-Check out our [Contributing Guide](/docs/contributing.md) for ideas on contributing and setup steps for getting our repositories up and running on your local machine.
+Check out our [Contributing Guide](https://actionsflow.github.io/docs/contributing.md) for ideas on contributing and setup steps for getting our repositories up and running on your local machine.
 
 ## ✍️ Authors <a name = "authors"></a>
 
@@ -131,4 +131,4 @@ See also the list of [contributors](https://github.com/actionsflow/actionsflow/c
 
 ## 📝 License
 
-Licensed under the [MIT License](./LICENSE).
+Licensed under the [MIT License](https://github.com/actionsflow/actionsflow/blob/master/LICENSE).
