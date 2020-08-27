@@ -22,6 +22,7 @@
     "lint:code": "eslint --cache --ext .js,.ts .",
     "lint:docs": "remark --quiet --frail \"./docs\"",
     "lint:other": "npm run prettier -- --check",
+    "remark": "remark",
     "format:other": "npm run prettier -- --write",
     "format:code": "npm run lint:code -- --fix",
     "prettier": "prettier \"**/*.{md,json,js,ts,yaml,yml}\"",
