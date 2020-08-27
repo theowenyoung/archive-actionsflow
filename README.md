@@ -28,7 +28,7 @@
 - [Document](#document)
 - [How Actionsflow Worked](#howactiionsflowworked)
 - [Getting Started](#getting_started)
-- [Contributing](../CONTRIBUTING.md)
+- [Contributing](#contributing)
 - [Authors](#authors)
 
 ## 🧐 About <a name = "about"></a>
@@ -108,6 +108,12 @@ For more information about the Actionsflow triggers, see [Triggers](/docs/trigge
 For more information about use cases, see [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
 
 For more questions about Actionsflow, see [FAQs](/docs/faqs.md)
+
+## 🤝 How to Contribute <a name = "contributing"></a>
+
+Whether you're helping us fix bugs, improve the docs, or spread the word, we'd love to have you as part of the Actionsflow community! 💪💜
+
+Check out our [Contributing Guide](/docs/contributing.md) for ideas on contributing and setup steps for getting our repositories up and running on your local machine.
 
 ## ✍️ Authors <a name = "authors"></a>
 
