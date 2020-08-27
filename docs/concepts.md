@@ -9,4 +9,4 @@ Actionsflow setup a Github scheduled action with running every 5 minutes, Action
 
 # What Actionsflow include
 
-A typical Actionsflow workflow includes a [trigger](/docs/triggers.md) and some [job steps](/docs/steps.md)(Actionsflow also support multiple triggers and multiple jobs), when a trigger is triggered, Actionsflow will run jobs you defined at the [workflow file](/docs/reference/0-workflow-syntax.md).
+A typical Actionsflow workflow includes a [trigger](/docs/triggers.md) and some [job steps](/docs/steps.md)(Actionsflow also support multiple triggers and multiple jobs), when a trigger is triggered, Actionsflow will run jobs you defined at the [workflow file](/docs/reference.md).
