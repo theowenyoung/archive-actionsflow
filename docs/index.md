@@ -19,7 +19,7 @@ You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 Build an Actionsflow workflows is basically a three-step process:
 
 1. Create a public Github repository by this [link](https://github.com/actionsflow/workflow/generate)
-1. Define your [workflow files](/docs/reference/0-workflow-syntax.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
+1. Define your [workflow files](/docs/reference.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
 1. commit and push your updates to Github
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
