@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.8](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.0.7...actionsflow@0.0.8) (2020-08-28)
+
+### Features
+
+- add example ([3aac693](https://github.com/actionsflow/actionsflow/commit/3aac6939dda0dc1eebabe0ddf54aff4545bed2c3))
+- yarn v2 ([6418eef](https://github.com/actionsflow/actionsflow/commit/6418eef07f9cfaa21c17555409fb621de7f5cd2c))
+
 ## [0.0.7](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.0.6...actionsflow@0.0.7) (2020-08-19)
 
 ### Features

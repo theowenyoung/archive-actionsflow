@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.3](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.2...actionsflow-interface@0.0.3) (2020-08-28)
+
+### Features
+
+- yarn v2 ([6418eef](https://github.com/actionsflow/actionsflow/commit/6418eef07f9cfaa21c17555409fb621de7f5cd2c))
+
 ## 0.0.2 (2020-08-19)
 
 ### Features

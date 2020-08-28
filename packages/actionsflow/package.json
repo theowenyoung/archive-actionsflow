@@ -1,5 +1,5 @@
 {
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -25,8 +25,8 @@
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.has": "^4.5.6",
-    "actionsflow-cli": "^0.0.6",
-    "actionsflow-interface": "^0.0.2",
+    "actionsflow-cli": "^0.0.7",
+    "actionsflow-interface": "^0.0.3",
     "axios": "^0.19.2",
     "cache-manager": "^3.3.0",
     "cache-manager-fs-hash": "^0.0.9",

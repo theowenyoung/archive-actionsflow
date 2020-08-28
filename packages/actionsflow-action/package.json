@@ -1,6 +1,6 @@
 {
   "name": "actionsflow-action",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": true,
   "description": "Actionsflow action",
   "keywords": [
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.4",
-    "actionsflow": "^0.0.7"
+    "actionsflow": "^0.0.8"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.23.0"
