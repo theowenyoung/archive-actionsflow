@@ -10,8 +10,8 @@ You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 # Features
 
 - **Totally Free!** Actionsflow based on [Github actions](https://docs.github.com/en/actions). To run an Actionsflow workflow, you just need to [create a repository from Actionsflow template repository](https://github.com/actionsflow/workflow/generate).
-- **support almost all actions of github**, you can use almost all [Github actions](https://github.com/marketplace?type=actions). Actionsflow use [act](https://github.com/nektos/act) for running [Github actions](https://github.com/marketplace?type=actions). With [Github actions](https://github.com/marketplace?type=actions), You can connect with IFTTT, Zapier, or the other services.
-- **Easy to write workflow file**, the Actionsflow configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's very easy to define an Actionsflow workflow file,
+- **Support almost all actions of github**, you can use almost all [Github actions](https://github.com/marketplace?type=actions). Actionsflow use [act](https://github.com/nektos/act) for running [Github actions](https://github.com/marketplace?type=actions). With [Github actions](https://github.com/marketplace?type=actions), You can connect with IFTTT, Zapier, or the other services.
+- **Easy to write workflow file**, the Actionsflow configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's very easy to define an Actionsflow workflow file
 - **Run a trigger every 5 minutes**. The workflow can check and run every 5 minutes based on [Github actions scheduled events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events)
 
 # Quick Started
@@ -19,7 +19,7 @@ You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 Build an Actionsflow workflows is basically a three-step process:
 
 1. Create a public Github repository by this [link](https://github.com/actionsflow/workflow/generate)
-1. Define your [workflow files](/docs/reference.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
+1. Define your [workflow files](/docs/workflow.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
 1. commit and push your updates to Github
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
@@ -68,7 +68,7 @@ jobs:
 ```
 
 For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](/docs/reference.md).
+[Actionsflow workflow reference](/docs/workflow.md).
 
 For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
 

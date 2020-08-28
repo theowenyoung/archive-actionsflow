@@ -60,7 +60,7 @@ Actionsflow setup a Github scheduled action with running every 5 minutes, Action
 Build an Actionsflow workflows is basically a three-step process:
 
 1. Create a public Github repository by this [link](https://github.com/actionsflow/workflow/generate)
-1. Define your [workflow files](https://actionsflow.github.io/docs/reference.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
+1. Define your [workflow files](https://actionsflow.github.io/docs/workflow.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
 1. commit and push your updates to Github
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
@@ -109,7 +109,7 @@ jobs:
 ```
 
 For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](https://actionsflow.github.io/docs/reference.md).
+[Actionsflow workflow reference](https://actionsflow.github.io/docs/workflow.md).
 
 For more information about the Actionsflow triggers, see [Triggers](https://actionsflow.github.io/docs/triggers.md)
 

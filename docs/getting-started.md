@@ -13,7 +13,7 @@ Click this [link](https://github.com/actionsflow/workflow/generate) to generate 
 
 # 2. Create workflow files
 
-Define your [workflow files](/docs/reference.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
+Define your [workflow files](/docs/workflow.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
 
 A typical Actionsflow repository structure looks like this:
 
@@ -51,7 +51,7 @@ jobs:
 ```
 
 For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](/docs/reference.md).
+[Actionsflow workflow reference](/docs/workflow.md).
 
 # 3. Commit and push your updates to Github
 
@@ -67,7 +67,7 @@ git push
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
 
 For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](/docs/reference.md).
+[Actionsflow workflow reference](/docs/workflow.md).
 
 For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
 

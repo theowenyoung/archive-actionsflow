@@ -1,6 +1,12 @@
-name: "Actionsflow Action"
-author: Actionsflow
-description: "Run Actionsflow in Github"
+---
+title: Actionsflow action API
+---
+
+Actionsflow action for Github.
+
+## Inputs
+
+```yaml
 inputs:
   base:
     description: "base workspace folder, default is current workspace"
@@ -17,12 +23,20 @@ inputs:
     description: 'Log level, default is "info", you can use one of these values, "trace" | "debug" | "info" | "warn" | "error" | "silent"'
     required: false
     default: "info"
+```
+
+## Outputs
+
+```yaml
 outputs:
   success:
     description: "If the build status is success, value can be 'true', or 'false', if build failed, the action outcome will be set failed"
-runs:
-  using: "node12"
-  main: "packages/actionsflow-action/dist/index.js"
-branding:
-  icon: "send"
-  color: "blue"
+```
+
+## Example usage
+
+```yaml
+uses: actionsflow/actionsflow@v1
+with:
+  log-level: "debug"
+```

@@ -41906,9 +41906,10 @@ actionsflow_1.build({
     logLevel: "debug",
 })
     .then(() => {
-    core.setOutput("result", "test");
+    core.setOutput("success", true);
 })
     .catch((e) => {
+    core.setOutput("success", false);
     core.setFailed(e);
 });
 
