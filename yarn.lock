@@ -2438,11 +2438,11 @@ __metadata:
   dependencies:
     "@actions/core": ^1.2.4
     "@vercel/ncc": ^0.23.0
-    actionsflow: ^0.0.7
+    actionsflow: ^0.0.8
   languageName: unknown
   linkType: soft
 
-"actionsflow-cli@^0.0.6, actionsflow-cli@workspace:packages/actionsflow-cli":
+"actionsflow-cli@^0.0.7, actionsflow-cli@workspace:packages/actionsflow-cli":
   version: 0.0.0-use.local
   resolution: "actionsflow-cli@workspace:packages/actionsflow-cli"
   dependencies:
@@ -2462,13 +2462,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"actionsflow-interface@^0.0.2, actionsflow-interface@workspace:packages/actionsflow-interface":
+"actionsflow-interface@^0.0.3, actionsflow-interface@workspace:packages/actionsflow-interface":
   version: 0.0.0-use.local
   resolution: "actionsflow-interface@workspace:packages/actionsflow-interface"
   languageName: unknown
   linkType: soft
 
-"actionsflow@^0.0.7, actionsflow@workspace:packages/actionsflow":
+"actionsflow@^0.0.8, actionsflow@workspace:packages/actionsflow":
   version: 0.0.0-use.local
   resolution: "actionsflow@workspace:packages/actionsflow"
   dependencies:
@@ -2479,8 +2479,8 @@ __metadata:
     "@types/lodash.clonedeep": ^4.5.6
     "@types/lodash.get": ^4.4.6
     "@types/lodash.has": ^4.5.6
-    actionsflow-cli: ^0.0.6
-    actionsflow-interface: ^0.0.2
+    actionsflow-cli: ^0.0.7
+    actionsflow-interface: ^0.0.3
     axios: ^0.19.2
     cache-manager: ^3.3.0
     cache-manager-fs-hash: ^0.0.9
