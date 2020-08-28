@@ -2,7 +2,7 @@
 title: Actionsflow CLI API
 ---
 
-This document is for [npm actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.
+This document is for [npm Actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.
 
 Here is the Actionsflow CLI API docs, you can see [API docs at here](/docs/reference/2-api.md)
 
@@ -71,7 +71,7 @@ Options:
 
 ## clean
 
-Clean the dist fokder and cache
+Clean the dist folder and cache
 
 ```bash
 actionsflow clean

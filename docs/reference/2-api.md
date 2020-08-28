@@ -2,7 +2,7 @@
 title: Actionsflow core API
 ---
 
-This document is for [npm actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.
+This document is for [npm Actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.
 
 Here is the Actionsflow core API docs, you can see [CLI docs at here](/docs/reference/3-cli.md)
 
@@ -33,7 +33,7 @@ function build(options: {
 
 # clean
 
-Clean the dist fokder and cache
+Clean the dist folder and cache
 
 ```typescript
 import { clean } from "actionsflow";

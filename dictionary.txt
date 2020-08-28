@@ -24,3 +24,5 @@ repo
 UI
 CLI
 APIs
+customizations
+npm

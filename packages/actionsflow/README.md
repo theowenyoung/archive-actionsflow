@@ -51,7 +51,7 @@ Full documentation for Actionsflow lives [on the website](https://actionsflow.gi
 
 You can also [view it at Github](https://github.com/actionsflow/actionsflow/blob/master/docs/index.md) if you prefer.
 
-If you need `actionsflow` npm package docs, please see [here](./docs/README.md)
+If you need `actionsflow` npm package docs, please see [here](https://actionsflow.github.io/docs/reference/2-api/)
 
 ## 👀 How Actionsflow worked <a name = "howactiionsflowworked"></a>
 
