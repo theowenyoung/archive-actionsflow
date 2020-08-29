@@ -1,6 +1,6 @@
 # `actionsflow-trigger-twitter`
 
-> TODO: description
+> twitter trigger for actionsflow
 
 ## Usage
 

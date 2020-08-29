@@ -72,7 +72,7 @@
     "update-notifier": "^4.1.0",
     "yargs": "^15.4.1"
   },
-  "gitHead": "0430bcce7fe294657963516c0bd0c9cdab8ba16c",
+  "gitHead": "19d0ab5fbbe4a5d7ef557544070b98e4849edb1c",
   "devDependencies": {
     "@types/jest": "^26.0.10"
   }

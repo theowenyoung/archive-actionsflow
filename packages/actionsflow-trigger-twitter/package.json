@@ -28,11 +28,14 @@
     "clean": "rimraf ./dist",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
     "actionsflow-interface": "^0.0.5"
   },
-  "gitHead": "0430bcce7fe294657963516c0bd0c9cdab8ba16c"
+  "gitHead": "19d0ab5fbbe4a5d7ef557544070b98e4849edb1c"
 }

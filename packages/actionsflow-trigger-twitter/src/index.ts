@@ -30,6 +30,7 @@ export default class Example implements ITriggerClassType {
       {
         id: "id",
         key: "value",
+        test: "testValue",
       },
     ];
     return {

@@ -10,7 +10,7 @@
     "start": "npm run build && lerna run --parallel start",
     "clean": "lerna run --parallel clean",
     "build": "npm run clean && lerna run build",
-    "release": "lerna publish",
+    "release": "npm run test && lerna publish",
     "test": "npm-run-all -s lint jest",
     "coverage": "jest --coverage",
     "lint": "npm-run-all --continue-on-error -p lint:code lint:docs lint:other",
