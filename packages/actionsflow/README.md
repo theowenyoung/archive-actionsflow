@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://actionsflow.github.io" rel="noopener">
- <img width=200px height=200px src="./docs/assets/logo.svg" alt="Project logo"></a>
+ <img width=200px height=200px src="https://raw.githubusercontent.com/actionsflow/actionsflow/master/docs/assets/logo.svg" alt="Project logo"></a>
 </p>
 
 <h1 align="center">Actionsflow</h1>
