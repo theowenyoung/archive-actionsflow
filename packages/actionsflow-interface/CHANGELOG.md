@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.4](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.3...actionsflow-interface@0.0.4) (2020-08-29)
+
+### Features
+
+- move cli to core ([5d30736](https://github.com/actionsflow/actionsflow/commit/5d30736e216605a3e1bd41fe18100bfaf1337d4d))
+
 ## [0.0.3](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.2...actionsflow-interface@0.0.3) (2020-08-28)
 
 ### Features

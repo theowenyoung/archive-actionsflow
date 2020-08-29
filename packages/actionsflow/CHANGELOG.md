@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.13](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.0.8...actionsflow@0.0.13) (2020-08-29)
+
+### Features
+
+- move cli to core ([5d30736](https://github.com/actionsflow/actionsflow/commit/5d30736e216605a3e1bd41fe18100bfaf1337d4d))
+- package update ([923a49d](https://github.com/actionsflow/actionsflow/commit/923a49daa507ddd88ec8b2ba594514174c388649))
+- package update ([b74affb](https://github.com/actionsflow/actionsflow/commit/b74affb41baf9e84ee380846259923087172fa80))
+- support thirdparty trigger ([f9beb20](https://github.com/actionsflow/actionsflow/commit/f9beb20dafea8b50948b5a239c311660bf7a025a))
+
 ## [0.0.8](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.0.7...actionsflow@0.0.8) (2020-08-28)
 
 ### Features
