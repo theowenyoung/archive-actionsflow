@@ -87,6 +87,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   const workflows = await getWorkflows({
     src: workflowsPath,
     context,
+    base: base as string,
   });
   // create workflow dest dir
   await fs.ensureDir(path.resolve(destPath, "workflows"));

@@ -1,5 +1,5 @@
 {
-  "name": "actionsflow-trigger-twitter",
+  "name": "@actionsflow/trigger-twitter",
   "version": "0.0.1",
   "description": "Actionsflow trigger twitter",
   "keywords": [
@@ -23,7 +23,10 @@
     "url": "git+https://github.com/actionsflow/actionsflow.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "start": "tsc -w -p tsconfig.production.json",
+    "build": "tsc -p tsconfig.production.json",
+    "clean": "rimraf ./dist",
+    "prepublishOnly": "npm run build"
   },
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"

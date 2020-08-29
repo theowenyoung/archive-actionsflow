@@ -1,5 +1,10 @@
 import has from "lodash.has";
-import { AnyObject } from "actionsflow-interface";
+// import resolveCwd from "resolve-cwd";
+
+import {
+  AnyObject,
+  ITriggerClassTypeConstructable,
+} from "actionsflow-interface";
 interface IOptions {
   interpolate?: RegExp;
   includeVariableRegex?: RegExp;
@@ -118,4 +123,21 @@ export const template = function (
     "var toJson = function(obj){return JSON.stringify(obj,null,2)};with(this)return" +
       evaluate.join("+")
   ).call(context);
+};
+
+export const getThirdPartyTrigger = (
+  triggerName: string
+): ITriggerClassTypeConstructable | undefined => {
+  const triggerPath = require.resolve(`@actionsflow/trigger-${triggerName}`);
+  if (triggerPath) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const Trigger = require(triggerPath);
+    if (Trigger.default) {
+      return Trigger.default;
+    } else {
+      return Trigger;
+    }
+  } else {
+    return undefined;
+  }
 };

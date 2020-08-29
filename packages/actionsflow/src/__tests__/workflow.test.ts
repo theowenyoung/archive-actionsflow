@@ -13,6 +13,7 @@ import yaml from "js-yaml";
 test("get workflows", async () => {
   const workflows = await getWorkflows({
     src: path.resolve(__dirname, "./fixtures/workflows"),
+    base: path.resolve(__dirname, "./fixtures"),
     context: {
       github: {
         event: {},

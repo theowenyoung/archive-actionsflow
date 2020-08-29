@@ -1,3 +1,5 @@
+import { getThirdPartyTrigger } from "./util";
+
 import * as Triggers from "./triggers";
 import { createContentDigest, getCache } from "./helpers";
 import log from "./log";
@@ -55,8 +57,15 @@ export const run = async ({
     });
     TriggerMap[triggerInstance.name] = AllTriggers[triggerKey];
   });
+  let Trigger = TriggerMap[trigger.name];
 
-  if (TriggerMap[trigger.name]) {
+  if (!Trigger) {
+    Trigger = getThirdPartyTrigger(
+      trigger.name
+    ) as ITriggerClassTypeConstructable;
+  }
+
+  if (Trigger) {
     const triggerHelpers = {
       createContentDigest,
       cache: getCache(`trigger-${triggerId}`),
@@ -67,7 +76,7 @@ export const run = async ({
       context: context,
     };
     finalResult.helpers = triggerHelpers;
-    const Trigger = TriggerMap[trigger.name];
+
     const triggerInstance = new Trigger(triggerOptions);
 
     const triggerResult = await triggerInstance.run();

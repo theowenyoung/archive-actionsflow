@@ -1,11 +1,11 @@
-import path from "path";
+import path, { relative } from "path";
 import fg from "fast-glob";
 import yaml from "js-yaml";
 import mapObj from "map-obj";
 import { createContentDigest, getCache } from "./helpers";
 import fs from "fs-extra";
 import log from "./log";
-import { template } from "./util";
+import { template, getThirdPartyTrigger } from "./util";
 import * as Triggers from "./triggers";
 import {
   ITriggerContext,
@@ -39,7 +39,14 @@ const getSupportedTriggers = (
     const keys = Object.keys(onObj);
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index] as string;
+      // check thirdparty support
+      let isTriggerSupported = false;
       if (supportTriggerIds.includes(key)) {
+        isTriggerSupported = true;
+      } else if (getThirdPartyTrigger(key)) {
+        isTriggerSupported = true;
+      }
+      if (isTriggerSupported) {
         // is active
         if (!(onObj[key] && onObj[key].active === false)) {
           // handle context expresstion
@@ -77,6 +84,7 @@ const getSupportedTriggers = (
 interface IGetWorkflowsOptions {
   src: string;
   context: ITriggerContext;
+  base: string;
 }
 export const getWorkflows = async (
   options: IGetWorkflowsOptions
@@ -84,8 +92,7 @@ export const getWorkflows = async (
   if (!options.src) {
     throw new Error("Can not found src options");
   }
-  const { src: workflowsPath, context } = options;
-  console.log("workflowsPath", workflowsPath);
+  const { src: workflowsPath, context, base } = options;
   // check is folder
   const stat = await fs.lstat(workflowsPath);
   const isFile = stat.isFile();
@@ -94,22 +101,34 @@ export const getWorkflows = async (
     // check is exist
     const isExist = await fs.pathExists(workflowsPath);
     if (isExist) {
-      entries.push(workflowsPath);
+      // relative path
+      const relativePath = path.relative(
+        path.resolve(base, "workflows"),
+        workflowsPath
+      );
+      entries.push({
+        path: workflowsPath,
+        relativePath,
+      });
     }
   } else {
     // get all files with json object
-    entries = await fg(["**/*.yml", "**/*.yaml"], {
+    const relativeEntries = await fg(["**/*.yml", "**/*.yaml"], {
       cwd: workflowsPath,
       dot: true,
     });
+    entries = relativeEntries.map((relativePath) => {
+      return {
+        relativePath,
+        path: path.resolve(workflowsPath, relativePath),
+      };
+    });
   }
-
-  console.log("entries", entries);
 
   const workflows: IWorkflow[] = [];
   // Get document, or throw exception on error
   for (let index = 0; index < entries.length; index++) {
-    const filePath = path.resolve(workflowsPath, entries[index]);
+    const filePath = entries[index].path;
     log.debug("yaml file path:", filePath);
     try {
       const doc = yaml.safeLoad(await fs.readFile(filePath, "utf8"));
@@ -117,7 +136,7 @@ export const getWorkflows = async (
         const triggers = getSupportedTriggers(doc as AnyObject, context);
         workflows.push({
           path: filePath,
-          relativePath: entries[index],
+          relativePath: entries[index].relativePath,
           data: doc as AnyObject,
           rawTriggers: triggers,
         });
