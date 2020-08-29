@@ -1,5 +1,5 @@
 {
-  "version": "0.0.9",
+  "version": "0.0.12",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -17,6 +17,24 @@
     "prepare": "npm run build"
   },
   "name": "actionsflow",
+  "description": "The best Zapier/IFTTT free alternative for developers to automate your workflows based on Github actions",
+  "keywords": [
+    "workflow",
+    "github",
+    "actions",
+    "trigger",
+    "automate",
+    "zapier"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/actionsflow/actionsflow",
+    "directory": "packages/actionsflow"
+  },
+  "bugs": {
+    "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
+  "homepage": "https://actionsflow.github.io",
   "author": "Owen Young",
   "dependencies": {
     "@types/cache-manager": "^2.10.3",
