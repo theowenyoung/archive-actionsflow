@@ -18,5 +18,6 @@
     "prepublishOnly": "npm run build"
   },
   "name": "actionsflow-interface",
-  "author": "Owen Young"
+  "author": "Owen Young",
+  "gitHead": "0430bcce7fe294657963516c0bd0c9cdab8ba16c"
 }

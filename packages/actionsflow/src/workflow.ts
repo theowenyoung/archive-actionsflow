@@ -1,4 +1,4 @@
-import path, { relative } from "path";
+import path from "path";
 import fg from "fast-glob";
 import yaml from "js-yaml";
 import mapObj from "map-obj";
