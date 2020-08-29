@@ -14,7 +14,7 @@
     "start": "tsc -w -p tsconfig.production.json",
     "build": "tsc -p tsconfig.production.json",
     "clean": "rimraf ./dist",
-    "prepare": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "name": "actionsflow",
   "description": "The best Zapier/IFTTT free alternative for developers to automate your workflows based on Github actions",
@@ -43,7 +43,6 @@
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.has": "^4.5.6",
-    "actionsflow-cli": "^0.0.7",
     "actionsflow-interface": "^0.0.3",
     "axios": "^0.19.2",
     "cache-manager": "^3.3.0",
@@ -63,7 +62,14 @@
     "map-obj": "^4.1.0",
     "node-object-hash": "^2.0.0",
     "rss-parser": "^3.9.0",
-    "tslib": "^2.0.1"
+    "@babel/polyfill": "^7.10.4",
+    "@types/semver": "^7.3.3",
+    "@types/update-notifier": "^4.1.1",
+    "resolve-cwd": "^3.0.0",
+    "semver": "^7.3.2",
+    "tslib": "^2.0.1",
+    "update-notifier": "^4.1.0",
+    "yargs": "^15.4.1"
   },
   "gitHead": "c0fa784300ff8ccb860c84b9c507f9532f80f2fd",
   "devDependencies": {

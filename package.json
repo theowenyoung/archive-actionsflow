@@ -9,7 +9,6 @@
   "scripts": {
     "start": "npm run build && lerna run --parallel start",
     "clean": "lerna run --parallel clean",
-    "prepare": "npm run clean && lerna run prepare",
     "build": "npm run clean && lerna run build",
     "release": "lerna publish",
     "test": "npm-run-all -s lint jest",
@@ -26,8 +25,8 @@
     "format:other": "npm run prettier -- --write",
     "format:code": "npm run lint:code -- --fix",
     "prettier": "prettier \"**/*.{md,json,js,ts,yaml,yml}\"",
-    "bootstrap": "lerna bootstrap",
-    "lerna": "lerna",
+    "bootstrap": "npx lerna bootstrap",
+    "lerna": "npx lerna",
     "build:example": "cd examples && ../packages/actionsflow/cli.js build",
     "run:example": "act -W ./examples/dist/workflows --secret-file ./examples/dist/.secrets -e ./examples/dist/event.json",
     "clean:example": "cd examples && ../packages/actionsflow/cli.js clean",
@@ -38,7 +37,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
-    "@commitlint/config-conventional": "^9.1.1",
+    "@commitlint/config-conventional": "^10.0.0",
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.0",
     "@typescript-eslint/eslint-plugin": "^3.9.0",

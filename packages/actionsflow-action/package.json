@@ -10,23 +10,16 @@
   "homepage": "https://actionsflow.github.io",
   "license": "MIT",
   "main": "dist/src/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/actionsflow/actionsflow.git"
   },
   "scripts": {
     "start": "tsc -w -p tsconfig.production.json",
-    "build": "yarn run ncc build src/index.ts",
+    "build": "npx ncc build src/index.ts",
     "test": "jest --passWithNoTests",
     "lint": "eslint --fix ./src && prettier --write  --loglevel warn ./src",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "clean": "rimraf ./dist",
     "hooks:pre-commit": "npm run clean && npm run build && git add dist"
   },

@@ -85,11 +85,27 @@ export const getWorkflows = async (
     throw new Error("Can not found src options");
   }
   const { src: workflowsPath, context } = options;
-  // get all files with json object
-  const entries = await fg(["**/*.yml", "**/*.yaml"], {
-    cwd: workflowsPath,
-    dot: true,
-  });
+  console.log("workflowsPath", workflowsPath);
+  // check is folder
+  const stat = await fs.lstat(workflowsPath);
+  const isFile = stat.isFile();
+  let entries = [];
+  if (isFile) {
+    // check is exist
+    const isExist = await fs.pathExists(workflowsPath);
+    if (isExist) {
+      entries.push(workflowsPath);
+    }
+  } else {
+    // get all files with json object
+    entries = await fg(["**/*.yml", "**/*.yaml"], {
+      cwd: workflowsPath,
+      dot: true,
+    });
+  }
+
+  console.log("entries", entries);
+
   const workflows: IWorkflow[] = [];
   // Get document, or throw exception on error
   for (let index = 0; index < entries.length; index++) {

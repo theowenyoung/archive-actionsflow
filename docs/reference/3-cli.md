@@ -53,20 +53,13 @@ actionsflow build
 Build a Actionsflow workflows.
 
 Options:
-  --verbose      Turn on verbose output
-                      [boolean] [default: false]
-  --dest         workflows build dest path
-                    [string] [default: "./dist"]
-  --base         workspace base path
-                              [string] [default:
-         "/Users/owenyoung/project/actionsflow"]
-  --workflows    workflows path
-               [string] [default: "./workflows"]
-  -h, --help     Show help             [boolean]
-  -v, --version  Show the version of the
-                 Actionsflow CLI and the
-                 Actionsflow package in the
-                 current project       [boolean]
+  --verbose        Turn on verbose output                                [boolean] [default: false]
+  --dest, -d       workflows build dest path                           [string] [default: "./dist"]
+  --base, -b       workspace base path   [string] [default: "/Users/owenyoung/project/actionsflow"]
+  --workflows, -w  workflows path                                 [string] [default: "./workflows"]
+  -h, --help       Show help                                                              [boolean]
+  -v, --version    Show the version of the Actionsflow CLI and the Actionsflow package in the
+                   current project                                                        [boolean]
 ```
 
 ## clean
@@ -76,20 +69,13 @@ Clean the dist folder and cache
 ```bash
 actionsflow clean
 
-Wipe the local actionsflow environment including
-built assets and cache
+Wipe the local actionsflow environment including built assets and cache
 
 Options:
-  --verbose      Turn on verbose output
-                      [boolean] [default: false]
-  --dest         workflows build dest path
-                    [string] [default: "./dist"]
-  --base         workspace base path
-                              [string] [default:
-         "/Users/owenyoung/project/actionsflow"]
-  -h, --help     Show help             [boolean]
-  -v, --version  Show the version of the
-                 Actionsflow CLI and the
-                 Actionsflow package in the
-                 current project       [boolean]
+  --verbose      Turn on verbose output                                         [boolean] [default: false]
+  --dest, -d     workflows build dest path                                    [string] [default: "./dist"]
+  --base, -b     workspace base path            [string] [default: "/Users/owenyoung/project/actionsflow"]
+  -h, --help     Show help                                                                       [boolean]
+  -v, --version  Show the version of the Actionsflow CLI and the Actionsflow package in the current
+                 project                                                                         [boolean]
 ```

@@ -1,7 +1,7 @@
 import path from "path";
 import resolveCwd from "resolve-cwd";
 import yargs from "yargs";
-import log from "./log";
+import log from "../log";
 // eslint-disable-next-line @typescript-eslint/ban-types
 const handlerP = (fn: Function) => (...args: unknown[]): void => {
   Promise.resolve(fn(...args)).then(
@@ -19,7 +19,7 @@ function buildLocalCommands(cli: yargs.Argv) {
   function resolveLocalCommand(command: string) {
     try {
       const cmdPath = resolveCwd.silent(
-        `actionsflow/dist/src/commands/${command}`
+        path.resolve(__dirname, `../commands/${command}`)
       );
       if (!cmdPath)
         return log.warn(
@@ -67,16 +67,19 @@ function buildLocalCommands(cli: yargs.Argv) {
     describe: `Build a Actionsflow workflows.`,
     builder: (_) =>
       _.option(`dest`, {
+        alias: "d",
         type: `string`,
         describe: `workflows build dest path`,
         default: "./dist",
       })
         .option(`base`, {
+          alias: "b",
           type: `string`,
           describe: `workspace base path`,
           default: process.cwd(),
         })
         .option(`workflows`, {
+          alias: "w",
           type: `string`,
           describe: `workflows path`,
           default: "./workflows",
@@ -93,10 +96,12 @@ function buildLocalCommands(cli: yargs.Argv) {
     describe: `Wipe the local actionsflow environment including built assets and cache`,
     builder: (_) =>
       _.option(`dest`, {
+        alias: "d",
         type: `string`,
         describe: `workflows build dest path`,
         default: "./dist",
       }).option(`base`, {
+        alias: "b",
         type: `string`,
         describe: `workspace base path`,
         default: process.cwd(),
@@ -107,7 +112,7 @@ function buildLocalCommands(cli: yargs.Argv) {
 
 function getVersionInfo() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { version } = require(`../package.json`);
+  const { version } = require(`../../package.json`);
 
   return `Actionsflow CLI version: ${version}`;
 }

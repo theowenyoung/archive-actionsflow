@@ -12,9 +12,8 @@
       "message": "chore(release): publish"
     }
   },
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "registry": "https://registry.npmjs.org/",
-  "useWorkspaces": true,
   "ignoreChanges": [
     "CHANGELOG.md",
     "*.md",

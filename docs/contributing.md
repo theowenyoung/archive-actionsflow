@@ -17,7 +17,7 @@ When working on the Actionsflow documentation, you can choose between two major 
 Some tips:
 
 - if you need use link the internal docs at Actionsflow, you should always use `/docs/about.md` format to link the other doc, then the doc site will be built as expected
-- we use [remark lint](https://github.com/remarkjs/remark-lint) as our markdown document lint, the config is [here](https://github.com/actionsflow/actionsflow/blob/master/.remarkrc.js), run `yarn lint` will checking the document format.
+- we use [remark lint](https://github.com/remarkjs/remark-lint) as our markdown document lint, the config is [here](https://github.com/actionsflow/actionsflow/blob/master/.remarkrc.js), run `npm run lint` will checking the document format.
 
 # Code Contributions
 
@@ -51,28 +51,22 @@ The most important directories:
    cd actionsflow
    ```
 
-1. Install all dependencies of all modules:
+1. Install all dependencies of all modules & Link them together
 
    ```bash
-   yarn
-   ```
-
-1. Link them together
-
-   ```bash
-   yarn bootstrap
+   npm run bootstrap
    ```
 
 1. start and watch codes changes:
 
    ```bash
-   yarn start
+   npm run start
    ```
 
 ### Test
 
 ```bash
-yarn test
+npm run test
 
 ```
 
@@ -85,34 +79,40 @@ JSON_SECRETS='{"GITHUB_TOKEN": "test","IFTTT_KEY":"<use your ifttt key replace>"
 JSON_GITHUB='{"event":{"action":"test"}}'
 ```
 
-build workflows:
+build all `examples/workflows` workflows:
 
 ```bash
-yarn build:example
+npm run build:example
+```
+
+or you can build specific workflow file:
+
+```bash
+npm run build:example -- -w ./workflows/rss2ifttt.yml
 ```
 
 run `act` for run workflows local, you should install [act](https://github.com/nektos/act) first.
 
 ```bash
-yarn run:example
+npm run run:example
 ```
 
 clean build files:
 
 ```bash
-yarn clean:example
+npm run clean:example
 ```
 
 ## Development Cycle
 
-While iterating on Actionsflow modules code, you can run `yarn start`. It will then
+While iterating on Actionsflow modules code, you can run `npm run start`. It will then
 automatically build your code, rebuild on every change you make.
 
-1.  Start Actionsflow in development mode: `yarn start`
+1.  Start Actionsflow in development mode: `npm run start`
 1.  hack, hack, hack
 1.  Create tests
-1.  Run all tests, `yarn test`
-1.  Commit code and create pull request(you can use `yarn cm` to commit)
+1.  Run all tests, `npm run test`
+1.  Commit code and create pull request(you can use `npm run cm` to commit)
 
 ## Create Trigger
 
