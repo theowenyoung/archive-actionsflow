@@ -31,6 +31,7 @@
     "act:example": "lerna run act --scope actionsflow-workflow-example",
     "clean:example": "lerna run clean --scope actionsflow-workflow-example",
     "actionsflow": "./packages/actionsflow/cli.js",
+    "postinstall": "npm run bootstrap",
     "hooks:uninstall": "node node_modules/husky/husky.js uninstall",
     "hooks:install": "node node_modules/husky/husky.js install",
     "version": "prettier --write \"**/CHANGELOG.md\""

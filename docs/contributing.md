@@ -56,7 +56,7 @@ The most important directories:
 1. Install all dependencies of all modules & Link them together
 
    ```bash
-   npm run bootstrap
+   npm i
    ```
 
 1. start and watch codes changes:
