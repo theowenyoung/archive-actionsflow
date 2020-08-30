@@ -24,9 +24,10 @@ Build Actionsflow workflow files to standard Github actions workflow files
 import { build } from "actionsflow";
 
 function build(options: {
-  base?: string; // base workspace folder, default is process.cwd()
-  workflows?: string; // Actionsflow workflow files path, default valid is 'workflows'
+  cwd?: string; // base root workspace folder, default is process.cwd()
   dest?: string; // dest folder, default value is 'dist', the standard Github actions workflow files will place to `./dist/workflows`
+  include?: string[]; // Include only workflow files with names matching the given glob.
+  exclude?: string[]; // Exclude workflow files with names matching the given glob.
   logLevel?: LogLevelDesc; // Log level, default is "info", you can use one of these values, "trace" | "debug" | "info" | "warn" | "error" | "silent"
 }): Promise<void>;
 ```

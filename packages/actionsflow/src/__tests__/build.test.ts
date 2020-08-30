@@ -10,11 +10,11 @@ test("build workflows", async () => {
   process.env.JSON_GITHUB = "{}";
 
   await build({
-    base: path.resolve(__dirname, "./fixtures"),
+    cwd: path.resolve(__dirname, "./fixtures"),
   });
   // read built file
   const yamlString = await readFile(
-    path.resolve(__dirname, "./fixtures/dist/workflows/rss.yaml"),
+    path.resolve(__dirname, "./fixtures/dist/workflows/rss.yml"),
     "utf8"
   );
   const newWorkflow = yaml.safeLoad(yamlString);
@@ -42,11 +42,11 @@ test("build webhook workflows", async () => {
   }`;
 
   await build({
-    base: path.resolve(__dirname, "./fixtures"),
+    cwd: path.resolve(__dirname, "./fixtures"),
   });
   // read built file
   const yamlString = await readFile(
-    path.resolve(__dirname, "./fixtures/dist/workflows/webhook.yaml"),
+    path.resolve(__dirname, "./fixtures/dist/workflows/webhook.yml"),
     "utf8"
   );
   const newWorkflow = yaml.safeLoad(yamlString);

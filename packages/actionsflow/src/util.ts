@@ -1,5 +1,5 @@
 import has from "lodash.has";
-// import resolveCwd from "resolve-cwd";
+import resolveCwd from "resolve-cwd";
 
 import {
   AnyObject,
@@ -128,7 +128,7 @@ export const template = function (
 export const getThirdPartyTrigger = (
   triggerName: string
 ): ITriggerClassTypeConstructable | undefined => {
-  const triggerPath = require.resolve(`@actionsflow/trigger-${triggerName}`);
+  const triggerPath = resolveCwd.silent(`@actionsflow/trigger-${triggerName}`);
   if (triggerPath) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const Trigger = require(triggerPath);

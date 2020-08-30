@@ -12,8 +12,7 @@ import yaml from "js-yaml";
 
 test("get workflows", async () => {
   const workflows = await getWorkflows({
-    src: path.resolve(__dirname, "./fixtures/workflows"),
-    base: path.resolve(__dirname, "./fixtures"),
+    cwd: path.resolve(__dirname, "./fixtures"),
     context: {
       github: {
         event: {},
@@ -141,7 +140,7 @@ test("build single workflow", async () => {
     ],
   });
   const workflowString = await readFile(
-    path.resolve(".cache/workflows/rss2.yaml"),
+    path.resolve(".cache/workflows/rss2.yml"),
     "utf8"
   );
   const newWorkflow = yaml.safeLoad(workflowString);

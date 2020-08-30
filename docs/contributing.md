@@ -35,6 +35,8 @@ The most important directories:
 - `/packages/actionsflow-action` - Github actions for Actionsflow
 - `/packages/actionsflow-interface` - Common interfaces
 - `/examples` - workflows examples
+- `/examples/actionsflow-workflow-example` - example workflow
+- `/examples/actionsflow-trigger-example` = example trigger
 
 ## Setup
 
@@ -72,14 +74,10 @@ npm run test
 
 # Run example workflows
 
-Before you run example, you should create `.env` at `/examples` folder, which should have `JSON_SECRETS`,`JSON_GITHUB` environment variables.
+build all `examples/actionsflow-workflow-example` workflows:
 
-```ini
-JSON_SECRETS='{"GITHUB_TOKEN": "test","IFTTT_KEY":"<use your ifttt key replace>","TELEGRAM_BOT_TOKEN":"<use your telegram token replace>"}'
-JSON_GITHUB='{"event":{"action":"test"}}'
-```
-
-build all `examples/workflows` workflows:
+> You should create `.env` file at the example directory with follow content:
+> `JSON_SECRETS='{"IFTTT_KEY":"place your ifttt webhook key","TELEGRAM_BOT_TOKEN":"place your telegram bot token"}'`
 
 ```bash
 npm run build:example
@@ -88,13 +86,13 @@ npm run build:example
 or you can build specific workflow file:
 
 ```bash
-npm run build:example -- -w ./workflows/rss2ifttt.yml
+npm run build:example -- -- -w ./workflows/rss.yml
 ```
 
 run `act` for run workflows local, you should install [act](https://github.com/nektos/act) first.
 
 ```bash
-npm run run:example
+npm run act:example
 ```
 
 clean build files:

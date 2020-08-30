@@ -1,0 +1,12 @@
+on:
+  twitter:
+    screen_name: test
+jobs:
+  print:
+    name: Print
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Outputs
+        env:
+        run: |
+          echo hello

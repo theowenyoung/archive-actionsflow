@@ -7,6 +7,7 @@ import fs from "fs-extra";
 import log from "./log";
 import { template, getThirdPartyTrigger } from "./util";
 import * as Triggers from "./triggers";
+import multimatch from "multimatch";
 import {
   ITriggerContext,
   ITrigger,
@@ -82,17 +83,18 @@ const getSupportedTriggers = (
   return triggers;
 };
 interface IGetWorkflowsOptions {
-  src: string;
   context: ITriggerContext;
-  base: string;
+  cwd: string;
+  include?: string[];
+  exclude?: string[];
 }
 export const getWorkflows = async (
   options: IGetWorkflowsOptions
 ): Promise<IWorkflow[]> => {
-  if (!options.src) {
-    throw new Error("Can not found src options");
-  }
-  const { src: workflowsPath, context, base } = options;
+  const { context, cwd } = options;
+  const include = options.include as string[];
+  const exclude = options.exclude as string[];
+  const workflowsPath = path.resolve(cwd, "workflows");
   // check is folder
   const stat = await fs.lstat(workflowsPath);
   const isFile = stat.isFile();
@@ -103,7 +105,7 @@ export const getWorkflows = async (
     if (isExist) {
       // relative path
       const relativePath = path.relative(
-        path.resolve(base, "workflows"),
+        path.resolve(cwd, "workflows"),
         workflowsPath
       );
       entries.push({
@@ -113,10 +115,23 @@ export const getWorkflows = async (
     }
   } else {
     // get all files with json object
-    const relativeEntries = await fg(["**/*.yml", "**/*.yaml"], {
+    let relativeEntries = await fg(["**/*.yml", "**/*.yaml"], {
       cwd: workflowsPath,
       dot: true,
     });
+    const patterns: string[] = arrify(include).concat(negate(exclude));
+
+    // filter
+    if (patterns.length) {
+      log.debug("workflows filter", patterns);
+
+      if (!include.length) {
+        // only excludes needs to select all items first
+        // globstar is for matching scoped packages
+        patterns.unshift("**");
+      }
+      relativeEntries = multimatch(relativeEntries, patterns);
+    }
     entries = relativeEntries.map((relativePath) => {
       return {
         relativePath,
@@ -129,7 +144,6 @@ export const getWorkflows = async (
   // Get document, or throw exception on error
   for (let index = 0; index < entries.length; index++) {
     const filePath = entries[index].path;
-    log.debug("yaml file path:", filePath);
     try {
       const doc = yaml.safeLoad(await fs.readFile(filePath, "utf8"));
       if (doc) {
@@ -235,7 +249,7 @@ export const buildSingleWorkflow = async (
   const destWorkflowPath = path.resolve(
     dest,
     "workflows",
-    `${relativePathWithoutExt}.yaml`
+    `${relativePathWithoutExt}.yml`
   );
   const workflowData = workflow.data;
   // handle context expresstion
@@ -340,6 +354,7 @@ export const buildSingleWorkflow = async (
   newWorkflowData.jobs = finalJobs;
 
   const workflowContent = yaml.safeDump(newWorkflowData);
+  log.debug("generate workflow file: ", destWorkflowPath);
   await fs.outputFile(destWorkflowPath, workflowContent);
   return {
     workflow: newWorkflowData,
@@ -385,3 +400,19 @@ export const buildNativeSecrets = async (options: {
     secrets: secrets,
   };
 };
+
+function arrify(thing: string | string[]): string[] {
+  if (!thing) {
+    return [];
+  }
+
+  if (!Array.isArray(thing)) {
+    return [thing];
+  }
+
+  return thing;
+}
+
+function negate(patterns: string | string[]): string[] {
+  return arrify(patterns).map((pattern) => `!${pattern}`);
+}

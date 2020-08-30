@@ -19,19 +19,22 @@ import {
 } from "actionsflow-interface";
 
 interface IBuildOptions {
-  workflows?: string;
   dest?: string;
-  base?: string;
+  cwd?: string;
+  include?: string[];
+  exclude?: string[];
   logLevel?: LogLevelDesc;
 }
 const build = async (options: IBuildOptions = {}): Promise<void> => {
   options = {
-    workflows: "./workflows",
     dest: "./dist",
-    base: process.cwd(),
+    cwd: process.cwd(),
+    include: [],
+    exclude: [],
     logLevel: "info",
     ...options,
   };
+  // log.debug("build: options", options);
   if (options.logLevel) {
     log.setLevel(options.logLevel);
   }
@@ -50,9 +53,8 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   } catch (error) {
     log.warn("parse enviroment variable JSON_GITHUB error:", error);
   }
-  const { base, workflows: workflowPath, dest } = options;
-  const workflowsPath = path.resolve(base as string, workflowPath as string);
-  const destPath = path.resolve(base as string, dest as string);
+  const { cwd, dest, include, exclude } = options;
+  const destPath = path.resolve(cwd as string, dest as string);
   log.debug("destPath:", destPath);
 
   let secretObj: Record<string, string> = {};
@@ -85,9 +87,10 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   const isWebhookEvent = githubObj.event_name === "repository_dispatch";
   log.debug("isWebhookEvent: ", isWebhookEvent);
   const workflows = await getWorkflows({
-    src: workflowsPath,
     context,
-    base: base as string,
+    cwd: cwd as string,
+    include,
+    exclude,
   });
   // create workflow dest dir
   await fs.ensureDir(path.resolve(destPath, "workflows"));
@@ -161,7 +164,6 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         },
         context,
       });
-      log.debug("triggerResult", JSON.stringify(triggerResult, null, 2));
 
       if (triggerResult.items.length > 0) {
         // check is need to run workflowTodos

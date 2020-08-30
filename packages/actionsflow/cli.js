@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require(`./dist/src/bin/actionsflow.js`);
+require(`./dist/src/bin/index.js`);

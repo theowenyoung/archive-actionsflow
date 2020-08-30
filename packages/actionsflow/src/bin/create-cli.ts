@@ -6,7 +6,10 @@ import log from "../log";
 const handlerP = (fn: Function) => (...args: unknown[]): void => {
   Promise.resolve(fn(...args)).then(
     () => process.exit(0),
-    (err) => log.warn(err)
+    (err) => {
+      log.error(err);
+      process.exit(1);
+    }
   );
 };
 function buildLocalCommands(cli: yargs.Argv) {
@@ -72,17 +75,22 @@ function buildLocalCommands(cli: yargs.Argv) {
         describe: `workflows build dest path`,
         default: "./dist",
       })
-        .option(`base`, {
-          alias: "b",
+        .option(`cwd`, {
           type: `string`,
-          describe: `workspace base path`,
+          describe: `current workspace path`,
           default: process.cwd(),
         })
-        .option(`workflows`, {
-          alias: "w",
-          type: `string`,
-          describe: `workflows path`,
-          default: "./workflows",
+        .option(`include`, {
+          alias: "i",
+          type: "array",
+          describe: `workflow files that should include, you can use <glob> patterns`,
+          default: [],
+        })
+        .option(`exclude`, {
+          alias: "e",
+          type: "array",
+          describe: `workflow files that should exclude, you can use <glob> patterns`,
+          default: [],
         }),
     handler: handlerP(
       getCommandHandler(`build`, (args, cmd) => {
