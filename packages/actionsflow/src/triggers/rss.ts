@@ -9,7 +9,6 @@ import {
 import log from "../log";
 
 export default class Rss implements ITriggerClassType {
-  name = "rss";
   options: AnyObject = {};
   helpers: IHelpers;
   every = 5;

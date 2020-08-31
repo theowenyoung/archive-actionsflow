@@ -1,0 +1,15 @@
+on:
+  example-for-js:
+    max_items_count: 5
+jobs:
+  print:
+    name: Print
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Outputs
+        env:
+          title: ${{ on["example-for-js"].outputs.title }}
+          id: ${{ on["example-for-js"].outputs.id }}
+        run: |
+          echo "title: $title"
+          echo "id: $id"

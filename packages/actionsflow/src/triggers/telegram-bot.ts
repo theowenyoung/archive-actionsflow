@@ -9,7 +9,6 @@ import {
 } from "actionsflow-interface";
 
 export default class TelegramBot implements ITriggerClassType {
-  name = "telegram_bot";
   options: AnyObject = {};
   helpers: IHelpers;
   every = 5;

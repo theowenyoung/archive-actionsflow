@@ -94,6 +94,9 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     include,
     exclude,
   });
+
+  console.log("workflows", workflows);
+
   // create workflow dest dir
   await fs.ensureDir(path.resolve(destPath, "workflows"));
   let needHandledWorkflows = workflows.filter(

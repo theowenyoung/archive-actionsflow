@@ -7,7 +7,6 @@ import {
 } from "actionsflow-interface";
 
 export default class Webhook implements ITriggerClassType {
-  name = "webhook";
   context: ITriggerContext;
   constructor({ context }: ITriggerContructorParams) {
     this.context = context;

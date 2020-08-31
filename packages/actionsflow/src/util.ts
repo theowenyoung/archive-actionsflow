@@ -5,6 +5,7 @@ import {
   AnyObject,
   ITriggerClassTypeConstructable,
 } from "actionsflow-interface";
+import log from "./log";
 interface IOptions {
   interpolate?: RegExp;
   includeVariableRegex?: RegExp;
@@ -128,7 +129,10 @@ export const template = function (
 export const getThirdPartyTrigger = (
   triggerName: string
 ): ITriggerClassTypeConstructable | undefined => {
-  const triggerPath = resolveCwd.silent(`@actionsflow/trigger-${triggerName}`);
+  const thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
+  log.debug("third party trigger", thirdPartyTrigger);
+  const triggerPath = resolveCwd.silent(thirdPartyTrigger);
+  log.debug("third party trigger path", triggerPath);
   if (triggerPath) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const Trigger = require(triggerPath);

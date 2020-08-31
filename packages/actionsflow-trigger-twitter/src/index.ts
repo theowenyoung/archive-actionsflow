@@ -7,7 +7,6 @@ import {
 } from "actionsflow-interface";
 
 export default class Example implements ITriggerClassType {
-  name = "example";
   options: AnyObject = {};
   helpers: IHelpers;
   every = 5;

@@ -23,6 +23,7 @@ const getSupportedTriggers = (
   if (doc && doc.on) {
     const onObj = doc.on as Record<string, Record<string, unknown>>;
     const keys = Object.keys(onObj);
+
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index] as string;
       // check thirdparty support
@@ -32,6 +33,7 @@ const getSupportedTriggers = (
       } else if (getThirdPartyTrigger(key)) {
         isTriggerSupported = true;
       }
+      log.debug("is trigger support", isTriggerSupported);
       if (isTriggerSupported) {
         // is active
         if (!(onObj[key] && onObj[key].active === false)) {
@@ -108,7 +110,8 @@ export const getWorkflows = async (
 
     // filter
     if (patterns.length) {
-      log.debug("workflows filter", patterns);
+      log.debug("workflows detect: ", relativeEntries);
+      log.debug("workflows filter pattern: ", patterns);
 
       if (!include.length) {
         // only excludes needs to select all items first
@@ -116,6 +119,7 @@ export const getWorkflows = async (
         patterns.unshift("**");
       }
       relativeEntries = multimatch(relativeEntries, patterns);
+      log.debug("workflows filter results: ", relativeEntries);
     }
     entries = relativeEntries.map((relativePath) => {
       return {
@@ -129,21 +133,24 @@ export const getWorkflows = async (
   // Get document, or throw exception on error
   for (let index = 0; index < entries.length; index++) {
     const filePath = entries[index].path;
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    let doc: object | string | undefined;
     try {
-      const doc = yaml.safeLoad(await fs.readFile(filePath, "utf8"));
-      if (doc) {
-        const triggers = getSupportedTriggers(doc as AnyObject, context);
-        workflows.push({
-          path: filePath,
-          relativePath: entries[index].relativePath,
-          data: doc as AnyObject,
-          rawTriggers: triggers,
-        });
-      } else {
-        log.debug("skip empty file", filePath);
-      }
+      doc = yaml.safeLoad(await fs.readFile(filePath, "utf8"));
     } catch (e) {
       log.error("load yaml file error:", filePath, e);
+      throw e;
+    }
+    if (doc) {
+      const triggers = getSupportedTriggers(doc as AnyObject, context);
+      workflows.push({
+        path: filePath,
+        relativePath: entries[index].relativePath,
+        data: doc as AnyObject,
+        rawTriggers: triggers,
+      });
+    } else {
+      log.debug("skip empty file", filePath);
     }
   }
 

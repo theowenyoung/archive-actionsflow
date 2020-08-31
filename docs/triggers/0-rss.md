@@ -14,7 +14,7 @@ RSS trigger is triggered when new items are detected. This trigger supports one(
 on:
   rss:
     event: new_item
-    URL: https://hnrss.org/newest?points=300
+    url: https://hnrss.org/newest?points=300
 ```
 
 Event `new_item` watched a single feed URL.
@@ -66,7 +66,7 @@ jobs:
 on:
   rss:
     event: new_item_in_multiple_feeds
-    URLs:
+    urls:
       - https://hnrss.org/newest?points=300
       - https://www.buzzfeed.com/world.xml
     max_items_count: 15
@@ -77,7 +77,7 @@ Event `new_item_in_multiple_feeds` can watch multiple feeds, any of these feeds'
 ### Params
 
 - `event`, required, the value must be `new_item_in_multiple_feeds`
-- `URLs`, required, a URL array, the RSS feed URLs
+- `urls`, required, a URL array, the RSS feed URLs
 - `every`, optional, RSS fetch interval, the unit is minute, default value is `5`
 - `skip_first`, optional, if RSS fetch should skip the first items, default value is `false`
 - `max_items_count`, optional, the feed items max length, default value is `undefined`, it will trigger all feed items

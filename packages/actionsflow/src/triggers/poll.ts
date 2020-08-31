@@ -11,7 +11,6 @@ import {
 } from "actionsflow-interface";
 
 export default class Poll implements ITriggerClassType {
-  name = "poll";
   options: AnyObject = {};
   helpers: IHelpers;
   every = 5;
