@@ -28,7 +28,6 @@ export interface ITriggerRunFunctionResult {
 }
 
 export interface ITriggerClassType {
-  name: string;
   every?: number;
   shouldDeduplicate?: boolean;
   getItemKey?: (item: AnyObject) => string;
