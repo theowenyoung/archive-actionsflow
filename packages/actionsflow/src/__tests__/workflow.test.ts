@@ -132,7 +132,6 @@ test("build single workflow", async () => {
     },
     triggers: [
       {
-        id: `1-trigger-test-rss`,
         name: `rss`,
         options: feedOptions,
         payload: feedPayload,

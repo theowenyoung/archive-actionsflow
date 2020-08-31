@@ -37,13 +37,11 @@ export interface ITriggerClassTypeConstructable {
   new (params: ITriggerContructorParams): ITriggerClassType;
 }
 export interface ITrigger {
-  id?: string;
   name: string;
   options: AnyObject;
   payload?: AnyObject;
 }
 export interface ITriggerResult {
-  id: string;
   items: AnyObject[];
   helpers?: IHelpers;
 }
