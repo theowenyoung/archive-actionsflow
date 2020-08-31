@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.6](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.0.5...@actionsflow/trigger-twitter@0.0.6) (2020-08-31)
+
+### Features
+
+- no ip option ([d0075ee](https://github.com/actionsflow/actionsflow/commit/d0075ee4d63c58b5e6b522384915143cdb4f0853))
+
 ## [0.0.5](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.0.4...@actionsflow/trigger-twitter@0.0.5) (2020-08-31)
 
 ### Features

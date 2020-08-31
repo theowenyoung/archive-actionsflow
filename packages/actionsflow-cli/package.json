@@ -1,6 +1,6 @@
 {
   "name": "actionsflow-cli",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Actionsflow Command line ",
   "keywords": [
     "actionsflow",
@@ -39,7 +39,7 @@
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
-    "actionsflow": "^0.0.16"
+    "actionsflow": "^0.0.17"
   },
   "gitHead": "7b804e5a8726b189bcb4c2ea8d784a682b73b8b7"
 }

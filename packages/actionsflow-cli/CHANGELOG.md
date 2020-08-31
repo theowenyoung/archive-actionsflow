@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.12](https://github.com/actionsflow/actionsflow/compare/actionsflow-cli@0.0.11...actionsflow-cli@0.0.12) (2020-08-31)
+
+### Features
+
+- no ip option ([d0075ee](https://github.com/actionsflow/actionsflow/commit/d0075ee4d63c58b5e6b522384915143cdb4f0853))
+
 ## [0.0.11](https://github.com/actionsflow/actionsflow/compare/actionsflow-cli@0.0.10...actionsflow-cli@0.0.11) (2020-08-31)
 
 **Note:** Version bump only for package actionsflow-cli

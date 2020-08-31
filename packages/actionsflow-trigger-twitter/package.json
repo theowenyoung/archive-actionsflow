@@ -1,6 +1,6 @@
 {
   "name": "@actionsflow/trigger-twitter",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Actionsflow trigger twitter",
   "keywords": [
     "twitter",
@@ -28,10 +28,10 @@
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
-    "actionsflow-interface": "^0.0.7"
+    "actionsflow-interface": "^0.0.8"
   },
   "devDependencies": {
-    "actionsflow": "^0.0.16"
+    "actionsflow": "^0.0.17"
   },
   "gitHead": "7b804e5a8726b189bcb4c2ea8d784a682b73b8b7"
 }

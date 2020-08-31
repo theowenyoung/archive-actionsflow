@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.8](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.7...actionsflow-interface@0.0.8) (2020-08-31)
+
+### Features
+
+- no ip option ([d0075ee](https://github.com/actionsflow/actionsflow/commit/d0075ee4d63c58b5e6b522384915143cdb4f0853))
+
 ## [0.0.7](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.6...actionsflow-interface@0.0.7) (2020-08-31)
 
 **Note:** Version bump only for package actionsflow-interface
