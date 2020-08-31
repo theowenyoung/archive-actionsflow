@@ -1,6 +1,11 @@
-import Rss from "./rss";
 import Poll from "./poll";
-import Webhook from "./webhook";
+import Rss from "./rss";
 import TelegramBot from "./telegram-bot";
+import Webhook from "./webhook";
 
-export { Rss, Poll, Webhook, TelegramBot };
+export default {
+  poll: Poll,
+  rss: Rss,
+  telegram_bot: TelegramBot,
+  webhook: Webhook,
+};

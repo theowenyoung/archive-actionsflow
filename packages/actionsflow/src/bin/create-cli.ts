@@ -91,6 +91,12 @@ function buildLocalCommands(cli: yargs.Argv) {
           type: "array",
           describe: `workflow files that should exclude, you can use <glob> patterns`,
           default: [],
+        })
+        .option("force", {
+          alias: "f",
+          type: "boolean",
+          describe:
+            "force update all triggers, it will ignore the update interval and cached deduplicate key",
         }),
     handler: handlerP(
       getCommandHandler(`build`, (args, cmd) => {

@@ -5,7 +5,7 @@ test("run trigger", async () => {
       name: "rss",
       options: {
         url: "https://hnrss.org/newest?points=300",
-        force_update: true,
+        force: true,
       },
       workflowRelativePath: "rss.yml",
     },

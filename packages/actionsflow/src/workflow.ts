@@ -2,18 +2,16 @@ import path from "path";
 import fg from "fast-glob";
 import yaml from "js-yaml";
 import mapObj from "map-obj";
-import { createContentDigest, getCache } from "./helpers";
 import fs from "fs-extra";
 import log from "./log";
 import { template, getThirdPartyTrigger } from "./util";
-import * as Triggers from "./triggers";
+import Triggers from "./triggers";
 import multimatch from "multimatch";
 import {
   ITriggerContext,
   ITrigger,
   IWorkflow,
   AnyObject,
-  ITriggerClassTypeConstructable,
 } from "actionsflow-interface";
 
 const getSupportedTriggers = (
@@ -21,19 +19,6 @@ const getSupportedTriggers = (
   context: ITriggerContext
 ): ITrigger[] => {
   const supportTriggerKeys = Object.keys(Triggers);
-  const AllTriggers = Triggers as Record<
-    string,
-    ITriggerClassTypeConstructable
-  >;
-  const supportTriggerIds = supportTriggerKeys.map((triggerKey) => {
-    const Trigger = AllTriggers[triggerKey];
-    const triggerInstance = new Trigger({
-      options: {},
-      context: context,
-      helpers: { createContentDigest, cache: getCache(`trigger-temp`) },
-    });
-    return triggerInstance.name;
-  });
   const triggers = [];
   if (doc && doc.on) {
     const onObj = doc.on as Record<string, Record<string, unknown>>;
@@ -42,7 +27,7 @@ const getSupportedTriggers = (
       const key = keys[index] as string;
       // check thirdparty support
       let isTriggerSupported = false;
-      if (supportTriggerIds.includes(key)) {
+      if (supportTriggerKeys.includes(key)) {
         isTriggerSupported = true;
       } else if (getThirdPartyTrigger(key)) {
         isTriggerSupported = true;

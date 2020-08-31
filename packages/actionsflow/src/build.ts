@@ -23,6 +23,7 @@ interface IBuildOptions {
   cwd?: string;
   include?: string[];
   exclude?: string[];
+  force?: boolean;
   logLevel?: LogLevelDesc;
 }
 const build = async (options: IBuildOptions = {}): Promise<void> => {
@@ -32,6 +33,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     include: [],
     exclude: [],
     logLevel: "info",
+    force: false,
     ...options,
   };
   // log.debug("build: options", options);
@@ -53,7 +55,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   } catch (error) {
     log.warn("parse enviroment variable JSON_GITHUB error:", error);
   }
-  const { cwd, dest, include, exclude } = options;
+  const { cwd, dest, include, exclude, force } = options;
   const destPath = path.resolve(cwd as string, dest as string);
   log.debug("destPath:", destPath);
 
@@ -153,6 +155,13 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     // manual run trigger
     for (let j = 0; j < rawTriggers.length; j++) {
       const rawTrigger = rawTriggers[j];
+      if (force) {
+        if (rawTrigger.options) {
+          rawTrigger.options.force = true;
+        } else {
+          rawTrigger.options = { force: true };
+        }
+      }
       let triggerResult: ITriggerResult = {
         id: `default_id_${j}`,
         items: [],

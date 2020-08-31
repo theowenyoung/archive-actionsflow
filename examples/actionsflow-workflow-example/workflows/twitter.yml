@@ -8,5 +8,6 @@ jobs:
     steps:
       - name: Print Outputs
         env:
+          text: ${{ on.twitter.outputs.text }}
         run: |
-          echo hello
+          echo text: $text

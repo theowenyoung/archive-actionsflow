@@ -28,9 +28,8 @@ export default class Example implements ITriggerClassType {
   async run(): Promise<ITriggerRunFunctionResult> {
     const items: AnyObject[] = [
       {
-        id: "id",
-        key: "value",
-        test: "testValue",
+        id: "xxxxxxx1111",
+        text: "hello world text",
       },
     ];
     return {

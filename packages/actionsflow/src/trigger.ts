@@ -1,8 +1,7 @@
 import { getThirdPartyTrigger } from "./util";
-
-import * as Triggers from "./triggers";
 import { createContentDigest, getCache } from "./helpers";
 import log from "./log";
+import Triggers from "./triggers";
 import {
   ITriggerContext,
   ITriggerResult,
@@ -18,6 +17,8 @@ interface ITriggerOptions {
   };
   context: ITriggerContext;
 }
+
+const allTriggers = Triggers as Record<string, ITriggerClassTypeConstructable>;
 
 export const run = async ({
   trigger,
@@ -35,7 +36,7 @@ export const run = async ({
       path: trigger.workflowRelativePath,
     });
   }
-  if (trigger && trigger.options && trigger.options.force_update) {
+  if (trigger && trigger.options && trigger.options.force) {
     forceUpdate = true;
   }
   const finalResult: ITriggerResult = {
@@ -43,21 +44,11 @@ export const run = async ({
     items: [],
   };
 
-  const AllTriggers = Triggers as Record<
-    string,
-    ITriggerClassTypeConstructable
-  >;
-  const triggersKeys = Object.keys(AllTriggers);
-  const TriggerMap: Record<string, ITriggerClassTypeConstructable> = {};
-  triggersKeys.forEach((triggerKey) => {
-    const triggerInstance = new AllTriggers[triggerKey]({
-      options: {},
-      context: context,
-      helpers: { createContentDigest, cache: getCache(`__trigger-temp`) },
-    });
-    TriggerMap[triggerInstance.name] = AllTriggers[triggerKey];
-  });
-  let Trigger = TriggerMap[trigger.name];
+  let Trigger: ITriggerClassTypeConstructable | undefined;
+
+  if (allTriggers[trigger.name]) {
+    Trigger = allTriggers[trigger.name];
+  }
 
   if (!Trigger) {
     Trigger = getThirdPartyTrigger(
