@@ -7,8 +7,6 @@ const handlerP = (fn: Function) => (...args: unknown[]): void => {
   Promise.resolve(fn(...args)).then(
     () => process.exit(0),
     (err) => {
-      console.log("xxxxxx");
-
       log.error(err);
       process.exit(1);
     }

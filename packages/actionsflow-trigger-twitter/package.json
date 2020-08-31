@@ -11,13 +11,6 @@
   "homepage": "https://github.com/actionsflow/actionsflow#readme",
   "license": "MIT",
   "main": "dist/src/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/actionsflow/actionsflow.git"
@@ -36,6 +29,9 @@
   },
   "dependencies": {
     "actionsflow-interface": "^0.0.6"
+  },
+  "devDependencies": {
+    "actionsflow": "^0.0.15"
   },
   "gitHead": "19d0ab5fbbe4a5d7ef557544070b98e4849edb1c"
 }

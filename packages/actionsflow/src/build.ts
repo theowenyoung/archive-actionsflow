@@ -94,9 +94,6 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     include,
     exclude,
   });
-
-  console.log("workflows", workflows);
-
   // create workflow dest dir
   await fs.ensureDir(path.resolve(destPath, "workflows"));
   let needHandledWorkflows = workflows.filter(
@@ -140,7 +137,6 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   );
 
   const workflowTodos = [];
-  let triggerIndex = 0;
   for (let i = 0; i < needHandledWorkflows.length; i++) {
     const workflow = needHandledWorkflows[i];
     const rawTriggers = workflow.rawTriggers || [];
@@ -166,7 +162,6 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         }
       }
       let triggerResult: ITriggerResult = {
-        id: `default_id_${j}`,
         items: [],
       };
       triggerResult = await runTrigger({
@@ -182,12 +177,10 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         for (let index = 0; index < triggerResult.items.length; index++) {
           const element = triggerResult.items[index];
           workflowTodo.triggers.push({
-            id: `${triggerIndex}-${triggerResult.id}-${rawTrigger.name}`,
             name: rawTrigger.name,
             options: rawTrigger.options,
             payload: element,
           });
-          triggerIndex++;
         }
       }
     }

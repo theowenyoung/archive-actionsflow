@@ -7,6 +7,7 @@ import {
   ITriggerResult,
   AnyObject,
   ITriggerClassTypeConstructable,
+  ITriggerContructorParams,
 } from "actionsflow-interface";
 const MAX_CACHE_KEYS_COUNT = 5000;
 interface ITriggerOptions {
@@ -19,28 +20,39 @@ interface ITriggerOptions {
 }
 
 const allTriggers = Triggers as Record<string, ITriggerClassTypeConstructable>;
+export const getTriggerOptions = ({
+  trigger,
+  context,
+}: ITriggerOptions): ITriggerContructorParams => {
+  // get unique id
+  const triggerId = createContentDigest({
+    name: trigger.name,
+    path: trigger.workflowRelativePath,
+  });
 
+  const options = trigger.options || {};
+  const triggerHelpers = {
+    createContentDigest,
+    cache: getCache(`trigger-${triggerId}`),
+  };
+  const triggerOptions = {
+    helpers: triggerHelpers,
+    options: options,
+    context: context,
+  };
+  return triggerOptions;
+};
 export const run = async ({
   trigger,
   context,
 }: ITriggerOptions): Promise<ITriggerResult> => {
   log.debug("trigger:", trigger);
-  // get unique id
-  let triggerId = "";
+
   let forceUpdate = false;
-  if (trigger && trigger.options && trigger.options.id) {
-    triggerId = trigger.options.id as string;
-  } else {
-    triggerId = createContentDigest({
-      name: trigger.name,
-      path: trigger.workflowRelativePath,
-    });
-  }
   if (trigger && trigger.options && trigger.options.force) {
     forceUpdate = true;
   }
   const finalResult: ITriggerResult = {
-    id: triggerId,
     items: [],
   };
 
@@ -57,17 +69,9 @@ export const run = async ({
   }
 
   if (Trigger) {
-    const triggerHelpers = {
-      createContentDigest,
-      cache: getCache(`trigger-${triggerId}`),
-    };
-    const triggerOptions = {
-      helpers: triggerHelpers,
-      options: trigger.options || {},
-      context: context,
-    };
-    finalResult.helpers = triggerHelpers;
-
+    const triggerOptions = getTriggerOptions({ trigger, context });
+    const triggerHelpers = triggerOptions.helpers;
+    finalResult.helpers = triggerOptions.helpers;
     const triggerInstance = new Trigger(triggerOptions);
 
     const triggerResult = await triggerInstance.run();

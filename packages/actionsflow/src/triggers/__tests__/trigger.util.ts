@@ -1,5 +1,17 @@
 import { ITriggerContructorParams, AnyObject } from "actionsflow-interface";
-import { getCache, createContentDigest } from "../../helpers";
+import { getTriggerOptions } from "../../trigger";
+export const CONTEXT = {
+  github: {
+    event_name: "repository_dispatch",
+    event: {
+      action: "test",
+      client_payload: {
+        test: 1,
+      },
+    },
+  },
+  secrets: {},
+};
 export const getTriggerConstructorParams = ({
   options,
   name,
@@ -7,24 +19,12 @@ export const getTriggerConstructorParams = ({
   options: AnyObject;
   name: string;
 }): ITriggerContructorParams => {
-  const triggerParams: ITriggerContructorParams = {
-    helpers: {
-      cache: getCache(`test-trigger-cache-${name}`),
-      createContentDigest,
+  return getTriggerOptions({
+    trigger: {
+      name,
+      options,
+      workflowRelativePath: "test.yml",
     },
-    context: {
-      github: {
-        event_name: "repository_dispatch",
-        event: {
-          action: "test",
-          client_payload: {
-            test: 1,
-          },
-        },
-      },
-      secrets: {},
-    },
-    options: options,
-  };
-  return triggerParams;
+    context: CONTEXT,
+  });
 };
