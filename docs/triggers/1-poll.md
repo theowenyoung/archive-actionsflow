@@ -70,15 +70,20 @@ An outputs example:
 You can use the outputs like this:
 
 ```yaml
+on:
+  poll:
+    url: https://jsonplaceholder.typicode.com/posts
+    max_items_count: 5
 jobs:
-  ifttt:
-    name: Make a Request to IFTTT
+  print:
+    name: Print
     runs-on: ubuntu-latest
     steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: test
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{ on.poll.outputs.id }}
-          value2: ${{ toJson(on.poll.outputs) }}
+      - name: Print Outputs
+        env:
+          title: ${{ on.poll.outputs.title }}
+          body: ${{ on.poll.outputs.body }}
+        run: |
+          echo "title: $title"
+          echo "body: $body"
 ```

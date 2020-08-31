@@ -118,16 +118,22 @@ An outputs example:
 You can use the outputs like this:
 
 ```yaml
+on:
+  webhook:
+    active: false
+    event: test
 jobs:
-  ifttt:
-    name: Make a Request to IFTTT
+  print:
+    name: Print
     runs-on: ubuntu-latest
     steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: test
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{ on.webhook.outputs.event }}
-          value2: ${{ toJson(on.webhook.outputs.payload) }}
-          value3: ${{ toJson(on.webhook.outputs.body) }}
+      - name: Print Outputs
+        env:
+          event: ${{ on.webhook.outputs.event }}
+          payload: ${{ toJson(on.webhook.outputs.payload) }}
+          body: ${{ toJson(on.webhook.outputs.body) }}
+        run: |
+          echo event: $event
+          echo payload $payload
+          echo body: $body
 ```

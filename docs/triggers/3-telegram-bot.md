@@ -64,15 +64,17 @@ An outputs example:
 You can use the outputs like this:
 
 ```yaml
+on:
+  telegram_bot:
+    token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 jobs:
-  ifttt:
-    name: Make a Request to IFTTT
+  print:
+    name: Print
     runs-on: ubuntu-latest
     steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: test
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{ on.telegram_bot.outputs.text }}
-          value2: ${{ toJson(on.telegram_bot.outputs) }}
+      - name: Print Outputs
+        env:
+          telegram_outputs: ${{ toJson(on.telegram_bot.outputs) }}
+        run: |
+          echo telegram: $telegram_outputs
 ```

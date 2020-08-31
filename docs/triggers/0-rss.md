@@ -46,18 +46,23 @@ An outputs example:
 You can use the outputs like this:
 
 ```yaml
+on:
+  rss:
+    url: https://hnrss.org/newest?points=300
 jobs:
-  ifttt:
-    name: Make a Request to IFTTT
+  print:
+    name: Print
     runs-on: ubuntu-latest
     steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: notice
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{ on.rss.outputs.title }}
-          value2: ${{ on.rss.outputs.contentSnippet }}
-          value3: ${{ on.rss.outputs.link }}
+      - name: Print Outputs
+        env:
+          title: ${{on.rss.outputs.title}}
+          contentSnippet: ${{on.rss.outputs.contentSnippet}}
+          link: ${{on.rss.outputs.link}}
+        run: |
+          echo title: $title
+          echo contentSnippet: $contentSnippet
+          echo link: $link
 ```
 
 ### New item in multiple feeds
@@ -104,16 +109,25 @@ An outputs example:
 You can use the outputs like this:
 
 ```yaml
+on:
+  rss:
+    event: new_item_in_multiple_feeds
+    urls:
+      - https://hnrss.org/newest?points=300
+      - https://www.buzzfeed.com/world.xml
+    max_items_count: 15
 jobs:
-  ifttt:
-    name: Make a Request to IFTTT
+  print:
+    name: Print
     runs-on: ubuntu-latest
     steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: notice
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{ on.rss.outputs.title }}
-          value2: ${{ on.rss.outputs.contentSnippet }}
-          value3: ${{ on.rss.outputs.link }}
+      - name: Print Outputs
+        env:
+          title: ${{on.rss.outputs.title}}
+          contentSnippet: ${{on.rss.outputs.contentSnippet}}
+          link: ${{on.rss.outputs.link}}
+        run: |
+          echo title: $title
+          echo contentSnippet: $contentSnippet
+          echo link: $link
 ```
