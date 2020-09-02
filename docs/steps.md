@@ -5,7 +5,7 @@ metaTitle: "Actionsflow job steps"
 
 Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions) by using [act](https://github.com/nektos/act).
 
-A typical job steps look like this:
+Typical job steps look like this:
 
 ```yaml
 jobs:
@@ -22,9 +22,9 @@ jobs:
           value3: ${{ on.rss.outputs.link }}
 ```
 
-The configure format is same with [Github actions jobs](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions), you can use any [context and expression of Github actions](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions), and the other expression supported by Actionsflow, like trigger's outputs, for example: `${{ on.rss.outputs.title }}`
+The configure format is the same with [Github actions jobs](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions), you can use any [context and expression of Github actions](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions), and the other expression supported by Actionsflow, like trigger's outputs, for example: `${{ on.rss.outputs.title }}`
 
-Like Github actions, you can also define multiple jobs for your workflow. For example:
+Like Github's actions, you can also define multiple jobs for your workflow. For example:
 
 ```yaml
 jobs:

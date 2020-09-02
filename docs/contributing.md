@@ -83,7 +83,7 @@ build all `examples/actionsflow-workflow-example` workflows:
 npm run build:example
 ```
 
-or you can build specific workflow file:
+or you can build a specific workflow file:
 
 ```bash
 npm run build:example -- -- -w ./workflows/rss.yml
@@ -110,7 +110,7 @@ automatically build your code, rebuild on every change you make.
 1.  hack, hack, hack
 1.  Create tests
 1.  Run all tests, `npm run test`
-1.  Commit code and create pull request(you can use `npm run cm` to commit)
+1.  Commit code and create a pull request(you can use `npm run cm` to commit)
 
 ## Create Trigger
 

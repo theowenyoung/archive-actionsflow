@@ -25,7 +25,7 @@ import { build } from "actionsflow";
 
 function build(options: {
   cwd?: string; // base root workspace folder, default is process.cwd()
-  dest?: string; // dest folder, default value is 'dist', the standard Github actions workflow files will place to `./dist/workflows`
+  dest?: string; // dest folder, the default value is 'dist', the standard Github actions workflow files will place to `./dist/workflows`
   include?: string[]; // Include only workflow files with names matching the given glob.
   exclude?: string[]; // Exclude workflow files with names matching the given glob.
   force?: boolean; // if force the trigger update, ignore the deduplicate key and update interval
@@ -41,7 +41,7 @@ Clean the dist folder and cache
 import { clean } from "actionsflow";
 
 function clean (options: {
-  dest?: string; // dest folder, default value is 'dist'
+  dest?: string; // dest folder, the default value is 'dist'
   base?: string; // base workspace folder, default is process.cwd()
   logLevel?: Log.LogLevelDesc; // Log level, default is "info", you can use one of these values, "trace" | "debug" | "info" | "warn" | "error" | "silent"
 }): Promise<void>;

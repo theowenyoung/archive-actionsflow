@@ -3,13 +3,13 @@ title: "Getting Started"
 metaTitle: "Actionsflow Getting Started"
 ---
 
-Get started with Actionsflow, the free, open source tool for building powerful workflows.
+Get started with Actionsflow, the free, open-source tool for building powerful workflows.
 
-Build an Actionsflow workflows is basically a three-step process:
+Build an Actionsflow workflow is basically a three-step process:
 
 # 1. Create a Github repository
 
-Click this [link](https://github.com/actionsflow/workflow/generate) to generate a new public github repository, pick a repository name as you like, for example `workflow`,`my-workflow`
+Click this [link](https://github.com/actionsflow/workflow/generate) to generate a new public Github repository, pick a repository name as you like, for example, `workflow`, `my-workflow`
 
 # 2. Create workflow files
 
@@ -20,8 +20,8 @@ A typical Actionsflow repository structure looks like this:
 ```sh
 .
 ├── .github
-│   └── workflows
-│       └── actionsflow-jobs.yml
+│   └── workflows
+│       └── actionsflow-jobs.yml
 ├── .gitignore
 ├── README.md
 └── workflows # you should add workflow files at this directory

@@ -5,7 +5,7 @@ metaTitle: "Compare with Zapier and IFTTT"
 
 [Actionsflow](https://github.com/actionsflow/actionsflow) is a great alternative to [Zapier](https://zapier.com/) and [IFTTT](https://ifttt.com/) for developers, you can also use it with [Zapier](https://zapier.com/) or [IFTTT](https://ifttt.com/). Create simple one to one workflow, or multiple workflows in minutes.
 
-**The biggest difference is that [Actionsflow](https://github.com/actionsflow/actionsflow) supports user to customize their steps, you can do any tasks you want to to**, Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions), you can also write your self action. Actionsflow is free and open source.
+**The biggest difference is that [Actionsflow](https://github.com/actionsflow/actionsflow) supports user to customize their steps, you can do any tasks you want to**, Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions), you can also write your self-action. Actionsflow is free and open-source.
 
 # Compare Actionsflow with Zapier & IFTTT
 

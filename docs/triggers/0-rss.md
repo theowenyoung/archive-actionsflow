@@ -8,7 +8,7 @@ RSS trigger is triggered when new items are detected. This trigger supports one(
 
 # Events
 
-## New item in feed
+## New item in a feed
 
 ```yaml
 on:
@@ -21,8 +21,8 @@ Event `new_item` watched a single feed URL.
 
 ### Params
 
-- `event`, optional, the value must be `new_item`, default value is `new_item`, so you can ignore it also.
-- `url`, required, the RSS feed URL, for example: <https://hnrss.org/newest?points=300> items
+- `event`, optional, the value must be `new_item`, the default value is `new_item`, so you can ignore it also.
+- `url`, required, the RSS feed URL, for example, <https://hnrss.org/newest?points=300> items
 
 ### Outputs
 
@@ -83,9 +83,9 @@ Event `new_item_in_multiple_feeds` can watch multiple feeds, any of these feeds'
 
 - `event`, required, the value must be `new_item_in_multiple_feeds`
 - `urls`, required, a URL array, the RSS feed URLs
-- `every`, optional, RSS fetch interval, the unit is minute, default value is `5`
-- `skip_first`, optional, if RSS fetch should skip the first items, default value is `false`
-- `max_items_count`, optional, the feed items max length, default value is `undefined`, it will trigger all feed items
+- `every`, optional, RSS fetch interval, the unit is minute, the default value is `5`
+- `skip_first`, optional, if RSS fetch should skip the first items, the default value is `false`
+- `max_items_count`, optional, the feed items max length, the default value is `undefined`, it will trigger all feed items
 
 ### Outputs
 

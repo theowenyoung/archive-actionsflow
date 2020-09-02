@@ -28,7 +28,7 @@ We implement Webhook feature by using Github's [`repository_dispatch`](https://d
 }
 ```
 
-You need to generate a personal access tokens with `repo` scope at [Github settings](https://github.com/settings/tokens)
+You need to generate personal access tokens with `repo` scope at [Github settings](https://github.com/settings/tokens)
 
 ### Curl example
 
@@ -74,9 +74,9 @@ axios(config)
 
 ### IFTTT Webhook Request example
 
-> !!Note, for some reason, IFTTT can not post github API directly, always response 403 status code, I don't know the reason yet, I suspect it's a github API problem, but I'm not sure. if you know why, please let me know!
+> !!Note, for some reason, IFTTT can not post Github API directly, always response 403 status code, I don't know the reason yet, I suspect it's a Github API problem, but I'm not sure. if you know why, please let me know!
 
-I create a webhook relay API for forward IFTTT's request to github service temporarily. So you can use it like this:
+I create a webhook relay API for forwarding IFTTT's request to Github service temporarily. So you can use it like this:
 
 You can use IFTTT webhook as a `then` action to trigger the webhook, here is an example:
 

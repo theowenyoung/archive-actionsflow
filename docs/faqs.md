@@ -14,6 +14,6 @@ individuals, we have a number of open channels for communication.
 
 # FAQs
 
-## 1. How to set schedule/cron event?
+## 1. How to set a scheduled/cron event?
 
-Actionsflow do not support schedule event, because Github actions support scheduled event, you can use [Github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events) to do it if you want.
+Actionsflow does not support schedule event, because Github actions support the scheduled event, you can use [Github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events) to do it if you want.

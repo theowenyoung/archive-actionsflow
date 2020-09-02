@@ -4,7 +4,7 @@ title: Actionsflow CLI API
 
 This document is for [npm Actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.
 
-Here is the Actionsflow CLI API docs, you can see [API docs at here](/docs/reference/2-api.md)
+Here are the Actionsflow CLI API docs, you can see [API docs at here](/docs/reference/2-api.md)
 
 ## Install
 
@@ -25,7 +25,7 @@ npm i actionsflow --save
 Usage: actionsflow <command> [options]
 
 Commands:
-  actionsflow build  Build a Actionsflow
+  actionsflow build  Build an Actionsflow
                      workflows.
   actionsflow clean  Wipe the local actionsflow
                      environment including built
@@ -50,7 +50,7 @@ Build Actionsflow workflow files to standard Github actions workflow files
 ```bash
 actionsflow build
 
-Build a Actionsflow workflows.
+Build an Actionsflow workflow.
 
 Options:
   --verbose      Turn on verbose output                                                                                  [boolean] [default: false]

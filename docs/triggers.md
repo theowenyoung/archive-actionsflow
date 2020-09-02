@@ -5,7 +5,7 @@ metaTitle: "Actionsflow Triggers"
 
 Every Actionsflow workflow file starts with a trigger, which watches for new data as it comes in or a polling API call to check for new data periodically.
 
-Triggers are how your workflows can start automated workflows whenever they add or update something in your workflow. Actionsflow extend the triggers that [Github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows) supported.
+Triggers are how your workflows can start automated workflows whenever they add or update something in your workflow. Actionsflow extends the triggers that [Github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows) supported.
 
 # Triggers supported
 
@@ -22,7 +22,7 @@ An Actionsflow workflow can include multiple triggers, you can use the trigger's
 
 All triggers support follow params:
 
-- `active`, optional, `boolean`, if trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
+- `active`, optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
 
 # Context and expression syntax for Actionsflow triggers
 

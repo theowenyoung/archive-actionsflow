@@ -5,18 +5,18 @@ metaTitle: "Actionsflow introduction"
 
 [Actionsflow](https://github.com/actionsflow/actionsflow) helps you to automate workflows, it's the best [IFTTT](https://ifttt.com/)/[Zapier](https://zapier.com/) free alternative for developers. With [Actionsflow](https://github.com/actionsflow/actionsflow), you can connect your favorite apps, data, and APIs, receive notifications of actions as they occur, sync files, collect data, and more. , We implemented it based on [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow)) to build your workflows. If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's very easy to define an Actionsflow workflow file, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your job's steps.
 
-You can see core concepts of Actionsflow at [here](#howactionsflowworked).
+You can see the core concepts of Actionsflow at [here](#howactionsflowworked).
 
 # Features
 
 - **Totally Free!** Actionsflow based on [Github actions](https://docs.github.com/en/actions). To run an Actionsflow workflow, you just need to [create a repository from Actionsflow template repository](https://github.com/actionsflow/workflow/generate).
-- **Support almost all actions of github**, you can use almost all [Github actions](https://github.com/marketplace?type=actions). Actionsflow use [act](https://github.com/nektos/act) for running [Github actions](https://github.com/marketplace?type=actions). With [Github actions](https://github.com/marketplace?type=actions), You can connect with IFTTT, Zapier, or the other services.
+- **Support almost all actions of Github**, you can use almost all [Github actions](https://github.com/marketplace?type=actions). Actionsflow use [act](https://github.com/nektos/act) for running [Github actions](https://github.com/marketplace?type=actions). With [Github actions](https://github.com/marketplace?type=actions), You can connect with IFTTT, Zapier, or the other services.
 - **Easy to write workflow file**, the Actionsflow configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's very easy to define an Actionsflow workflow file
 - **Run a trigger every 5 minutes**. The workflow can check and run every 5 minutes based on [Github actions scheduled events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events)
 
 # Quick Started
 
-Build an Actionsflow workflows is basically a three-step process:
+Build an Actionsflow workflow is basically a three-step process:
 
 1. Create a public Github repository by this [link](https://github.com/actionsflow/workflow/generate)
 1. Define your [workflow files](/docs/workflow.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
@@ -33,8 +33,8 @@ A typical Actionsflow repository structure looks like this:
 ```sh
 .
 ├── .github
-│   └── workflows
-│       └── actionsflow-jobs.yml
+│   └── workflows
+│       └── actionsflow-jobs.yml
 ├── .gitignore
 ├── README.md
 └── workflows

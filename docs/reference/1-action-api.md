@@ -16,7 +16,7 @@ inputs:
     required: false
     default: "workflows"
   dest:
-    description: "dest folder, default value is 'dist', the standard Github actions workflow files will place to ./dist/workflows"
+    description: "dest folder, the default value is 'dist', the standard Github actions workflow files will place to ./dist/workflows"
     required: false
     default: "dist"
   logLevel:
@@ -30,7 +30,7 @@ inputs:
 ```yaml
 outputs:
   success:
-    description: "If the build status is success, value can be 'true', or 'false', if build failed, the action outcome will be set failed"
+    description: "If the build status is a success, the value can be 'true', or 'false', if the build failed, the action outcome will be set failed"
 ```
 
 ## Example usage
