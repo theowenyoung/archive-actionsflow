@@ -49,6 +49,7 @@
     "@types/lodash.has": "^4.5.6",
     "@types/semver": "^7.3.3",
     "@types/update-notifier": "^4.1.1",
+    "@types/xml2js": "^0.4.5",
     "actionsflow-interface": "^0.0.8",
     "axios": "^0.19.2",
     "cache-manager": "^3.3.0",
