@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "npm run build && lerna run --ignore actionsflow-workflow* --parallel start",
-    "clean": "lerna run --parallel --ignore actionsflow-workflow* clean",
+    "clean": "lerna run --ignore actionsflow-workflow* clean && rimraf ./.cache ./dist ./coverage",
     "build": "npm run clean && lerna run --ignore actionsflow-workflow* build ",
     "release": "npm run test && lerna publish",
     "test": "npm-run-all -s lint jest",
