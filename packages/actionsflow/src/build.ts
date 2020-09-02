@@ -136,7 +136,6 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     )
   );
 
-  const workflowTodos = [];
   for (let i = 0; i < needHandledWorkflows.length; i++) {
     const workflow = needHandledWorkflows[i];
     const rawTriggers = workflow.rawTriggers || [];
@@ -175,9 +174,12 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
       } catch (error) {
         // if continue-on-error
         if (rawTrigger.options && rawTrigger.options["continue-on-error"]) {
-          log.info(`run trigger ${rawTrigger.name} error: `, error);
-          log.info(
-            "the workflow will continue to run because continue-on-error: true"
+          log.warn(
+            `Run ${workflow.relativePath} trigger ${rawTrigger.name} error: `,
+            error
+          );
+          log.warn(
+            "But the workflow will continue to run because continue-on-error: true"
           );
           workflowTodo.triggers.push({
             name: rawTrigger.name,
@@ -186,10 +188,13 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
             outcome: "failure",
             conclusion: "success",
           });
-          return;
+          continue;
         } else {
-          log.error(`run trigger ${rawTrigger.name} error: `, error);
-          log.warn(`skip trigger [${rawTrigger.name}]`);
+          log.warn(
+            `Skip ${workflow.relativePath} trigger [${rawTrigger.name}]`
+          );
+          log.warn(`Run trigger ${rawTrigger.name} error: `, error);
+          continue;
         }
       }
 
@@ -215,12 +220,10 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         });
       }
     }
-    workflowTodos.push(workflowTodo);
-  }
-  for (let index = 0; index < workflowTodos.length; index++) {
-    const element = workflowTodos[index];
-    if (element.triggers.length > 0) {
-      await buildSingleWorkflow(element);
+    if (workflowTodo.triggers.length > 0) {
+      await buildSingleWorkflow(workflowTodo);
+      // success
+      log.info(`Build workflow ${workflowTodo.workflow.relativePath} success`);
     }
   }
 };

@@ -38,9 +38,12 @@ export default class Example implements ITriggerClassType {
       access_token: string;
       access_token_secret: string;
     };
-    const { event } = this.options as {
+    let { event } = this.options as {
       event: string;
     };
+    if (!event) {
+      event = "user_timeline";
+    }
     const finalResult: ITriggerRunFunctionResult = {
       items: [],
     };
@@ -50,19 +53,40 @@ export default class Example implements ITriggerClassType {
       access_token,
       access_token_secret,
     });
-    if (event === "new_my_tweets") {
+    if (event === "user_timeline") {
+      // get cache with since_id
+      const since_id = (await this.helpers.cache.get(`${event}_since_id`)) as
+        | string
+        | undefined;
       // get screen_name
       const optionParams = this.options.params as AnyObject;
       const params = {
         screen_name: "",
-        count: 200,
+        count: 50,
         exclude_replies: true,
         include_rts: true,
         tweet_mode: "extended",
+        since_id,
         ...optionParams,
       };
       const result = await twitter.get("statuses/user_timeline", params);
-      finalResult.items = result.data as AnyObject[];
+      const tweets = result.data as AnyObject[];
+      let max_id = "";
+      if (tweets.length > 0) {
+        tweets.sort((a, b) => {
+          return Number(BigInt(a.id as bigint) - BigInt(b.id as bigint));
+        });
+
+        tweets.forEach((tweet) => {
+          if (!max_id || BigInt(tweet.id_str) > BigInt(max_id)) {
+            max_id = tweet.id_str as string;
+          }
+        });
+      }
+      if (max_id) {
+        this.helpers.cache.set(`${event}_since_id`, max_id);
+      }
+      finalResult.items = tweets;
     }
 
     return finalResult;

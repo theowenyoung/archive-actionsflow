@@ -26,5 +26,8 @@
   },
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2"
   }
 }

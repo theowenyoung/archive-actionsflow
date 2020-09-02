@@ -1,7 +1,6 @@
 on:
   twitter:
-    continue-on-error: true
-    event: new_my_tweets
+    event: user_timeline
     auth:
       consumer_key: ${{ secrets.TWITTER_CONSUMER_KEY }}
       consumer_secret: ${{ secrets.TWITTER_CONSUMER_SECRET }}
@@ -15,9 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Outputs
-        if: on.twitter.outcome==='failure'
         env:
-          text: ${{ on.twitter.outputs.text }}
-          outcome: ${{ on.twitter.outcome }}
+          text: ${{ on.twitter.outputs.full_text }}
         run: |
-          echo text: $outcome
+          echo text: $text

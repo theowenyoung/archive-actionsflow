@@ -269,74 +269,85 @@ export const buildSingleWorkflow = async (
   for (let index = 0; index < triggers.length; index++) {
     const trigger = triggers[index];
     const { payload, name, outcome, conclusion } = trigger;
-
-    const context: ITriggerBuildContext = {
-      ...workflowContext,
-      on: {},
-    };
-    // add all triggers results to env
-    workflow.rawTriggers.forEach((rawTrigger) => {
-      if (name === rawTrigger.name) {
-        newEnv[
-          `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`
-        ] = JSON.stringify({
-          outcome: outcome,
-          conclusion: conclusion,
-          outputs: payload,
-          options: rawTrigger.options,
-        });
-      } else {
-        newEnv[
-          `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`
-        ] = JSON.stringify({
-          outcome: "skipped",
-          conclusion: "skipped",
-          outputs: {},
-          options: rawTrigger.options,
-        });
-      }
-      context.on[
-        rawTrigger.name
-      ] = `(fromJSON(env.${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}))`;
-    });
-    // handle context expresstion
-    const newJobs = mapObj(
-      workflowDataJobs as Record<string, unknown>,
-      (key, value) => {
-        value = value as unknown;
-
-        if (typeof value === "string" && key !== "if") {
-          // if supported
-
-          value = getTemplateStringByParentName(value, "on", context);
+    if (conclusion === "success") {
+      const context: ITriggerBuildContext = {
+        ...workflowContext,
+        on: {},
+      };
+      // add all triggers results to env
+      workflow.rawTriggers.forEach((rawTrigger) => {
+        if (name === rawTrigger.name) {
+          newEnv[
+            `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`
+          ] = JSON.stringify(
+            {
+              outcome: outcome,
+              conclusion: conclusion,
+              outputs: payload,
+            },
+            null,
+            2
+          );
+        } else {
+          newEnv[
+            `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`
+          ] = JSON.stringify(
+            {
+              outcome: "skipped",
+              conclusion: "skipped",
+              outputs: {},
+            },
+            null,
+            2
+          );
         }
-        if (key === "if" && typeof value === "string") {
-          if (value.trim().indexOf("${{") !== 0) {
-            value = `\${{ ${value} }}`;
+        context.on[
+          rawTrigger.name
+        ] = `(fromJSON(env.${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}))`;
+      });
+      // handle context expresstion
+      const newJobs = mapObj(
+        workflowDataJobs as Record<string, unknown>,
+        (key, value) => {
+          value = value as unknown;
+
+          if (typeof value === "string" && key !== "if") {
+            // if supported
+
+            value = getTemplateStringByParentName(value, "on", context);
           }
-          value = getTemplateStringByParentName(value as string, "on", context);
+          if (key === "if" && typeof value === "string") {
+            if (value.trim().indexOf("${{") !== 0) {
+              value = `\${{ ${value} }}`;
+            }
+            value = getTemplateStringByParentName(
+              value as string,
+              "on",
+              context
+            );
+          }
+          return [key, value];
+        },
+        {
+          deep: true,
         }
-        return [key, value];
-      },
-      {
-        deep: true,
-      }
-    );
+      );
 
-    const jobs = renameJobsBySuffix(
-      newJobs as Record<string, AnyObject>,
-      `_${index}`
-    );
+      const jobs = renameJobsBySuffix(
+        newJobs as Record<string, AnyObject>,
+        `_${index}`
+      );
 
-    // jobs id rename for merge
+      // jobs id rename for merge
 
-    const jobsDependences = getJobsDependences(jobs);
+      const jobsDependences = getJobsDependences(jobs);
 
-    jobsGroups.push({
-      lastJobs: jobsDependences.lastJobs,
-      firstJobs: jobsDependences.firstJobs,
-      jobs: jobs,
-    });
+      jobsGroups.push({
+        lastJobs: jobsDependences.lastJobs,
+        firstJobs: jobsDependences.firstJobs,
+        jobs: jobs,
+      });
+    }
   }
 
   const finalJobs: Record<string, AnyObject> = {};
@@ -377,14 +388,18 @@ export const buildSingleWorkflow = async (
     }
     finalJobs[jobKey] = job;
   });
-  newWorkflowData.on = {
-    push: null,
-  };
+  newWorkflowData.on = ["push"];
   newWorkflowData.jobs = finalJobs;
   newWorkflowData.env = newEnv;
-  const workflowContent = yaml.safeDump(newWorkflowData);
-  log.debug("generate workflow file: ", destWorkflowPath);
-  await fs.outputFile(destWorkflowPath, workflowContent);
+  // if finalJobs not empty, then build
+  if (Object.keys(finalJobs).length > 0) {
+    const workflowContent = yaml.safeDump(newWorkflowData);
+    log.debug("generate workflow file: ", destWorkflowPath);
+    await fs.outputFile(destWorkflowPath, workflowContent);
+  } else {
+    log.info("Skip generate workflow file: ", workflow.relativePath),
+      " because of no jobs";
+  }
   return {
     workflow: newWorkflowData,
   };

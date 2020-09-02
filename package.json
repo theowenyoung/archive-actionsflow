@@ -27,7 +27,7 @@
     "prettier": "prettier \"**/*.{md,json,js,ts,yaml,yml}\"",
     "bootstrap": "npx lerna bootstrap",
     "lerna": "npx lerna",
-    "build:example": "lerna run build --scope actionsflow-workflow-example -- -- --verbose -i multiple-triggers.yml",
+    "build:example": "lerna run build --scope actionsflow-workflow-example -- -- --verbose -i twitter.yml",
     "act:example": "lerna run act --scope actionsflow-workflow-example",
     "clean:example": "lerna run clean --scope actionsflow-workflow-example",
     "actionsflow": "./packages/actionsflow/cli.js",
