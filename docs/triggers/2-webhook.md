@@ -28,6 +28,18 @@ We implement Webhook feature by using Github's [`repository_dispatch`](https://d
 }
 ```
 
+```json
+{
+  "event_type": "webhook",
+  "client_payload": {
+    "path": "/telegram/telegram_bot/webhook",
+    "method": "POST",
+    "headers": {},
+    "body": {}
+  }
+}
+```
+
 You need to generate personal access tokens with `repo` scope at [Github settings](https://github.com/settings/tokens)
 
 ### Curl example
