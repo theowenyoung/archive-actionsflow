@@ -20,8 +20,7 @@
     "test": "jest --passWithNoTests",
     "lint": "eslint --fix ./src && prettier --write  --loglevel warn ./src",
     "prepublishOnly": "npm run build",
-    "clean": "rimraf ./dist",
-    "hooks:pre-commit": "npm run clean && npm run build && git add dist"
+    "hooks:pre-commit": "rimraf ./dist && npm run build && git add dist"
   },
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"
