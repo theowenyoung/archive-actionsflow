@@ -39,6 +39,22 @@ test("getTemplateStringByParentName simple2", () => {
   );
 });
 
+test("getTemplateStringByParentName simple3", () => {
+  expect(
+    getTemplateStringByParentName(
+      "$xxx test ${{ true && on['test'].event && true}} 999 ${{ true && on.test.event && true}} true ${{github.event_type}} false$",
+      "on",
+      {
+        on: {
+          test: `(fromJson(env.test))`,
+        },
+      }
+    )
+  ).toBe(
+    "$xxx test ${{ true && (fromJson(env.test)).event && true}} 999 ${{ true && (fromJson(env.test)).event && true}} true ${{github.event_type}} false$"
+  );
+});
+
 test("template string", () => {
   expect(
     template("test ${{on.test.event}}", {
