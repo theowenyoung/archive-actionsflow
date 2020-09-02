@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "lib": ["es2020"],
+    "lib": ["es2018", "es2020.string"],
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es6",
+    "target": "es2018",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
