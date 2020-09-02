@@ -135,6 +135,8 @@ test("build single workflow", async () => {
         name: `rss`,
         options: feedOptions,
         payload: feedPayload,
+        outcome: "success",
+        conclusion: "success",
       },
     ],
   });
@@ -146,7 +148,9 @@ test("build single workflow", async () => {
   expect(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (newWorkflow as any).jobs.job1_0.steps[0].run
-  ).toEqual(`echo Can't you just right click?`);
+  ).toEqual(
+    "echo ${{ (fromJSON(env.ACTIONSFLOW_TRIGGER_RESULT_FOR_rss_0)).outputs.title }}"
+  );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect((newWorkflow as any).jobs.job1_0.name).toBe("job 0");
   // const newWorkflow = await readFile(path.resolve(".cache/workflows/"), "utf8");

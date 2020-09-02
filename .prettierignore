@@ -16,3 +16,4 @@ packages/**/*.js
 coverage
 
 .yarn
+package-lock.json

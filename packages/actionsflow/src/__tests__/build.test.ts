@@ -21,7 +21,7 @@ test("build workflows", async () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect((newWorkflow as any).jobs.ifttt_0.steps[0].with.key).toBe(
-    "fake_ifttt_key"
+    "${{ secrets.IFTTT_KEY }}"
   );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect((newWorkflow as any).jobs.ifttt_1.needs[0]).toBe("ifttt_0");
@@ -52,5 +52,7 @@ test("build webhook workflows", async () => {
   const newWorkflow = yaml.safeLoad(yamlString);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect((newWorkflow as any).jobs.ifttt_0.steps[0].with.value2).toBe("value");
+  expect((newWorkflow as any).jobs.ifttt_0.steps[0].with.value2).toBe(
+    "${{(fromJSON(env.ACTIONSFLOW_TRIGGER_RESULT_FOR_webhook_0)).outputs.payload.key}}"
+  );
 });

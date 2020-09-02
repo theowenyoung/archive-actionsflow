@@ -1,4 +1,18 @@
-import { template } from "../util";
+import { template, getTemplateStringByParentName } from "../util";
+
+test("getTemplateStringByParentName simple", () => {
+  expect(
+    getTemplateStringByParentName(
+      "test ${{on.test.event}} true ${{github.event_type}}",
+      "on",
+      {
+        on: {
+          test: `(fromJson(env.test))`,
+        },
+      }
+    )
+  ).toBe("test ${{(fromJson(env.test)).event}} true ${{github.event_type}}");
+});
 
 test("template string", () => {
   expect(
@@ -12,16 +26,30 @@ test("template string", () => {
   ).toBe("test new_item");
 });
 
-test("template function string", () => {
+test("template string 2", () => {
   expect(
-    template("test ${{ toJson(on.test.json) }}", {
+    template("test ${{ true && on.test.event}}", {
       on: {
         test: {
-          json: {
-            key: "value",
-          },
+          event: "new_item",
         },
       },
     })
-  ).toBe('test {\n  "key": "value"\n}');
+  ).toBe("test new_item");
+});
+
+test("template if condition string", () => {
+  expect(
+    template(
+      "${{on.test.outcome ===  'success'}}",
+      {
+        on: {
+          test: {
+            outcome: "success",
+          },
+        },
+      },
+      {}
+    )
+  ).toBe("true");
 });

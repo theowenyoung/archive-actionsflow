@@ -64,6 +64,7 @@ export default class Poll implements ITriggerClassType {
       }
 
       log.error(`fetch ${url} error: `, e);
+      throw e;
     }
     // For now we just take the items and ignore everything else
     if (requestResult && requestResult.data) {

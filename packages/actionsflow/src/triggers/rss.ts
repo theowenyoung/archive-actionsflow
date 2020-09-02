@@ -74,6 +74,7 @@ export default class Rss implements ITriggerClassType {
         }
 
         log.error("fetch rss feed error: ", e);
+        throw e;
       }
       // For now we just take the items and ignore everything else
       if (feed && feed.items) {

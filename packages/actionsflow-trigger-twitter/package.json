@@ -28,7 +28,9 @@
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
-    "actionsflow-interface": "^0.0.8"
+    "@types/twit": "^2.2.27",
+    "actionsflow-interface": "^0.0.8",
+    "twit": "^2.2.11"
   },
   "devDependencies": {
     "actionsflow": "^0.0.17"

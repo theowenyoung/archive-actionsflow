@@ -4,7 +4,11 @@ import yaml from "js-yaml";
 import mapObj from "map-obj";
 import fs from "fs-extra";
 import log from "./log";
-import { template, getThirdPartyTrigger } from "./util";
+import {
+  template,
+  getThirdPartyTrigger,
+  getTemplateStringByParentName,
+} from "./util";
 import Triggers from "./triggers";
 import multimatch from "multimatch";
 import {
@@ -12,8 +16,12 @@ import {
   ITrigger,
   IWorkflow,
   AnyObject,
+  ITriggerBuildResult,
 } from "actionsflow-interface";
-
+import { TRIGGER_RESULT_ENV_PREFIX } from "./constans";
+interface ITriggerBuildContext extends ITriggerContext {
+  on: Record<string, string>;
+}
 const getSupportedTriggers = (
   doc: AnyObject,
   context: ITriggerContext
@@ -227,7 +235,7 @@ interface IBuildSingleWorkflowOptions {
   context: ITriggerContext;
   workflow: IWorkflow;
   dest: string;
-  triggers: ITrigger[];
+  triggers: ITriggerBuildResult[];
 }
 export const buildSingleWorkflow = async (
   options: IBuildSingleWorkflowOptions
@@ -256,29 +264,57 @@ export const buildSingleWorkflow = async (
     firstJobs: string[];
     jobs: Record<string, AnyObject>;
   }[] = [];
+  const newEnv: Record<string, string> = {};
+  // todo
   for (let index = 0; index < triggers.length; index++) {
     const trigger = triggers[index];
-    const { payload, name, options: triggerOptions } = trigger;
-    const context = {
+    const { payload, name, outcome, conclusion } = trigger;
+
+    const context: ITriggerBuildContext = {
       ...workflowContext,
-      on: {
-        [name]: {
-          outputs: payload,
-          options: triggerOptions,
-        },
-      },
+      on: {},
     };
+    // add all triggers results to env
+    workflow.rawTriggers.forEach((rawTrigger) => {
+      if (name === rawTrigger.name) {
+        newEnv[
+          `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`
+        ] = JSON.stringify({
+          outcome: outcome,
+          conclusion: conclusion,
+          outputs: payload,
+          options: rawTrigger.options,
+        });
+      } else {
+        newEnv[
+          `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`
+        ] = JSON.stringify({
+          outcome: "skipped",
+          conclusion: "skipped",
+          outputs: {},
+          options: rawTrigger.options,
+        });
+      }
+      context.on[
+        rawTrigger.name
+      ] = `(fromJSON(env.${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}))`;
+    });
     // handle context expresstion
     const newJobs = mapObj(
       workflowDataJobs as Record<string, unknown>,
       (key, value) => {
         value = value as unknown;
-        if (typeof value === "string") {
+
+        if (typeof value === "string" && key !== "if") {
           // if supported
 
-          value = template(value, context, {
-            shouldReplaceUndefinedToEmpty: true,
-          });
+          value = getTemplateStringByParentName(value, "on", context);
+        }
+        if (key === "if" && typeof value === "string") {
+          if (value.trim().indexOf("${{") !== 0) {
+            value = `\${{ ${value} }}`;
+          }
+          value = getTemplateStringByParentName(value as string, "on", context);
         }
         return [key, value];
       },
@@ -295,6 +331,7 @@ export const buildSingleWorkflow = async (
     // jobs id rename for merge
 
     const jobsDependences = getJobsDependences(jobs);
+
     jobsGroups.push({
       lastJobs: jobsDependences.lastJobs,
       firstJobs: jobsDependences.firstJobs,
@@ -344,7 +381,7 @@ export const buildSingleWorkflow = async (
     push: null,
   };
   newWorkflowData.jobs = finalJobs;
-
+  newWorkflowData.env = newEnv;
   const workflowContent = yaml.safeDump(newWorkflowData);
   log.debug("generate workflow file: ", destWorkflowPath);
   await fs.outputFile(destWorkflowPath, workflowContent);

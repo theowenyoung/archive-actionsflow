@@ -91,6 +91,7 @@ export default class TelegramBot implements ITriggerClassType {
       }
 
       log.error(`fetch ${url} error: `, e);
+      throw e;
     }
 
     // For now we just take the items and ignore everything else

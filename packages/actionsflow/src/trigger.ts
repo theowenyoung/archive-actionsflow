@@ -73,99 +73,104 @@ export const run = async ({
     const triggerHelpers = triggerOptions.helpers;
     finalResult.helpers = triggerOptions.helpers;
     const triggerInstance = new Trigger(triggerOptions);
-
     const triggerResult = await triggerInstance.run();
-    const { shouldDeduplicate, every } = triggerInstance;
-    let { items } = triggerResult;
-    const maxItemsCount = trigger.options.max_items_count as number;
-    const skipFirst = trigger.options.skip_first || false;
 
-    if (!items || items.length === 0) {
-      return finalResult;
-    }
-    // updateInterval
-    const lastUpdatedAt =
-      (await triggerHelpers.cache.get("lastUpdatedAt")) || 0;
-    log.debug("lastUpdatedAt: ", lastUpdatedAt);
+    if (triggerInstance && triggerResult) {
+      const { shouldDeduplicate, every } = triggerInstance;
+      let { items } = triggerResult;
+      const maxItemsCount = trigger.options.max_items_count as number;
+      const skipFirst = trigger.options.skip_first || false;
 
-    if (every) {
-      // check if should update
-      // unit minutes
-      // get latest update time
-      const shouldUpdateUtil = (lastUpdatedAt as number) + every * 60 * 1000;
-      const now = Date.now();
-      const shouldUpdate = forceUpdate || shouldUpdateUtil - now <= 0;
-      log.debug("shouldUpdate:", shouldUpdate);
-      // write to cache
-      await triggerHelpers.cache.set("lastUpdatedAt", now);
-      if (!shouldUpdate) {
+      if (!items || items.length === 0) {
         return finalResult;
       }
-    }
-    // duplicate
-    if (shouldDeduplicate === true && !forceUpdate) {
+      // updateInterval
+      const lastUpdatedAt =
+        (await triggerHelpers.cache.get("lastUpdatedAt")) || 0;
+      log.debug("lastUpdatedAt: ", lastUpdatedAt);
+
+      if (every) {
+        // check if should update
+        // unit minutes
+        // get latest update time
+        const shouldUpdateUtil = (lastUpdatedAt as number) + every * 60 * 1000;
+        const now = Date.now();
+        const shouldUpdate = forceUpdate || shouldUpdateUtil - now <= 0;
+        log.debug("shouldUpdate:", shouldUpdate);
+        // write to cache
+        await triggerHelpers.cache.set("lastUpdatedAt", now);
+        if (!shouldUpdate) {
+          return finalResult;
+        }
+      }
       // duplicate
-      const getItemKeyFn = (item: AnyObject): string => {
-        if (item.guid) return item.guid as string;
-        if (item.id) return item.id as string;
-        return createContentDigest(item);
-      };
+      if (shouldDeduplicate === true && !forceUpdate) {
+        // duplicate
+        const getItemKeyFn = (item: AnyObject): string => {
+          if (item.guid) return item.guid as string;
+          if (item.id) return item.id as string;
+          return createContentDigest(item);
+        };
 
-      // deduplicate
-      // get cache
-      let deduplicationKeys =
-        (await triggerHelpers.cache.get("deduplicationKeys")) || [];
-      log.debug("get cached deduplicationKeys", deduplicationKeys);
-      const itemsKeyMaps = new Map();
-      items.forEach((item) => {
-        if (triggerInstance.getItemKey) {
-          itemsKeyMaps.set(triggerInstance.getItemKey(item), item);
-        } else {
-          itemsKeyMaps.set(getItemKeyFn(item), item);
-        }
-      });
-      items = [...itemsKeyMaps.values()];
+        // deduplicate
+        // get cache
+        let deduplicationKeys =
+          (await triggerHelpers.cache.get("deduplicationKeys")) || [];
+        log.debug("get cached deduplicationKeys", deduplicationKeys);
+        const itemsKeyMaps = new Map();
+        items.forEach((item) => {
+          if (triggerInstance.getItemKey) {
+            itemsKeyMaps.set(triggerInstance.getItemKey(item), item);
+          } else {
+            itemsKeyMaps.set(getItemKeyFn(item), item);
+          }
+        });
+        items = [...itemsKeyMaps.values()];
 
-      items = items.filter((result) => {
-        let key = "";
-        if (triggerInstance.getItemKey) {
-          key = triggerInstance.getItemKey(result);
-        } else {
-          key = getItemKeyFn(result);
-        }
-        if ((deduplicationKeys as string[]).includes(key)) {
-          return false;
-        } else {
-          return true;
-        }
-      });
+        items = items.filter((result) => {
+          let key = "";
+          if (triggerInstance.getItemKey) {
+            key = triggerInstance.getItemKey(result);
+          } else {
+            key = getItemKeyFn(result);
+          }
+          if ((deduplicationKeys as string[]).includes(key)) {
+            return false;
+          } else {
+            return true;
+          }
+        });
 
-      if (maxItemsCount) {
-        items = items.slice(0, maxItemsCount);
+        if (maxItemsCount) {
+          items = items.slice(0, maxItemsCount);
+        }
+        // if save to cache
+        if (items.length > 0) {
+          deduplicationKeys = (deduplicationKeys as string[]).concat(
+            items.map((item: AnyObject) => getItemKeyFn(item))
+          );
+          deduplicationKeys = (deduplicationKeys as string[]).slice(
+            -MAX_CACHE_KEYS_COUNT
+          );
+          log.debug("set deduplicationKeys", deduplicationKeys);
+
+          // set cache
+          await triggerHelpers.cache.set(
+            "deduplicationKeys",
+            deduplicationKeys
+          );
+        } else {
+          log.debug("no items update, do not need to update cache");
+        }
       }
-      // if save to cache
-      if (items.length > 0) {
-        deduplicationKeys = (deduplicationKeys as string[]).concat(
-          items.map((item: AnyObject) => getItemKeyFn(item))
-        );
-        deduplicationKeys = (deduplicationKeys as string[]).slice(
-          -MAX_CACHE_KEYS_COUNT
-        );
-        log.debug("set deduplicationKeys", deduplicationKeys);
 
-        // set cache
-        await triggerHelpers.cache.set("deduplicationKeys", deduplicationKeys);
-      } else {
-        log.debug("no items update, do not need to update cache");
+      if (skipFirst && lastUpdatedAt === 0 && !forceUpdate) {
+        return finalResult;
       }
+      finalResult.items = items;
     }
-
-    if (skipFirst && lastUpdatedAt === 0 && !forceUpdate) {
-      return finalResult;
-    }
-    finalResult.items = items;
   } else {
-    log.warn(`we don't support this trigger [${trigger.name}] yet`);
+    throw new Error(`we don't support this trigger [${trigger.name}] yet`);
   }
   return finalResult;
 };

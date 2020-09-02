@@ -21,6 +21,7 @@ test("run trigger", async () => {
     })
   );
   expect(trigger.every).toBe(10);
-  const triggerResults = await trigger.run();
-  expect(triggerResults.items.length).toBe(1);
+  await expect(trigger.run()).rejects.toEqual(
+    new Error("Twit config must include `consumer_key` when using user auth.")
+  );
 });

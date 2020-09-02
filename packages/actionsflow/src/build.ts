@@ -13,9 +13,9 @@ import { LogLevelDesc } from "loglevel";
 import {
   ITriggerContext,
   ITriggerResult,
-  ITrigger,
   IWorkflow,
   IGithub,
+  ITriggerBuildResult,
 } from "actionsflow-interface";
 
 interface IBuildOptions {
@@ -144,7 +144,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
       dest: string;
       workflow: IWorkflow;
       context: ITriggerContext;
-      triggers: ITrigger[];
+      triggers: ITriggerBuildResult[];
     } = {
       dest: destPath,
       workflow: workflow,
@@ -164,13 +164,34 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
       let triggerResult: ITriggerResult = {
         items: [],
       };
-      triggerResult = await runTrigger({
-        trigger: {
-          ...rawTrigger,
-          workflowRelativePath: workflow.relativePath,
-        },
-        context,
-      });
+      try {
+        triggerResult = await runTrigger({
+          trigger: {
+            ...rawTrigger,
+            workflowRelativePath: workflow.relativePath,
+          },
+          context,
+        });
+      } catch (error) {
+        // if continue-on-error
+        if (rawTrigger.options && rawTrigger.options["continue-on-error"]) {
+          log.info(`run trigger ${rawTrigger.name} error: `, error);
+          log.info(
+            "the workflow will continue to run because continue-on-error: true"
+          );
+          workflowTodo.triggers.push({
+            name: rawTrigger.name,
+            options: rawTrigger.options,
+            payload: {},
+            outcome: "failure",
+            conclusion: "success",
+          });
+          return;
+        } else {
+          log.error(`run trigger ${rawTrigger.name} error: `, error);
+          log.warn(`skip trigger [${rawTrigger.name}]`);
+        }
+      }
 
       if (triggerResult.items.length > 0) {
         // check is need to run workflowTodos
@@ -180,8 +201,18 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
             name: rawTrigger.name,
             options: rawTrigger.options,
             payload: element,
+            conclusion: "success",
+            outcome: "success",
           });
         }
+      } else {
+        workflowTodo.triggers.push({
+          name: rawTrigger.name,
+          options: rawTrigger.options,
+          payload: {},
+          outcome: "skipped",
+          conclusion: "skipped",
+        });
       }
     }
     workflowTodos.push(workflowTodo);

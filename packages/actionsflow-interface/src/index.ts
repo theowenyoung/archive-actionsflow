@@ -39,7 +39,15 @@ export interface ITriggerClassTypeConstructable {
 export interface ITrigger {
   name: string;
   options: AnyObject;
+}
+export type OutcomeStatus = "success" | "failure" | "skipped";
+export type ConclusionStatus = "success" | "failure" | "skipped";
+export interface ITriggerBuildResult {
+  name: string;
+  options: AnyObject;
   payload?: AnyObject;
+  outcome: OutcomeStatus;
+  conclusion: ConclusionStatus;
 }
 export interface ITriggerResult {
   items: AnyObject[];
