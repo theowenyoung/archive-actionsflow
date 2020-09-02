@@ -326,7 +326,10 @@ export const getThirdPartyTrigger = (
 ): ITriggerClassTypeConstructable | undefined => {
   const thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
   log.debug("third party trigger", thirdPartyTrigger);
-  const triggerPath = resolveCwd.silent(thirdPartyTrigger);
+  let triggerPath = resolveCwd.silent(thirdPartyTrigger);
+  if (!triggerPath) {
+    triggerPath = resolveCwd.silent(`actionsflow-trigger-${triggerName}`);
+  }
   log.debug("third party trigger path", triggerPath);
   if (triggerPath) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
