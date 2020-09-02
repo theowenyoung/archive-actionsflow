@@ -1,5 +1,14 @@
-import { template, getTemplateStringByParentName } from "../util";
+import {
+  template,
+  getTemplateStringByParentName,
+  getExpressionResult,
+} from "../util";
 
+test("getExpressionResult", () => {
+  expect(
+    getExpressionResult("data.test", { data: { test: "testvalue" } })
+  ).toBe("testvalue");
+});
 test("getTemplateStringByParentName simple", () => {
   expect(
     getTemplateStringByParentName(
@@ -12,6 +21,22 @@ test("getTemplateStringByParentName simple", () => {
       }
     )
   ).toBe("test ${{(fromJson(env.test)).event}} true ${{github.event_type}}");
+});
+
+test("getTemplateStringByParentName simple2", () => {
+  expect(
+    getTemplateStringByParentName(
+      "$xxx test ${{ true && on.test.event && true}} 999 ${{ true && on.test.event && true}} true ${{github.event_type}} false$",
+      "on",
+      {
+        on: {
+          test: `(fromJson(env.test))`,
+        },
+      }
+    )
+  ).toBe(
+    "$xxx test ${{ true && (fromJson(env.test)).event && true}} 999 ${{ true && (fromJson(env.test)).event && true}} true ${{github.event_type}} false$"
+  );
 });
 
 test("template string", () => {
