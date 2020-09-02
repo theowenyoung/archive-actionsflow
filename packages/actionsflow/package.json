@@ -71,6 +71,7 @@
     "resolve-cwd": "^3.0.0",
     "rss-parser": "^3.9.0",
     "semver": "^7.3.2",
+    "string.prototype.matchall": "^4.0.2",
     "tslib": "^2.0.1",
     "update-notifier": "^4.1.0",
     "yargs": "^15.4.1"

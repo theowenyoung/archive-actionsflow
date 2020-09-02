@@ -1,5 +1,6 @@
 import has from "lodash.has";
 import resolveCwd from "resolve-cwd";
+import matchAll from "string.prototype.matchall";
 
 import {
   AnyObject,
@@ -59,7 +60,7 @@ export const getAstsByParentName = (
     "g"
   );
   // match all ${{ }} expression
-  const interpolateMatchRawResults = text.matchAll(interpolate);
+  const interpolateMatchRawResults = matchAll(text, interpolate);
   const interpolateMatchResults = [...interpolateMatchRawResults];
 
   // matched
@@ -104,7 +105,8 @@ export const getAstsByParentName = (
         if (isIncludeSpecificExpressionSyntax) {
           // if include
 
-          const specificExpressRawResults = rawFullExpressionText.matchAll(
+          const specificExpressRawResults = matchAll(
+            rawFullExpressionText,
             specificExpressionRegex
           );
           const specificExpressionResults = [...specificExpressRawResults];
