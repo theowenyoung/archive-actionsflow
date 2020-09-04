@@ -2,7 +2,7 @@ import {
   ITriggerClassType,
   ITriggerContructorParams,
   AnyObject,
-  ITriggerRunFunctionResult,
+  ITriggerResult,
   ITriggerContext,
 } from "actionsflow-interface";
 
@@ -11,7 +11,7 @@ export default class Webhook implements ITriggerClassType {
   constructor({ context }: ITriggerContructorParams) {
     this.context = context;
   }
-  async run(): Promise<ITriggerRunFunctionResult> {
+  async run(): Promise<ITriggerResult> {
     const context = this.context;
     let items: AnyObject[] = [];
     if (

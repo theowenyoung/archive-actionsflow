@@ -8,7 +8,7 @@ import {
   template,
   getThirdPartyTrigger,
   getTemplateStringByParentName,
-} from "./util";
+} from "./utils";
 import Triggers from "./triggers";
 import multimatch from "multimatch";
 import {
@@ -19,9 +19,7 @@ import {
   ITriggerBuildResult,
 } from "actionsflow-interface";
 import { TRIGGER_RESULT_ENV_PREFIX } from "./constans";
-interface ITriggerBuildContext extends ITriggerContext {
-  on: Record<string, string>;
-}
+
 const getSupportedTriggers = (
   doc: AnyObject,
   context: ITriggerContext
@@ -41,7 +39,9 @@ const getSupportedTriggers = (
       } else if (getThirdPartyTrigger(key)) {
         isTriggerSupported = true;
       }
-      log.debug("is trigger support", isTriggerSupported);
+      if (!isTriggerSupported) {
+        log.info(`We do not support trigger [${key}] now.`);
+      }
       if (isTriggerSupported) {
         // is active
         if (!(onObj[key] && onObj[key].active === false)) {
@@ -151,9 +151,14 @@ export const getWorkflows = async (
     }
     if (doc) {
       const triggers = getSupportedTriggers(doc as AnyObject, context);
+      const relativePathWithoutExt = entries[index].relativePath
+        .split(".")
+        .slice(0, -1)
+        .join(".");
       workflows.push({
         path: filePath,
         relativePath: entries[index].relativePath,
+        filename: relativePathWithoutExt,
         data: doc as AnyObject,
         rawTriggers: triggers,
       });
@@ -161,8 +166,10 @@ export const getWorkflows = async (
       log.debug("skip empty file", filePath);
     }
   }
-
-  return workflows;
+  const validWorkflows = workflows.filter(
+    (item) => item.rawTriggers.length > 0
+  );
+  return validWorkflows;
 };
 
 export const getJobsDependences = (
@@ -232,25 +239,17 @@ export const renameJobsBySuffix = (
   return newJobs;
 };
 interface IBuildSingleWorkflowOptions {
-  context: ITriggerContext;
   workflow: IWorkflow;
-  dest: string;
-  triggers: ITriggerBuildResult[];
+  trigger: {
+    name: string;
+    results: ITriggerBuildResult[];
+  };
 }
-export const buildSingleWorkflow = async (
+export const getBuiltWorkflow = async (
   options: IBuildSingleWorkflowOptions
-): Promise<{ workflow: AnyObject }> => {
+): Promise<AnyObject> => {
   log.debug("buildWorkflow options:", options);
-  const { context: workflowContext, workflow, dest, triggers } = options;
-  const relativePathWithoutExt = workflow.relativePath
-    .split(".")
-    .slice(0, -1)
-    .join(".");
-  const destWorkflowPath = path.resolve(
-    dest,
-    "workflows",
-    `${relativePathWithoutExt}.yml`
-  );
+  const { workflow, trigger } = options;
   const workflowData = workflow.data;
   // handle context expresstion
   const workflowDataJobs: Record<
@@ -266,24 +265,23 @@ export const buildSingleWorkflow = async (
   }[] = [];
   const newEnv: Record<string, string> = {};
   // todo
-  for (let index = 0; index < triggers.length; index++) {
-    const trigger = triggers[index];
-    const { payload, name, outcome, conclusion } = trigger;
+  for (let index = 0; index < trigger.results.length; index++) {
+    const triggerResult = trigger.results[index];
+    const { outputs, outcome, conclusion } = triggerResult;
     if (conclusion === "success") {
-      const context: ITriggerBuildContext = {
-        ...workflowContext,
+      const context: Record<string, AnyObject> = {
         on: {},
       };
       // add all triggers results to env
       workflow.rawTriggers.forEach((rawTrigger) => {
-        if (name === rawTrigger.name) {
+        if (trigger.name === rawTrigger.name) {
           newEnv[
             `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`
           ] = JSON.stringify(
             {
               outcome: outcome,
               conclusion: conclusion,
-              outputs: payload,
+              outputs: outputs,
             },
             null,
             2
@@ -392,57 +390,8 @@ export const buildSingleWorkflow = async (
   newWorkflowData.jobs = finalJobs;
   newWorkflowData.env = newEnv;
   // if finalJobs not empty, then build
-  if (Object.keys(finalJobs).length > 0) {
-    const workflowContent = yaml.safeDump(newWorkflowData);
-    log.debug("generate workflow file: ", destWorkflowPath);
-    await fs.outputFile(destWorkflowPath, workflowContent);
-  } else {
-    log.info("Skip generate workflow file: ", workflow.relativePath),
-      " because of no jobs";
-  }
-  return {
-    workflow: newWorkflowData,
-  };
-};
 
-export const buildNativeEvent = async (options: {
-  dest: string;
-  github: AnyObject;
-}): Promise<{ path: string; eventJson: string }> => {
-  const baseDest = options.dest;
-  const github = options.github;
-  const destWorkflowEventPath = path.resolve(baseDest, "event.json");
-  let eventJson = "{}";
-  if (!github.event) {
-    github.event = {};
-  }
-  eventJson = JSON.stringify(github.event, null, 2);
-  await fs.outputFile(destWorkflowEventPath, eventJson);
-  log.debug("build event file success", destWorkflowEventPath);
-
-  return {
-    path: destWorkflowEventPath,
-    eventJson: eventJson,
-  };
-};
-export const buildNativeSecrets = async (options: {
-  dest: string;
-  secrets: AnyObject;
-}): Promise<{ path: string; secrets: string }> => {
-  const baseDest = options.dest;
-  const secretsObj = options.secrets;
-
-  const destWorkflowSecretsPath = path.resolve(baseDest, ".secrets");
-  let secrets = "";
-  Object.keys(secretsObj).forEach((key) => {
-    secrets += key + "=" + secretsObj[key] + "\n";
-  });
-  await fs.outputFile(destWorkflowSecretsPath, secrets);
-  log.debug("build secrets file success", destWorkflowSecretsPath);
-  return {
-    path: destWorkflowSecretsPath,
-    secrets: secrets,
-  };
+  return newWorkflowData;
 };
 
 function arrify(thing: string | string[]): string[] {

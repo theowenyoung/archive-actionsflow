@@ -19,24 +19,28 @@ Event `new_item` watched a single feed URL.
 ### Params
 
 - `url`, required, the RSS feed URL, for example, <https://hnrss.org/newest?points=300>
+
 - `items_path`, optional, if the API's returned JSON is not a list and is instead an object (maybe paginated), you should configure `items_path` as the key that contains the results. Example: `results`, `items`, `data.items`, etc... The default value is `undefined`, which means the API's response should be a list.
+
 - `deduplication_key`, optional. The poll trigger deduplicates the array we see each poll against the id key. If the id key does not exist, you should specify an alternative unique key to deduplicate off of. If neither are supplied, we fallback to looking for `guid`, `key`, if neither are supplied, we will hash the item, and generate a unique key
+
 - `every`, optional, RSS fetch interval, the unit is minute, the default value is `5`
+
 - `skip_first`, optional, if RSS fetch should skip the first items, the default value is `false`
+
 - `max_items_count`, optional, the feed items max length, the default value is `undefined`, it will trigger all feed items
 
-#### More params
+- `requestParams`, optional, we use [Axios](https://github.com/axios/axios) for polling data, so your can pass all params that [axios supported](https://github.com/axios/axios#request-config). For example:
 
-We use [Axios](https://github.com/axios/axios) for polling data, so your can pass all params that [axios supported](https://github.com/axios/axios#request-config). For example:
-
-```yaml
-on:
-  poll:
-    url: https://jsonplaceholder.typicode.com/posts
-    method: POST
-    headers:
-      Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
-```
+  ```yaml
+  on:
+    poll:
+      url: https://jsonplaceholder.typicode.com/posts
+      requestParams:
+        method: POST
+        headers:
+          Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+  ```
 
 ### Outputs
 

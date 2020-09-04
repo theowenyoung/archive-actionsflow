@@ -27,11 +27,18 @@ on:
 ### Params
 
 - `token`, required, telegram bot token, you should get it from [Telegram BotFather](https://telegram.me/BotFather), for example: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`
+
 - `event`, optional, telegram message type, allowed types: `text`,`animation`,`audio`,`channel_chat_created`,`contact`,`delete_chat_photo`,`dice`,`document`,`game`,`group_chat_created`,`invoice`,`left_chat_member`,`location`,`migrate_from_chat_id`,`migrate_to_chat_id`,`new_chat_members`,`new_chat_photo`,`new_chat_title`,`passport_data`,`photo`,`pinned_message`,`poll`,`sticker`,`successful_payment`,`supergroup_chat_created`,`video`,`video_note`,`voice`, if neither `event` or `events` is not provided, all message will be triggered.
+
 - `events`, optional, an array of event, example: `["text","photo"]`
-- `every`, optional, RSS fetch interval, the unit is minute, the default value is `5`
-- `skip_first`, optional, if RSS fetch should skip the first items, the default value is `false`
-- `max_items_count`, optional, the feed items max length, the default value is `undefined`, it will trigger all feed items
+
+- `requestParams`, optional, we use [Axios](https://github.com/axios/axios) for polling data, so your can pass all params that [axios supported](https://github.com/axios/axios#request-config). For example:
+
+  ```yaml
+  on:
+    telegram_bot:
+      url: https://jsonplaceholder.typicode.com/posts
+  ```
 
 ## Outputs
 

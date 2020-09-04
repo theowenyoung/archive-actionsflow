@@ -28,6 +28,8 @@ We implement Webhook feature by using Github's [`repository_dispatch`](https://d
 }
 ```
 
+<https://webhook.actionsflow.io/owner/repo/telegram/telegram_bot>
+
 ```json
 {
   "event_type": "webhook",

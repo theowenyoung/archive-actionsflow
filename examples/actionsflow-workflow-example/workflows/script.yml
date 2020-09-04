@@ -1,0 +1,17 @@
+on:
+  script:
+    script: |
+      const result = await axios.get("https://jsonplaceholder.typicode.com/posts")
+      return {
+        items: result.data
+      }
+jobs:
+  print:
+    name: Print
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Outputs
+        env:
+          title: ${{on.script.outputs.title}}
+        run: |
+          echo title: $title

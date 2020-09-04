@@ -11,7 +11,6 @@ test("rss trigger", async () => {
       name: "rss",
     })
   );
-  expect(rss.every).toBe(10);
   const triggerResults = await rss.run();
 
   expect(triggerResults.items.length).toBe(2);
@@ -28,7 +27,6 @@ test("rss trigger with event new_item_in_multiple_feeds", async () => {
       name: "rss",
     })
   );
-  expect(rss.every).toBe(10);
   const triggerResults = await rss.run();
 
   expect(triggerResults.items.length).toBe(2);

@@ -5,7 +5,7 @@ import get from "lodash.get";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerRunFunctionResult,
+  ITriggerResult,
   IHelpers,
   AnyObject,
 } from "actionsflow-interface";
@@ -13,7 +13,6 @@ import {
 export default class Poll implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
-  every = 5;
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     // TODO adapt every cases
@@ -30,12 +29,8 @@ export default class Poll implements ITriggerClassType {
       this.options = options;
     }
     this.helpers = helpers;
-
-    if (options.every) {
-      this.every = options.every as number;
-    }
   }
-  async run(): Promise<ITriggerRunFunctionResult> {
+  async run(): Promise<ITriggerResult> {
     const { url, items_path, ...requestOptions } = this.options as {
       url?: string;
       items_path?: string;

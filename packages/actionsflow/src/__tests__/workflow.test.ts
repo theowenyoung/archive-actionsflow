@@ -2,13 +2,9 @@ import {
   getWorkflows,
   renameJobsBySuffix,
   getJobsDependences,
-  buildNativeEvent,
-  buildNativeSecrets,
-  buildSingleWorkflow,
+  getBuiltWorkflow,
 } from "../workflow";
 import path from "path";
-import { readJson, readFile } from "fs-extra";
-import yaml from "js-yaml";
 
 test("get workflows", async () => {
   const workflows = await getWorkflows({
@@ -60,33 +56,6 @@ test("get jobs dependence", () => {
   });
 });
 
-test("build native event", async () => {
-  await buildNativeEvent({
-    dest: path.resolve(".cache"),
-    github: {
-      event: {
-        action: "test",
-      },
-    },
-  });
-  const eventJson = await readJson(path.resolve(".cache/event.json"));
-  expect(eventJson).toEqual({
-    action: "test",
-  });
-});
-
-test("build secrets", async () => {
-  await buildNativeSecrets({
-    dest: path.resolve(".cache"),
-    secrets: {
-      TOKEN: "token",
-      TEST: "test",
-    },
-  });
-  const secretsString = await readFile(path.resolve(".cache/.secrets"), "utf8");
-  expect(secretsString).toEqual("TOKEN=token\nTEST=test\n");
-});
-
 test("build single workflow", async () => {
   const feedUrl = "https://hnrss.org/newest?points=300";
   const feedOptions = {
@@ -96,17 +65,11 @@ test("build single workflow", async () => {
     title: "Can't you just right click?",
     guid: "https://news.ycombinator.com/item?id=24217116",
   };
-  await buildSingleWorkflow({
-    dest: ".cache",
-    context: {
-      github: {
-        event: {},
-      },
-      secrets: {},
-    },
+  const workflowData = await getBuiltWorkflow({
     workflow: {
       path: path.resolve(__dirname, "./fixtures/workflows/rss2.yml"),
       relativePath: "rss2.yml",
+      filename: "rss2",
       data: {
         on: {
           rss: {
@@ -130,28 +93,24 @@ test("build single workflow", async () => {
         },
       ],
     },
-    triggers: [
-      {
-        name: `rss`,
-        options: feedOptions,
-        payload: feedPayload,
-        outcome: "success",
-        conclusion: "success",
-      },
-    ],
+    trigger: {
+      name: "rss",
+      results: [
+        {
+          outputs: feedPayload,
+          outcome: "success",
+          conclusion: "success",
+        },
+      ],
+    },
   });
-  const workflowString = await readFile(
-    path.resolve(".cache/workflows/rss2.yml"),
-    "utf8"
-  );
-  const newWorkflow = yaml.safeLoad(workflowString);
   expect(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (newWorkflow as any).jobs.job1_0.steps[0].run
+    (workflowData as any).jobs.job1_0.steps[0].run
   ).toEqual(
     "echo ${{ (fromJSON(env.ACTIONSFLOW_TRIGGER_RESULT_FOR_rss_0)).outputs.title }}"
   );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect((newWorkflow as any).jobs.job1_0.name).toBe("job 0");
+  expect((workflowData as any).jobs.job1_0.name).toBe("job 0");
   // const newWorkflow = await readFile(path.resolve(".cache/workflows/"), "utf8");
 });

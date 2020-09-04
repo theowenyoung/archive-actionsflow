@@ -29,12 +29,10 @@ test("poll trigger", async () => {
     getTriggerConstructorParams({
       options: {
         url: "https://jsonplaceholder.typicode.com/posts",
-        every: 10,
       },
       name: "poll",
     })
   );
-  expect(poll.every).toBe(10);
   const triggerResults = await poll.run();
 
   expect(triggerResults.items.length).toBe(2);

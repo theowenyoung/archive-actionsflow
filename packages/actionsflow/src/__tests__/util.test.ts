@@ -2,7 +2,7 @@ import {
   template,
   getTemplateStringByParentName,
   getExpressionResult,
-} from "../util";
+} from "../utils";
 
 test("getExpressionResult", () => {
   expect(

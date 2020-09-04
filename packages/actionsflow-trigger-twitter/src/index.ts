@@ -1,7 +1,7 @@
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerRunFunctionResult,
+  ITriggerResult,
   IHelpers,
   AnyObject,
 } from "actionsflow-interface";
@@ -9,7 +9,6 @@ import Twit from "twit";
 export default class Example implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
-  every = 5;
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     if (item.id_str) return item.id_str as string;
@@ -20,13 +19,9 @@ export default class Example implements ITriggerClassType {
     this.options.auth = this.options.auth || {};
     this.options.params = (this.options.params as AnyObject) || {};
     this.helpers = helpers;
-
-    if (options.every) {
-      this.every = options.every as number;
-    }
   }
 
-  async run(): Promise<ITriggerRunFunctionResult> {
+  async run(): Promise<ITriggerResult> {
     const {
       consumer_key,
       consumer_secret,
@@ -44,7 +39,7 @@ export default class Example implements ITriggerClassType {
     if (!event) {
       event = "user_timeline";
     }
-    const finalResult: ITriggerRunFunctionResult = {
+    const finalResult: ITriggerResult = {
       items: [],
     };
     const twitter = new Twit({

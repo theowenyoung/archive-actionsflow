@@ -1,59 +1,119 @@
-import { getThirdPartyTrigger } from "./util";
+import { getThirdPartyTrigger } from "./utils";
 import { createContentDigest, getCache } from "./helpers";
 import log from "./log";
 import Triggers from "./triggers";
 import {
   ITriggerContext,
-  ITriggerResult,
+  ITriggerInternalResult,
   AnyObject,
   ITriggerClassTypeConstructable,
-  ITriggerContructorParams,
+  ITriggerResult,
+  IWorkflow,
+  ITriggerEvent,
+  ITriggerClassType,
+  IHelpers,
+  IWebhookRequestPayload,
 } from "actionsflow-interface";
+import { getWebhook } from "./webhook";
 const MAX_CACHE_KEYS_COUNT = 5000;
 interface ITriggerOptions {
   trigger: {
     name: string;
     options: Record<string, unknown>;
-    workflowRelativePath: string;
   };
+  workflow: IWorkflow;
+  event: ITriggerEvent;
   context: ITriggerContext;
 }
-
-const allTriggers = Triggers as Record<string, ITriggerClassTypeConstructable>;
-export const getTriggerOptions = ({
-  trigger,
-  context,
-}: ITriggerOptions): ITriggerContructorParams => {
-  // get unique id
+export const getTriggerId = ({
+  name,
+  workflowRelativePath,
+}: {
+  name: string;
+  workflowRelativePath: string;
+}): string => {
   const triggerId = createContentDigest({
-    name: trigger.name,
-    path: trigger.workflowRelativePath,
+    name: name,
+    path: workflowRelativePath,
   });
-
-  const options = trigger.options || {};
+  return triggerId;
+};
+export const getTriggerHelpers = ({
+  name,
+  workflowRelativePath,
+}: {
+  name: string;
+  workflowRelativePath: string;
+}): IHelpers => {
+  const triggerId = getTriggerId({
+    name: name,
+    workflowRelativePath: workflowRelativePath,
+  });
   const triggerHelpers = {
     createContentDigest,
     cache: getCache(`trigger-${triggerId}`),
   };
-  const triggerOptions = {
-    helpers: triggerHelpers,
-    options: options,
-    context: context,
+  return triggerHelpers;
+};
+const allTriggers = Triggers as Record<string, ITriggerClassTypeConstructable>;
+interface IGeneralTriggerOptions {
+  every: number;
+  shouldDeduplicate: boolean;
+  getItemKey?: (item: AnyObject) => string;
+  skipFirst: boolean;
+  maxItemsCount: number;
+  force: boolean;
+}
+export const getGeneralTriggerFinalOptions = (
+  triggerInstance: ITriggerClassType,
+  userOptions: AnyObject
+): IGeneralTriggerOptions => {
+  const options: IGeneralTriggerOptions = {
+    every: 5,
+    shouldDeduplicate: true,
+    getItemKey: (item: AnyObject): string => {
+      return createContentDigest(item);
+    },
+    skipFirst: false,
+    maxItemsCount: -1,
+    force: false,
   };
-  return triggerOptions;
+  if (!userOptions.every === undefined) {
+    options.every = Number(userOptions.every);
+  }
+  if (triggerInstance.shouldDeduplicate !== undefined) {
+    options.shouldDeduplicate = Boolean(triggerInstance.shouldDeduplicate);
+  }
+
+  if (options.shouldDeduplicate) {
+    if (triggerInstance.getItemKey) {
+      options.getItemKey = triggerInstance.getItemKey;
+    }
+  }
+  if (userOptions.skip_first !== undefined) {
+    options.skipFirst = Boolean(userOptions.skip_first);
+  }
+  if (userOptions.max_items_count) {
+    options.maxItemsCount = Number(userOptions.max_items_count);
+  }
+  if (userOptions.force !== undefined) {
+    options.force = Boolean(userOptions.force);
+  }
+
+  return options;
 };
 export const run = async ({
   trigger,
   context,
-}: ITriggerOptions): Promise<ITriggerResult> => {
+  event,
+  workflow,
+}: ITriggerOptions): Promise<ITriggerInternalResult> => {
   log.debug("trigger:", trigger);
 
-  let forceUpdate = false;
-  if (trigger && trigger.options && trigger.options.force) {
-    forceUpdate = true;
-  }
-  const finalResult: ITriggerResult = {
+  const finalResult: ITriggerInternalResult = {
     items: [],
+    outcome: "success",
+    conclusion: "success",
   };
 
   let Trigger: ITriggerClassTypeConstructable | undefined;
@@ -69,108 +129,146 @@ export const run = async ({
   }
 
   if (Trigger) {
-    const triggerOptions = getTriggerOptions({ trigger, context });
-    const triggerHelpers = triggerOptions.helpers;
-    finalResult.helpers = triggerOptions.helpers;
-    const triggerInstance = new Trigger(triggerOptions);
-    const triggerResult = await triggerInstance.run();
+    const triggerHelpers = getTriggerHelpers({
+      name: trigger.name,
+      workflowRelativePath: workflow.relativePath,
+    });
+    finalResult.helpers = triggerHelpers;
+    const triggerInstance = new Trigger({
+      helpers: triggerHelpers,
+      options: trigger.options || {},
+      context: context,
+    });
 
-    if (triggerInstance && triggerResult) {
-      const { shouldDeduplicate, every } = triggerInstance;
-      let { items } = triggerResult;
-      const maxItemsCount = trigger.options.max_items_count as number;
-      const skipFirst = trigger.options.skip_first || false;
+    let triggerResult: ITriggerResult | undefined;
+    const triggerId = getTriggerId({
+      name: trigger.name,
+      workflowRelativePath: workflow.relativePath,
+    });
+    const triggerCacheManager = getCache(`trigger-cache-manager-${triggerId}`);
 
-      if (!items || items.length === 0) {
-        return finalResult;
-      }
-      // updateInterval
+    if (triggerInstance) {
+      const triggerGeneralOptions = getGeneralTriggerFinalOptions(
+        triggerInstance,
+        trigger.options
+      );
+      const {
+        every,
+        shouldDeduplicate,
+        maxItemsCount,
+        skipFirst,
+        force,
+        getItemKey,
+      } = triggerGeneralOptions;
       const lastUpdatedAt =
-        (await triggerHelpers.cache.get("lastUpdatedAt")) || 0;
+        (await triggerCacheManager.get("lastUpdatedAt")) || 0;
       log.debug("lastUpdatedAt: ", lastUpdatedAt);
+      if (event.type === "webhook" && triggerInstance.webhooks) {
+        // webhook event should call webhook method
+        // lookup specific webhook event
+        // call webhooks
+        const webhook = getWebhook({
+          webhooks: triggerInstance.webhooks,
+          request: event.request as IWebhookRequestPayload,
+          workflow,
+          trigger,
+        });
 
-      if (every) {
+        if (webhook) {
+          triggerResult = await webhook.handler.bind(triggerInstance)(
+            webhook.request
+          );
+          await triggerCacheManager.set("lastUpdatedAt", Date.now());
+        }
+      } else if (triggerInstance.run) {
+        // updateInterval
+
         // check if should update
         // unit minutes
         // get latest update time
         const shouldUpdateUtil = (lastUpdatedAt as number) + every * 60 * 1000;
         const now = Date.now();
-        const shouldUpdate = forceUpdate || shouldUpdateUtil - now <= 0;
+
+        const shouldUpdate = force || shouldUpdateUtil - now <= 0;
         log.debug("shouldUpdate:", shouldUpdate);
         // write to cache
-        await triggerHelpers.cache.set("lastUpdatedAt", now);
         if (!shouldUpdate) {
-          return finalResult;
-        }
-      }
-      // duplicate
-      if (shouldDeduplicate === true && !forceUpdate) {
-        // duplicate
-        const getItemKeyFn = (item: AnyObject): string => {
-          if (item.guid) return item.guid as string;
-          if (item.id) return item.id as string;
-          return createContentDigest(item);
-        };
-
-        // deduplicate
-        // get cache
-        let deduplicationKeys =
-          (await triggerHelpers.cache.get("deduplicationKeys")) || [];
-        log.debug("get cached deduplicationKeys", deduplicationKeys);
-        const itemsKeyMaps = new Map();
-        items.forEach((item) => {
-          if (triggerInstance.getItemKey) {
-            itemsKeyMaps.set(triggerInstance.getItemKey(item), item);
-          } else {
-            itemsKeyMaps.set(getItemKeyFn(item), item);
-          }
-        });
-        items = [...itemsKeyMaps.values()];
-
-        items = items.filter((result) => {
-          let key = "";
-          if (triggerInstance.getItemKey) {
-            key = triggerInstance.getItemKey(result);
-          } else {
-            key = getItemKeyFn(result);
-          }
-          if ((deduplicationKeys as string[]).includes(key)) {
-            return false;
-          } else {
-            return true;
-          }
-        });
-
-        if (maxItemsCount) {
-          items = items.slice(0, maxItemsCount);
-        }
-        // if save to cache
-        if (items.length > 0) {
-          deduplicationKeys = (deduplicationKeys as string[]).concat(
-            items.map((item: AnyObject) => getItemKeyFn(item))
-          );
-          deduplicationKeys = (deduplicationKeys as string[]).slice(
-            -MAX_CACHE_KEYS_COUNT
-          );
-          log.debug("set deduplicationKeys", deduplicationKeys);
-
-          // set cache
-          await triggerHelpers.cache.set(
-            "deduplicationKeys",
-            deduplicationKeys
-          );
+          finalResult.outcome = "skipped";
+          finalResult.conclusion = "skipped";
+          triggerResult = { items: [] };
         } else {
-          log.debug("no items update, do not need to update cache");
+          // check should run
+          // scheduled event call run method
+          triggerResult = await triggerInstance.run();
+          await triggerCacheManager.set("lastUpdatedAt", Date.now());
         }
+      } else {
+        throw new Error(
+          `Neither webhook or run method dose not exports with trigger [${trigger.name}]`
+        );
       }
 
-      if (skipFirst && lastUpdatedAt === 0 && !forceUpdate) {
+      if (triggerResult && triggerResult.items) {
+        let { items } = triggerResult;
+        if (items.length > 0) {
+          // duplicate
+          if (shouldDeduplicate === true && getItemKey && !force) {
+            // deduplicate
+            // get cache
+            let deduplicationKeys =
+              (await triggerCacheManager.get("deduplicationKeys")) || [];
+            log.debug("get cached deduplicationKeys", deduplicationKeys);
+            const itemsKeyMaps = new Map();
+            items.forEach((item) => {
+              itemsKeyMaps.set(getItemKey(item), item);
+            });
+            items = [...itemsKeyMaps.values()];
+            items = items.filter((result) => {
+              const key = getItemKey(result);
+              if ((deduplicationKeys as string[]).includes(key)) {
+                return false;
+              } else {
+                return true;
+              }
+            });
+
+            // if save to cache
+            if (items.length > 0) {
+              deduplicationKeys = (deduplicationKeys as string[]).concat(
+                items.map((item: AnyObject) => getItemKey(item))
+              );
+              deduplicationKeys = (deduplicationKeys as string[]).slice(
+                -MAX_CACHE_KEYS_COUNT
+              );
+
+              // set cache
+              await triggerCacheManager.set(
+                "deduplicationKeys",
+                deduplicationKeys
+              );
+              log.debug("save deduplicationKeys to cache", deduplicationKeys);
+            } else {
+              log.debug("no items update, do not need to update cache");
+            }
+          }
+          if (maxItemsCount > 0) {
+            items = items.slice(0, maxItemsCount);
+          }
+        }
+
+        if (!(skipFirst && lastUpdatedAt === 0) || force) {
+          finalResult.items = items;
+        }
+
         return finalResult;
+      } else {
+        throw new Error(
+          `Trigger [${trigger.name}] does not return a valid result with items key`
+        );
       }
-      finalResult.items = items;
+    } else {
+      throw new Error(`Trigger [${trigger.name}] construct error`);
     }
-  } else {
-    throw new Error(`we don't support this trigger [${trigger.name}] yet`);
   }
   return finalResult;
 };

@@ -1,21 +1,22 @@
 import "./env";
 import path from "path";
 import fs from "fs-extra";
+import { getBuiltWorkflow, getWorkflows } from "./workflow";
 import {
-  buildSingleWorkflow,
-  getWorkflows,
   buildNativeEvent,
   buildNativeSecrets,
-} from "./workflow";
+  buildWorkflowFile,
+} from "./generate";
 import { run as runTrigger } from "./trigger";
 import log from "./log";
+import { getContext } from "./context";
 import { LogLevelDesc } from "loglevel";
+import { getTasksByTriggerEvent } from "./task";
+import { getEventByContext } from "./event";
 import {
-  ITriggerContext,
-  ITriggerResult,
-  IWorkflow,
-  IGithub,
+  ITriggerInternalResult,
   ITriggerBuildResult,
+  AnyObject,
 } from "actionsflow-interface";
 
 interface IBuildOptions {
@@ -40,95 +41,54 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   if (options.logLevel) {
     log.setLevel(options.logLevel);
   }
-  // clean dist
-
-  let githubObj: IGithub = {
-    event: {},
-  };
-  try {
-    if (process.env.JSON_GITHUB) {
-      githubObj = JSON.parse(process.env.JSON_GITHUB);
-    }
-    if (!githubObj) {
-      githubObj = { event: {} };
-    }
-  } catch (error) {
-    log.warn("parse enviroment variable JSON_GITHUB error:", error);
-  }
   const { cwd, dest, include, exclude, force } = options;
   const destPath = path.resolve(cwd as string, dest as string);
   log.debug("destPath:", destPath);
-
-  let secretObj: Record<string, string> = {};
-  try {
-    if (process.env.JSON_SECRETS) {
-      secretObj = JSON.parse(process.env.JSON_SECRETS);
-    }
-    if (!secretObj) {
-      secretObj = {};
-    }
-  } catch (error) {
-    log.warn("parse enviroment variable JSON_SECRETS error:", error);
-  }
-  const context: ITriggerContext = {
-    secrets: secretObj,
-    github: githubObj,
-  };
+  const context = getContext();
+  // create workflow dest dir
+  const workflowsDestPath = path.resolve(destPath, "workflows");
+  await fs.ensureDir(workflowsDestPath);
+  // act need event.json and .secrets, event the workflows folder is empty
   // build native event
   await buildNativeEvent({
     dest: destPath,
-    github: githubObj,
+    github: context.github,
   });
-  // build secret
 
+  // build secret file
   await buildNativeSecrets({
     dest: destPath,
-    secrets: secretObj,
+    secrets: context.secrets,
   });
-  // if webhook event
-  const isWebhookEvent = githubObj.event_name === "repository_dispatch";
-  log.debug("isWebhookEvent: ", isWebhookEvent);
+
+  // get all valid workflows
   const workflows = await getWorkflows({
     context,
     cwd: cwd as string,
     include,
     exclude,
   });
-  // create workflow dest dir
-  await fs.ensureDir(path.resolve(destPath, "workflows"));
-  let needHandledWorkflows = workflows.filter(
-    (item) => item.rawTriggers.length > 0
-  );
 
-  //
-  if (isWebhookEvent) {
-    // only handle webhook event
-    needHandledWorkflows = needHandledWorkflows.filter((item) => {
-      const triggers = item.rawTriggers;
-      let isMatchedWebhookEvent = false;
-      for (let index = 0; index < triggers.length; index++) {
-        const trigger = triggers[index];
-        if (trigger.name === "webhook") {
-          if (trigger.options && trigger.options.event) {
-            // specific evetn
-            if (trigger.options.event === githubObj.event.action) {
-              isMatchedWebhookEvent = true;
-            }
-          } else {
-            isMatchedWebhookEvent = true;
-          }
-        }
-      }
-      return isMatchedWebhookEvent;
-    });
-  }
+  // get event by context
+  const triggerEvent = getEventByContext(context);
+  // get trigger by trigger type such as webhook, scheduled, manual
+
+  // get workflows that belong this type
+
+  const tasks = getTasksByTriggerEvent({
+    event: triggerEvent,
+    workflows,
+  });
+
+  // scheduled task
   log.debug(
-    "needHandledWorkflows",
+    "tasks",
     JSON.stringify(
-      needHandledWorkflows.map((item) => {
+      tasks.map((item) => {
         return {
-          relativePath: item.relativePath,
-          rawTriggers: item.rawTriggers,
+          relativePath: item.workflow.relativePath,
+          trigger: item.trigger,
+          event: item.event,
         };
       }),
       null,
@@ -136,94 +96,94 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     )
   );
 
-  for (let i = 0; i < needHandledWorkflows.length; i++) {
-    const workflow = needHandledWorkflows[i];
-    const rawTriggers = workflow.rawTriggers || [];
-    const workflowTodo: {
-      dest: string;
-      workflow: IWorkflow;
-      context: ITriggerContext;
-      triggers: ITriggerBuildResult[];
-    } = {
-      dest: destPath,
-      workflow: workflow,
-      context: context,
-      triggers: [],
-    };
+  for (let i = 0; i < tasks.length; i++) {
+    const task = tasks[i];
+    const workflow = task.workflow;
+    const trigger = task.trigger;
+    const event = task.event;
+    const destPath = path.resolve(
+      workflowsDestPath,
+      `${workflow.filename}-${task.trigger.name}.yml`
+    );
     // manual run trigger
-    for (let j = 0; j < rawTriggers.length; j++) {
-      const rawTrigger = rawTriggers[j];
-      if (force) {
-        if (rawTrigger.options) {
-          rawTrigger.options.force = true;
-        } else {
-          rawTrigger.options = { force: true };
-        }
-      }
-      let triggerResult: ITriggerResult = {
-        items: [],
-      };
-      try {
-        triggerResult = await runTrigger({
-          trigger: {
-            ...rawTrigger,
-            workflowRelativePath: workflow.relativePath,
-          },
-          context,
-        });
-      } catch (error) {
-        // if continue-on-error
-        if (rawTrigger.options && rawTrigger.options["continue-on-error"]) {
-          log.warn(
-            `Run ${workflow.relativePath} trigger ${rawTrigger.name} error: `,
-            error
-          );
-          log.warn(
-            "But the workflow will continue to run because continue-on-error: true"
-          );
-          workflowTodo.triggers.push({
-            name: rawTrigger.name,
-            options: rawTrigger.options,
-            payload: {},
-            outcome: "failure",
-            conclusion: "success",
-          });
-          continue;
-        } else {
-          log.warn(
-            `Skip ${workflow.relativePath} trigger [${rawTrigger.name}]`
-          );
-          log.warn(`Run trigger ${rawTrigger.name} error: `, error);
-          continue;
-        }
-      }
-
-      if (triggerResult.items.length > 0) {
-        // check is need to run workflowTodos
-        for (let index = 0; index < triggerResult.items.length; index++) {
-          const element = triggerResult.items[index];
-          workflowTodo.triggers.push({
-            name: rawTrigger.name,
-            options: rawTrigger.options,
-            payload: element,
-            conclusion: "success",
-            outcome: "success",
-          });
-        }
+    const triggerResults: ITriggerBuildResult[] = [];
+    if (force) {
+      if (trigger.options) {
+        trigger.options.force = true;
       } else {
-        workflowTodo.triggers.push({
-          name: rawTrigger.name,
-          options: rawTrigger.options,
-          payload: {},
-          outcome: "skipped",
-          conclusion: "skipped",
+        trigger.options = { force: true };
+      }
+    }
+    let triggerRunResult: ITriggerInternalResult | undefined;
+    try {
+      triggerRunResult = await runTrigger({
+        workflow: workflow,
+        trigger: {
+          name: trigger.name,
+          options: trigger.options,
+        },
+        event: event,
+        context,
+      });
+    } catch (error) {
+      // if continue-on-error
+      if (trigger.options && trigger.options["continue-on-error"]) {
+        log.warn(
+          `Run ${workflow.relativePath} trigger ${trigger.name} error: `,
+          error
+        );
+        log.warn(
+          "But the workflow will continue to run because continue-on-error: true"
+        );
+        triggerResults.push({
+          outputs: {},
+          outcome: "failure",
+          conclusion: "success",
+        });
+        continue;
+      } else {
+        log.warn(`Skip ${workflow.relativePath} trigger [${trigger.name}]`);
+        log.warn(`Run trigger ${trigger.name} error: `, error);
+        continue;
+      }
+    }
+
+    if (
+      triggerRunResult.conclusion === "success" &&
+      triggerRunResult.items.length > 0
+    ) {
+      // only handle success, skip other status
+      // check is need to run workflowTasks
+      for (let index = 0; index < triggerRunResult.items.length; index++) {
+        const outputs = triggerRunResult.items[index];
+        triggerResults.push({
+          outputs,
+          conclusion: triggerRunResult.conclusion,
+          outcome: triggerRunResult.outcome,
         });
       }
     }
-    if (workflowTodo.triggers.length > 0) {
-      await buildSingleWorkflow(workflowTodo);
-      // success
-      log.info(`Build workflow ${workflowTodo.workflow.relativePath} success`);
+
+    if (triggerResults.length > 0) {
+      const newWorkflowFileData = await getBuiltWorkflow({
+        workflow: workflow,
+        trigger: {
+          name: trigger.name,
+          results: triggerResults,
+        },
+      });
+      if (Object.keys(newWorkflowFileData.jobs as AnyObject).length > 0) {
+        await buildWorkflowFile({
+          workflowData: newWorkflowFileData,
+          dest: destPath,
+        });
+
+        // success
+        log.info(`Build workflow ${workflow.relativePath} success`);
+      } else {
+        log.info("Skip generate workflow file: ", workflow.relativePath),
+          " because of no jobs";
+      }
     }
   }
 };

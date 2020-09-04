@@ -2,7 +2,7 @@ import Parser from "rss-parser";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerRunFunctionResult,
+  ITriggerResult,
   IHelpers,
   AnyObject,
 } from "actionsflow-interface";
@@ -11,7 +11,6 @@ import log from "../log";
 export default class Rss implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
-  every = 5;
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     // TODO adapt every cases
@@ -28,13 +27,9 @@ export default class Rss implements ITriggerClassType {
     if (!options.event) {
       this.options.event = "new_item";
     }
-
-    if (options.every) {
-      this.every = options.every as number;
-    }
   }
 
-  async run(): Promise<ITriggerRunFunctionResult> {
+  async run(): Promise<ITriggerResult> {
     const { event, url } = this.options;
     let urls = [];
 

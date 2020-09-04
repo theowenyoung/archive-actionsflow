@@ -1,3 +1,14 @@
+export type HTTP_METHODS_LOWERCASE =
+  | "head"
+  | "get"
+  | "post"
+  | "put"
+  | "patch"
+  | "delete"
+  | "options";
+export interface RequestQuery {
+  [key: string]: string | string[];
+}
 export type AnyObject = Record<string, unknown>;
 export interface IGithub {
   event: AnyObject;
@@ -23,15 +34,42 @@ export interface ITriggerContructorParams {
   context: ITriggerContext;
 }
 
-export interface ITriggerRunFunctionResult {
+export interface ITriggerResult {
   items: AnyObject[];
 }
-
+export interface IWebhookRequestRawPayload {
+  method?: HTTP_METHODS_LOWERCASE;
+  headers?: Record<string, string>;
+  path?: string;
+  body?: string | AnyObject | undefined;
+}
+export interface IWebhookRequestPayload {
+  method: HTTP_METHODS_LOWERCASE;
+  headers: Record<string, string>;
+  path: string;
+  body?: string | AnyObject | undefined;
+}
+export interface IWebhookRequest {
+  method: HTTP_METHODS_LOWERCASE;
+  headers: Record<string, string>;
+  path: string;
+  query: RequestQuery;
+  body: string | AnyObject | undefined;
+  params: AnyObject;
+}
+export type IWebhookHandler = (
+  request: IWebhookRequest
+) => Promise<ITriggerResult>;
+export interface IWebhook {
+  path?: string;
+  method?: string;
+  handler: IWebhookHandler;
+}
 export interface ITriggerClassType {
-  every?: number;
   shouldDeduplicate?: boolean;
   getItemKey?: (item: AnyObject) => string;
-  run(): Promise<ITriggerRunFunctionResult>;
+  run?(): Promise<ITriggerResult>;
+  webhooks?: IWebhook[];
 }
 export interface ITriggerClassTypeConstructable {
   new (params: ITriggerContructorParams): ITriggerClassType;
@@ -43,19 +81,32 @@ export interface ITrigger {
 export type OutcomeStatus = "success" | "failure" | "skipped";
 export type ConclusionStatus = "success" | "failure" | "skipped";
 export interface ITriggerBuildResult {
-  name: string;
-  options: AnyObject;
-  payload?: AnyObject;
+  outputs?: AnyObject;
   outcome: OutcomeStatus;
   conclusion: ConclusionStatus;
 }
-export interface ITriggerResult {
+export interface ITriggerInternalResult {
   items: AnyObject[];
+  outcome: OutcomeStatus;
+  conclusion: ConclusionStatus;
   helpers?: IHelpers;
 }
 export interface IWorkflow {
   path: string;
   relativePath: string;
+  filename: string;
   data: AnyObject;
   rawTriggers: ITrigger[];
+}
+
+export type TriggerEventType = "manual" | "schedule" | "webhook";
+export interface ITriggerEvent {
+  type: TriggerEventType;
+  request?: IWebhookRequestPayload;
+}
+
+export interface ITask {
+  workflow: IWorkflow;
+  trigger: ITrigger;
+  event: ITriggerEvent;
 }

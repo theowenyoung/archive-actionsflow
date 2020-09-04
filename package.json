@@ -9,7 +9,7 @@
   "scripts": {
     "start": "npm run build && lerna run --ignore actionsflow-workflow* --parallel start",
     "clean": "lerna run --ignore actionsflow-workflow* clean && rimraf ./.cache ./dist ./coverage",
-    "build": "npm run clean && lerna run --ignore actionsflow-workflow* build ",
+    "build": "npm run clean && lerna exec --ignore actionsflow-workflow* -- npm run build ",
     "release": "npm run test && lerna publish",
     "test": "npm-run-all -s lint jest",
     "coverage": "jest --coverage",
@@ -27,7 +27,7 @@
     "prettier": "prettier \"**/*.{md,json,js,ts,yaml,yml}\"",
     "bootstrap": "npx lerna bootstrap",
     "lerna": "npx lerna",
-    "build:example": "lerna run build --scope actionsflow-workflow-example -- -- --verbose -i twitter.yml",
+    "build:example": "lerna run build --scope actionsflow-workflow-example -- -- --verbose -i script.yml",
     "act:example": "lerna run act --scope actionsflow-workflow-example",
     "clean:example": "lerna run clean --scope actionsflow-workflow-example",
     "actionsflow": "./packages/actionsflow/cli.js",

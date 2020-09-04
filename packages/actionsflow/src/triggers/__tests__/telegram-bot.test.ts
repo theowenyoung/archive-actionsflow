@@ -62,13 +62,11 @@ test("telegram bot trigger", async () => {
     getTriggerConstructorParams({
       options: {
         token: TELEGRAM_TOKEN,
-        every: 10,
         event: "text",
       },
       name: "telegram_bot",
     })
   );
-  expect(telegramBot.every).toBe(10);
   const triggerResults = await telegramBot.run();
 
   expect(triggerResults.items.length).toBe(2);
