@@ -8,7 +8,7 @@ import {
   IWebhookRequestPayload,
 } from "actionsflow-interface";
 import { match, Match } from "path-to-regexp";
-
+import { formatRequest } from "./event";
 import { getTriggerWebhookBasePath } from "./utils";
 import log from "loglevel";
 export const getWebhook = ({
@@ -22,20 +22,19 @@ export const getWebhook = ({
   workflow: IWorkflow;
   trigger: ITrigger;
 }): { request: IWebhookRequest; handler: IWebhookHandler } | undefined => {
-  const requestPath = request.path;
+  const requestOriginPath = request.originPath;
   const requestMethod = request.method;
   const webhookBasePath = getTriggerWebhookBasePath(
     workflow.relativePath,
     trigger.name
   );
-  if (requestPath.startsWith(webhookBasePath)) {
-    let requestPathWithoutWebhookBasePath = requestPath.slice(
+  if (requestOriginPath.startsWith(webhookBasePath)) {
+    let requestPathWithoutWebhookBasePath = requestOriginPath.slice(
       webhookBasePath.length
     );
     if (!requestPathWithoutWebhookBasePath.startsWith("/")) {
       requestPathWithoutWebhookBasePath = `/${requestPathWithoutWebhookBasePath}`;
     }
-    request.path = requestPathWithoutWebhookBasePath;
     let matchedWebhook:
       | { request: IWebhookRequest; handler: IWebhookHandler }
       | undefined;
@@ -63,7 +62,12 @@ export const getWebhook = ({
       }
       if (isMethodMatched && isMatchedPath) {
         const newRequest: IWebhookRequest = {
-          ...request,
+          ...formatRequest({
+            path: requestPathWithoutWebhookBasePath,
+            method: request.method,
+            headers: request.headers,
+            body: request.body,
+          }),
           params: matchResult ? (matchResult.params as AnyObject) : {},
         };
 
@@ -77,13 +81,13 @@ export const getWebhook = ({
       return matchedWebhook;
     } else {
       log.debug(
-        `not found any webhooks matched for request path ${requestPath}`
+        `not found any webhooks matched for request path ${requestOriginPath}`
       );
       return;
     }
   } else {
     log.warn(
-      `can not found matched webhook handler for request path ${requestPath}`
+      `can not found matched webhook handler for request path ${requestOriginPath}`
     );
     return;
   }

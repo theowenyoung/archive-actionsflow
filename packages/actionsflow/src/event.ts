@@ -21,13 +21,16 @@ export const formatRequest = ({
   body?: string | AnyObject | undefined;
 }): IWebhookRequestPayload => {
   const pathInstance = new URL(path, WEBHOOK_DEFAULT_HOST);
+  const querystringStr = pathInstance.search
+    ? pathInstance.search.slice(1)
+    : "";
   const request: IWebhookRequestPayload = {
     path: pathInstance.pathname,
     method: method || "get",
     headers: headers || {},
     originPath: path,
-    query: querystring.parse(pathInstance.search),
-    querystring: pathInstance.search ? pathInstance.search.slice(1) : "",
+    query: querystring.parse(querystringStr),
+    querystring: querystringStr,
     search: pathInstance.search,
     searchParams: pathInstance.searchParams,
     URL: pathInstance,

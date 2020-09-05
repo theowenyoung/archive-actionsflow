@@ -15,6 +15,7 @@ test("get event by context", () => {
     secrets: {},
   };
   const event = getEventByContext(context);
+  console.log("event", event);
 
   expect(event.type).toEqual("webhook");
   if (event.request) {
@@ -22,5 +23,6 @@ test("get event by context", () => {
     if (typeof event.request.body === "object") {
       expect(event.request.body.update_id).toBe("test");
     }
+    expect(event.request.query.test).toBe("1");
   }
 });

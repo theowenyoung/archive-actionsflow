@@ -4,14 +4,14 @@ import { formatRequest } from "../event";
 test("get webhook", () => {
   const webhook = getWebhook({
     request: formatRequest({
-      path: "/telegram-bot/telegram_bot/webhook",
+      path: "/telegram-bot/telegram_bot/webhook/id-test?id=1",
       method: "post",
       body: '{"update_id":"test"}',
     }),
     trigger: { name: "telegram_bot", options: { token: "test" } },
     webhooks: [
       {
-        path: "/webhook",
+        path: "/webhook/:id",
         handler: async () => {
           return { items: [{ id: "test", title: "test title" }] };
         },
@@ -48,7 +48,12 @@ test("get webhook", () => {
     },
   });
   if (webhook) {
-    expect(webhook.request.path as string).toBe("/webhook");
+    console.log("webhook.request", webhook.request);
+
+    expect(webhook.request.path as string).toBe("/webhook/id-test");
+    expect(webhook.request.originPath as string).toBe("/webhook/id-test?id=1");
+    expect(webhook.request.params.id as string).toBe("id-test");
+    expect(webhook.request.method as string).toBe("post");
   } else {
     expect(webhook).toBe(undefined);
   }
