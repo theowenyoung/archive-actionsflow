@@ -5,7 +5,7 @@ const log = Log.getLogger("actionsflow");
 interface IColors {
   [key: string]: chalk.Chalk;
 }
-const colors: IColors = {
+export const colors: IColors = {
   TRACE: chalk.magenta,
   DEBUG: chalk.cyan,
   INFO: chalk.blue,
@@ -24,3 +24,4 @@ prefix.apply(log, {
   },
 });
 export default log;
+export { Log, prefix };

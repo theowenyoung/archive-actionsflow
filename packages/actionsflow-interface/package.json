@@ -19,5 +19,8 @@
   },
   "name": "actionsflow-interface",
   "author": "Owen Young",
-  "gitHead": "7b804e5a8726b189bcb4c2ea8d784a682b73b8b7"
+  "gitHead": "7b804e5a8726b189bcb4c2ea8d784a682b73b8b7",
+  "dependencies": {
+    "loglevel": "^1.7.0"
+  }
 }

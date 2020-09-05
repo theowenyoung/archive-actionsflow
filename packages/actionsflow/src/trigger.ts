@@ -1,6 +1,7 @@
 import { getThirdPartyTrigger, isPromise } from "./utils";
+import chalk from "chalk";
 import { createContentDigest, getCache } from "./helpers";
-import log from "./log";
+import log, { Log, prefix, colors } from "./log";
 import Triggers from "./triggers";
 import {
   ITriggerContext,
@@ -49,9 +50,18 @@ export const getTriggerHelpers = ({
     name: name,
     workflowRelativePath: workflowRelativePath,
   });
+  const triggerLog = Log.getLogger(`Actionsflow-trigger [${name}]`);
+  prefix.apply(triggerLog, {
+    format(level, name, timestamp) {
+      return `${chalk.gray(`[${timestamp}]`)} ${colors[level.toUpperCase()](
+        level
+      )} ${chalk.green(`${name}:`)}`;
+    },
+  });
   const triggerHelpers = {
     createContentDigest,
     cache: getCache(`trigger-${triggerId}`),
+    log: triggerLog,
   };
   return triggerHelpers;
 };

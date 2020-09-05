@@ -43,9 +43,12 @@ test("run trigger", async () => {
   }
 });
 
-test("run trigger with telegram bot webhook", async () => {
+test("run trigger with  webhook", async () => {
   const result = await run({
-    trigger: { name: "telegram_bot", options: { token: "test", force: true } },
+    trigger: {
+      name: "webhook",
+      options: { deduplication_key: "update_id", force: true },
+    },
 
     context: {
       github: {
@@ -54,13 +57,13 @@ test("run trigger with telegram bot webhook", async () => {
       secrets: {},
     },
     workflow: {
-      path: path.resolve(__dirname, "./fixtures/workflows/telegram-bot.yml"),
-      relativePath: "telegram-bot.yml",
-      filename: "telegram-bot",
+      path: path.resolve(__dirname, "./fixtures/workflows/webhook.yml"),
+      relativePath: "webhook.yml",
+      filename: "webhook",
       data: {
         on: {
-          telegram_bot: {
-            token: "test",
+          webhook: {
+            deduplication_key: "update_id",
           },
         },
         jobs: {
@@ -75,9 +78,9 @@ test("run trigger with telegram bot webhook", async () => {
       },
       rawTriggers: [
         {
-          name: "telegram_bot",
+          name: "webhook",
           options: {
-            token: "test",
+            deduplication_key: "update_id",
           },
         },
       ],
@@ -85,7 +88,7 @@ test("run trigger with telegram bot webhook", async () => {
     event: {
       type: "webhook",
       request: formatRequest({
-        path: "/telegram-bot/telegram_bot/",
+        path: "/webhook/webhook/",
         method: "post",
         body: {
           update_id: "test",
@@ -98,7 +101,8 @@ test("run trigger with telegram bot webhook", async () => {
   });
 
   expect(result.items.length).toBe(1);
-  expect(result.items[0].update_id).toBe("test");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect((result.items[0] as any).body.message.id).toBe("test");
 
   // clear cache
   if (result.helpers && result.helpers.cache) {

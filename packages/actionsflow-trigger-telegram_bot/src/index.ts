@@ -1,4 +1,3 @@
-import log from "../log";
 import axios, { AxiosRequestConfig } from "axios";
 import {
   ITriggerClassType,
@@ -39,6 +38,7 @@ export default class TelegramBot implements ITriggerClassType {
     },
   ];
   async run(): Promise<ITriggerResult> {
+    const log = this.helpers.log;
     const { token } = this.options as {
       token?: string;
       every?: number;

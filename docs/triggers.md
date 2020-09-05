@@ -14,7 +14,6 @@ For now, Actionsflow supports:
 - [RSS](/docs/triggers/0-rss.md)
 - [API polling](/docs/triggers/1-poll.md)
 - [Webhook](/docs/triggers/2-webhook.md)
-- [Telegram Bot](/docs/triggers/3-telegram-bot.md)
 
 An Actionsflow workflow can include multiple triggers, you can use the trigger's outputs at the [job steps](/docs/steps.md)
 

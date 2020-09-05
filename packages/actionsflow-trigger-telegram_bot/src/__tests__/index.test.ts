@@ -1,7 +1,7 @@
 import axios from "axios";
-import TelegramBot from "../telegram-bot";
+import TelegramBot from "../index";
 jest.mock("axios");
-import { getTriggerConstructorParams } from "./trigger.util";
+import { getTriggerHelpers } from "actionsflow/dist/src/trigger";
 
 const TELEGRAM_TOKEN = "test";
 
@@ -58,15 +58,22 @@ test("telegram bot trigger", async () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (axios as any).mockImplementation(() => Promise.resolve(resp));
 
-  const telegramBot = new TelegramBot(
-    getTriggerConstructorParams({
-      options: {
-        token: TELEGRAM_TOKEN,
-        event: "text",
-      },
+  const telegramBot = new TelegramBot({
+    helpers: getTriggerHelpers({
       name: "telegram_bot",
-    })
-  );
+      workflowRelativePath: "telegram_bot.yml",
+    }),
+    options: {
+      token: TELEGRAM_TOKEN,
+      event: "text",
+    },
+    context: {
+      github: {
+        event: {},
+      },
+      secrets: {},
+    },
+  });
   const triggerResults = await telegramBot.run();
 
   expect(triggerResults.items.length).toBe(2);

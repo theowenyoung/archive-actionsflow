@@ -1,5 +1,7 @@
 import { URLSearchParams, URL } from "url";
 import { ParsedUrlQuery } from "querystring";
+import { Logger } from "loglevel";
+
 export type HTTP_METHODS_LOWERCASE =
   | "head"
   | "get"
@@ -22,6 +24,7 @@ export interface IHelpers {
     del: (key: string) => Promise<void>;
     reset: () => Promise<void>;
   };
+  log: Logger;
 }
 export interface ITriggerContext extends AnyObject {
   secrets: Record<string, string>;

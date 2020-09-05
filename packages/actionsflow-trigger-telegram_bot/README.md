@@ -3,7 +3,9 @@ title: "Telegram Bot"
 metaTitle: "Telegram Bot trigger"
 ---
 
-Telegram Bot trigger is triggered when new messages of telegram bot are detected. This trigger supports to specify one message type or multiple message types
+# `@actionsflow/trigger-telegram_bot`
+
+This is an [Actionsflow](https://github.com/actionsflow/actionsflow) telegram bot trigger. `telegram_bot` trigger is triggered when new messages of telegram bot are detected. This trigger supports to specify one message type or multiple message types
 
 # Events
 
