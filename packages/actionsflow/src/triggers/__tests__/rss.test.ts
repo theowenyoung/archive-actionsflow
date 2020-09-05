@@ -16,12 +16,11 @@ test("rss trigger", async () => {
   expect(triggerResults.items.length).toBe(2);
 });
 
-test("rss trigger with event new_item_in_multiple_feeds", async () => {
+test("rss trigger with multiple urls", async () => {
   const rss = new Rss(
     getTriggerConstructorParams({
       options: {
-        event: "new_item_in_multiple_feeds",
-        urls: ["https://hnrss.org/newest?points=300"],
+        url: ["https://hnrss.org/newest?points=300"],
         every: 10,
       },
       name: "rss",

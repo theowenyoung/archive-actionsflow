@@ -49,7 +49,7 @@ test("telegram bot trigger", async () => {
               type: "private",
             },
             date: 1597941280,
-            text: "world",
+            photo: {},
           },
         },
       ],
@@ -65,7 +65,7 @@ test("telegram bot trigger", async () => {
     }),
     options: {
       token: TELEGRAM_TOKEN,
-      event: "text",
+      event: ["text", "photo"],
     },
     context: {
       github: {
@@ -79,4 +79,25 @@ test("telegram bot trigger", async () => {
   expect(triggerResults.items.length).toBe(2);
 
   expect(telegramBot.getItemKey(triggerResults.items[0])).toBe(791185170);
+
+  const telegramBot2 = new TelegramBot({
+    helpers: getTriggerHelpers({
+      name: "telegram_bot",
+      workflowRelativePath: "telegram_bot.yml",
+    }),
+    options: {
+      token: TELEGRAM_TOKEN,
+      event: "photo",
+    },
+    context: {
+      github: {
+        event: {},
+      },
+      secrets: {},
+    },
+  });
+  const triggerResults2 = await telegramBot2.run();
+  expect(triggerResults2.items.length).toBe(1);
+
+  expect(telegramBot2.getItemKey(triggerResults2.items[0])).toBe(791185171);
 });

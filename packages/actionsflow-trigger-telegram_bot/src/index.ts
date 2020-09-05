@@ -42,7 +42,7 @@ export default class TelegramBot implements ITriggerClassType {
     const { token } = this.options as {
       token?: string;
       every?: number;
-      event?: string;
+      event?: string | string[];
     };
 
     if (!token) {
@@ -90,12 +90,12 @@ export default class TelegramBot implements ITriggerClassType {
   }
   _getItems(itemsArray: AnyObject[]): AnyObject[] {
     const { event } = this.options as {
-      event: string;
+      event: string | string[];
     };
-    let { events } = this.options as {
-      events?: string[];
-    };
-    if (!events && event) {
+    let events: string[] = [];
+    if (Array.isArray(event)) {
+      events = event;
+    } else {
       events = [event];
     }
     const items: AnyObject[] = [];
@@ -141,7 +141,7 @@ export default class TelegramBot implements ITriggerClassType {
         return message[messageType];
       });
 
-      if (events) {
+      if (events.length > 0) {
         if (messageType && events.includes(messageType)) {
           items.push(message);
         }

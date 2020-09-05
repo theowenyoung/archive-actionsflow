@@ -15,14 +15,15 @@ This is an [Actionsflow](https://github.com/actionsflow/actionsflow) telegram bo
 # single message type
 on:
   telegram_bot:
-    events:
-      - photo
-      - text
+    event: text
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
 # multiple message types
 on:
   telegram_bot:
-    event: text
+    event:
+      - photo
+      - text
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 ```
 
@@ -30,9 +31,7 @@ on:
 
 - `token`, required, telegram bot token, you should get it from [Telegram BotFather](https://telegram.me/BotFather), for example: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`
 
-- `event`, optional, telegram message type, allowed types: `text`,`animation`,`audio`,`channel_chat_created`,`contact`,`delete_chat_photo`,`dice`,`document`,`game`,`group_chat_created`,`invoice`,`left_chat_member`,`location`,`migrate_from_chat_id`,`migrate_to_chat_id`,`new_chat_members`,`new_chat_photo`,`new_chat_title`,`passport_data`,`photo`,`pinned_message`,`poll`,`sticker`,`successful_payment`,`supergroup_chat_created`,`video`,`video_note`,`voice`, if neither `event` or `events` is not provided, all message will be triggered.
-
-- `events`, optional, an array of event, example: `["text","photo"]`
+- `event`, optional, `string` or `string[]`, telegram message type, allowed types: `text`,`animation`,`audio`,`channel_chat_created`,`contact`,`delete_chat_photo`,`dice`,`document`,`game`,`group_chat_created`,`invoice`,`left_chat_member`,`location`,`migrate_from_chat_id`,`migrate_to_chat_id`,`new_chat_members`,`new_chat_photo`,`new_chat_title`,`passport_data`,`photo`,`pinned_message`,`poll`,`sticker`,`successful_payment`,`supergroup_chat_created`,`video`,`video_note`,`voice`, if neither `event` or `events` is not provided, all message will be triggered. example: `["text","photo"]`,`text`
 
 - `requestParams`, optional, we use [Axios](https://github.com/axios/axios) for polling data, so your can pass all params that [axios supported](https://github.com/axios/axios#request-config). For example:
 

@@ -23,28 +23,17 @@ export default class Rss implements ITriggerClassType {
       this.options = options;
     }
     this.helpers = helpers;
-
-    if (!options.event) {
-      this.options.event = "new_item";
-    }
   }
 
   async run(): Promise<ITriggerResult> {
-    const { event, url } = this.options;
+    const { url } = this.options;
     let urls = [];
 
-    if (event === "new_item_in_multiple_feeds") {
-      const urlsParam = this.options.urls;
-      if (!urlsParam) {
-        throw new Error("Miss param urls");
+    if (Array.isArray(url)) {
+      if (url.length === 0) {
+        throw new Error("url must be provided one at lease");
       }
-      if (typeof urlsParam === "string") {
-        urls = [urlsParam];
-      } else if (Array.isArray(urlsParam)) {
-        urls = urlsParam;
-      } else {
-        throw new Error("Param urls is invalid!");
-      }
+      urls = url;
     } else {
       if (!url) {
         throw new Error("Miss required param url");
