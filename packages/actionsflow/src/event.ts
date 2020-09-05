@@ -4,8 +4,39 @@ import {
   IWebhookRequestRawPayload,
   HTTP_METHODS_LOWERCASE,
   IWebhookRequestPayload,
+  AnyObject,
 } from "actionsflow-interface";
-
+import querystring from "querystring";
+import { WEBHOOK_DEFAULT_HOST } from "./constans";
+import { URL } from "url";
+export const formatRequest = ({
+  path,
+  method,
+  headers,
+  body,
+}: {
+  path: string;
+  method?: HTTP_METHODS_LOWERCASE;
+  headers?: Record<string, string>;
+  body?: string | AnyObject | undefined;
+}): IWebhookRequestPayload => {
+  const pathInstance = new URL(path, WEBHOOK_DEFAULT_HOST);
+  const request: IWebhookRequestPayload = {
+    path: pathInstance.pathname,
+    method: method || "get",
+    headers: headers || {},
+    originPath: path,
+    query: querystring.parse(pathInstance.search),
+    querystring: pathInstance.search ? pathInstance.search.slice(1) : "",
+    search: pathInstance.search,
+    searchParams: pathInstance.searchParams,
+    URL: pathInstance,
+  };
+  if (body) {
+    request.body = body;
+  }
+  return request;
+};
 export const getEventByContext = (context: ITriggerContext): ITriggerEvent => {
   const triggerEvent: ITriggerEvent = {
     type: "manual",
@@ -63,7 +94,14 @@ export const getEventByContext = (context: ITriggerContext): ITriggerEvent => {
       clientPayload.headers = newHeaders;
     }
 
-    triggerEvent.request = clientPayload as IWebhookRequestPayload;
+    // parse path
+
+    triggerEvent.request = formatRequest({
+      path: clientPayload.path,
+      method: clientPayload.method,
+      headers: clientPayload.headers,
+      body: clientPayload.body,
+    });
   } else if (githubObj.event_type === "schedule") {
     triggerEvent.type = "schedule";
   } else {

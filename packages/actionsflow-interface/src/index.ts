@@ -1,3 +1,5 @@
+import { URLSearchParams, URL } from "url";
+import { ParsedUrlQuery } from "querystring";
 export type HTTP_METHODS_LOWERCASE =
   | "head"
   | "get"
@@ -6,9 +8,7 @@ export type HTTP_METHODS_LOWERCASE =
   | "patch"
   | "delete"
   | "options";
-export interface RequestQuery {
-  [key: string]: string | string[];
-}
+
 export type AnyObject = Record<string, unknown>;
 export interface IGithub {
   event: AnyObject;
@@ -46,15 +46,16 @@ export interface IWebhookRequestRawPayload {
 export interface IWebhookRequestPayload {
   method: HTTP_METHODS_LOWERCASE;
   headers: Record<string, string>;
+  originPath: string;
   path: string;
+  query: ParsedUrlQuery;
+  querystring: string;
+  search: string;
   body?: string | AnyObject | undefined;
+  searchParams: URLSearchParams;
+  URL: URL;
 }
-export interface IWebhookRequest {
-  method: HTTP_METHODS_LOWERCASE;
-  headers: Record<string, string>;
-  path: string;
-  query: RequestQuery;
-  body: string | AnyObject | undefined;
+export interface IWebhookRequest extends IWebhookRequestPayload {
   params: AnyObject;
 }
 export type IWebhookHandler = (

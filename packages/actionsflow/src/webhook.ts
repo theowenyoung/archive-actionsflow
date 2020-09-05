@@ -35,6 +35,7 @@ export const getWebhook = ({
     if (!requestPathWithoutWebhookBasePath.startsWith("/")) {
       requestPathWithoutWebhookBasePath = `/${requestPathWithoutWebhookBasePath}`;
     }
+    request.path = requestPathWithoutWebhookBasePath;
     let matchedWebhook:
       | { request: IWebhookRequest; handler: IWebhookHandler }
       | undefined;
@@ -61,13 +62,14 @@ export const getWebhook = ({
         isMatchedPath = true;
       }
       if (isMethodMatched && isMatchedPath) {
-        request.path = requestPathWithoutWebhookBasePath;
+        const newRequest: IWebhookRequest = {
+          ...request,
+          params: matchResult ? (matchResult.params as AnyObject) : {},
+        };
+
         matchedWebhook = {
           handler: webhook.handler,
-          request: {
-            ...(request as IWebhookRequest),
-            params: matchResult ? (matchResult.params as AnyObject) : {},
-          },
+          request: newRequest,
         };
       }
     });

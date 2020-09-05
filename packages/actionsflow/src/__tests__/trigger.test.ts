@@ -1,5 +1,6 @@
 import path from "path";
 import { run } from "../trigger";
+import { formatRequest } from "../event";
 test("run trigger", async () => {
   const result = await run({
     trigger: {
@@ -42,7 +43,7 @@ test("run trigger", async () => {
   }
 });
 
-test("run trigger with webhook", async () => {
+test("run trigger with telegram bot webhook", async () => {
   const result = await run({
     trigger: { name: "telegram_bot", options: { token: "test", force: true } },
 
@@ -83,18 +84,16 @@ test("run trigger with webhook", async () => {
     },
     event: {
       type: "webhook",
-      request: {
+      request: formatRequest({
         path: "/telegram-bot/telegram_bot/",
         method: "post",
-        headers: {},
         body: {
           update_id: "test",
           message: {
-            message_id: "testmessageid",
-            text: "hello",
+            id: "test",
           },
         },
-      },
+      }),
     },
   });
 

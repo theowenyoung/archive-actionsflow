@@ -1,15 +1,13 @@
 import { getWebhook } from "../webhook";
 import path from "path";
+import { formatRequest } from "../event";
 test("get webhook", () => {
   const webhook = getWebhook({
-    request: {
+    request: formatRequest({
       path: "/telegram-bot/telegram_bot/webhook",
       method: "post",
-      headers: {},
-      body: {
-        update_id: "test",
-      },
-    },
+      body: '{"update_id":"test"}',
+    }),
     trigger: { name: "telegram_bot", options: { token: "test" } },
     webhooks: [
       {
@@ -58,14 +56,11 @@ test("get webhook", () => {
 
 test("get webhook not match", () => {
   const webhook = getWebhook({
-    request: {
+    request: formatRequest({
       path: "/telegram-bot/telegram_bot/webhook",
       method: "post",
-      headers: {},
-      body: {
-        update_id: "test",
-      },
-    },
+      body: '{"update_id":"test"}',
+    }),
     trigger: { name: "telegram_bot", options: { token: "test" } },
     webhooks: [
       {

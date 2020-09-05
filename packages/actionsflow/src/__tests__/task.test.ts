@@ -1,4 +1,5 @@
 import { getTasksByTriggerEvent } from "../task";
+import { formatRequest } from "../event";
 import path from "path";
 const feedUrl = "https://hnrss.org/newest?points=300";
 const feedOptions = {
@@ -46,14 +47,10 @@ test("get task by trigger event webhook", () => {
   const tasks = getTasksByTriggerEvent({
     event: {
       type: "webhook",
-      request: {
+      request: formatRequest({
         path: "/telegram-bot/telegram_bot/webhook",
         method: "post",
-        headers: {},
-        body: {
-          update_id: "test",
-        },
-      },
+      }),
     },
     workflows: [
       {
