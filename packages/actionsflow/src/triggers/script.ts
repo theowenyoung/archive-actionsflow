@@ -32,14 +32,18 @@ export default class Script implements ITriggerClassType {
   script = "";
   path = "";
   getItemKey(item: AnyObject): string {
+    const deduplication_key = this.options.deduplication_key;
+    if (deduplication_key) {
+      return item[deduplication_key as string] as string;
+    }
     if (item.id) return item.id as string;
+    if (item.key) return item.key as string;
     return this.helpers.createContentDigest(item);
   }
   constructor({ helpers, options, context }: ITriggerContructorParams) {
     this.options = options;
     this.helpers = helpers;
     this.context = context;
-
     if (options.script) {
       this.script = options.script as string;
     } else if (options.path) {
