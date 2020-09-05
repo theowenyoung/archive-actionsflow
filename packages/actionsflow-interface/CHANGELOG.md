@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.10](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.9...actionsflow-interface@0.0.10) (2020-09-05)
+
+### Features
+
+- change package ([f81623f](https://github.com/actionsflow/actionsflow/commit/f81623f282c215f2b1a8064507d2beeddb4a927d))
+
 ## [0.0.9](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.8...actionsflow-interface@0.0.9) (2020-09-05)
 
 ### Bug Fixes
