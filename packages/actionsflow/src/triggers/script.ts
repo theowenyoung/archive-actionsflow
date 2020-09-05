@@ -5,9 +5,11 @@ import {
   ITriggerResult,
   IHelpers,
   ITriggerContext,
+  IWorkflow,
 } from "actionsflow-interface";
 import resolveCwd from "resolve-cwd";
 import { isPromise } from "../utils";
+import { resolve } from "path";
 import axios, { AxiosStatic } from "axios";
 const AsyncFunction = Object.getPrototypeOf(async () => null).constructor;
 
@@ -31,9 +33,8 @@ export default class Script implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
   context: ITriggerContext;
+  workflow: IWorkflow;
   shouldDeduplicate = true;
-  script = "";
-  path = "";
   getItemKey(item: AnyObject): string {
     const deduplication_key = this.options.deduplication_key;
     if (deduplication_key) {
@@ -43,15 +44,16 @@ export default class Script implements ITriggerClassType {
     if (item.key) return item.key as string;
     return this.helpers.createContentDigest(item);
   }
-  constructor({ helpers, options, context }: ITriggerContructorParams) {
+  constructor({
+    helpers,
+    options,
+    context,
+    workflow,
+  }: ITriggerContructorParams) {
     this.options = options;
     this.helpers = helpers;
     this.context = context;
-    if (options.script) {
-      this.script = options.script as string;
-    } else if (options.path) {
-      this.path = options.path as string;
-    }
+    this.workflow = workflow;
   }
 
   async run(): Promise<ITriggerResult> {
@@ -62,14 +64,19 @@ export default class Script implements ITriggerClassType {
       context: this.context,
       options: this.options,
     };
-    if (this.script) {
+    const { run, path } = this.options as {
+      run: string;
+      path: string;
+    };
+    if (run) {
       const results = (await callAsyncFunction(
         functionContext,
-        this.script
+        run
       )) as ITriggerResult;
       return results;
-    } else if (this.path) {
-      const scriptPath = resolveCwd.silent(this.path);
+    } else if (path) {
+      const scriptAbsolutePath = resolve(this.workflow.path, "../", path);
+      const scriptPath = resolveCwd.silent(scriptAbsolutePath);
       if (scriptPath) {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const scriptFunction = require(scriptPath);
@@ -79,14 +86,11 @@ export default class Script implements ITriggerClassType {
         }
         return scriptFunctionResult;
       } else {
-        this.helpers.log.warn(
-          `can not found the path ${this.path}, skip [script] trigger`
-        );
-        return { items: [] };
+        throw new Error(`can not found the script path ${path}`);
       }
     } else {
       throw new Error(
-        "Miss param script or path, you must provide one of script or path at least"
+        "Miss param run or path, you must provide one of run or path at least"
       );
     }
   }

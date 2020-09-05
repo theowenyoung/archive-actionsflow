@@ -37,7 +37,12 @@ const getSupportedTriggers = (doc: AnyObject): ITrigger[] => {
         isTriggerSupported = true;
       }
       if (!isTriggerSupported) {
-        log.info(`We do not support trigger [${key}] now.`);
+        log.info(
+          `can not found the trigger [${key}]. Did you forget to install the third party trigger?
+
+Try \`npm i @actionsflow/trigger-${key}\` if it exists.
+`
+        );
       }
       if (isTriggerSupported) {
         // is active
@@ -59,6 +64,72 @@ interface IGetWorkflowsOptions {
   include?: string[];
   exclude?: string[];
 }
+export const getWorkflow = async ({
+  cwd,
+  path: filePath,
+  context,
+}: {
+  cwd: string;
+  path: string;
+  context: ITriggerContext;
+}): Promise<IWorkflow | undefined> => {
+  const relativePath = path.relative(path.resolve(cwd, "workflows"), filePath);
+  let doc: Record<string, unknown> | string | undefined;
+  try {
+    doc = yaml.safeLoad(await fs.readFile(filePath, "utf8")) as Record<
+      string,
+      unknown
+    >;
+  } catch (e) {
+    log.error("load yaml file error:", filePath, e);
+    throw e;
+  }
+  if (doc && typeof doc === "object" && doc.on) {
+    // handle doc on, replace variables
+    if (doc.on && typeof doc.on === "object") {
+      const newOn = mapObj(
+        doc.on,
+        (mapKey, mapValue) => {
+          let newMapValueString = "";
+          let isHandled = false;
+          if (typeof mapValue === "string") {
+            const theMapValue = mapValue as string;
+            // if supported
+            newMapValueString = template(theMapValue, context, {
+              shouldReplaceUndefinedToEmpty: true,
+            });
+            isHandled = true;
+          }
+          if (isHandled) {
+            return [mapKey, newMapValueString];
+          } else {
+            return [mapKey, mapValue];
+          }
+        },
+        {
+          deep: true,
+        }
+      );
+      doc.on = newOn;
+    }
+
+    const triggers = getSupportedTriggers(doc as AnyObject);
+    const relativePathWithoutExt = relativePath
+      .split(".")
+      .slice(0, -1)
+      .join(".");
+    return {
+      path: filePath,
+      relativePath: relativePath,
+      filename: relativePathWithoutExt,
+      data: doc as AnyObject,
+      rawTriggers: triggers,
+    };
+  } else {
+    log.debug("skip empty or invalid file", filePath);
+    return undefined;
+  }
+};
 export const getWorkflows = async (
   options: IGetWorkflowsOptions
 ): Promise<IWorkflow[]> => {
@@ -117,59 +188,13 @@ export const getWorkflows = async (
   // Get document, or throw exception on error
   for (let index = 0; index < entries.length; index++) {
     const filePath = entries[index].path;
-    let doc: Record<string, unknown> | string | undefined;
-    try {
-      doc = yaml.safeLoad(await fs.readFile(filePath, "utf8")) as Record<
-        string,
-        unknown
-      >;
-    } catch (e) {
-      log.error("load yaml file error:", filePath, e);
-      throw e;
-    }
-    if (doc && typeof doc === "object" && doc.on) {
-      // handle doc on, replace variables
-      if (doc.on && typeof doc.on === "object") {
-        const newOn = mapObj(
-          doc.on,
-          (mapKey, mapValue) => {
-            let newMapValueString = "";
-            let isHandled = false;
-            if (typeof mapValue === "string") {
-              const theMapValue = mapValue as string;
-              // if supported
-              newMapValueString = template(theMapValue, context, {
-                shouldReplaceUndefinedToEmpty: true,
-              });
-              isHandled = true;
-            }
-            if (isHandled) {
-              return [mapKey, newMapValueString];
-            } else {
-              return [mapKey, mapValue];
-            }
-          },
-          {
-            deep: true,
-          }
-        );
-        doc.on = newOn;
-      }
-
-      const triggers = getSupportedTriggers(doc as AnyObject);
-      const relativePathWithoutExt = entries[index].relativePath
-        .split(".")
-        .slice(0, -1)
-        .join(".");
-      workflows.push({
-        path: filePath,
-        relativePath: entries[index].relativePath,
-        filename: relativePathWithoutExt,
-        data: doc as AnyObject,
-        rawTriggers: triggers,
-      });
-    } else {
-      log.debug("skip empty or invalid file", filePath);
+    const workflow = await getWorkflow({
+      path: filePath,
+      cwd: cwd,
+      context: context,
+    });
+    if (workflow) {
+      workflows.push(workflow);
     }
   }
   const validWorkflows = workflows.filter(

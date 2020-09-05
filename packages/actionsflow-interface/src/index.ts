@@ -35,6 +35,7 @@ export interface ITriggerContructorParams {
   options: AnyObject;
   helpers: IHelpers;
   context: ITriggerContext;
+  workflow: IWorkflow;
 }
 
 export interface ITriggerResult {

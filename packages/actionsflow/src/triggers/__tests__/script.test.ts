@@ -3,9 +3,9 @@ import { getTriggerConstructorParams } from "./trigger.util";
 import path from "path";
 test("script trigger", async () => {
   const script = new Script(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
-        script: `return {
+        run: `return {
           items: [{id:'test',title:'test'}]
         }`,
       },
@@ -20,10 +20,10 @@ test("script trigger", async () => {
 
 test("script trigger with options", async () => {
   const script = new Script(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         test: "222",
-        script: `return {
+        run: `return {
           items: [{id:'test',title:'test',options:options}]
         }`,
       },
@@ -38,9 +38,9 @@ test("script trigger with options", async () => {
 
 test("script trigger with deduplication_key", async () => {
   const script = new Script(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
-        script: `return {
+        run: `return {
           items: [{id:'test',title:'test'}]
         }`,
         deduplication_key: "title",
@@ -57,9 +57,9 @@ test("script trigger with deduplication_key", async () => {
 
 test("script trigger with deduplication_key no found", async () => {
   const script = new Script(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
-        script: `return {
+        run: `return {
           items: [{id2:'test',title:'test'}]
         }`,
       },
@@ -75,7 +75,7 @@ test("script trigger with deduplication_key no found", async () => {
 
 test("script trigger without required param", async () => {
   const script = new Script(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {},
       name: "script",
     })
@@ -83,14 +83,14 @@ test("script trigger without required param", async () => {
 
   await expect(script.run()).rejects.toEqual(
     new Error(
-      "Miss param script or path, you must provide one of script or path at least"
+      "Miss param run or path, you must provide one of run or path at least"
     )
   );
 });
 
 test("script trigger with file path", async () => {
   const script = new Script(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         path: path.resolve(__dirname, "fixtures/script.js"),
       },

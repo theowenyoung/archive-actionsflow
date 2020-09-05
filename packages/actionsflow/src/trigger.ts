@@ -152,6 +152,7 @@ export const run = async ({
       helpers: triggerHelpers,
       options: trigger.options || {},
       context: context,
+      workflow: workflow,
     });
 
     let triggerResult: ITriggerResult | undefined;

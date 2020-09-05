@@ -3,7 +3,7 @@ import { getTriggerConstructorParams } from "./trigger.util";
 
 test("rss trigger", async () => {
   const rss = new Rss(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         url: "https://hnrss.org/newest?points=300",
         every: 10,
@@ -18,7 +18,7 @@ test("rss trigger", async () => {
 
 test("rss trigger with multiple urls", async () => {
   const rss = new Rss(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         url: ["https://hnrss.org/newest?points=300"],
         every: 10,
@@ -32,7 +32,7 @@ test("rss trigger with multiple urls", async () => {
 });
 test("rss trigger without required param", async () => {
   const rss = new Rss(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {},
       name: "rss",
     })

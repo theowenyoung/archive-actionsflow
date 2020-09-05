@@ -5,7 +5,7 @@ import { formatRequest } from "../../event";
 
 test("webhook trigger", async () => {
   const webhook = new Webhook(
-    getTriggerConstructorParams({ options: {}, name: "webhook" })
+    await getTriggerConstructorParams({ options: {}, name: "webhook" })
   );
   const requestPayload = formatRequest({
     path: "/",

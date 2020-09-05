@@ -1,10 +1,6 @@
 on:
   script:
-    run: |
-      const result = await axios.get("https://jsonplaceholder.typicode.com/posts")
-      return {
-        items: result.data
-      }
+    path: ./script.js
 jobs:
   print:
     name: Print

@@ -1,5 +1,11 @@
-import { ITriggerContructorParams, AnyObject } from "actionsflow-interface";
-import { getTriggerHelpers } from "../../trigger";
+import {
+  ITriggerContructorParams,
+  AnyObject,
+  IWorkflow,
+} from "actionsflow-interface";
+import path from "path";
+import { getTriggerHelpers, getWorkflow } from "../../index";
+
 export const CONTEXT = {
   github: {
     event_name: "repository_dispatch",
@@ -12,13 +18,13 @@ export const CONTEXT = {
   },
   secrets: {},
 };
-export const getTriggerConstructorParams = ({
+export const getTriggerConstructorParams = async ({
   options,
   name,
 }: {
   options: AnyObject;
   name: string;
-}): ITriggerContructorParams => {
+}): Promise<ITriggerContructorParams> => {
   return {
     options: options,
     helpers: getTriggerHelpers({
@@ -26,5 +32,10 @@ export const getTriggerConstructorParams = ({
       workflowRelativePath: "test.yml",
     }),
     context: CONTEXT,
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "./fixtures/workflows/rss.yml"),
+      cwd: path.resolve(__dirname, "./fixtures"),
+      context: CONTEXT,
+    })) as IWorkflow,
   };
 };

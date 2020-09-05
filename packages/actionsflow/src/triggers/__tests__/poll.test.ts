@@ -26,7 +26,7 @@ test("poll trigger", async () => {
   (axios as any).mockImplementation(() => Promise.resolve(resp));
 
   const poll = new Poll(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         url: "https://jsonplaceholder.typicode.com/posts",
       },
@@ -45,7 +45,7 @@ test("poll trigger with deduplication_key", async () => {
   (axios as any).mockImplementation(() => Promise.resolve(resp));
 
   const poll = new Poll(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         url: "https://jsonplaceholder.typicode.com/posts",
         deduplication_key: "userId",
@@ -84,7 +84,7 @@ test("poll trigger with deduplication_key as key", async () => {
   (axios as any).mockImplementation(() => Promise.resolve(resp2));
 
   const poll = new Poll(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         url: "https://jsonplaceholder.typicode.com/posts",
       },
@@ -120,7 +120,7 @@ test("poll trigger with deduplication_key no found", async () => {
   (axios as any).mockImplementation(() => Promise.resolve(resp2));
 
   const poll = new Poll(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {
         url: "https://jsonplaceholder.typicode.com/posts",
       },
@@ -136,7 +136,7 @@ test("poll trigger with deduplication_key no found", async () => {
 
 test("poll trigger without required param", async () => {
   const poll = new Poll(
-    getTriggerConstructorParams({
+    await getTriggerConstructorParams({
       options: {},
       name: "poll",
     })

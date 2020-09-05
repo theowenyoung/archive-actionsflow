@@ -1,7 +1,9 @@
 import axios from "axios";
+import path from "path";
 import TelegramBot from "../index";
 jest.mock("axios");
-import { getTriggerHelpers } from "actionsflow/dist/src/trigger";
+import { getTriggerHelpers, getContext, getWorkflow } from "actionsflow";
+import { IWorkflow } from "actionsflow-interface";
 
 const TELEGRAM_TOKEN = "test";
 
@@ -59,21 +61,22 @@ test("telegram bot trigger", async () => {
   (axios as any).mockImplementation(() => Promise.resolve(resp));
 
   const telegramBot = new TelegramBot({
-    helpers: getTriggerHelpers({
-      name: "telegram_bot",
-      workflowRelativePath: "telegram_bot.yml",
-    }),
+    context: getContext(),
     options: {
       token: TELEGRAM_TOKEN,
       event: ["text", "photo"],
     },
-    context: {
-      github: {
-        event: {},
-      },
-      secrets: {},
-    },
+    helpers: getTriggerHelpers({
+      name: "telegram_bot",
+      workflowRelativePath: "workflow.yml",
+    }),
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "fixtures/workflows/workflow.yml"),
+      cwd: path.resolve(__dirname, "fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
   });
+
   const triggerResults = await telegramBot.run();
 
   expect(triggerResults.items.length).toBe(2);
@@ -81,20 +84,20 @@ test("telegram bot trigger", async () => {
   expect(telegramBot.getItemKey(triggerResults.items[0])).toBe(791185170);
 
   const telegramBot2 = new TelegramBot({
-    helpers: getTriggerHelpers({
-      name: "telegram_bot",
-      workflowRelativePath: "telegram_bot.yml",
-    }),
+    context: getContext(),
     options: {
       token: TELEGRAM_TOKEN,
       event: "photo",
     },
-    context: {
-      github: {
-        event: {},
-      },
-      secrets: {},
-    },
+    helpers: getTriggerHelpers({
+      name: "telegram_bot",
+      workflowRelativePath: "workflow.yml",
+    }),
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "fixtures/workflows/workflow.yml"),
+      cwd: path.resolve(__dirname, "fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
   });
   const triggerResults2 = await telegramBot2.run();
   expect(triggerResults2.items.length).toBe(1);
