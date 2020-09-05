@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.7](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.0.6...@actionsflow/trigger-twitter@0.0.7) (2020-09-05)
+
+### Features
+
+- add docs ([0d1ad46](https://github.com/actionsflow/actionsflow/commit/0d1ad468725b9da5c87e79b242b70e3c51f7ea68))
+- telegram to sperate ([f45aa43](https://github.com/actionsflow/actionsflow/commit/f45aa4379f71ff320ccb6a785b28e206aaa51ac2))
+
 ## [0.0.6](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.0.5...@actionsflow/trigger-twitter@0.0.6) (2020-08-31)
 
 ### Features

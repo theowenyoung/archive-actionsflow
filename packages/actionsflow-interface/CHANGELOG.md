@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.9](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.8...actionsflow-interface@0.0.9) (2020-09-05)
+
+### Bug Fixes
+
+- event request ([71607e8](https://github.com/actionsflow/actionsflow/commit/71607e8b1ee7b8ef67fca4ce986490963cb3aefd))
+
+### Features
+
+- suppor webhook getItemKey ([fd99cf0](https://github.com/actionsflow/actionsflow/commit/fd99cf030a711e1a436a568089ea57c594fff6b9))
+- support no promise run ([0aef166](https://github.com/actionsflow/actionsflow/commit/0aef166e1c939414218bb514b3751c5c81c56a5c))
+- telegram to sperate ([f45aa43](https://github.com/actionsflow/actionsflow/commit/f45aa4379f71ff320ccb6a785b28e206aaa51ac2))
+
 ## [0.0.8](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.0.7...actionsflow-interface@0.0.8) (2020-08-31)
 
 ### Features
