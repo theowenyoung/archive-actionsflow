@@ -15,7 +15,6 @@ test("get event by context", () => {
     secrets: {},
   };
   const event = getEventByContext(context);
-  console.log("event", event);
 
   expect(event.type).toEqual("webhook");
   if (event.request) {

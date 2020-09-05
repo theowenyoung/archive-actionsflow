@@ -64,6 +64,7 @@ export type IWebhookHandler = (
 export interface IWebhook {
   path?: string;
   method?: string;
+  getItemKey?: (item: AnyObject) => string;
   handler: IWebhookHandler;
 }
 export interface ITriggerClassType {

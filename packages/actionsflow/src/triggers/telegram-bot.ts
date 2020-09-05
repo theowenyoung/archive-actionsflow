@@ -36,6 +36,9 @@ export default class TelegramBot implements ITriggerClassType {
           items,
         };
       },
+      getItemKey(): string {
+        return "222";
+      },
     },
   ];
   async run(): Promise<ITriggerResult> {

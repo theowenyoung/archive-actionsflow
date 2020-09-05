@@ -48,8 +48,6 @@ test("get webhook", () => {
     },
   });
   if (webhook) {
-    console.log("webhook.request", webhook.request);
-
     expect(webhook.request.path as string).toBe("/webhook/id-test");
     expect(webhook.request.originPath as string).toBe("/webhook/id-test?id=1");
     expect(webhook.request.params.id as string).toBe("id-test");

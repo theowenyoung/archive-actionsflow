@@ -158,7 +158,6 @@ export const run = async ({
         maxItemsCount,
         skipFirst,
         force,
-        getItemKey,
       } = triggerGeneralOptions;
       const lastUpdatedAt =
         (await triggerCacheManager.get("lastUpdatedAt")) || 0;
@@ -175,6 +174,12 @@ export const run = async ({
         });
 
         if (webhook) {
+          // check if specific getItemKey at Webhook
+          if (webhook.getItemKey) {
+            triggerGeneralOptions.getItemKey = webhook.getItemKey.bind(
+              triggerInstance
+            );
+          }
           triggerResult = await webhook.handler.bind(triggerInstance)(
             webhook.request
           );
@@ -215,6 +220,7 @@ export const run = async ({
       }
 
       if (triggerResult && triggerResult.items) {
+        const { getItemKey } = triggerGeneralOptions;
         let { items } = triggerResult;
         if (items.length > 0) {
           // duplicate

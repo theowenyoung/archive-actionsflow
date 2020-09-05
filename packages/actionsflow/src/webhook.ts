@@ -11,6 +11,11 @@ import { match, Match } from "path-to-regexp";
 import { formatRequest } from "./event";
 import { getTriggerWebhookBasePath } from "./utils";
 import log from "loglevel";
+interface IWebhookMatchedResult {
+  request: IWebhookRequest;
+  handler: IWebhookHandler;
+  getItemKey?: (item: AnyObject) => string;
+}
 export const getWebhook = ({
   webhooks,
   request,
@@ -21,7 +26,7 @@ export const getWebhook = ({
   request: IWebhookRequestPayload;
   workflow: IWorkflow;
   trigger: ITrigger;
-}): { request: IWebhookRequest; handler: IWebhookHandler } | undefined => {
+}): IWebhookMatchedResult | undefined => {
   const requestOriginPath = request.originPath;
   const requestMethod = request.method;
   const webhookBasePath = getTriggerWebhookBasePath(
@@ -35,9 +40,7 @@ export const getWebhook = ({
     if (!requestPathWithoutWebhookBasePath.startsWith("/")) {
       requestPathWithoutWebhookBasePath = `/${requestPathWithoutWebhookBasePath}`;
     }
-    let matchedWebhook:
-      | { request: IWebhookRequest; handler: IWebhookHandler }
-      | undefined;
+    let matchedWebhook: IWebhookMatchedResult | undefined;
     // lookup webhook handler
     webhooks.forEach((webhook) => {
       let isMethodMatched = false;
@@ -75,6 +78,9 @@ export const getWebhook = ({
           handler: webhook.handler,
           request: newRequest,
         };
+        if (webhook.getItemKey) {
+          matchedWebhook.getItemKey = webhook.getItemKey;
+        }
       }
     });
     if (matchedWebhook) {
