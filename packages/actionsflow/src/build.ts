@@ -101,10 +101,8 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     const workflow = task.workflow;
     const trigger = task.trigger;
     const event = task.event;
-    const destPath = path.resolve(
-      workflowsDestPath,
-      `${workflow.filename}-${task.trigger.name}.yml`
-    );
+    const destRelativePath = `${workflow.filename}-${task.trigger.name}.yml`;
+    const destPath = path.resolve(workflowsDestPath, destRelativePath);
     // manual run trigger
     const triggerResults: ITriggerBuildResult[] = [];
     if (force) {
@@ -179,7 +177,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         });
 
         // success
-        log.info(`Build workflow ${workflow.relativePath} success`);
+        log.info(`Build workflow ${destRelativePath} success`);
       } else {
         log.info("Skip generate workflow file: ", workflow.relativePath),
           " because of no jobs";

@@ -109,7 +109,7 @@ export const run = async ({
   workflow,
 }: ITriggerOptions): Promise<ITriggerInternalResult> => {
   log.debug("trigger:", trigger);
-
+  log.debug("trigger event", event);
   const finalResult: ITriggerInternalResult = {
     items: [],
     outcome: "success",
@@ -179,6 +179,11 @@ export const run = async ({
             webhook.request
           );
           await triggerCacheManager.set("lastUpdatedAt", Date.now());
+        } else {
+          // skip
+          log.info(
+            `No webhook path matched request path, skip [${trigger.name}] trigger building`
+          );
         }
       } else if (triggerInstance.run) {
         // updateInterval
@@ -203,9 +208,10 @@ export const run = async ({
           await triggerCacheManager.set("lastUpdatedAt", Date.now());
         }
       } else {
-        throw new Error(
-          `Neither webhook or run method dose not exports with trigger [${trigger.name}]`
-        );
+        //  skipped, no method for the event type
+        finalResult.outcome = "skipped";
+        finalResult.conclusion = "skipped";
+        triggerResult = { items: [] };
       }
 
       if (triggerResult && triggerResult.items) {

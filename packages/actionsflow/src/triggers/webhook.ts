@@ -1,37 +1,46 @@
 import {
   ITriggerClassType,
   ITriggerContructorParams,
+  IWebhook,
+  ITriggerContext,
   AnyObject,
   ITriggerResult,
-  ITriggerContext,
+  IWebhookRequest,
+  IHelpers,
 } from "actionsflow-interface";
 
 export default class Webhook implements ITriggerClassType {
   context: ITriggerContext;
-  constructor({ context }: ITriggerContructorParams) {
+  options: AnyObject = {};
+  helpers: IHelpers;
+  constructor({ context, options, helpers }: ITriggerContructorParams) {
     this.context = context;
-  }
-  async run(): Promise<ITriggerResult> {
-    const context = this.context;
-    let items: AnyObject[] = [];
-    if (
-      context &&
-      context.github &&
-      context.github.event_name === "repository_dispatch"
-    ) {
-      const githubObj = context.github;
-      const item = {
-        payload: githubObj.event.client_payload,
-        event: githubObj.event.action,
-        body: {
-          event_type: githubObj.event.action,
-          client_payload: githubObj.event.client_payload,
-        },
-      };
-      items = [item];
+    this.options = options;
+    this.helpers = helpers;
+    if (this.options.path) {
+      this.webhooks[0].path = this.options.path as string;
     }
-    return {
-      items: items,
-    };
   }
+  getItemKey(item: AnyObject): string {
+    if (item.request_id) return item.request_id as string;
+    return this.helpers.createContentDigest(item);
+  }
+  _getBodyKey(item: AnyObject): string {
+    // TODO adapt every cases
+    const deduplication_key = this.options.deduplication_key;
+    if (deduplication_key) {
+      return item[deduplication_key as string] as string;
+    }
+    if (item.id) return item.id as string;
+    if (item.key) return item.key as string;
+    return this.helpers.createContentDigest(item);
+  }
+  webhooks: IWebhook[] = [
+    {
+      handler: async (request: IWebhookRequest): Promise<ITriggerResult> => {
+        const id = this._getBodyKey(request.body as AnyObject);
+        return { items: [{ request_id: id, body: request.body }] };
+      },
+    },
+  ];
 }
