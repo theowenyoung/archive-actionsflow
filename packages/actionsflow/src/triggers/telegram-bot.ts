@@ -26,7 +26,7 @@ export default class TelegramBot implements ITriggerClassType {
   };
   webhooks = [
     {
-      handler: async (request: IWebhookRequest): Promise<ITriggerResult> => {
+      handler: (request: IWebhookRequest): ITriggerResult => {
         let items: AnyObject[] = [];
         if (request.body && (request.body as AnyObject).update_id) {
           items = this._getItems([request.body as AnyObject]);
@@ -35,9 +35,6 @@ export default class TelegramBot implements ITriggerClassType {
         return {
           items,
         };
-      },
-      getItemKey(): string {
-        return "222";
       },
     },
   ];

@@ -2,8 +2,22 @@ import {
   template,
   getTemplateStringByParentName,
   getExpressionResult,
+  isPromise,
 } from "../utils";
 
+test("isPromise yes", () => {
+  const is = isPromise(
+    new Promise((resolve) => {
+      return resolve(1);
+    })
+  );
+  expect(is).toBe(true);
+});
+
+test("isPromisee no", () => {
+  const is = isPromise({ test: 1 });
+  expect(is).toBe(false);
+});
 test("getExpressionResult", () => {
   expect(
     getExpressionResult("data.test", { data: { test: "testvalue" } })

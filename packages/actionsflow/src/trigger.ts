@@ -1,4 +1,4 @@
-import { getThirdPartyTrigger } from "./utils";
+import { getThirdPartyTrigger, isPromise } from "./utils";
 import { createContentDigest, getCache } from "./helpers";
 import log from "./log";
 import Triggers from "./triggers";
@@ -180,9 +180,15 @@ export const run = async ({
               triggerInstance
             );
           }
-          triggerResult = await webhook.handler.bind(triggerInstance)(
+          const webhookHandlerResult = webhook.handler.bind(triggerInstance)(
             webhook.request
           );
+          if (isPromise(webhookHandlerResult)) {
+            triggerResult = (await webhookHandlerResult) as ITriggerResult;
+          } else {
+            triggerResult = webhookHandlerResult as ITriggerResult;
+          }
+
           await triggerCacheManager.set("lastUpdatedAt", Date.now());
         } else {
           // skip
@@ -209,7 +215,12 @@ export const run = async ({
         } else {
           // check should run
           // scheduled event call run method
-          triggerResult = await triggerInstance.run();
+          const runHandler = triggerInstance.run.bind(triggerInstance)();
+          if (isPromise(runHandler)) {
+            triggerResult = (await runHandler) as ITriggerResult;
+          } else {
+            triggerResult = runHandler as ITriggerResult;
+          }
           await triggerCacheManager.set("lastUpdatedAt", Date.now());
         }
       } else {

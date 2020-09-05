@@ -60,7 +60,7 @@ export interface IWebhookRequest extends IWebhookRequestPayload {
 }
 export type IWebhookHandler = (
   request: IWebhookRequest
-) => Promise<ITriggerResult>;
+) => Promise<ITriggerResult> | ITriggerResult;
 export interface IWebhook {
   path?: string;
   method?: string;
@@ -70,7 +70,7 @@ export interface IWebhook {
 export interface ITriggerClassType {
   shouldDeduplicate?: boolean;
   getItemKey?: (item: AnyObject) => string;
-  run?(): Promise<ITriggerResult>;
+  run?(): Promise<ITriggerResult> | ITriggerResult;
   webhooks?: IWebhook[];
 }
 export interface ITriggerClassTypeConstructable {
