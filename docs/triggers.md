@@ -17,11 +17,16 @@ For now, Actionsflow supports:
 
 An Actionsflow workflow can include multiple triggers, you can use the trigger's outputs at the [job steps](/docs/steps.md)
 
-# Common params for triggers
+# General params for triggers
 
 All triggers support follow params:
 
 - `active`, optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
+- `every`, optional, `number`, polling data interval time, the unit is minute, the default value is `5`
+- `skip_first`, optional, `boolean`, whether to skip the data obtained for the first time, if `true`, the trigger will run the next time it get data. The default value is `false`
+- `max_items_count`, optional, the trigger's results max length, the default value is `undefined`, it means the trigger will trigger all items
+- `should_deduplicate`, optional, `boolean`, if the trigger's results should be dedeplicate, the default value is decided by the trigger, you can force to override it.
+- `force`, optional, `boolean`, whether to force data to be updated, if `true`, the trigger will ignore cache, and last update time. The default value is `false`
 
 # Context and expression syntax for Actionsflow triggers
 

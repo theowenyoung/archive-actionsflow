@@ -4,31 +4,36 @@ metaTitle: "Actionsflow RSS trigger"
 metaDescription: "RSS trigger is triggered when new items are detected. This trigger supports one or multiple RSS sources"
 ---
 
-RSS trigger is triggered when new items are detected. This trigger supports one(`event: new_item`) or multiple RSS sources((`event: new_item_in_multiple_feeds`)).
+RSS trigger is triggered when new items are detected. Both single feed and multiple feeds are supported for RSS trigger.
 
 # Events
 
 ## New item in a feed
 
+Single feed:
+
 ```yaml
 on:
   rss:
-    event: new_item
     url: https://hnrss.org/newest?points=300
+```
+
+Multiple feeds:
+
+```yaml
+on:
+  rss:
+    url:
+      - https://hnrss.org/newest?points=300
+      - https://www.buzzfeed.com/world.xml
+    max_items_count: 15
 ```
 
 ### Params
 
-- `url`, required, `string` or `string[]`, when `url` is `string[]`, then multiple RSS feeds can trigger the action. For example,
+This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
 
-  ```yaml
-  on:
-    rss:
-      url:
-        - https://hnrss.org/newest?points=300
-        - https://www.buzzfeed.com/world.xml
-      max_items_count: 15
-  ```
+- `url`, required, `string` or `string[]`, when `url` is `string[]`, then multiple RSS feeds can trigger the action.
 
 ### Outputs
 

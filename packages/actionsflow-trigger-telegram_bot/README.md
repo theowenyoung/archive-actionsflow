@@ -29,6 +29,8 @@ on:
 
 ### Params
 
+This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+
 - `token`, required, telegram bot token, you should get it from [Telegram BotFather](https://telegram.me/BotFather), for example: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`
 
 - `event`, optional, `string` or `string[]`, telegram message type, allowed types:

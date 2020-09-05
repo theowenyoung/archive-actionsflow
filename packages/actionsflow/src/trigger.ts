@@ -94,6 +94,10 @@ export const getGeneralTriggerFinalOptions = (
   if (triggerInstance.shouldDeduplicate !== undefined) {
     options.shouldDeduplicate = Boolean(triggerInstance.shouldDeduplicate);
   }
+  if (userOptions.should_deduplicate !== undefined) {
+    // priorty
+    options.shouldDeduplicate = Boolean(userOptions.should_deduplicate);
+  }
 
   if (options.shouldDeduplicate) {
     if (triggerInstance.getItemKey) {

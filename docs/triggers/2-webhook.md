@@ -113,6 +113,8 @@ You can use IFTTT webhook as a `then` action to trigger the webhook, here is an 
 
 ## Params
 
+This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+
 - `event`, optional, it will be trigger when post body `event_type` === `event`,if not provided, all events will trigger this workflow
 
 ## Outputs

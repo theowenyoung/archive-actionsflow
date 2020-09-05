@@ -25,6 +25,8 @@ on:
 
 ### Params
 
+This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+
 - `event`, optional, default is `user_timeline`, for now only support `user_timeline`.
 - `auth`, required, twitter api authentication, you should get it from [Twitter Developers App](https://developer.twitter.com/en/apps)
   ```yaml
@@ -43,9 +45,6 @@ on:
     include_rts: true,
     tweet_mode: "extended",
   ```
-- `every`, optional, fetch interval, the unit is minute, the default value is `5`
-- `skip_first`, optional, should skip the first items, the default value is `false`
-- `max_items_count`, optional, the feed items max length, the default value is `undefined`, it will trigger all items
 
 ### Outputs
 
