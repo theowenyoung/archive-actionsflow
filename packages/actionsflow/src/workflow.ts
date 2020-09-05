@@ -20,10 +20,7 @@ import {
 } from "actionsflow-interface";
 import { TRIGGER_RESULT_ENV_PREFIX } from "./constans";
 
-const getSupportedTriggers = (
-  doc: AnyObject,
-  context: ITriggerContext
-): ITrigger[] => {
+const getSupportedTriggers = (doc: AnyObject): ITrigger[] => {
   const supportTriggerKeys = Object.keys(Triggers);
   const triggers = [];
   if (doc && doc.on) {
@@ -45,31 +42,10 @@ const getSupportedTriggers = (
       if (isTriggerSupported) {
         // is active
         if (!(onObj[key] && onObj[key].active === false)) {
-          // handle context expresstion
-          let newOptions = onObj[key];
-          if (onObj[key]) {
-            const on: Record<string, unknown> = onObj[key];
-            newOptions = mapObj(
-              on,
-              (mapKey, mapValue) => {
-                if (typeof mapValue === "string") {
-                  // if supported
-                  mapValue = template(mapValue, context, {
-                    shouldReplaceUndefinedToEmpty: true,
-                  });
-                }
-                return [mapKey, mapValue];
-              },
-              {
-                deep: true,
-              }
-            );
-          }
-
           // valid event
           triggers.push({
             name: key,
-            options: newOptions || {},
+            options: onObj[key] || {},
           });
         }
       }
@@ -141,16 +117,46 @@ export const getWorkflows = async (
   // Get document, or throw exception on error
   for (let index = 0; index < entries.length; index++) {
     const filePath = entries[index].path;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    let doc: object | string | undefined;
+    let doc: Record<string, unknown> | string | undefined;
     try {
-      doc = yaml.safeLoad(await fs.readFile(filePath, "utf8"));
+      doc = yaml.safeLoad(await fs.readFile(filePath, "utf8")) as Record<
+        string,
+        unknown
+      >;
     } catch (e) {
       log.error("load yaml file error:", filePath, e);
       throw e;
     }
-    if (doc) {
-      const triggers = getSupportedTriggers(doc as AnyObject, context);
+    if (doc && typeof doc === "object" && doc.on) {
+      // handle doc on, replace variables
+      if (doc.on && typeof doc.on === "object") {
+        const newOn = mapObj(
+          doc.on,
+          (mapKey, mapValue) => {
+            let newMapValueString = "";
+            let isHandled = false;
+            if (typeof mapValue === "string") {
+              const theMapValue = mapValue as string;
+              // if supported
+              newMapValueString = template(theMapValue, context, {
+                shouldReplaceUndefinedToEmpty: true,
+              });
+              isHandled = true;
+            }
+            if (isHandled) {
+              return [mapKey, newMapValueString];
+            } else {
+              return [mapKey, mapValue];
+            }
+          },
+          {
+            deep: true,
+          }
+        );
+        doc.on = newOn;
+      }
+
+      const triggers = getSupportedTriggers(doc as AnyObject);
       const relativePathWithoutExt = entries[index].relativePath
         .split(".")
         .slice(0, -1)
@@ -163,7 +169,7 @@ export const getWorkflows = async (
         rawTriggers: triggers,
       });
     } else {
-      log.debug("skip empty file", filePath);
+      log.debug("skip empty or invalid file", filePath);
     }
   }
   const validWorkflows = workflows.filter(

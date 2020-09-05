@@ -13,13 +13,19 @@ test("get workflows", async () => {
       github: {
         event: {},
       },
-      secrets: {},
+      secrets: {
+        TEST: "test",
+      },
     },
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expect((workflows[0] as any).data.on.rss.url).toBe(
     "https://hnrss.org/newest?points=300"
   );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect((workflows[0] as any).rawTriggers[0].options.test).toBe("test-1");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect((workflows[0] as any).data.on.rss.test).toBe("test-1");
 });
 
 test("rename jobs by suffix", () => {

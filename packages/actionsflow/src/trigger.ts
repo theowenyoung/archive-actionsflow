@@ -87,7 +87,7 @@ export const getGeneralTriggerFinalOptions = (
 
   if (options.shouldDeduplicate) {
     if (triggerInstance.getItemKey) {
-      options.getItemKey = triggerInstance.getItemKey;
+      options.getItemKey = triggerInstance.getItemKey.bind(triggerInstance);
     }
   }
   if (userOptions.skip_first !== undefined) {
