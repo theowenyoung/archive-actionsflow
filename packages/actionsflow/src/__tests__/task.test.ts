@@ -1,88 +1,43 @@
 import { getTasksByTriggerEvent } from "../task";
 import { formatRequest } from "../event";
+import { getWorkflow, getContext } from "../index";
 import path from "path";
-const feedUrl = "https://hnrss.org/newest?points=300";
-const feedOptions = {
-  url: feedUrl,
-};
-test("get task by trigger event manual", () => {
+import { IWorkflow } from "actionsflow-interface";
+
+test("get task by trigger event manual", async () => {
   const tasks = getTasksByTriggerEvent({
     event: {
       type: "manual",
     },
     workflows: [
-      {
-        path: path.resolve(__dirname, "./fixtures/workflows/rss2.yml"),
-        relativePath: "rss2.yml",
-        filename: "rss2",
-        data: {
-          on: {
-            rss: {
-              url: feedUrl,
-            },
-          },
-          jobs: {
-            job1: {
-              steps: [
-                {
-                  run: "echo ${{ on.rss.outputs.title }}",
-                },
-              ],
-            },
-          },
-        },
-        rawTriggers: [
-          {
-            name: "rss",
-            options: feedOptions,
-          },
-        ],
-      },
+      (await getWorkflow({
+        path: path.resolve(__dirname, "./fixtures/workflows/rss.yml"),
+        cwd: path.resolve(__dirname, "./fixtures"),
+        context: getContext(),
+      })) as IWorkflow,
     ],
   });
   expect(tasks[0].trigger.name).toEqual("rss");
 });
 
-test("get task by trigger event webhook", () => {
+test("get task by trigger event webhook", async () => {
   const tasks = getTasksByTriggerEvent({
     event: {
       type: "webhook",
       request: formatRequest({
-        path: "/telegram-bot/telegram_bot/webhook",
+        path: "/webhook/webhook",
         method: "post",
       }),
     },
     workflows: [
-      {
-        path: path.resolve(__dirname, "./fixtures/workflows/telegram-bot.yml"),
-        relativePath: "telegram-bot.yml",
-        filename: "telegram-bot",
-        data: {
-          on: {
-            telegram_bot: {
-              token: "test",
-            },
-          },
-          jobs: {
-            job1: {
-              steps: [
-                {
-                  run: "echo ${{ on.rss.outputs.title }}",
-                },
-              ],
-            },
-          },
-        },
-        rawTriggers: [
-          {
-            name: "telegram_bot",
-            options: {
-              token: "test",
-            },
-          },
-        ],
-      },
+      (await getWorkflow({
+        path: path.resolve(__dirname, "./fixtures/workflows/webhook.yml"),
+        cwd: path.resolve(__dirname, "./fixtures"),
+        context: getContext(),
+      })) as IWorkflow,
     ],
   });
-  expect(tasks[0].trigger.name).toEqual("telegram_bot");
+  expect(tasks.length).toBe(1);
+
+  expect(tasks[0].trigger.name).toEqual("webhook");
 });

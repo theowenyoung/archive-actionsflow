@@ -114,14 +114,10 @@ export const getWorkflow = async ({
     }
 
     const triggers = getSupportedTriggers(doc as AnyObject);
-    const relativePathWithoutExt = relativePath
-      .split(".")
-      .slice(0, -1)
-      .join(".");
+
     return {
       path: filePath,
       relativePath: relativePath,
-      filename: relativePathWithoutExt,
       data: doc as AnyObject,
       rawTriggers: triggers,
     };

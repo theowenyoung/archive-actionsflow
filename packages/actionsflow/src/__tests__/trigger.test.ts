@@ -1,6 +1,7 @@
 import path from "path";
 import { run } from "../trigger";
-import { formatRequest } from "../event";
+import { IWorkflow } from "actionsflow-interface";
+import { formatRequest, getWorkflow, getContext } from "../index";
 test("run trigger", async () => {
   const result = await run({
     trigger: {
@@ -10,17 +11,11 @@ test("run trigger", async () => {
         force: true,
       },
     },
-    context: {
-      github: {
-        event: {},
-      },
-      secrets: {},
-    },
+
     workflow: {
       relativePath: "test.yml",
       path: "",
       data: {},
-      filename: "test",
       rawTriggers: [
         {
           name: "rss",
@@ -50,41 +45,11 @@ test("run trigger with  webhook", async () => {
       options: { deduplication_key: "update_id", force: true },
     },
 
-    context: {
-      github: {
-        event: {},
-      },
-      secrets: {},
-    },
-    workflow: {
+    workflow: (await getWorkflow({
       path: path.resolve(__dirname, "./fixtures/workflows/webhook.yml"),
-      relativePath: "webhook.yml",
-      filename: "webhook",
-      data: {
-        on: {
-          webhook: {
-            deduplication_key: "update_id",
-          },
-        },
-        jobs: {
-          job1: {
-            steps: [
-              {
-                run: "echo ${{ on.rss.outputs.title }}",
-              },
-            ],
-          },
-        },
-      },
-      rawTriggers: [
-        {
-          name: "webhook",
-          options: {
-            deduplication_key: "update_id",
-          },
-        },
-      ],
-    },
+      cwd: path.resolve(__dirname, "./fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
     event: {
       type: "webhook",
       request: formatRequest({

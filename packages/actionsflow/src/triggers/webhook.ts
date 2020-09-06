@@ -2,7 +2,6 @@ import {
   ITriggerClassType,
   ITriggerContructorParams,
   IWebhook,
-  ITriggerContext,
   AnyObject,
   ITriggerResult,
   IWebhookRequest,
@@ -10,11 +9,9 @@ import {
 } from "actionsflow-interface";
 
 export default class Webhook implements ITriggerClassType {
-  context: ITriggerContext;
   options: AnyObject = {};
   helpers: IHelpers;
-  constructor({ context, options, helpers }: ITriggerContructorParams) {
-    this.context = context;
+  constructor({ options, helpers }: ITriggerContructorParams) {
     this.options = options;
     this.helpers = helpers;
     if (this.options.path) {

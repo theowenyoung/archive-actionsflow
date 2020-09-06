@@ -4,7 +4,9 @@ import {
   getJobsDependences,
   getBuiltWorkflow,
 } from "../workflow";
+import { getWorkflow, getContext } from "../index";
 import path from "path";
+import { IWorkflow } from "actionsflow-interface";
 
 test("get workflows", async () => {
   const workflows = await getWorkflows({
@@ -63,42 +65,16 @@ test("get jobs dependence", () => {
 });
 
 test("build single workflow", async () => {
-  const feedUrl = "https://hnrss.org/newest?points=300";
-  const feedOptions = {
-    url: feedUrl,
-  };
   const feedPayload = {
     title: "Can't you just right click?",
     guid: "https://news.ycombinator.com/item?id=24217116",
   };
   const workflowData = await getBuiltWorkflow({
-    workflow: {
-      path: path.resolve(__dirname, "./fixtures/workflows/rss2.yml"),
-      relativePath: "rss2.yml",
-      filename: "rss2",
-      data: {
-        on: {
-          rss: {
-            url: feedUrl,
-          },
-        },
-        jobs: {
-          job1: {
-            steps: [
-              {
-                run: "echo ${{ on.rss.outputs.title }}",
-              },
-            ],
-          },
-        },
-      },
-      rawTriggers: [
-        {
-          name: "rss",
-          options: feedOptions,
-        },
-      ],
-    },
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "./fixtures/workflows/rss.yml"),
+      cwd: path.resolve(__dirname, "./fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
     trigger: {
       name: "rss",
       results: [
@@ -112,11 +88,13 @@ test("build single workflow", async () => {
   });
   expect(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (workflowData as any).jobs.job1_0.steps[0].run
+    (workflowData as any).jobs.ifttt_0.steps[0].with.value1
   ).toEqual(
-    "echo ${{ (fromJSON(env.ACTIONSFLOW_TRIGGER_RESULT_FOR_rss_0)).outputs.title }}"
+    "${{(fromJSON(env.ACTIONSFLOW_TRIGGER_RESULT_FOR_rss_0)).outputs.title}}"
   );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect((workflowData as any).jobs.job1_0.name).toBe("job 0");
+  expect((workflowData as any).jobs.ifttt_0.name).toBe(
+    "Make a Request to IFTTT 0"
+  );
   // const newWorkflow = await readFile(path.resolve(".cache/workflows/"), "utf8");
 });

@@ -101,7 +101,11 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     const workflow = task.workflow;
     const trigger = task.trigger;
     const event = task.event;
-    const destRelativePath = `${workflow.filename}-${task.trigger.name}.yml`;
+    const relativePathWithoutExt = workflow.relativePath
+      .split(".")
+      .slice(0, -1)
+      .join(".");
+    const destRelativePath = `${relativePathWithoutExt}-${task.trigger.name}.yml`;
     const destPath = path.resolve(workflowsDestPath, destRelativePath);
     // manual run trigger
     const triggerResults: ITriggerBuildResult[] = [];
@@ -121,7 +125,6 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
           options: trigger.options,
         },
         event: event,
-        context,
       });
     } catch (error) {
       // if continue-on-error

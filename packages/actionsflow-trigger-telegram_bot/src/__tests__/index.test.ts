@@ -61,7 +61,6 @@ test("telegram bot trigger", async () => {
   (axios as any).mockImplementation(() => Promise.resolve(resp));
 
   const telegramBot = new TelegramBot({
-    context: getContext(),
     options: {
       token: TELEGRAM_TOKEN,
       event: ["text", "photo"],
@@ -84,7 +83,6 @@ test("telegram bot trigger", async () => {
   expect(telegramBot.getItemKey(triggerResults.items[0])).toBe(791185170);
 
   const telegramBot2 = new TelegramBot({
-    context: getContext(),
     options: {
       token: TELEGRAM_TOKEN,
       event: "photo",

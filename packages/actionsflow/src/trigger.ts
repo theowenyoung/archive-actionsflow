@@ -4,7 +4,6 @@ import { createContentDigest, getCache } from "./helpers";
 import log, { Log, prefix, colors } from "./log";
 import Triggers from "./triggers";
 import {
-  ITriggerContext,
   ITriggerInternalResult,
   AnyObject,
   ITriggerClassTypeConstructable,
@@ -24,7 +23,6 @@ interface ITriggerOptions {
   };
   workflow: IWorkflow;
   event: ITriggerEvent;
-  context: ITriggerContext;
 }
 export const getTriggerId = ({
   name,
@@ -118,7 +116,6 @@ export const getGeneralTriggerFinalOptions = (
 };
 export const run = async ({
   trigger,
-  context,
   event,
   workflow,
 }: ITriggerOptions): Promise<ITriggerInternalResult> => {
@@ -151,7 +148,6 @@ export const run = async ({
     const triggerInstance = new Trigger({
       helpers: triggerHelpers,
       options: trigger.options || {},
-      context: context,
       workflow: workflow,
     });
 

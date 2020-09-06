@@ -34,7 +34,6 @@ export interface ITriggerContext extends AnyObject {
 export interface ITriggerContructorParams {
   options: AnyObject;
   helpers: IHelpers;
-  context: ITriggerContext;
   workflow: IWorkflow;
 }
 
@@ -100,7 +99,6 @@ export interface ITriggerInternalResult {
 export interface IWorkflow {
   path: string;
   relativePath: string;
-  filename: string;
   data: AnyObject;
   rawTriggers: ITrigger[];
 }

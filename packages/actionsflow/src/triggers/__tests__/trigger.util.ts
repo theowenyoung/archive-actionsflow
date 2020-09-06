@@ -31,7 +31,6 @@ export const getTriggerConstructorParams = async ({
       name: name,
       workflowRelativePath: "test.yml",
     }),
-    context: CONTEXT,
     workflow: (await getWorkflow({
       path: path.resolve(__dirname, "./fixtures/workflows/rss.yml"),
       cwd: path.resolve(__dirname, "./fixtures"),

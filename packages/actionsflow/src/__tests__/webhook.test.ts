@@ -1,14 +1,15 @@
 import { getWebhook } from "../webhook";
 import path from "path";
-import { formatRequest } from "../event";
-test("get webhook", () => {
+import { IWorkflow } from "actionsflow-interface";
+import { formatRequest, getWorkflow, getContext } from "../index";
+test("get webhook", async () => {
   const webhook = getWebhook({
     request: formatRequest({
-      path: "/telegram-bot/telegram_bot/webhook/id-test?id=1",
+      path: "/webhook/webhook/webhook/id-test?id=1",
       method: "post",
       body: '{"update_id":"test"}',
     }),
-    trigger: { name: "telegram_bot", options: { token: "test" } },
+    trigger: { name: "webhook", options: { token: "test" } },
     webhooks: [
       {
         path: "/webhook/:id",
@@ -17,35 +18,11 @@ test("get webhook", () => {
         },
       },
     ],
-    workflow: {
-      path: path.resolve(__dirname, "./fixtures/workflows/telegram-bot.yml"),
-      relativePath: "telegram-bot.yml",
-      filename: "telegram-bot",
-      data: {
-        on: {
-          telegram_bot: {
-            token: "test",
-          },
-        },
-        jobs: {
-          job1: {
-            steps: [
-              {
-                run: "echo ${{ on.rss.outputs.title }}",
-              },
-            ],
-          },
-        },
-      },
-      rawTriggers: [
-        {
-          name: "telegram_bot",
-          options: {
-            token: "test",
-          },
-        },
-      ],
-    },
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "./fixtures/workflows/webhook.yml"),
+      cwd: path.resolve(__dirname, "./fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
   });
   if (webhook) {
     expect(webhook.request.path as string).toBe("/webhook/id-test");
@@ -57,14 +34,14 @@ test("get webhook", () => {
   }
 });
 
-test("get webhook not match", () => {
+test("get webhook not match", async () => {
   const webhook = getWebhook({
     request: formatRequest({
-      path: "/telegram-bot/telegram_bot/webhook",
+      path: "/webhook/webhook/webhook",
       method: "post",
       body: '{"update_id":"test"}',
     }),
-    trigger: { name: "telegram_bot", options: { token: "test" } },
+    trigger: { name: "webhook", options: { token: "test" } },
     webhooks: [
       {
         path: "/webhook2",
@@ -73,35 +50,11 @@ test("get webhook not match", () => {
         },
       },
     ],
-    workflow: {
-      path: path.resolve(__dirname, "./fixtures/workflows/telegram-bot.yml"),
-      relativePath: "telegram-bot.yml",
-      filename: "telegram-bot",
-      data: {
-        on: {
-          telegram_bot: {
-            token: "test",
-          },
-        },
-        jobs: {
-          job1: {
-            steps: [
-              {
-                run: "echo ${{ on.rss.outputs.title }}",
-              },
-            ],
-          },
-        },
-      },
-      rawTriggers: [
-        {
-          name: "telegram_bot",
-          options: {
-            token: "test",
-          },
-        },
-      ],
-    },
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "./fixtures/workflows/webhook.yml"),
+      cwd: path.resolve(__dirname, "./fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
   });
 
   expect(webhook).toBe(undefined);

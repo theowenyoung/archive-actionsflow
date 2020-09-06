@@ -4,7 +4,6 @@ import {
   AnyObject,
   ITriggerResult,
   IHelpers,
-  ITriggerContext,
   IWorkflow,
 } from "actionsflow-interface";
 import resolveCwd from "resolve-cwd";
@@ -18,7 +17,6 @@ type AsyncFunctionArguments = {
   helpers: IHelpers;
   require: NodeRequire;
   axios: AxiosStatic;
-  context: ITriggerContext;
   options: AnyObject;
 };
 
@@ -33,7 +31,6 @@ function callAsyncFunction<T>(
 export default class Script implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
-  context: ITriggerContext;
   workflow: IWorkflow;
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
@@ -45,15 +42,9 @@ export default class Script implements ITriggerClassType {
     if (item.key) return item.key as string;
     return this.helpers.createContentDigest(item);
   }
-  constructor({
-    helpers,
-    options,
-    context,
-    workflow,
-  }: ITriggerContructorParams) {
+  constructor({ helpers, options, workflow }: ITriggerContructorParams) {
     this.options = options;
     this.helpers = helpers;
-    this.context = context;
     this.workflow = workflow;
   }
 
@@ -67,7 +58,6 @@ export default class Script implements ITriggerClassType {
       helpers: this.helpers,
       require: require,
       axios: axios,
-      context: this.context,
       options: this.options,
     };
     const { run, path } = this.options as {

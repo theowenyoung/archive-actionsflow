@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@types/twit": "^2.2.27",
-    "actionsflow-interface": "^0.0.11",
+    "actionsflow-interface": "^0.1.1",
     "twit": "^2.2.11"
   },
   "devDependencies": {

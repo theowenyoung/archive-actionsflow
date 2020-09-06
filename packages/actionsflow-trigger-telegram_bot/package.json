@@ -28,7 +28,7 @@
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
-    "actionsflow-interface": "^0.0.11",
+    "actionsflow-interface": "^0.1.1",
     "axios": "^0.20.0"
   },
   "devDependencies": {

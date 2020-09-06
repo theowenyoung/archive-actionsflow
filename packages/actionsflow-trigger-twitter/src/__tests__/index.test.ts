@@ -4,7 +4,6 @@ import { IWorkflow } from "actionsflow-interface";
 import path from "path";
 test("run trigger", async () => {
   const trigger = new Trigger({
-    context: getContext(),
     options: {
       params1: "value1",
       every: 10,
