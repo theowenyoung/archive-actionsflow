@@ -3,12 +3,6 @@
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
-  "files": [
-    "dist",
-    "src",
-    "types",
-    "cli.js"
-  ],
   "engines": {
     "node": ">=10.4"
   },

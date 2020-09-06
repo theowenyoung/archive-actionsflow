@@ -21,11 +21,6 @@
   },
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
-  "files": [
-    "types",
-    "dist",
-    "cli.js"
-  ],
   "engines": {
     "node": ">=10"
   },

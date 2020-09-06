@@ -1,15 +1,11 @@
 {
   "name": "@actionsflow/trigger-telegram_bot",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Actionsflow trigger telegram bot",
   "keywords": [
     "telegram",
     "actionsflow",
     "trigger"
-  ],
-  "files": [
-    "types",
-    "dist"
   ],
   "author": "Owen Young <theowenyoung@gmail.com>",
   "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot",
