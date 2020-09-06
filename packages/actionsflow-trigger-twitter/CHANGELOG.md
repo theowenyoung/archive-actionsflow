@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.9](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.0.8...@actionsflow/trigger-twitter@0.0.9) (2020-09-06)
+
+### Bug Fixes
+
+- tests ([6c5499d](https://github.com/actionsflow/actionsflow/commit/6c5499d4b56efd98672462b67216b27da3c0484d))
+
 ## [0.0.8](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.0.7...@actionsflow/trigger-twitter@0.0.8) (2020-09-05)
 
 ### Features
