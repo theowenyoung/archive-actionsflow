@@ -79,6 +79,7 @@ export interface ITriggerClassType {
 export interface ITriggerClassTypeConstructable {
   new (params: ITriggerContructorParams): ITriggerClassType;
 }
+
 export interface ITrigger {
   name: string;
   options: AnyObject;
@@ -100,7 +101,6 @@ export interface IWorkflow {
   path: string;
   relativePath: string;
   data: AnyObject;
-  rawTriggers: ITrigger[];
 }
 
 export type TriggerEventType = "manual" | "schedule" | "webhook";

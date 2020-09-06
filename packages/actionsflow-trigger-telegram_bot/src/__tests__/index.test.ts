@@ -2,7 +2,7 @@ import axios from "axios";
 import path from "path";
 import TelegramBot from "../index";
 jest.mock("axios");
-import { getTriggerHelpers, getContext, getWorkflow } from "actionsflow";
+import { getTriggerHelpers, getContext, getWorkflow } from "actionsflow-core";
 import { IWorkflow } from "actionsflow-interface";
 
 const TELEGRAM_TOKEN = "test";

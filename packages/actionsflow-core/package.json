@@ -9,17 +9,14 @@
   "engines": {
     "node": ">=10.4"
   },
-  "bin": {
-    "actionsflow": "./cli.js"
-  },
   "scripts": {
     "start": "tsc -w -p tsconfig.production.json",
     "build": "tsc -p tsconfig.production.json",
     "clean": "rimraf ./dist",
     "prepublishOnly": "npm run build"
   },
-  "name": "actionsflow",
-  "description": "The best Zapier/IFTTT free alternative for developers to automate your workflows based on Github actions",
+  "name": "actionsflow-core",
+  "description": "Actionsflow core lib",
   "keywords": [
     "workflow",
     "github",
@@ -31,7 +28,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/actionsflow/actionsflow",
-    "directory": "packages/actionsflow"
+    "directory": "packages/actionsflow-core"
   },
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"
@@ -40,8 +37,6 @@
   "author": "Owen Young",
   "dependencies": {
     "@actions/github": "^4.0.0",
-    "@actionsflow/trigger-telegram_bot": "^0.1.2",
-    "@actionsflow/trigger-twitter": "^0.1.2",
     "@babel/polyfill": "^7.10.4",
     "@octokit/core": "^3.1.2",
     "@types/cache-manager": "^2.10.3",
@@ -53,7 +48,6 @@
     "@types/semver": "^7.3.3",
     "@types/update-notifier": "^4.1.1",
     "@types/xml2js": "^0.4.5",
-    "actionsflow-core": "^0.1.2",
     "actionsflow-interface": "^0.1.2",
     "axios": "^0.20.0",
     "cache-manager": "^3.3.0",
@@ -79,11 +73,8 @@
     "rss-parser": "^3.9.0",
     "semver": "^7.3.2",
     "string.prototype.matchall": "^4.0.2",
-    "tslib": "^2.0.1",
-    "update-notifier": "^4.1.0",
-    "yargs": "^15.4.1"
+    "tslib": "^2.0.1"
   },
-  "gitHead": "5354ce92742b20e721fb899516bf376702872ed2",
   "devDependencies": {
     "@types/jest": "^26.0.10"
   }

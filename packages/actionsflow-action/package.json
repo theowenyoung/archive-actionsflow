@@ -20,14 +20,14 @@
     "test": "jest --passWithNoTests",
     "lint": "eslint --fix ./src && prettier --write  --loglevel warn ./src",
     "prepublishOnly": "npm run build",
-    "hooks:pre-commit": "rimraf ./dist && npm run build && git add dist"
+    "hooks:pre-commit": "rimraf ./dist && npm run build && git add dist/*"
   },
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
     "@actions/core": "^1.2.4",
-    "actionsflow": "^0.0.8"
+    "actionsflow": "^0.1.2"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.23.0"

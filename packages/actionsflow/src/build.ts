@@ -1,18 +1,20 @@
 import "./env";
 import path from "path";
 import fs from "fs-extra";
-import { getBuiltWorkflow, getWorkflows } from "./workflow";
 import {
+  getBuiltWorkflow,
+  getContext,
+  getWorkflows,
+  getEventByContext,
+  log,
   buildNativeEvent,
   buildNativeSecrets,
   buildWorkflowFile,
-} from "./generate";
+} from "actionsflow-core";
+
 import { run as runTrigger } from "./trigger";
-import log from "./log";
-import { getContext } from "./context";
 import { LogLevelDesc } from "loglevel";
 import { getTasksByTriggerEvent } from "./task";
-import { getEventByContext } from "./event";
 import {
   ITriggerInternalResult,
   ITriggerBuildResult,
@@ -25,7 +27,7 @@ interface IBuildOptions {
   include?: string[];
   exclude?: string[];
   force?: boolean;
-  logLevel?: LogLevelDesc;
+  logLevel?: string;
 }
 const build = async (options: IBuildOptions = {}): Promise<void> => {
   options = {
@@ -39,7 +41,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   };
   // log.debug("build: options", options);
   if (options.logLevel) {
-    log.setLevel(options.logLevel);
+    log.setLevel(options.logLevel as LogLevelDesc);
   }
   const { cwd, dest, include, exclude, force } = options;
   const destPath = path.resolve(cwd as string, dest as string);

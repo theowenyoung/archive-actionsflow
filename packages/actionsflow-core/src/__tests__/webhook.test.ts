@@ -1,9 +1,10 @@
-import { getWebhook } from "../webhook";
+import { getWebhookByRequest } from "../webhook";
 import path from "path";
 import { IWorkflow } from "actionsflow-interface";
 import { formatRequest, getWorkflow, getContext } from "../index";
+
 test("get webhook", async () => {
-  const webhook = getWebhook({
+  const webhook = getWebhookByRequest({
     request: formatRequest({
       path: "/webhook/webhook/webhook/id-test?id=1",
       method: "post",
@@ -35,7 +36,7 @@ test("get webhook", async () => {
 });
 
 test("get webhook not match", async () => {
-  const webhook = getWebhook({
+  const webhook = getWebhookByRequest({
     request: formatRequest({
       path: "/webhook/webhook/webhook",
       method: "post",

@@ -1,7 +1,7 @@
 import path from "path";
 import resolveCwd from "resolve-cwd";
 import yargs from "yargs";
-import log from "../log";
+import { log } from "actionsflow-core";
 // eslint-disable-next-line @typescript-eslint/ban-types
 const handlerP = (fn: Function) => (...args: unknown[]): void => {
   Promise.resolve(fn(...args)).then(

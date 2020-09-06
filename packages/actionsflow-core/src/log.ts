@@ -23,5 +23,4 @@ prefix.apply(log, {
     )} ${chalk.green(`${name}:`)}`;
   },
 });
-export default log;
-export { Log, prefix };
+export { log, Log, prefix };

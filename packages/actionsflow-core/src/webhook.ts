@@ -10,13 +10,13 @@ import {
 import { match, Match } from "path-to-regexp";
 import { formatRequest } from "./event";
 import { getTriggerWebhookBasePath } from "./utils";
-import log from "loglevel";
+import { log } from "./log";
 interface IWebhookMatchedResult {
   request: IWebhookRequest;
   handler: IWebhookHandler;
   getItemKey?: (item: AnyObject) => string;
 }
-export const getWebhook = ({
+export const getWebhookByRequest = ({
   webhooks,
   request,
   workflow,

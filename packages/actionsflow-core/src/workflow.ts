@@ -3,61 +3,18 @@ import fg from "fast-glob";
 import yaml from "js-yaml";
 import mapObj from "map-obj";
 import fs from "fs-extra";
-import log from "./log";
-import {
-  template,
-  getThirdPartyTrigger,
-  getTemplateStringByParentName,
-} from "./utils";
-import Triggers from "./triggers";
+import { log } from "./log";
+import { template, getTemplateStringByParentName } from "./utils";
 import multimatch from "multimatch";
+import { getRawTriggers } from "./trigger";
 import {
   ITriggerContext,
-  ITrigger,
   IWorkflow,
   AnyObject,
   ITriggerBuildResult,
 } from "actionsflow-interface";
 import { TRIGGER_RESULT_ENV_PREFIX } from "./constans";
 
-const getSupportedTriggers = (doc: AnyObject): ITrigger[] => {
-  const supportTriggerKeys = Object.keys(Triggers);
-  const triggers = [];
-  if (doc && doc.on) {
-    const onObj = doc.on as Record<string, Record<string, unknown>>;
-    const keys = Object.keys(onObj);
-
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index] as string;
-      // check thirdparty support
-      let isTriggerSupported = false;
-      if (supportTriggerKeys.includes(key)) {
-        isTriggerSupported = true;
-      } else if (getThirdPartyTrigger(key)) {
-        isTriggerSupported = true;
-      }
-      if (!isTriggerSupported) {
-        log.info(
-          `can not found the trigger [${key}]. Did you forget to install the third party trigger?
-
-Try \`npm i @actionsflow/trigger-${key}\` if it exists.
-`
-        );
-      }
-      if (isTriggerSupported) {
-        // is active
-        if (!(onObj[key] && onObj[key].active === false)) {
-          // valid event
-          triggers.push({
-            name: key,
-            options: onObj[key] || {},
-          });
-        }
-      }
-    }
-  }
-  return triggers;
-};
 interface IGetWorkflowsOptions {
   context: ITriggerContext;
   cwd: string;
@@ -113,13 +70,10 @@ export const getWorkflow = async ({
       doc.on = newOn;
     }
 
-    const triggers = getSupportedTriggers(doc as AnyObject);
-
     return {
       path: filePath,
       relativePath: relativePath,
       data: doc as AnyObject,
-      rawTriggers: triggers,
     };
   } else {
     log.debug("skip empty or invalid file", filePath);
@@ -193,9 +147,11 @@ export const getWorkflows = async (
       workflows.push(workflow);
     }
   }
-  const validWorkflows = workflows.filter(
-    (item) => item.rawTriggers.length > 0
-  );
+
+  const validWorkflows = workflows.filter((workflow) => {
+    const rawTriggers = getRawTriggers(workflow.data);
+    return rawTriggers.length > 0;
+  });
   return validWorkflows;
 };
 
@@ -299,8 +255,9 @@ export const getBuiltWorkflow = async (
       const context: Record<string, AnyObject> = {
         on: {},
       };
+      const rawTriggers = getRawTriggers(workflow.data);
       // add all triggers results to env
-      workflow.rawTriggers.forEach((rawTrigger) => {
+      rawTriggers.forEach((rawTrigger) => {
         if (trigger.name === rawTrigger.name) {
           newEnv[
             `${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}`

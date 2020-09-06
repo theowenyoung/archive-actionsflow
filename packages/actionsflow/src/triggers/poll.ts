@@ -1,4 +1,3 @@
-import log from "../log";
 import axios, { AxiosRequestConfig } from "axios";
 import clonedeep from "lodash.clonedeep";
 import get from "lodash.get";
@@ -58,7 +57,7 @@ export default class Poll implements ITriggerClassType {
         );
       }
 
-      log.error(`fetch ${url} error: `, e);
+      this.helpers.log.error(`fetch ${url} error: `, e);
       throw e;
     }
     // For now we just take the items and ignore everything else

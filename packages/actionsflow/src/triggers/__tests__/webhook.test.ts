@@ -1,7 +1,7 @@
 import Webhook from "../webhook";
 import { IWebhookRequest } from "actionsflow-interface";
 import { getTriggerConstructorParams } from "./trigger.util";
-import { formatRequest } from "../../event";
+import { formatRequest } from "actionsflow-core";
 
 test("webhook trigger", async () => {
   const webhook = new Webhook(

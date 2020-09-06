@@ -1,7 +1,13 @@
-import { getThirdPartyTrigger, isPromise } from "./utils";
-import chalk from "chalk";
-import { createContentDigest, getCache } from "./helpers";
-import log, { Log, prefix, colors } from "./log";
+import {
+  getCache,
+  getTriggerId,
+  getTriggerHelpers,
+  getGeneralTriggerFinalOptions,
+  getThirdPartyTrigger,
+  isPromise,
+  log,
+  getWebhookByRequest,
+} from "actionsflow-core";
 import { LogLevelDesc } from "loglevel";
 import Triggers from "./triggers";
 import {
@@ -11,11 +17,9 @@ import {
   ITriggerResult,
   IWorkflow,
   ITriggerEvent,
-  ITriggerClassType,
-  IHelpers,
   IWebhookRequestPayload,
+  ITrigger,
 } from "actionsflow-interface";
-import { getWebhook } from "./webhook";
 const MAX_CACHE_KEYS_COUNT = 5000;
 interface ITriggerOptions {
   trigger: {
@@ -25,109 +29,14 @@ interface ITriggerOptions {
   workflow: IWorkflow;
   event: ITriggerEvent;
 }
-export const getTriggerId = ({
-  name,
-  workflowRelativePath,
-}: {
-  name: string;
-  workflowRelativePath: string;
-}): string => {
-  const triggerId = createContentDigest({
-    name: name,
-    path: workflowRelativePath,
-  });
-  return triggerId;
-};
 interface ITriggerHelpersOptions {
   name: string;
   workflowRelativePath: string;
   logLevel?: LogLevelDesc;
 }
-export const getTriggerHelpers = ({
-  name,
-  workflowRelativePath,
-  logLevel,
-}: ITriggerHelpersOptions): IHelpers => {
-  const triggerId = getTriggerId({
-    name: name,
-    workflowRelativePath: workflowRelativePath,
-  });
-  const triggerLog = Log.getLogger(`Actionsflow-trigger [${name}]`);
-  prefix.apply(triggerLog, {
-    format(level, name, timestamp) {
-      return `${chalk.gray(`[${timestamp}]`)} ${colors[level.toUpperCase()](
-        level
-      )} ${chalk.green(`${name}:`)}`;
-    },
-  });
-  if (logLevel) {
-    triggerLog.setDefaultLevel(logLevel);
-  } else {
-    triggerLog.setDefaultLevel("info");
-  }
-  const triggerHelpers = {
-    createContentDigest,
-    cache: getCache(`trigger-${triggerId}`),
-    log: triggerLog,
-  };
-  return triggerHelpers;
-};
+
 const allTriggers = Triggers as Record<string, ITriggerClassTypeConstructable>;
-interface IGeneralTriggerOptions {
-  every: number;
-  shouldDeduplicate: boolean;
-  getItemKey?: (item: AnyObject) => string;
-  skipFirst: boolean;
-  maxItemsCount: number;
-  force: boolean;
-  logLevel: LogLevelDesc;
-}
-export const getGeneralTriggerFinalOptions = (
-  triggerInstance: ITriggerClassType,
-  userOptions: AnyObject
-): IGeneralTriggerOptions => {
-  const options: IGeneralTriggerOptions = {
-    every: 5,
-    shouldDeduplicate: true,
-    getItemKey: (item: AnyObject): string => {
-      return createContentDigest(item);
-    },
-    skipFirst: false,
-    maxItemsCount: -1,
-    force: false,
-    logLevel: "info",
-  };
-  if (!userOptions.every === undefined) {
-    options.every = Number(userOptions.every);
-  }
-  if (triggerInstance.shouldDeduplicate !== undefined) {
-    options.shouldDeduplicate = Boolean(triggerInstance.shouldDeduplicate);
-  }
-  if (userOptions.should_deduplicate !== undefined) {
-    // priorty
-    options.shouldDeduplicate = Boolean(userOptions.should_deduplicate);
-  }
 
-  if (options.shouldDeduplicate) {
-    if (triggerInstance.getItemKey) {
-      options.getItemKey = triggerInstance.getItemKey.bind(triggerInstance);
-    }
-  }
-  if (userOptions.skip_first !== undefined) {
-    options.skipFirst = Boolean(userOptions.skip_first);
-  }
-  if (userOptions.max_items_count) {
-    options.maxItemsCount = Number(userOptions.max_items_count);
-  }
-  if (userOptions.force !== undefined) {
-    options.force = Boolean(userOptions.force);
-  }
-  if (userOptions.log_level) {
-    options.logLevel = userOptions.log_level as LogLevelDesc;
-  }
-
-  return options;
-};
 export const run = async ({
   trigger,
   event,
@@ -195,7 +104,7 @@ export const run = async ({
         // webhook event should call webhook method
         // lookup specific webhook event
         // call webhooks
-        const webhook = getWebhook({
+        const webhook = getWebhookByRequest({
           webhooks: triggerInstance.webhooks,
           request: event.request as IWebhookRequestPayload,
           workflow,
@@ -323,4 +232,37 @@ export const run = async ({
     }
   }
   return finalResult;
+};
+
+export const getSupportedTriggers = (rawTriggers: ITrigger[]): ITrigger[] => {
+  const supportTriggerKeys = Object.keys(Triggers);
+  const triggers = [];
+
+  for (let index = 0; index < rawTriggers.length; index++) {
+    const trigger = rawTriggers[index];
+    const name = trigger.name;
+    const options = trigger.options || {};
+    // check thirdparty support
+    let isTriggerSupported = false;
+    if (supportTriggerKeys.includes(name)) {
+      isTriggerSupported = true;
+    } else if (getThirdPartyTrigger(name)) {
+      isTriggerSupported = true;
+    }
+    if (!isTriggerSupported) {
+      log.info(
+        `can not found the trigger [${name}]. Did you forget to install the third party trigger?
+Try \`npm i @actionsflow/trigger-${name}\` if it exists.
+`
+      );
+    }
+    if (isTriggerSupported) {
+      // is active
+      if (!(options.active === false)) {
+        // valid event
+        triggers.push(trigger);
+      }
+    }
+  }
+  return triggers;
 };

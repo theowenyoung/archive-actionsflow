@@ -11,7 +11,7 @@ import { OctokitOptions } from "@octokit/core/dist-types/types";
 
 import resolveCwd from "resolve-cwd";
 import { getOctokit } from "@actions/github";
-import { isPromise } from "../utils";
+import { isPromise } from "actionsflow-core";
 import { resolve } from "path";
 import axios, { AxiosStatic } from "axios";
 const AsyncFunction = Object.getPrototypeOf(async () => null).constructor;

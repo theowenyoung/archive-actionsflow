@@ -1,5 +1,5 @@
 import Trigger from "../index";
-import { getTriggerHelpers, getWorkflow, getContext } from "actionsflow";
+import { getTriggerHelpers, getWorkflow, getContext } from "actionsflow-core";
 import { IWorkflow } from "actionsflow-interface";
 import path from "path";
 test("run trigger", async () => {

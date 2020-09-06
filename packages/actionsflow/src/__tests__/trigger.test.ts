@@ -1,7 +1,7 @@
 import path from "path";
 import { run } from "../trigger";
 import { IWorkflow } from "actionsflow-interface";
-import { formatRequest, getWorkflow, getContext } from "../index";
+import { formatRequest, getWorkflow, getContext } from "actionsflow-core";
 test("run trigger", async () => {
   const result = await run({
     trigger: {
@@ -16,15 +16,6 @@ test("run trigger", async () => {
       relativePath: "test.yml",
       path: "",
       data: {},
-      rawTriggers: [
-        {
-          name: "rss",
-          options: {
-            url: "https://hnrss.org/newest?points=300",
-            force: true,
-          },
-        },
-      ],
     },
     event: {
       type: "manual",

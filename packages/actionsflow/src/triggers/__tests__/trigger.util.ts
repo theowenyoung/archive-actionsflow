@@ -4,7 +4,7 @@ import {
   IWorkflow,
 } from "actionsflow-interface";
 import path from "path";
-import { getTriggerHelpers, getWorkflow } from "../../index";
+import { getTriggerHelpers, getWorkflow } from "actionsflow-core";
 
 export const CONTEXT = {
   github: {

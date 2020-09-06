@@ -4,9 +4,13 @@ import {
   IWorkflow,
   IWebhookRequest,
 } from "actionsflow-interface";
-import log from "./log";
-import { getTriggerWebhookBasePath, isMatchWebhookBasePath } from "./utils";
-
+import {
+  getRawTriggers,
+  log,
+  getTriggerWebhookBasePath,
+  isMatchWebhookBasePath,
+} from "actionsflow-core";
+import { getSupportedTriggers } from "./trigger";
 export const getTasksByTriggerEvent = ({
   event,
   workflows,
@@ -19,19 +23,21 @@ export const getTasksByTriggerEvent = ({
     const request = event.request as IWebhookRequest;
     const webhookPath = request.path;
     for (let i = 0; i < workflows.length; i++) {
-      const validWorkflow = workflows[i];
-      validWorkflow.rawTriggers.length;
-      for (let j = 0; j < validWorkflow.rawTriggers.length; j++) {
-        const trigger = validWorkflow.rawTriggers[j];
+      const workflow = workflows[i];
+      const rawTriggers = getRawTriggers(workflow.data);
+      // get support and active triggers
+      const supportedTriggers = getSupportedTriggers(rawTriggers);
+      for (let j = 0; j < supportedTriggers.length; j++) {
+        const trigger = supportedTriggers[j];
         const webhookTriggerBasePath = getTriggerWebhookBasePath(
-          validWorkflow.relativePath,
+          workflow.relativePath,
           trigger.name
         );
 
         if (isMatchWebhookBasePath(webhookPath, webhookTriggerBasePath)) {
           // final Trigger
           tasks.push({
-            workflow: validWorkflow,
+            workflow: workflow,
             trigger: trigger,
             event: event,
           });
@@ -48,15 +54,16 @@ export const getTasksByTriggerEvent = ({
     // manual
     for (let i = 0; i < workflows.length; i++) {
       const workflow = workflows[i];
-      const rawTriggers = workflow.rawTriggers || [];
-
+      const rawTriggers = getRawTriggers(workflow.data);
+      // get support and active triggers
+      const supportedTriggers = getSupportedTriggers(rawTriggers);
       // manual run trigger
-      for (let j = 0; j < rawTriggers.length; j++) {
-        const rawTrigger = rawTriggers[j];
+      for (let j = 0; j < supportedTriggers.length; j++) {
+        const trigger = supportedTriggers[j];
 
         tasks.push({
           workflow: workflow,
-          trigger: rawTrigger,
+          trigger: trigger,
           event: event,
         });
       }

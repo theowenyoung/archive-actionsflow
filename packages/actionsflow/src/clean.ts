@@ -1,6 +1,6 @@
 import "./env";
 import del from "del";
-import log from "./log";
+import { log } from "actionsflow-core";
 import * as Log from "loglevel";
 export default (options: {
   dest?: string;

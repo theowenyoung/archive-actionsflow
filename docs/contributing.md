@@ -30,13 +30,13 @@ Actionsflow is split up in different modules which are all in a single mono repo
 The most important directories:
 
 - `/packages` - The different Actionsflow modules
-- `/packages/actionsflow` - Core code which build workflows and handles workflow execution, active webhook
-- `/packages/actionsflow-cli` - CLI code to run Actionsflow
+- `/packages/actionsflow` - Core code witch build workflows and handles triggers
+- `/packages/actionsflow-core` - Core code which provide core utils
+- `/packages/actionsflow-cli` - CLI code, which is alias of `actionsflow`
 - `/packages/actionsflow-action` - Github actions for Actionsflow
 - `/packages/actionsflow-interface` - Common interfaces
 - `/examples` - workflows examples
 - `/examples/actionsflow-workflow-example` - example workflow
-- `/examples/actionsflow-trigger-example` = example trigger
 
 ## Setup
 
@@ -57,6 +57,12 @@ The most important directories:
 
    ```bash
    npm i
+   ```
+
+1. Bootstrap
+
+   ```bash
+   npm run bootstrap
    ```
 
 1. start and watch codes changes:

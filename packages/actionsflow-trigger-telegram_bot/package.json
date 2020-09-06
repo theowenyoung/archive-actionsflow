@@ -32,7 +32,7 @@
     "axios": "^0.20.0"
   },
   "devDependencies": {
-    "actionsflow": "^0.0.20"
+    "actionsflow-core": "^0.1.2"
   },
   "gitHead": "5354ce92742b20e721fb899516bf376702872ed2"
 }
