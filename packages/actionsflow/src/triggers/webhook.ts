@@ -17,6 +17,9 @@ export default class Webhook implements ITriggerClassType {
     if (this.options.path) {
       this.webhooks[0].path = this.options.path as string;
     }
+    if (this.options.method) {
+      this.webhooks[0].method = this.options.method as string;
+    }
   }
   getItemKey(item: AnyObject): string {
     if (item.request_id) return item.request_id as string;
@@ -36,7 +39,19 @@ export default class Webhook implements ITriggerClassType {
     {
       handler: async (request: IWebhookRequest): Promise<ITriggerResult> => {
         const id = this._getBodyKey(request.body as AnyObject);
-        return { items: [{ request_id: id, body: request.body }] };
+        return {
+          items: [
+            {
+              request_id: id,
+              body: request.body,
+              headers: request.headers,
+              method: request.method,
+              query: request.query,
+              querystring: request.querystring,
+              search: request.search,
+            },
+          ],
+        };
       },
     },
   ];

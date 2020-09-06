@@ -203,7 +203,7 @@ export const run = async ({
           await triggerCacheManager.set("lastUpdatedAt", Date.now());
         } else {
           // skip
-          log.info(
+          throw new Error(
             `No webhook path matched request path, skip [${trigger.name}] trigger building`
           );
         }

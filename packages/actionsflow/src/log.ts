@@ -13,6 +13,8 @@ export const colors: IColors = {
   ERROR: chalk.red,
 };
 prefix.reg(Log);
+console.log("process.env.DEFAULT_LOG_LEVEL", process.env.DEFAULT_LOG_LEVEL);
+
 log.setDefaultLevel(
   (process.env.DEFAULT_LOG_LEVEL as Log.LogLevelDesc) || "info"
 );
