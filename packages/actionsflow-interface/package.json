@@ -19,6 +19,14 @@
   },
   "name": "actionsflow-interface",
   "author": "Owen Young",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-interface",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actionsflow/actionsflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
   "gitHead": "5354ce92742b20e721fb899516bf376702872ed2",
   "dependencies": {
     "loglevel": "^1.7.0"

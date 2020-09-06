@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
-  "homepage": "https://actionsflow.github.io",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-core",
   "author": "Owen Young",
   "dependencies": {
     "@actions/github": "^4.0.0",

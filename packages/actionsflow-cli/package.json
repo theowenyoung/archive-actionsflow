@@ -8,7 +8,7 @@
     "workflow"
   ],
   "author": "Owen Young <theowenyoung@gmail.com>",
-  "homepage": "https://actionsflow.github.io",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-cli",
   "license": "MIT",
   "scripts": {
     "start": "tsc -w -p tsconfig.production.json",
@@ -27,9 +27,6 @@
   ],
   "engines": {
     "node": ">=10"
-  },
-  "directories": {
-    "test": "test"
   },
   "repository": {
     "type": "git",

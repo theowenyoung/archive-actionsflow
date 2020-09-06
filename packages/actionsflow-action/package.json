@@ -7,7 +7,7 @@
     "actionsflow"
   ],
   "author": "Owen Young <theowenyoung@gmail.com>",
-  "homepage": "https://actionsflow.github.io",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-action",
   "license": "MIT",
   "main": "dist/src/index.js",
   "repository": {
