@@ -1,7 +1,7 @@
 on:
   webhook:
     active: false
-    event: test
+    path: /
 jobs:
   print:
     name: Print
@@ -9,10 +9,10 @@ jobs:
     steps:
       - name: Print Outputs
         env:
-          event: ${{ on.webhook.outputs.event }}
-          payload: ${{ toJson(on.webhook.outputs.payload) }}
+          method: ${{ on.webhook.outputs.method }}
           body: ${{ toJson(on.webhook.outputs.body) }}
+          headers: ${{ oJson(on.webhook.outputs.headers) }}
         run: |
-          echo event: $event
-          echo payload $payload
+          echo method: $method
+          echo headers $headers
           echo body: $body

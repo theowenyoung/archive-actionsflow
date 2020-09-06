@@ -5,9 +5,7 @@
   "version": "0.0.7",
   "author": "Owen Young <theowenyoung@gmail.com>",
   "dependencies": {
-    "@actionsflow/trigger-telegram_bot": "^0.0.4",
-    "@actionsflow/trigger-twitter": "^0.0.9",
-    "actionsflow": "^0.0.20"
+    "actionsflow": "^0.1.2"
   },
   "keywords": [
     "actionsflow",

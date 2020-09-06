@@ -41,6 +41,8 @@
   "author": "Owen Young",
   "dependencies": {
     "@actions/github": "^4.0.0",
+    "@actionsflow/trigger-telegram_bot": "^0.1.2",
+    "@actionsflow/trigger-twitter": "^0.1.2",
     "@babel/polyfill": "^7.10.4",
     "@types/cache-manager": "^2.10.3",
     "@types/fs-extra": "^9.0.1",
