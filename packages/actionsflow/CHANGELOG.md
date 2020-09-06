@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.2...actionsflow@0.1.3) (2020-09-06)
+
+### Features
+
+- add package core ([d7bcb37](https://github.com/actionsflow/actionsflow/commit/d7bcb37b72bfd78aee59d3b90b29e0031c0772b8))
+- script docs ([52d1807](https://github.com/actionsflow/actionsflow/commit/52d18076faf8a32e0dd3f6a52677cbd568afdd2d))
+- update actions dependence ([0ef3400](https://github.com/actionsflow/actionsflow/commit/0ef3400a745171f64c475a7d197cea8322260685))
+- webhook ([10df2df](https://github.com/actionsflow/actionsflow/commit/10df2df84fd867b16a4a01e7dcf368a0107217c5))
+
 ## [0.1.2](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.1...actionsflow@0.1.2) (2020-09-06)
 
 ### Features

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.2...@actionsflow/trigger-twitter@0.1.3) (2020-09-06)
+
+### Features
+
+- add package core ([d7bcb37](https://github.com/actionsflow/actionsflow/commit/d7bcb37b72bfd78aee59d3b90b29e0031c0772b8))
+- update actions dependence ([0ef3400](https://github.com/actionsflow/actionsflow/commit/0ef3400a745171f64c475a7d197cea8322260685))
+
 ## [0.1.2](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.1...@actionsflow/trigger-twitter@0.1.2) (2020-09-06)
 
 ### Features
