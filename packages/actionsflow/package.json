@@ -5,6 +5,7 @@
   "typings": "dist/src/index.d.ts",
   "files": [
     "dist",
+    "src",
     "types",
     "cli.js"
   ],
