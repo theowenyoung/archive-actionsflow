@@ -5,6 +5,7 @@ on:
       return {
         items: result.data
       }
+    deduplication_key: id
 jobs:
   print:
     name: Print

@@ -28,3 +28,4 @@ customizations
 npm
 cron
 dedeplicate
+javascript

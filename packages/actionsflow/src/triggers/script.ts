@@ -8,6 +8,7 @@ import {
   IWorkflow,
 } from "actionsflow-interface";
 import resolveCwd from "resolve-cwd";
+// import { getOctokit } from "@actions/github";
 import { isPromise } from "../utils";
 import { resolve } from "path";
 import axios, { AxiosStatic } from "axios";
@@ -57,6 +58,11 @@ export default class Script implements ITriggerClassType {
   }
 
   async run(): Promise<ITriggerResult> {
+    // const token = this.context.secrets.GITHUB_TOKEN;
+    // if (this.options.github_token) {
+    // }
+    // const github = getOctokit(token, opts);
+
     const functionContext: AsyncFunctionArguments = {
       helpers: this.helpers,
       require: require,
