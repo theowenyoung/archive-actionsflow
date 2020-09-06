@@ -4,7 +4,9 @@
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "files": [
-    "dist"
+    "types",
+    "dist",
+    "cli.js"
   ],
   "engines": {
     "node": ">=10.4"

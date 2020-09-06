@@ -4,8 +4,8 @@
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "types",
+    "dist"
   ],
   "engines": {
     "node": ">=10"
