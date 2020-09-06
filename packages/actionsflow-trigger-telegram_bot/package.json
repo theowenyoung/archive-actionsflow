@@ -1,6 +1,6 @@
 {
   "name": "@actionsflow/trigger-telegram_bot",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Actionsflow trigger telegram bot",
   "keywords": [
     "telegram",
@@ -28,11 +28,11 @@
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
-    "actionsflow-interface": "^0.1.4",
+    "actionsflow-interface": "^0.1.7",
     "axios": "^0.20.0"
   },
   "devDependencies": {
-    "actionsflow-core": "^0.1.4"
+    "actionsflow-core": "^0.1.7"
   },
   "gitHead": "5354ce92742b20e721fb899516bf376702872ed2"
 }

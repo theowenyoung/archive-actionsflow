@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.7](https://github.com/actionsflow/actionsflow/compare/actionsflow-cli@0.1.6...actionsflow-cli@0.1.7) (2020-09-06)
+
+### Features
+
+- npm ignore ([2ff08fb](https://github.com/actionsflow/actionsflow/commit/2ff08fb31335ba7520aaf3d1ecd50d50a5a93027))
+
 ## [0.1.6](https://github.com/actionsflow/actionsflow/compare/actionsflow-cli@0.1.5...actionsflow-cli@0.1.6) (2020-09-06)
 
 **Note:** Version bump only for package actionsflow-cli

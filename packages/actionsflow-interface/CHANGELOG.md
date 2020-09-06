@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.7](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.4...actionsflow-interface@0.1.7) (2020-09-06)
+
+### Features
+
+- npm ignore ([2ff08fb](https://github.com/actionsflow/actionsflow/commit/2ff08fb31335ba7520aaf3d1ecd50d50a5a93027))
+
 ## [0.1.4](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.3...actionsflow-interface@0.1.4) (2020-09-06)
 
 ### Features
