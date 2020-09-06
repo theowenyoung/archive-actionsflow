@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/actionsflow/actionsflow/compare/actionsflow-cli@0.1.1...actionsflow-cli@0.1.2) (2020-09-06)
+
+**Note:** Version bump only for package actionsflow-cli
+
 ## [0.1.1](https://github.com/actionsflow/actionsflow/compare/actionsflow-cli@0.0.15...actionsflow-cli@0.1.1) (2020-09-06)
 
 **Note:** Version bump only for package actionsflow-cli

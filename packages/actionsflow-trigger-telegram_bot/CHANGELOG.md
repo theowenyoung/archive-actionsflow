@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-telegram_bot@0.1.1...@actionsflow/trigger-telegram_bot@0.1.2) (2020-09-06)
+
+### Features
+
+- no context to trigger ([98b0945](https://github.com/actionsflow/actionsflow/commit/98b09454152ecab2e3efbfe579e8394365700801))
+
 ## [0.1.1](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-telegram_bot@0.0.4...@actionsflow/trigger-telegram_bot@0.1.1) (2020-09-06)
 
 **Note:** Version bump only for package @actionsflow/trigger-telegram_bot
