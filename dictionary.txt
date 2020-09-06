@@ -29,3 +29,4 @@ npm
 cron
 dedeplicate
 javascript
+octokit

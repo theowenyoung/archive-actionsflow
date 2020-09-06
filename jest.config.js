@@ -11,4 +11,5 @@ module.exports = {
   testPathIgnorePatterns: [`__tests__/fixtures`, ".util.ts"],
   verbose: true,
   testTimeout: 10000,
+  setupFiles: ["dotenv/config"],
 };

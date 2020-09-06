@@ -6,8 +6,11 @@ import {
   IHelpers,
   IWorkflow,
 } from "actionsflow-interface";
+import { GitHub } from "@actions/github/lib/utils";
+import { OctokitOptions } from "@octokit/core/dist-types/types";
+
 import resolveCwd from "resolve-cwd";
-// import { getOctokit } from "@actions/github";
+import { getOctokit } from "@actions/github";
 import { isPromise } from "../utils";
 import { resolve } from "path";
 import axios, { AxiosStatic } from "axios";
@@ -18,6 +21,7 @@ type AsyncFunctionArguments = {
   require: NodeRequire;
   axios: AxiosStatic;
   options: AnyObject;
+  github?: InstanceType<typeof GitHub>;
 };
 
 function callAsyncFunction<T>(
@@ -49,10 +53,14 @@ export default class Script implements ITriggerClassType {
   }
 
   async run(): Promise<ITriggerResult> {
-    // const token = this.context.secrets.GITHUB_TOKEN;
-    // if (this.options.github_token) {
-    // }
-    // const github = getOctokit(token, opts);
+    const token = this.options.github_token as string;
+    const userAgent = this.options.user_agent as string;
+    const previews = this.options.previews as string[];
+    const opts: OctokitOptions = {};
+    opts.log = (this.helpers.log as unknown) as Console;
+    if (userAgent != null) opts.userAgent = userAgent;
+    if (previews && Array.isArray(previews) && previews.length > 0)
+      opts.previews = previews;
 
     const functionContext: AsyncFunctionArguments = {
       helpers: this.helpers,
@@ -60,6 +68,9 @@ export default class Script implements ITriggerClassType {
       axios: axios,
       options: this.options,
     };
+    if (token) {
+      functionContext.github = getOctokit(token, opts);
+    }
     const { run, path } = this.options as {
       run: string;
       path: string;

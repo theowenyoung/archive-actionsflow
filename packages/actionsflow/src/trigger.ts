@@ -2,6 +2,7 @@ import { getThirdPartyTrigger, isPromise } from "./utils";
 import chalk from "chalk";
 import { createContentDigest, getCache } from "./helpers";
 import log, { Log, prefix, colors } from "./log";
+import { LogLevelDesc } from "loglevel";
 import Triggers from "./triggers";
 import {
   ITriggerInternalResult,
@@ -37,13 +38,16 @@ export const getTriggerId = ({
   });
   return triggerId;
 };
+interface ITriggerHelpersOptions {
+  name: string;
+  workflowRelativePath: string;
+  logLevel?: LogLevelDesc;
+}
 export const getTriggerHelpers = ({
   name,
   workflowRelativePath,
-}: {
-  name: string;
-  workflowRelativePath: string;
-}): IHelpers => {
+  logLevel,
+}: ITriggerHelpersOptions): IHelpers => {
   const triggerId = getTriggerId({
     name: name,
     workflowRelativePath: workflowRelativePath,
@@ -56,6 +60,11 @@ export const getTriggerHelpers = ({
       )} ${chalk.green(`${name}:`)}`;
     },
   });
+  if (logLevel) {
+    triggerLog.setDefaultLevel(logLevel);
+  } else {
+    triggerLog.setDefaultLevel("info");
+  }
   const triggerHelpers = {
     createContentDigest,
     cache: getCache(`trigger-${triggerId}`),
@@ -71,6 +80,7 @@ interface IGeneralTriggerOptions {
   skipFirst: boolean;
   maxItemsCount: number;
   force: boolean;
+  logLevel: LogLevelDesc;
 }
 export const getGeneralTriggerFinalOptions = (
   triggerInstance: ITriggerClassType,
@@ -85,6 +95,7 @@ export const getGeneralTriggerFinalOptions = (
     skipFirst: false,
     maxItemsCount: -1,
     force: false,
+    logLevel: "info",
   };
   if (!userOptions.every === undefined) {
     options.every = Number(userOptions.every);
@@ -110,6 +121,9 @@ export const getGeneralTriggerFinalOptions = (
   }
   if (userOptions.force !== undefined) {
     options.force = Boolean(userOptions.force);
+  }
+  if (userOptions.log_level) {
+    options.logLevel = userOptions.log_level as LogLevelDesc;
   }
 
   return options;
@@ -140,10 +154,14 @@ export const run = async ({
   }
 
   if (Trigger) {
-    const triggerHelpers = getTriggerHelpers({
+    const triggerHelperOptions: ITriggerHelpersOptions = {
       name: trigger.name,
       workflowRelativePath: workflow.relativePath,
-    });
+    };
+    if (trigger.options && trigger.options.log_level) {
+      triggerHelperOptions.logLevel = trigger.options.log_level as LogLevelDesc;
+    }
+    const triggerHelpers = getTriggerHelpers(triggerHelperOptions);
     finalResult.helpers = triggerHelpers;
     const triggerInstance = new Trigger({
       helpers: triggerHelpers,

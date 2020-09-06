@@ -102,3 +102,31 @@ test("script trigger with file path", async () => {
   const itemKey = script.getItemKey(triggerResults.items[0]);
   expect(itemKey).toBe("test1");
 });
+
+test("script trigger with github token", async () => {
+  const token = process.env.GITHUB_TOKEN || "";
+  if (!token) {
+    // skip github test
+    return;
+  }
+  const script = new Script(
+    await getTriggerConstructorParams({
+      options: {
+        github_token: token,
+        run: `
+        let items = [];
+        const results = await github.issues.listForRepo({
+          owner:"actionsflow",
+          repo:"actionsflow",
+        });
+        return {
+          items:resutls.data
+        }
+        `,
+      },
+      name: "script",
+    })
+  );
+  const triggerResults = await script.run();
+  expect(Array.isArray(triggerResults.items)).toBe(true);
+});

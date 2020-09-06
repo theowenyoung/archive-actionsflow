@@ -81,5 +81,8 @@
     "packages": [
       "packages/*"
     ]
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
   }
 }
