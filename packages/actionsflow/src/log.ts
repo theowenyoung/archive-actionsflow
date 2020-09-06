@@ -8,7 +8,7 @@ interface IColors {
 export const colors: IColors = {
   TRACE: chalk.magenta,
   DEBUG: chalk.cyan,
-  INFO: chalk.blue,
+  INFO: chalk.green,
   WARN: chalk.yellow,
   ERROR: chalk.red,
 };

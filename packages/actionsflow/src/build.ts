@@ -177,13 +177,21 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         });
 
         // success
-        log.info(`Build workflow ${destRelativePath} success`);
+        log.info(
+          `${triggerResults.length} updates found at trigger [${trigger.name}] of workflow [${workflow.relativePath}], workflow file ${destRelativePath} build success`
+        );
       } else {
         log.info("Skip generate workflow file: ", workflow.relativePath),
           " because of no jobs";
       }
+    } else {
+      log.info(
+        `No new updates found at trigger [${trigger.name}] of workflow [${workflow.relativePath}], skip it.`
+      );
     }
   }
+
+  log.info("Done.");
 };
 
 export default build;
