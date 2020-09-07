@@ -3,8 +3,9 @@ import {
   renameJobsBySuffix,
   getJobsDependences,
   getBuiltWorkflow,
+  getWorkflow,
 } from "../workflow";
-import { getWorkflow, getContext } from "../index";
+import { getContext } from "../index";
 import path from "path";
 import { IWorkflow } from "actionsflow-interface";
 
@@ -63,7 +64,7 @@ test("get jobs dependence", () => {
   });
 });
 
-test("build single workflow", async () => {
+test("get built workflow", async () => {
   const feedPayload = {
     title: "Can't you just right click?",
     guid: "https://news.ycombinator.com/item?id=24217116",
@@ -96,4 +97,24 @@ test("build single workflow", async () => {
     "Make a Request to IFTTT 0"
   );
   // const newWorkflow = await readFile(path.resolve(".cache/workflows/"), "utf8");
+});
+
+test("get workflow", async () => {
+  const workflow = await getWorkflow({
+    cwd: path.resolve(__dirname, "fixtures"),
+    path: path.resolve(__dirname, "fixtures", "workflows", "rss.yml"),
+    context: {
+      github: {
+        event: {},
+      },
+      secrets: {
+        TEST: "test333",
+      },
+    },
+  });
+  if (workflow) {
+    expect(
+      (workflow.data.on as Record<string, Record<string, string>>).rss.test
+    ).toBe("test333-1");
+  }
 });
