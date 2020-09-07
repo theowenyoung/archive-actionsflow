@@ -47,7 +47,7 @@ export const getTasksByTriggerEvent = ({
     }
     if (tasks.length === 0) {
       log.info(
-        `The webhook request path [${webhookPath}] does not match any workflow triggers, Actionsflow will skip to continue build workflows this time`
+        `The webhook request path [${webhookPath}] does not match any workflow triggers, Actionsflow will skip building for this time`
       );
     }
   } else {
