@@ -1,5 +1,5 @@
 {
-  "version": "0.1.9",
+  "version": "0.1.10",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -37,7 +37,7 @@
   "author": "Owen Young",
   "dependencies": {
     "@actions/github": "^4.0.0",
-    "@actionsflow/trigger-telegram_bot": "^0.1.9",
+    "@actionsflow/trigger-telegram_bot": "^0.1.10",
     "@actionsflow/trigger-twitter": "^0.1.9",
     "@babel/polyfill": "^7.10.4",
     "@octokit/core": "^3.1.2",

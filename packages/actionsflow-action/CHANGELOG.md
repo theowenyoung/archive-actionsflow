@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.10](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.9...actionsflow-action@0.1.10) (2020-09-08)
+
+### Features
+
+- telegram add webhook param ([639a6c1](https://github.com/actionsflow/actionsflow/commit/639a6c113d3a6ea9da349ec89e0c22f3170cffe7))
+
 ## [0.1.9](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.8...actionsflow-action@0.1.9) (2020-09-08)
 
 ### Bug Fixes
