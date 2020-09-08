@@ -33,7 +33,7 @@ This trigger accepts [all trigger's general params](https://actionsflow.github.i
 
 - `token`, required, telegram bot token, you should get it from [Telegram BotFather](https://telegram.me/BotFather), for example: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`
 
-- `webhook`, optional, `boolean`, if use [telegram webhook mode](https://core.telegram.org/bots/api#setwebhook) to get telegram message updates, the default valude is `false`, the trigger will poll to get telegram updates. , if `true`, you must set webhook through telegram's [`setWebhook` API](https://core.telegram.org/bots/api#setwebhook), the webhook url should be `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/telegram_bot?__token=<your-github-personal-token>`, learn more about webhook URL, see [here](https://actionsflow.github.io/docs/reference/5-webhook/), here is a CURL example to set webhook:
+- `webhook`, optional, `boolean`, if use [telegram webhook mode](https://core.telegram.org/bots/api#setwebhook) to get telegram message updates, the default value is `false`, the trigger will poll to get telegram updates. , if `true`, you must set webhook through telegram's [`setWebhook` API](https://core.telegram.org/bots/api#setwebhook), the webhook URL should be `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/telegram_bot?__token=<your-github-personal-token>`, learn more about webhook URL, see [here](https://actionsflow.github.io/docs/reference/5-webhook/), here is a CURL example to set webhook:
 
   ```bash
   curl --request POST 'https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/setWebhook' \

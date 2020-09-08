@@ -28,7 +28,9 @@ on:
 This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
 
 - `event`, optional, default is `user_timeline`, for now only support `user_timeline`.
-- `auth`, required, twitter api authentication, you should get it from [Twitter Developers App](https://developer.twitter.com/en/apps)
+
+- `auth`, required, twitter API authentication, you should get it from [Twitter Developers App](https://developer.twitter.com/en/apps)
+
   ```yaml
   auth:
     consumer_key: ${{ secrets.TWITTER_CONSUMER_KEY }}
@@ -36,7 +38,9 @@ This trigger accepts [all trigger's general params](https://actionsflow.github.i
     access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
     access_token_secret: ${{ secrets.TWITTER_ACCESS_SECRET }}
   ```
-- `params`, optional, fetch twitter api query params, for `user_timeline`, you must provide `screen_name` field, for example:
+
+- `params`, optional, fetch twitter API query params, for `user_timeline`, you must provide `screen_name` field, for example:
+
   ```yaml
   params:
     screen_name: theowenyoung
