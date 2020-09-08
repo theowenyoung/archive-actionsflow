@@ -1,11 +1,5 @@
 # `actionsflow-core`
 
-> TODO: description
+The core library of [actionsflow](https://github.com/actionsflow/actionsflow)
 
-## Usage
-
-```
-const actionsflowCore = require('actionsflow-core');
-
-// TODO: DEMONSTRATE API
-```
+See [Contributing Guide](/docs/contributing.md)

@@ -16,6 +16,7 @@
   "registry": "https://registry.npmjs.org/",
   "ignoreChanges": [
     "CHANGELOG.md",
+    "!README.md",
     "*.md",
     "**/__tests__/**",
     "**/__mocks__/**",
