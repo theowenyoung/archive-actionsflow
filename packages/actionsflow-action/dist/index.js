@@ -26771,7 +26771,6 @@ const axios_1 = tslib_1.__importDefault(__webpack_require__(912));
 class TelegramBot {
     constructor({ helpers, options }) {
         this.options = {};
-        this.every = 5;
         this.shouldDeduplicate = true;
         this.getItemKey = (item) => {
             if (item.update_id)
@@ -26797,6 +26796,9 @@ class TelegramBot {
         this.helpers = helpers;
     }
     async run() {
+        if (this.options.webhook) {
+            return { items: [] };
+        }
         const log = this.helpers.log;
         const { token } = this.options;
         if (!token) {

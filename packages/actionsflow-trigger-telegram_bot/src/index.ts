@@ -17,7 +17,6 @@ export default class TelegramBot implements ITriggerClassType {
   }
   options: AnyObject = {};
   helpers: IHelpers;
-  every = 5;
   shouldDeduplicate = true;
   getItemKey = (item: AnyObject): string => {
     if (item.update_id) return item.update_id as string;
@@ -38,6 +37,10 @@ export default class TelegramBot implements ITriggerClassType {
     },
   ];
   async run(): Promise<ITriggerResult> {
+    // if webhook is true, then dont run manual fetch
+    if (this.options.webhook) {
+      return { items: [] };
+    }
     const log = this.helpers.log;
     const { token } = this.options as {
       token?: string;
