@@ -44,6 +44,46 @@ export const getWorkflow = async ({
   if (doc && typeof doc === "object" && doc.on) {
     // handle doc on, replace variables
     if (doc.on && typeof doc.on === "object") {
+      doc.env = doc.env || {};
+      // get new env actual value of doc yml
+      const newEnv = mapObj(
+        doc.env as Record<string, string>,
+        (mapKey, mapValue) => {
+          let newMapValueString = "";
+          let isHandled = false;
+          if (typeof mapValue === "string") {
+            const theMapValue = mapValue as string;
+            // if supported
+            newMapValueString = template(
+              theMapValue,
+              {
+                env: process.env,
+                ...context,
+              },
+              {
+                shouldReplaceUndefinedToEmpty: true,
+              }
+            );
+            isHandled = true;
+          }
+          if (isHandled) {
+            return [mapKey, newMapValueString];
+          } else {
+            return [mapKey, mapValue];
+          }
+        },
+        {
+          deep: true,
+        }
+      );
+      // add env to context
+      const newContext = {
+        ...context,
+        env: {
+          ...process.env,
+          ...newEnv,
+        },
+      };
       const newOn = mapObj(
         doc.on,
         (mapKey, mapValue) => {
@@ -52,7 +92,7 @@ export const getWorkflow = async ({
           if (typeof mapValue === "string") {
             const theMapValue = mapValue as string;
             // if supported
-            newMapValueString = template(theMapValue, context, {
+            newMapValueString = template(theMapValue, newContext, {
               shouldReplaceUndefinedToEmpty: true,
             });
             isHandled = true;

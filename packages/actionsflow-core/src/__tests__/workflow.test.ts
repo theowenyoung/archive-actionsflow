@@ -118,3 +118,23 @@ test("get workflow", async () => {
     ).toBe("test333-1");
   }
 });
+
+test("get workflow with env", async () => {
+  const workflow = await getWorkflow({
+    cwd: path.resolve(__dirname, "fixtures"),
+    path: path.resolve(__dirname, "fixtures", "workflows", "rss-env.yml"),
+    context: {
+      github: {
+        event: {},
+      },
+      secrets: {
+        TEST: "test333",
+      },
+    },
+  });
+  if (workflow) {
+    expect(
+      (workflow.data.on as Record<string, Record<string, string>>).rss.test2
+    ).toBe("test333-env1-3");
+  }
+});
