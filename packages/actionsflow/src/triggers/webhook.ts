@@ -11,6 +11,7 @@ import {
 export default class Webhook implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
+  shouldDeduplicate = false;
   constructor({ options, helpers }: ITriggerContructorParams) {
     this.options = options;
     this.helpers = helpers;

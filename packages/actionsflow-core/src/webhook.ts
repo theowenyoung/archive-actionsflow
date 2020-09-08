@@ -34,6 +34,12 @@ export const getWebhookByRequest = ({
     trigger.name
   );
   if (requestOriginPath.startsWith(webhookBasePath)) {
+    let requestPathWithoutWebhookBasePathname = request.path.slice(
+      webhookBasePath.length
+    );
+    if (!requestPathWithoutWebhookBasePathname.startsWith("/")) {
+      requestPathWithoutWebhookBasePathname = `/${requestPathWithoutWebhookBasePathname}`;
+    }
     let requestPathWithoutWebhookBasePath = requestOriginPath.slice(
       webhookBasePath.length
     );
@@ -45,7 +51,20 @@ export const getWebhookByRequest = ({
     webhooks.forEach((webhook) => {
       let isMethodMatched = false;
       if (webhook.method) {
-        isMethodMatched = webhook.method.toLowerCase() === requestMethod;
+        let methods: string[] = [];
+        if (Array.isArray(webhook.method)) {
+          methods = webhook.method;
+        } else {
+          methods = [webhook.method];
+        }
+
+        if (methods.length > 0) {
+          isMethodMatched = methods
+            .map((method) => method.toLowerCase())
+            .includes(requestMethod);
+        } else {
+          isMethodMatched = true;
+        }
       } else {
         // not define method
         isMethodMatched = true;
@@ -56,13 +75,16 @@ export const getWebhookByRequest = ({
       if (webhook.path) {
         // regex path
         const matchFn = match(webhook.path, { decode: decodeURIComponent });
-        matchResult = matchFn(requestPathWithoutWebhookBasePath);
+
+        matchResult = matchFn(requestPathWithoutWebhookBasePathname);
+
         if (matchResult) {
           isMatchedPath = true;
         }
       } else {
         isMatchedPath = true;
       }
+
       if (isMethodMatched && isMatchedPath) {
         const newRequest: IWebhookRequest = {
           ...formatRequest({

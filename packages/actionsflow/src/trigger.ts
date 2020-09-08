@@ -100,8 +100,6 @@ export const run = async ({
       const lastUpdatedAt =
         (await triggerCacheManager.get("lastUpdatedAt")) || 0;
       log.debug("lastUpdatedAt: ", lastUpdatedAt);
-      console.log("triggerInstance", triggerInstance);
-
       if (event.type === "webhook" && triggerInstance.webhooks) {
         // webhook event should call webhook method
         // lookup specific webhook event
@@ -129,8 +127,6 @@ export const run = async ({
           } else {
             triggerResult = webhookHandlerResult as ITriggerResult;
           }
-          console.log("triggerResult", triggerResult);
-
           await triggerCacheManager.set("lastUpdatedAt", Date.now());
         } else {
           // skip

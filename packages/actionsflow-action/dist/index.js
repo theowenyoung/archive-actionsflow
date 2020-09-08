@@ -15381,7 +15381,6 @@ exports.run = async ({ trigger, event, workflow, }) => {
             const { every, shouldDeduplicate, maxItemsCount, skipFirst, force, } = triggerGeneralOptions;
             const lastUpdatedAt = (await triggerCacheManager.get("lastUpdatedAt")) || 0;
             actionsflow_core_1.log.debug("lastUpdatedAt: ", lastUpdatedAt);
-            console.log("triggerInstance", triggerInstance);
             if (event.type === "webhook" && triggerInstance.webhooks) {
                 const webhook = actionsflow_core_1.getWebhookByRequest({
                     webhooks: triggerInstance.webhooks,
@@ -15401,7 +15400,6 @@ exports.run = async ({ trigger, event, workflow, }) => {
                     else {
                         triggerResult = webhookHandlerResult;
                     }
-                    console.log("triggerResult", triggerResult);
                     await triggerCacheManager.set("lastUpdatedAt", Date.now());
                 }
                 else {
@@ -33975,6 +33973,10 @@ exports.getWebhookByRequest = ({ webhooks, request, workflow, trigger, }) => {
     const requestMethod = request.method;
     const webhookBasePath = utils_1.getTriggerWebhookBasePath(workflow.relativePath, trigger.name);
     if (requestOriginPath.startsWith(webhookBasePath)) {
+        let requestPathWithoutWebhookBasePathname = request.path.slice(webhookBasePath.length);
+        if (!requestPathWithoutWebhookBasePathname.startsWith("/")) {
+            requestPathWithoutWebhookBasePathname = `/${requestPathWithoutWebhookBasePathname}`;
+        }
         let requestPathWithoutWebhookBasePath = requestOriginPath.slice(webhookBasePath.length);
         if (!requestPathWithoutWebhookBasePath.startsWith("/")) {
             requestPathWithoutWebhookBasePath = `/${requestPathWithoutWebhookBasePath}`;
@@ -33983,7 +33985,21 @@ exports.getWebhookByRequest = ({ webhooks, request, workflow, trigger, }) => {
         webhooks.forEach((webhook) => {
             let isMethodMatched = false;
             if (webhook.method) {
-                isMethodMatched = webhook.method.toLowerCase() === requestMethod;
+                let methods = [];
+                if (Array.isArray(webhook.method)) {
+                    methods = webhook.method;
+                }
+                else {
+                    methods = [webhook.method];
+                }
+                if (methods.length > 0) {
+                    isMethodMatched = methods
+                        .map((method) => method.toLowerCase())
+                        .includes(requestMethod);
+                }
+                else {
+                    isMethodMatched = true;
+                }
             }
             else {
                 isMethodMatched = true;
@@ -33992,7 +34008,7 @@ exports.getWebhookByRequest = ({ webhooks, request, workflow, trigger, }) => {
             let matchResult;
             if (webhook.path) {
                 const matchFn = path_to_regexp_1.match(webhook.path, { decode: decodeURIComponent });
-                matchResult = matchFn(requestPathWithoutWebhookBasePath);
+                matchResult = matchFn(requestPathWithoutWebhookBasePathname);
                 if (matchResult) {
                     isMatchedPath = true;
                 }
@@ -54025,6 +54041,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class Webhook {
     constructor({ options, helpers }) {
         this.options = {};
+        this.shouldDeduplicate = false;
         this.webhooks = [
             {
                 handler: (request) => {

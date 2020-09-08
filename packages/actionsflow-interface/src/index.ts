@@ -66,7 +66,7 @@ export type IWebhookHandler = (
 ) => Promise<ITriggerResult> | ITriggerResult;
 export interface IWebhook {
   path?: string;
-  method?: string;
+  method?: string | string[];
   getItemKey?: (item: AnyObject) => string;
   handler: IWebhookHandler;
 }
