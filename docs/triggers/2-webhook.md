@@ -35,6 +35,8 @@ curl --request POST 'https://webhook.actionsflow.workers.dev/actionsflow/actions
 }'
 ```
 
+Learn more about webhook URL, see [here](/docs/reference/5-webhook.md)
+
 ### IFTTT Webhook Request example
 
 You can use IFTTT webhook as a `then` action to trigger the workflow webhook, here is an example:
