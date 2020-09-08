@@ -57,6 +57,7 @@ You can use IFTTT webhook as a `then` action to trigger the workflow webhook, he
 This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
 
 - `method`, optional, `string` or `string[]`, you can define one or more as the specific method that the webhook should listen, the default is `undefined`, means that the webhook would listen all methods. The options value can be `get`, `post`, `put`, `patch`, `delete`, `head`, `options`
+- `should_deduplicate`, optional, `boolean`, if the webhook payload should be dedeplicate, the default value is `false`, it means every webhook request will trigger the jobs. You can set this `true`, and set `deduplication_key` to define the deduplication key.
 - `deduplication_key`, optional. The webhook trigger deduplicates the webhook body payload against body `id` key. If the id key does not exist, you should specify an alternative unique key to deduplicate. If neither are supplied, we fallback to looking for `id`, `key`, if neither are supplied, we will hash the body, and generate a unique key
 
 ## Outputs
@@ -65,10 +66,18 @@ An outputs example:
 
 ```json
 {
-  "event": "test",
-  "payload": { "key1": "value1", "key2": "value2" },
+  "headers": {
+    "content-type": "application/json"
+  },
+  "method": "post",
+  "query": {
+    "test": "1"
+  },
+  "querystring": "test=1",
+  "search": "?test=1",
   "body": {
-    "event": "test"
+    "id": "testid",
+    "title": "title"
   }
 }
 ```
@@ -78,8 +87,6 @@ You can use the outputs like this:
 ```yaml
 on:
   webhook:
-    active: false
-    event: test
 jobs:
   print:
     name: Print
@@ -87,12 +94,12 @@ jobs:
     steps:
       - name: Print Outputs
         env:
-          event: ${{ on.webhook.outputs.event }}
-          payload: ${{ toJson(on.webhook.outputs.payload) }}
+          method: ${{ on.webhook.outputs.method }}
           body: ${{ toJson(on.webhook.outputs.body) }}
+          headers: ${{ toJson(on.webhook.outputs.headers) }}
         run: |
-          echo event: $event
-          echo payload $payload
+          echo method: $method
+          echo headers $headers
           echo body: $body
 ```
 
