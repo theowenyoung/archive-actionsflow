@@ -1,6 +1,6 @@
 {
   "name": "@actionsflow/trigger-telegram_bot",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Actionsflow trigger telegram bot",
   "keywords": [
     "telegram",
