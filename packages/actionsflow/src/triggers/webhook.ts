@@ -37,8 +37,8 @@ export default class Webhook implements ITriggerClassType {
   }
   webhooks: IWebhook[] = [
     {
-      handler: async (request: IWebhookRequest): Promise<ITriggerResult> => {
-        const id = this._getBodyKey(request.body as AnyObject);
+      handler: (request: IWebhookRequest): ITriggerResult => {
+        const id = this._getBodyKey((request.body as AnyObject) || {});
         return {
           items: [
             {

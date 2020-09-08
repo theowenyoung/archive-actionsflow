@@ -105,7 +105,7 @@ export const getEventByContext = (context: ITriggerContext): ITriggerEvent => {
       headers: clientPayload.headers,
       body: clientPayload.body,
     });
-  } else if (githubObj.event_type === "schedule") {
+  } else if (githubObj.event_name === "schedule") {
     triggerEvent.type = "schedule";
   } else {
     // manual

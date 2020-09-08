@@ -11,7 +11,6 @@ metaDescription: "Trigger by a Webhook request"
 ```yaml
 on:
   webhook:
-    event: test
 ```
 
 ## Trigger Webhook

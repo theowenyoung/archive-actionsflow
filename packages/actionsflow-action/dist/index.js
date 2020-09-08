@@ -15381,6 +15381,7 @@ exports.run = async ({ trigger, event, workflow, }) => {
             const { every, shouldDeduplicate, maxItemsCount, skipFirst, force, } = triggerGeneralOptions;
             const lastUpdatedAt = (await triggerCacheManager.get("lastUpdatedAt")) || 0;
             actionsflow_core_1.log.debug("lastUpdatedAt: ", lastUpdatedAt);
+            console.log("triggerInstance", triggerInstance);
             if (event.type === "webhook" && triggerInstance.webhooks) {
                 const webhook = actionsflow_core_1.getWebhookByRequest({
                     webhooks: triggerInstance.webhooks,
@@ -15389,6 +15390,7 @@ exports.run = async ({ trigger, event, workflow, }) => {
                     trigger,
                 });
                 if (webhook) {
+                    actionsflow_core_1.log.debug("detect webhook2", webhook);
                     if (webhook.getItemKey) {
                         triggerGeneralOptions.getItemKey = webhook.getItemKey.bind(triggerInstance);
                     }
@@ -15399,6 +15401,7 @@ exports.run = async ({ trigger, event, workflow, }) => {
                     else {
                         triggerResult = webhookHandlerResult;
                     }
+                    console.log("triggerResult", triggerResult);
                     await triggerCacheManager.set("lastUpdatedAt", Date.now());
                 }
                 else {
@@ -20947,7 +20950,7 @@ exports.getEventByContext = (context) => {
             body: clientPayload.body,
         });
     }
-    else if (githubObj.event_type === "schedule") {
+    else if (githubObj.event_name === "schedule") {
         triggerEvent.type = "schedule";
     }
     else {
@@ -54024,8 +54027,8 @@ class Webhook {
         this.options = {};
         this.webhooks = [
             {
-                handler: async (request) => {
-                    const id = this._getBodyKey(request.body);
+                handler: (request) => {
+                    const id = this._getBodyKey(request.body || {});
                     return {
                         items: [
                             {
@@ -93081,12 +93084,42 @@ exports.getWorkflow = async ({ cwd, path: filePath, context, }) => {
     }
     if (doc && typeof doc === "object" && doc.on) {
         if (doc.on && typeof doc.on === "object") {
+            doc.env = doc.env || {};
+            const newEnv = map_obj_1.default(doc.env, (mapKey, mapValue) => {
+                let newMapValueString = "";
+                let isHandled = false;
+                if (typeof mapValue === "string") {
+                    const theMapValue = mapValue;
+                    newMapValueString = utils_1.template(theMapValue, {
+                        env: process.env,
+                        ...context,
+                    }, {
+                        shouldReplaceUndefinedToEmpty: true,
+                    });
+                    isHandled = true;
+                }
+                if (isHandled) {
+                    return [mapKey, newMapValueString];
+                }
+                else {
+                    return [mapKey, mapValue];
+                }
+            }, {
+                deep: true,
+            });
+            const newContext = {
+                ...context,
+                env: {
+                    ...process.env,
+                    ...newEnv,
+                },
+            };
             const newOn = map_obj_1.default(doc.on, (mapKey, mapValue) => {
                 let newMapValueString = "";
                 let isHandled = false;
                 if (typeof mapValue === "string") {
                     const theMapValue = mapValue;
-                    newMapValueString = utils_1.template(theMapValue, context, {
+                    newMapValueString = utils_1.template(theMapValue, newContext, {
                         shouldReplaceUndefinedToEmpty: true,
                     });
                     isHandled = true;

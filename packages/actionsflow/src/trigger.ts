@@ -100,6 +100,8 @@ export const run = async ({
       const lastUpdatedAt =
         (await triggerCacheManager.get("lastUpdatedAt")) || 0;
       log.debug("lastUpdatedAt: ", lastUpdatedAt);
+      console.log("triggerInstance", triggerInstance);
+
       if (event.type === "webhook" && triggerInstance.webhooks) {
         // webhook event should call webhook method
         // lookup specific webhook event
@@ -112,6 +114,7 @@ export const run = async ({
         });
 
         if (webhook) {
+          log.debug("detect webhook2", webhook);
           // check if specific getItemKey at Webhook
           if (webhook.getItemKey) {
             triggerGeneralOptions.getItemKey = webhook.getItemKey.bind(
@@ -126,6 +129,7 @@ export const run = async ({
           } else {
             triggerResult = webhookHandlerResult as ITriggerResult;
           }
+          console.log("triggerResult", triggerResult);
 
           await triggerCacheManager.set("lastUpdatedAt", Date.now());
         } else {

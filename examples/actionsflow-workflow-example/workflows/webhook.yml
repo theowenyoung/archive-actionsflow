@@ -1,7 +1,5 @@
 on:
   webhook:
-    active: false
-    path: /
 jobs:
   print:
     name: Print
@@ -11,7 +9,7 @@ jobs:
         env:
           method: ${{ on.webhook.outputs.method }}
           body: ${{ toJson(on.webhook.outputs.body) }}
-          headers: ${{ oJson(on.webhook.outputs.headers) }}
+          headers: ${{ toJson(on.webhook.outputs.headers) }}
         run: |
           echo method: $method
           echo headers $headers
