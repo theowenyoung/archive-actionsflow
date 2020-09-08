@@ -26785,13 +26785,9 @@ class TelegramBot {
             {
                 handler: (request) => {
                     let items = [];
-                    console.log("request.headers", request.headers);
-                    console.log("request.body", typeof request.body);
-                    console.log("request.body", request.body);
                     if (request.body && request.body.update_id) {
                         items = this._getItems([request.body]);
                     }
-                    console.log("items", items);
                     return {
                         items,
                     };
@@ -26847,7 +26843,7 @@ class TelegramBot {
         if (Array.isArray(event)) {
             events = event;
         }
-        else {
+        else if (event) {
             events = [event];
         }
         const items = [];

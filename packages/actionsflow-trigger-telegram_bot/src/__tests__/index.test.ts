@@ -16,7 +16,7 @@ test("telegram bot with webhook", async () => {
   const telegramBot = new TelegramBot({
     options: {
       token: TELEGRAM_TOKEN,
-      event: ["text", "photo"],
+      webhook: true,
     },
     helpers: getTriggerHelpers({
       name: "telegram_bot",

@@ -26,17 +26,10 @@ export default class TelegramBot implements ITriggerClassType {
     {
       handler: (request: IWebhookRequest): ITriggerResult => {
         let items: AnyObject[] = [];
-        console.log("request.headers", request.headers);
-
-        console.log("request.body", typeof request.body);
-
-        console.log("request.body", request.body);
 
         if (request.body && (request.body as AnyObject).update_id) {
           items = this._getItems([request.body as AnyObject]);
         }
-        console.log("items", items);
-
         return {
           items,
         };
@@ -105,7 +98,7 @@ export default class TelegramBot implements ITriggerClassType {
     let events: string[] = [];
     if (Array.isArray(event)) {
       events = event;
-    } else {
+    } else if (event) {
       events = [event];
     }
     const items: AnyObject[] = [];
@@ -140,6 +133,7 @@ export default class TelegramBot implements ITriggerClassType {
       "video_note",
       "voice",
     ];
+
     itemsArray.forEach((item: AnyObject) => {
       const message = item.message as {
         update_id: string;
@@ -150,7 +144,6 @@ export default class TelegramBot implements ITriggerClassType {
       const messageType = _messageTypes.find((messageType) => {
         return message[messageType];
       });
-
       if (events.length > 0) {
         if (messageType && events.includes(messageType)) {
           items.push(message);
