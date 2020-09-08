@@ -26,9 +26,12 @@ export default class TelegramBot implements ITriggerClassType {
     {
       handler: (request: IWebhookRequest): ITriggerResult => {
         let items: AnyObject[] = [];
+        console.log("request.body", request.body);
+
         if (request.body && (request.body as AnyObject).update_id) {
           items = this._getItems([request.body as AnyObject]);
         }
+        console.log("items", items);
 
         return {
           items,

@@ -20882,9 +20882,13 @@ exports.formatRequest = ({ path, method, headers, body, }) => {
     const querystringStr = pathInstance.search
         ? pathInstance.search.slice(1)
         : "";
+    let finalMethod = "get";
+    if (method) {
+        finalMethod = method.toLowerCase();
+    }
     const request = {
         path: pathInstance.pathname,
-        method: method || "get",
+        method: finalMethod,
         headers: headers || {},
         originPath: path,
         query: querystring_1.default.parse(querystringStr),
@@ -26781,9 +26785,11 @@ class TelegramBot {
             {
                 handler: (request) => {
                     let items = [];
+                    console.log("request.body", request.body);
                     if (request.body && request.body.update_id) {
                         items = this._getItems([request.body]);
                     }
+                    console.log("items", items);
                     return {
                         items,
                     };

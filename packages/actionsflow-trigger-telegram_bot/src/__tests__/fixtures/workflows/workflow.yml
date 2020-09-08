@@ -1,6 +1,6 @@
 on:
-  rss:
-    url: https://hnrss.org/newest?points=300
+  telegram_bot:
+    token: 123456
 jobs:
   print:
     name: Print
@@ -8,6 +8,6 @@ jobs:
     steps:
       - name: Print Outputs
         env:
-          title: ${{on.rss.outputs.title}}
+          id: ${{on.telegram_bot.outputs.id}}
         run: |
-          echo title: $title
+          echo id: $id

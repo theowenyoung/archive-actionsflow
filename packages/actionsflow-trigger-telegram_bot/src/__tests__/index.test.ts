@@ -2,10 +2,69 @@ import axios from "axios";
 import path from "path";
 import TelegramBot from "../index";
 jest.mock("axios");
-import { getTriggerHelpers, getContext, getWorkflow } from "actionsflow-core";
+import {
+  getTriggerHelpers,
+  getContext,
+  getWorkflow,
+  formatRequest,
+} from "actionsflow-core";
 import { IWorkflow } from "actionsflow-interface";
 
 const TELEGRAM_TOKEN = "test";
+
+test("telegram bot with webhook", async () => {
+  const telegramBot = new TelegramBot({
+    options: {
+      token: TELEGRAM_TOKEN,
+      event: ["text", "photo"],
+    },
+    helpers: getTriggerHelpers({
+      name: "telegram_bot",
+      workflowRelativePath: "workflow.yml",
+    }),
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "fixtures/workflows/workflow.yml"),
+      cwd: path.resolve(__dirname, "fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
+  });
+  const requestPayload = formatRequest({
+    path: "/",
+    body: {
+      update_id: 791185174,
+      message: {
+        message_id: 9,
+        from: {
+          id: 1056059698,
+          is_bot: false,
+          first_name: "Owen",
+          last_name: "Young",
+          language_code: "en",
+        },
+        chat: {
+          id: 1056059698,
+          first_name: "Owen",
+          last_name: "Young",
+          type: "private",
+        },
+        date: 1599586867,
+        text: "hello",
+      },
+    },
+    method: "POST",
+    headers: {},
+  });
+  const request = {
+    ...requestPayload,
+    params: {},
+  };
+  const triggerResults = await telegramBot.webhooks[0].handler.bind(
+    telegramBot
+  )(request);
+
+  expect(triggerResults.items.length).toBe(1);
+  expect(triggerResults.items[0].text).toBe("hello");
+});
 
 test("telegram bot trigger", async () => {
   const resp = {

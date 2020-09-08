@@ -16,7 +16,7 @@ export const formatRequest = ({
   body,
 }: {
   path: string;
-  method?: HTTP_METHODS_LOWERCASE;
+  method?: string;
   headers?: Record<string, string>;
   body?: string | AnyObject | undefined;
 }): IWebhookRequestPayload => {
@@ -24,9 +24,13 @@ export const formatRequest = ({
   const querystringStr = pathInstance.search
     ? pathInstance.search.slice(1)
     : "";
+  let finalMethod: HTTP_METHODS_LOWERCASE = "get";
+  if (method) {
+    finalMethod = method.toLowerCase() as HTTP_METHODS_LOWERCASE;
+  }
   const request: IWebhookRequestPayload = {
     path: pathInstance.pathname,
-    method: method || "get",
+    method: finalMethod,
     headers: headers || {},
     originPath: path,
     query: querystring.parse(querystringStr),
