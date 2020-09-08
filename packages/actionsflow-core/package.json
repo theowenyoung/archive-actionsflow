@@ -1,5 +1,5 @@
 {
-  "version": "0.1.9",
+  "version": "0.1.10",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -45,7 +45,7 @@
     "@types/semver": "^7.3.3",
     "@types/update-notifier": "^4.1.1",
     "@types/xml2js": "^0.4.5",
-    "actionsflow-interface": "^0.1.9",
+    "actionsflow-interface": "^0.1.10",
     "axios": "^0.20.0",
     "cache-manager": "^3.3.0",
     "cache-manager-fs-hash": "^0.0.9",

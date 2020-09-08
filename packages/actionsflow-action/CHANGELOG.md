@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.9](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.8...actionsflow-action@0.1.9) (2020-09-08)
+
+### Bug Fixes
+
+- webhook ([45a957b](https://github.com/actionsflow/actionsflow/commit/45a957b85f027c4d106bd4fde153b31684d73fcb))
+- webhook path regex ([473ea58](https://github.com/actionsflow/actionsflow/commit/473ea584d1c2b5bc3126b60bc5d40fd37603b4f3))
+
+### Features
+
+- support env variables at trigger options ([f93e257](https://github.com/actionsflow/actionsflow/commit/f93e257db4e34a2ee42a8c1821b00a56e4f2f40d))
+
 ## [0.1.8](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.7...actionsflow-action@0.1.8) (2020-09-08)
 
 **Note:** Version bump only for package actionsflow-action

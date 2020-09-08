@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.10](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.9...actionsflow-interface@0.1.10) (2020-09-08)
+
+### Bug Fixes
+
+- webhook path regex ([473ea58](https://github.com/actionsflow/actionsflow/commit/473ea584d1c2b5bc3126b60bc5d40fd37603b4f3))
+
 ## [0.1.9](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.7...actionsflow-interface@0.1.9) (2020-09-08)
 
 **Note:** Version bump only for package actionsflow-interface
