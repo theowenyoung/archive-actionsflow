@@ -23,7 +23,7 @@ jobs:
         with:
           url: https://theowenyoung:${{secrets.REPO_TOKEN}}@api.github.com/repos/actionsflow/docs/dispatches
           method: POST
-          body: |
+          data: |
             {
               "event_type": "redeploy"
             }
