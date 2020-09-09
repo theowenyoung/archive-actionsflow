@@ -12,5 +12,3 @@ You may be looking to build and perhaps publish a trigger that doesn't exist yet
 - Plugins implement the Gatsby APIs for [Node](/docs/node-apis/), [server-side rendering](/docs/ssr-apis/), and the [browser](/docs/browser-apis/)
 
 This section of the docs includes the following guides:
-
-<GuideList slug={props.slug} />
