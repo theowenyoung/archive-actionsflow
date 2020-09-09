@@ -12,6 +12,7 @@ import {
   IWorkflow,
   AnyObject,
   ITriggerBuildResult,
+  IWorkflowData,
 } from "actionsflow-interface";
 import { TRIGGER_RESULT_ENV_PREFIX } from "./constans";
 
@@ -31,12 +32,9 @@ export const getWorkflow = async ({
   context: ITriggerContext;
 }): Promise<IWorkflow | undefined> => {
   const relativePath = path.relative(path.resolve(cwd, "workflows"), filePath);
-  let doc: Record<string, unknown> | string | undefined;
+  let doc: IWorkflowData | string | undefined;
   try {
-    doc = yaml.safeLoad(await fs.readFile(filePath, "utf8")) as Record<
-      string,
-      unknown
-    >;
+    doc = yaml.safeLoad(await fs.readFile(filePath, "utf8")) as IWorkflowData;
   } catch (e) {
     log.error("load yaml file error:", filePath, e);
     throw e;
@@ -44,10 +42,10 @@ export const getWorkflow = async ({
   if (doc && typeof doc === "object" && doc.on) {
     // handle doc on, replace variables
     if (doc.on && typeof doc.on === "object") {
-      doc.env = doc.env || {};
+      const currentEnv = doc.env || {};
       // get new env actual value of doc yml
       const newEnv = mapObj(
-        doc.env as Record<string, string>,
+        currentEnv as Record<string, string>,
         (mapKey, mapValue) => {
           let newMapValueString = "";
           let isHandled = false;
@@ -113,7 +111,7 @@ export const getWorkflow = async ({
     return {
       path: filePath,
       relativePath: relativePath,
-      data: doc as AnyObject,
+      data: doc as IWorkflowData,
     };
   } else {
     log.debug("skip empty or invalid file", filePath);
@@ -270,7 +268,7 @@ interface IBuildSingleWorkflowOptions {
 }
 export const getBuiltWorkflow = async (
   options: IBuildSingleWorkflowOptions
-): Promise<AnyObject> => {
+): Promise<IWorkflowData> => {
   log.debug("buildWorkflow options:", options);
   const { workflow, trigger } = options;
   const workflowData = workflow.data;
@@ -286,7 +284,9 @@ export const getBuiltWorkflow = async (
     firstJobs: string[];
     jobs: Record<string, AnyObject>;
   }[] = [];
-  const newEnv: Record<string, string> = {};
+  const newEnv: Record<string, string> = {
+    ...(workflowData.env as Record<string, string>),
+  };
   // todo
   for (let index = 0; index < trigger.results.length; index++) {
     const triggerResult = trigger.results[index];
@@ -413,8 +413,6 @@ export const getBuiltWorkflow = async (
   newWorkflowData.on = ["push"];
   newWorkflowData.jobs = finalJobs;
   newWorkflowData.env = newEnv;
-  // if finalJobs not empty, then build
-
   return newWorkflowData;
 };
 

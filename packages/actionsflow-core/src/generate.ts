@@ -2,7 +2,7 @@ import path from "path";
 import yaml from "js-yaml";
 import fs from "fs-extra";
 import { log } from "./log";
-import { AnyObject } from "actionsflow-interface";
+import { IWorkflowData, AnyObject } from "actionsflow-interface";
 export const buildNativeEvent = async (options: {
   dest: string;
   github: AnyObject;
@@ -47,7 +47,7 @@ export const buildWorkflowFile = async ({
   workflowData,
   dest,
 }: {
-  workflowData: AnyObject;
+  workflowData: IWorkflowData;
   dest: string;
 }): Promise<{ path: string; workflowContent: string }> => {
   const workflowContent = yaml.safeDump(workflowData);

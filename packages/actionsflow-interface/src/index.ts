@@ -97,10 +97,15 @@ export interface ITriggerInternalResult {
   conclusion: ConclusionStatus;
   helpers?: IHelpers;
 }
+export interface IWorkflowData {
+  on: string[] | null | AnyObject | string;
+  jobs?: Record<string, AnyObject>;
+  env?: Record<string, string>;
+}
 export interface IWorkflow {
   path: string;
   relativePath: string;
-  data: AnyObject;
+  data: IWorkflowData;
 }
 
 export type TriggerEventType = "manual" | "schedule" | "webhook";

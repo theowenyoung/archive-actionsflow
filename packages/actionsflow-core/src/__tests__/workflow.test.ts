@@ -86,6 +86,18 @@ test("get built workflow", async () => {
       ],
     },
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expect((workflowData as any).env.TEST_ENV).toBe("testvalue");
+  expect(workflowData.env).toHaveProperty(
+    "ACTIONSFLOW_TRIGGER_RESULT_FOR_rss_0"
+  );
+  if (workflowData.env) {
+    const value1 = workflowData.env.ACTIONSFLOW_TRIGGER_RESULT_FOR_rss_0;
+    const valueJson = JSON.parse(value1);
+    expect(valueJson.outputs.title).toBe("Can't you just right click?");
+  }
+
   expect(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (workflowData as any).jobs.ifttt_0.steps[0].with.value1

@@ -12,11 +12,11 @@ test("run trigger", async () => {
       },
     },
 
-    workflow: {
-      relativePath: "test.yml",
-      path: "",
-      data: {},
-    },
+    workflow: (await getWorkflow({
+      path: path.resolve(__dirname, "./fixtures/workflows/rss.yml"),
+      cwd: path.resolve(__dirname, "./fixtures"),
+      context: getContext(),
+    })) as IWorkflow,
     event: {
       type: "manual",
     },

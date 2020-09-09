@@ -5,14 +5,22 @@ import { log } from "../log";
 export const getThirdPartyTrigger = (
   triggerName: string
 ): ITriggerClassTypeConstructable | undefined => {
-  const thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
-  log.debug("third party trigger", thirdPartyTrigger);
-  let triggerPath = resolveCwd.silent(thirdPartyTrigger);
+  // first resolve local triggers
+  log.debug("try to load local trigger", triggerName);
+  let triggerPath = resolveCwd.silent(`./triggers/${triggerName}`);
+
   if (!triggerPath) {
-    triggerPath = resolveCwd.silent(`actionsflow-trigger-${triggerName}`);
+    const thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
+    log.debug("try to load third party trigger", thirdPartyTrigger);
+    triggerPath = resolveCwd.silent(thirdPartyTrigger);
   }
-  log.debug("third party trigger path", triggerPath);
+  if (!triggerPath) {
+    const thirdPartyTrigger = `actionsflow-trigger-${triggerName}`;
+    log.debug("try to load third party trigger", thirdPartyTrigger);
+    triggerPath = resolveCwd.silent(thirdPartyTrigger);
+  }
   if (triggerPath) {
+    log.debug("success found third party trigger: ", triggerPath);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const Trigger = require(triggerPath);
     if (Trigger.default) {

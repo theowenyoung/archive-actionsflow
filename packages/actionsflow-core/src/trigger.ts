@@ -6,6 +6,7 @@ import {
   ITrigger,
   ITriggerClassType,
   IHelpers,
+  IWorkflowData,
 } from "actionsflow-interface";
 import { Log, prefix, colors } from "./log";
 
@@ -115,7 +116,7 @@ export const getGeneralTriggerFinalOptions = (
  * get raw triggers from workflow data
  * @param doc
  */
-export const getRawTriggers = (doc: AnyObject): ITrigger[] => {
+export const getRawTriggers = (doc: IWorkflowData): ITrigger[] => {
   const triggers = [];
   if (doc && doc.on) {
     const onObj = doc.on as Record<string, Record<string, unknown>>;

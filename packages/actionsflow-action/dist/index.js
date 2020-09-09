@@ -3560,14 +3560,20 @@ const tslib_1 = __webpack_require__(617);
 const resolve_cwd_1 = tslib_1.__importDefault(__webpack_require__(2651));
 const log_1 = __webpack_require__(9336);
 exports.getThirdPartyTrigger = (triggerName) => {
-    const thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
-    log_1.log.debug("third party trigger", thirdPartyTrigger);
-    let triggerPath = resolve_cwd_1.default.silent(thirdPartyTrigger);
+    log_1.log.debug("try to load local trigger", triggerName);
+    let triggerPath = resolve_cwd_1.default.silent(`./triggers/${triggerName}`);
     if (!triggerPath) {
-        triggerPath = resolve_cwd_1.default.silent(`actionsflow-trigger-${triggerName}`);
+        const thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
+        log_1.log.debug("try to load third party trigger", thirdPartyTrigger);
+        triggerPath = resolve_cwd_1.default.silent(thirdPartyTrigger);
     }
-    log_1.log.debug("third party trigger path", triggerPath);
+    if (!triggerPath) {
+        const thirdPartyTrigger = `actionsflow-trigger-${triggerName}`;
+        log_1.log.debug("try to load third party trigger", thirdPartyTrigger);
+        triggerPath = resolve_cwd_1.default.silent(thirdPartyTrigger);
+    }
     if (triggerPath) {
+        log_1.log.debug("success found third party trigger: ", triggerPath);
         const Trigger = require(triggerPath);
         if (Trigger.default) {
             return Trigger.default;
@@ -93107,8 +93113,8 @@ exports.getWorkflow = async ({ cwd, path: filePath, context, }) => {
     }
     if (doc && typeof doc === "object" && doc.on) {
         if (doc.on && typeof doc.on === "object") {
-            doc.env = doc.env || {};
-            const newEnv = map_obj_1.default(doc.env, (mapKey, mapValue) => {
+            const currentEnv = doc.env || {};
+            const newEnv = map_obj_1.default(currentEnv, (mapKey, mapValue) => {
                 let newMapValueString = "";
                 let isHandled = false;
                 if (typeof mapValue === "string") {
@@ -93287,7 +93293,9 @@ exports.getBuiltWorkflow = async (options) => {
     delete workflowData.jobs;
     const newWorkflowData = workflowData;
     const jobsGroups = [];
-    const newEnv = {};
+    const newEnv = {
+        ...workflowData.env,
+    };
     for (let index = 0; index < trigger.results.length; index++) {
         const triggerResult = trigger.results[index];
         const { outputs, outcome, conclusion } = triggerResult;
@@ -95739,14 +95747,18 @@ const tslib_1 = __webpack_require__(4414);
 __webpack_require__(1754);
 const del_1 = tslib_1.__importDefault(__webpack_require__(3703));
 const actionsflow_core_1 = __webpack_require__(5968);
+const path_1 = tslib_1.__importDefault(__webpack_require__(5622));
 exports.default = (options) => {
     options = {
         dest: "./dist",
-        base: process.cwd(),
+        cwd: process.cwd(),
         logLevel: "info",
         ...options,
     };
-    return del_1.default([options.dest, "./.cache"]).then(() => {
+    return del_1.default([
+        path_1.default.resolve(options.cwd, options.dest),
+        path_1.default.resolve(process.cwd(), ".cache"),
+    ]).then(() => {
         actionsflow_core_1.log.info("Successfully deleted directories");
     });
 };

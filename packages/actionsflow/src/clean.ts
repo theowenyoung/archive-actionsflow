@@ -2,18 +2,22 @@ import "./env";
 import del from "del";
 import { log } from "actionsflow-core";
 import * as Log from "loglevel";
+import path from "path";
 export default (options: {
   dest?: string;
-  base?: string;
+  cwd?: string;
   logLevel?: Log.LogLevelDesc;
 }): Promise<string[] | void> => {
   options = {
     dest: "./dist",
-    base: process.cwd(),
+    cwd: process.cwd(),
     logLevel: "info",
     ...options,
   };
-  return del([options.dest as string, "./.cache"]).then(() => {
+  return del([
+    path.resolve(options.cwd as string, options.dest as string),
+    path.resolve(process.cwd(), ".cache"),
+  ]).then(() => {
     log.info("Successfully deleted directories");
   });
 };
