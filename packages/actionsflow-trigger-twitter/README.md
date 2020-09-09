@@ -1,9 +1,3 @@
----
-title: "Twitter"
-metaTitle: "Actionsflow twitter trigger"
-metaDescription: "twitter trigger is triggered when new tweets are detected."
----
-
 # `@actionsflow/trigger-twitter`
 
 This is an [Actionsflow](https://github.com/actionsflow/actionsflow) twitter trigger. You can watch the `user_timeline` updates by using this trigger.
