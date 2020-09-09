@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig } from "axios";
 import clonedeep from "lodash.clonedeep";
 import get from "lodash.get";
 import {
@@ -49,7 +49,7 @@ export default class Poll implements ITriggerClassType {
     // get updates
     let requestResult;
     try {
-      requestResult = await axios(config);
+      requestResult = await this.helpers.axios(config);
     } catch (e) {
       if (e.code === "ECONNREFUSED") {
         throw new Error(

@@ -25,6 +25,7 @@
   },
   "gitHead": "5354ce92742b20e721fb899516bf376702872ed2",
   "dependencies": {
+    "axios": "^0.20.0",
     "loglevel": "^1.7.0"
   }
 }

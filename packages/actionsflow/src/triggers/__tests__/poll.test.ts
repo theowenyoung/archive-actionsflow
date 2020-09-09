@@ -1,6 +1,11 @@
-import axios from "axios";
 import Poll from "../poll";
-jest.mock("axios");
+import { getTriggerHelpers } from "actionsflow-core";
+import { IHelpers } from "actionsflow-interface";
+import { AxiosStatic } from "axios";
+const helpers: IHelpers = getTriggerHelpers({
+  name: "poll",
+  workflowRelativePath: "poll.yml",
+});
 import { getTriggerConstructorParams } from "./trigger.util";
 const resp = {
   data: [
@@ -22,17 +27,18 @@ const resp = {
   ],
 };
 test("poll trigger", async () => {
+  const axios = jest.fn();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (axios as any).mockImplementation(() => Promise.resolve(resp));
-
-  const poll = new Poll(
-    await getTriggerConstructorParams({
-      options: {
-        url: "https://jsonplaceholder.typicode.com/posts",
-      },
-      name: "poll",
-    })
-  );
+  axios.mockImplementation(() => Promise.resolve(resp));
+  helpers.axios = (axios as unknown) as AxiosStatic;
+  const constructionParams = await getTriggerConstructorParams({
+    options: {
+      url: "https://jsonplaceholder.typicode.com/posts",
+    },
+    name: "poll",
+  });
+  constructionParams.helpers = helpers;
+  const poll = new Poll(constructionParams);
   const triggerResults = await poll.run();
 
   expect(triggerResults.items.length).toBe(2);
@@ -41,18 +47,19 @@ test("poll trigger", async () => {
 });
 
 test("poll trigger with deduplication_key", async () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (axios as any).mockImplementation(() => Promise.resolve(resp));
+  const axios = jest.fn();
+  axios.mockImplementation(() => Promise.resolve(resp));
+  helpers.axios = (axios as unknown) as AxiosStatic;
+  const constructionParams = await getTriggerConstructorParams({
+    options: {
+      url: "https://jsonplaceholder.typicode.com/posts",
+      deduplication_key: "userId",
+    },
+    name: "poll",
+  });
+  constructionParams.helpers = helpers;
+  const poll = new Poll(constructionParams);
 
-  const poll = new Poll(
-    await getTriggerConstructorParams({
-      options: {
-        url: "https://jsonplaceholder.typicode.com/posts",
-        deduplication_key: "userId",
-      },
-      name: "poll",
-    })
-  );
   const triggerResults = await poll.run();
 
   expect(triggerResults.items.length).toBe(2);
@@ -80,17 +87,17 @@ test("poll trigger with deduplication_key as key", async () => {
       },
     ],
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (axios as any).mockImplementation(() => Promise.resolve(resp2));
-
-  const poll = new Poll(
-    await getTriggerConstructorParams({
-      options: {
-        url: "https://jsonplaceholder.typicode.com/posts",
-      },
-      name: "poll",
-    })
-  );
+  const axios = jest.fn();
+  axios.mockImplementation(() => Promise.resolve(resp2));
+  helpers.axios = (axios as unknown) as AxiosStatic;
+  const constructionParams = await getTriggerConstructorParams({
+    options: {
+      url: "https://jsonplaceholder.typicode.com/posts",
+    },
+    name: "poll",
+  });
+  constructionParams.helpers = helpers;
+  const poll = new Poll(constructionParams);
   const triggerResults = await poll.run();
 
   expect(triggerResults.items.length).toBe(2);
@@ -116,17 +123,18 @@ test("poll trigger with deduplication_key no found", async () => {
       },
     ],
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (axios as any).mockImplementation(() => Promise.resolve(resp2));
+  const axios = jest.fn();
+  axios.mockImplementation(() => Promise.resolve(resp2));
+  helpers.axios = (axios as unknown) as AxiosStatic;
+  const constructionParams = await getTriggerConstructorParams({
+    options: {
+      url: "https://jsonplaceholder.typicode.com/posts",
+    },
+    name: "poll",
+  });
+  constructionParams.helpers = helpers;
+  const poll = new Poll(constructionParams);
 
-  const poll = new Poll(
-    await getTriggerConstructorParams({
-      options: {
-        url: "https://jsonplaceholder.typicode.com/posts",
-      },
-      name: "poll",
-    })
-  );
   const triggerResults = await poll.run();
 
   expect(triggerResults.items.length).toBe(2);

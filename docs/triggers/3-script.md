@@ -14,7 +14,7 @@ You can use script trigger simply to write a script for a custom trigger logic.
 on:
   script:
     run: |
-      const result = await axios.get("https://jsonplaceholder.typicode.com/posts")
+      const result = await helpers.axios.get("https://jsonplaceholder.typicode.com/posts")
       return {
         items: result.data
       }
@@ -53,8 +53,8 @@ This trigger accepts [all trigger's general params](https://actionsflow.github.i
 - `path`, optional, you can run script from an external file. For example, `path: ./script.js`, the `script.js` should export following function:
 
   ```javascript
-  module.exports = async function ({ axios }) {
-    const result = await axios.get(
+  module.exports = async function ({ helpers }) {
+    const result = await helpers.axios.get(
       "https://jsonplaceholder.typicode.com/posts"
     );
     return {
@@ -72,8 +72,6 @@ This trigger accepts [all trigger's general params](https://actionsflow.github.i
 You can use the following context at your script code:
 
 - `helpers`, The Actionsflow triggers general helpers, which has `cache`, `log`, etc... You can see all helpers methods at [here](/docs/reference/4-trigger-helpers.md)
-
-- `axios`, [A promise based HTTP client for node.js](https://github.com/axios/axios), you can use it for HTTP request.
 
 - `options`, the options you pass it to `script` trigger
 
@@ -113,7 +111,7 @@ You can use the outputs like this:
 on:
   script:
     run: |
-      const result = await axios.get("https://jsonplaceholder.typicode.com/posts")
+      const result = await helpers.axios.get("https://jsonplaceholder.typicode.com/posts")
       return {
         items: result.data
       }

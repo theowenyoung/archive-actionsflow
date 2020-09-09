@@ -8,6 +8,7 @@ import {
   IHelpers,
   IWorkflowData,
 } from "actionsflow-interface";
+import axios from "axios";
 import { Log, prefix, colors } from "./log";
 
 export const getTriggerId = ({
@@ -54,6 +55,7 @@ export const getTriggerHelpers = ({
     createContentDigest,
     cache: getCache(`trigger-${triggerId}`),
     log: triggerLog,
+    axios: axios,
   };
   return triggerHelpers;
 };

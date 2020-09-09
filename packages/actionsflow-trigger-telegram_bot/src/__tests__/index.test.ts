@@ -1,7 +1,5 @@
-import axios from "axios";
 import path from "path";
 import TelegramBot from "../index";
-jest.mock("axios");
 import {
   getTriggerHelpers,
   getContext,
@@ -9,7 +7,7 @@ import {
   formatRequest,
 } from "actionsflow-core";
 import { IWorkflow } from "actionsflow-interface";
-
+import { AxiosStatic } from "axios";
 const TELEGRAM_TOKEN = "test";
 
 test("telegram bot with webhook", async () => {
@@ -116,18 +114,21 @@ test("telegram bot trigger", async () => {
       ],
     },
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (axios as any).mockImplementation(() => Promise.resolve(resp));
+  const helpers = getTriggerHelpers({
+    name: "telegram_bot",
+    workflowRelativePath: "workflow.yml",
+  });
 
+  const mockAxios = jest.fn();
+
+  mockAxios.mockResolvedValue(resp);
+  helpers.axios = (mockAxios as unknown) as AxiosStatic;
   const telegramBot = new TelegramBot({
     options: {
       token: TELEGRAM_TOKEN,
       event: ["text", "photo"],
     },
-    helpers: getTriggerHelpers({
-      name: "telegram_bot",
-      workflowRelativePath: "workflow.yml",
-    }),
+    helpers: helpers,
     workflow: (await getWorkflow({
       path: path.resolve(__dirname, "fixtures/workflows/workflow.yml"),
       cwd: path.resolve(__dirname, "fixtures"),
@@ -146,10 +147,7 @@ test("telegram bot trigger", async () => {
       token: TELEGRAM_TOKEN,
       event: "photo",
     },
-    helpers: getTriggerHelpers({
-      name: "telegram_bot",
-      workflowRelativePath: "workflow.yml",
-    }),
+    helpers: helpers,
     workflow: (await getWorkflow({
       path: path.resolve(__dirname, "fixtures/workflows/workflow.yml"),
       cwd: path.resolve(__dirname, "fixtures"),

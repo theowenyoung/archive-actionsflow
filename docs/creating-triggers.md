@@ -7,7 +7,8 @@ You may be looking to build and perhaps publish a trigger that doesn't exist yet
 
 ## Core concepts
 
-- Each Actionsflow trigger can be created as an npm package or as a [local trigger](/docs/creating-a-local-plugin/)
+- Each Actionsflow trigger can be created as an npm package or as a [local trigger](/docs/creating-triggers/creating-a-local-trigger.md)
 - Trigger implement the Actionsflow APIs for [Trigger](/docs/node-apis/), [server-side rendering](/docs/ssr-apis/), and the [browser](/docs/browser-apis/)
+- The code to run once the node gets executed
 
 This section of the docs includes the following guides:

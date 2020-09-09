@@ -13,13 +13,11 @@ import resolveCwd from "resolve-cwd";
 import { getOctokit } from "@actions/github";
 import { isPromise } from "actionsflow-core";
 import { resolve } from "path";
-import axios, { AxiosStatic } from "axios";
 const AsyncFunction = Object.getPrototypeOf(async () => null).constructor;
 
 type AsyncFunctionArguments = {
   helpers: IHelpers;
   require: NodeRequire;
-  axios: AxiosStatic;
   options: AnyObject;
   github?: InstanceType<typeof GitHub>;
 };
@@ -65,7 +63,6 @@ export default class Script implements ITriggerClassType {
     const functionContext: AsyncFunctionArguments = {
       helpers: this.helpers,
       require: require,
-      axios: axios,
       options: this.options,
     };
     if (token) {

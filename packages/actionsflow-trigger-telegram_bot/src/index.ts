@@ -1,4 +1,3 @@
-import axios, { AxiosRequestConfig } from "axios";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
@@ -54,14 +53,14 @@ export default class TelegramBot implements ITriggerClassType {
 
     let items: AnyObject[] = [];
     const url = `https://api.telegram.org/bot${token}/getUpdates`;
-    const config: AxiosRequestConfig = {
+    const config = {
       url,
     };
 
     // get updates
     let requestResult;
     try {
-      requestResult = await axios(config);
+      requestResult = await this.helpers.axios(config);
     } catch (e) {
       if (e.code === "ECONNREFUSED") {
         throw new Error(

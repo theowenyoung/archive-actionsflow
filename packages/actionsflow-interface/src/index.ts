@@ -1,7 +1,7 @@
 import { URLSearchParams, URL } from "url";
 import { ParsedUrlQuery } from "querystring";
 import { Logger } from "loglevel";
-
+import { AxiosStatic } from "axios";
 export type HTTP_METHODS_LOWERCASE =
   | "head"
   | "get"
@@ -25,6 +25,7 @@ export interface IHelpers {
     reset: () => Promise<void>;
   };
   log: Logger;
+  axios: AxiosStatic;
 }
 export interface ITriggerContext extends AnyObject {
   secrets: Record<string, string>;
