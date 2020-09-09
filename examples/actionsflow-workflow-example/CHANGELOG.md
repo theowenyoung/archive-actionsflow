@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.19](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.18...actionsflow-workflow-example@0.0.19) (2020-09-09)
+
+### Features
+
+- support local trigges ([a8d2987](https://github.com/actionsflow/actionsflow/commit/a8d29876930cffd9635a0e6052d918295ddbb24c))
+
 ## [0.0.18](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.17...actionsflow-workflow-example@0.0.18) (2020-09-08)
 
 **Note:** Version bump only for package actionsflow-workflow-example

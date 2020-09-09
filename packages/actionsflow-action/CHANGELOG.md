@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.14](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.13...actionsflow-action@0.1.14) (2020-09-09)
+
+### Features
+
+- remove axios dependence for trigger ([eaf8d57](https://github.com/actionsflow/actionsflow/commit/eaf8d57b8c9fdc860723a713eb6064606dfd7bd7))
+- support local trigges ([a8d2987](https://github.com/actionsflow/actionsflow/commit/a8d29876930cffd9635a0e6052d918295ddbb24c))
+
 ## [0.1.13](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.12...actionsflow-action@0.1.13) (2020-09-08)
 
 **Note:** Version bump only for package actionsflow-action

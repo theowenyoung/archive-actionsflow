@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.11](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.10...actionsflow-interface@0.1.11) (2020-09-09)
+
+### Features
+
+- remove axios dependence for trigger ([eaf8d57](https://github.com/actionsflow/actionsflow/commit/eaf8d57b8c9fdc860723a713eb6064606dfd7bd7))
+- support local trigges ([a8d2987](https://github.com/actionsflow/actionsflow/commit/a8d29876930cffd9635a0e6052d918295ddbb24c))
+
 ## [0.1.10](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.9...actionsflow-interface@0.1.10) (2020-09-08)
 
 ### Bug Fixes
