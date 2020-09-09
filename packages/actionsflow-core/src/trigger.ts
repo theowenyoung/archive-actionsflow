@@ -1,15 +1,18 @@
 import chalk from "chalk";
 import { createContentDigest, getCache } from "./helpers";
 import { LogLevelDesc } from "loglevel";
+import path from "path";
 import {
   AnyObject,
-  ITrigger,
   ITriggerClassType,
   IHelpers,
-  IWorkflowData,
+  IWorkflow,
   ITriggerOptions,
+  ITriggerContructorParams,
 } from "actionsflow-interface";
 import axios from "axios";
+import { getWorkflow } from "./workflow";
+import { getContext } from "./context";
 import { Log, prefix, colors } from "./log";
 
 export const getTriggerId = ({
@@ -115,27 +118,34 @@ export const getGeneralTriggerFinalOptions = (
 
   return options;
 };
-/**
- * get raw triggers from workflow data
- * @param doc
- */
-export const getRawTriggers = (doc: IWorkflowData): ITrigger[] => {
-  const triggers = [];
-  if (doc && doc.on) {
-    const onObj = doc.on as Record<string, Record<string, unknown>>;
-    const keys = Object.keys(onObj);
 
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index] as string;
-      let options = {};
-      if (onObj && onObj[key]) {
-        options = onObj[key];
-      }
-      triggers.push({
-        name: key,
-        options: options,
-      });
-    }
-  }
-  return triggers;
+export const getTriggerConstructorParams = async ({
+  options,
+  name,
+  cwd,
+  workflowPath,
+}: {
+  options: ITriggerOptions;
+  name: string;
+  cwd?: string;
+  workflowPath: string;
+}): Promise<ITriggerContructorParams> => {
+  cwd = cwd || process.cwd();
+  const relativePath = path.relative(
+    path.resolve(cwd, "workflows"),
+    workflowPath
+  );
+
+  return {
+    options: options,
+    helpers: getTriggerHelpers({
+      name: name,
+      workflowRelativePath: relativePath,
+    }),
+    workflow: (await getWorkflow({
+      path: workflowPath,
+      cwd: cwd,
+      context: getContext(),
+    })) as IWorkflow,
+  };
 };

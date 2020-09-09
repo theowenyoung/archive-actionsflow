@@ -8,7 +8,33 @@ You may be looking to build and perhaps publish a trigger that doesn't exist yet
 ## Core concepts
 
 - Each Actionsflow trigger can be created as an npm package or as a [local trigger](/docs/creating-triggers/creating-a-local-trigger.md)
-- Trigger implement the Actionsflow APIs for [Trigger](/docs/node-apis/), [server-side rendering](/docs/ssr-apis/), and the [browser](/docs/browser-apis/)
-- The code to run once the node gets executed
+- Trigger exports a class with `run` method for getting the initial results.
+
+A typical trigger class looks like this:
+
+```javascript
+module.exports = class Example {
+  shouldDeduplicate = true;
+  constructor({ helpers, options }) {
+    this.options = options;
+    this.helpers = helpers;
+  }
+  async run() {
+    const items = [
+      {
+        id: "uniqueId",
+        title: "hello world title",
+      },
+      {
+        id: "uniqueId2",
+        title: "hello world title2",
+      },
+    ];
+    return {
+      items,
+    };
+  }
+};
+```
 
 This section of the docs includes the following guides:

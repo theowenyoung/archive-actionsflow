@@ -3,6 +3,7 @@ import {
   getTemplateStringByParentName,
   getExpressionResult,
   isPromise,
+  getRawTriggers,
 } from "../utils";
 
 test("isPromise yes", () => {
@@ -107,4 +108,28 @@ test("template if condition string", () => {
       {}
     )
   ).toBe("true");
+});
+
+test("get raw trigger", () => {
+  expect(
+    getRawTriggers({
+      on: {
+        rss: {
+          url: "test",
+        },
+        poll: {
+          url: "test2",
+        },
+      },
+    })
+  ).toEqual([
+    {
+      name: "rss",
+      options: { url: "test" },
+    },
+    {
+      name: "poll",
+      options: { url: "test2" },
+    },
+  ]);
 });

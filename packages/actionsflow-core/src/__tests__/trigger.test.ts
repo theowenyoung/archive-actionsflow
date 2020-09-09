@@ -1,4 +1,4 @@
-import { getTriggerId, getRawTriggers, getTriggerHelpers } from "../trigger";
+import { getTriggerId, getTriggerHelpers } from "../trigger";
 
 test("get trigger id", () => {
   expect(
@@ -7,30 +7,6 @@ test("get trigger id", () => {
       workflowRelativePath: "test.yml",
     })
   ).toBe("368459a7f7a75d9648fe2dea2322c00d");
-});
-
-test("get raw trigger", () => {
-  expect(
-    getRawTriggers({
-      on: {
-        rss: {
-          url: "test",
-        },
-        poll: {
-          url: "test2",
-        },
-      },
-    })
-  ).toEqual([
-    {
-      name: "rss",
-      options: { url: "test" },
-    },
-    {
-      name: "poll",
-      options: { url: "test2" },
-    },
-  ]);
 });
 
 test("getTriggerHelpers", async () => {

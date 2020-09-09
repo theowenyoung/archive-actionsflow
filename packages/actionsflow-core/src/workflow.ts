@@ -4,9 +4,12 @@ import yaml from "js-yaml";
 import mapObj from "map-obj";
 import fs from "fs-extra";
 import { log } from "./log";
-import { template, getTemplateStringByParentName } from "./utils";
+import {
+  template,
+  getTemplateStringByParentName,
+  getRawTriggers,
+} from "./utils";
 import multimatch from "multimatch";
-import { getRawTriggers } from "./trigger";
 import {
   ITriggerContext,
   IWorkflow,

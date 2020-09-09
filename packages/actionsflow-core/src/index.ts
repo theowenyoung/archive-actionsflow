@@ -3,7 +3,7 @@ export {
   getTriggerHelpers,
   getTriggerId,
   getGeneralTriggerFinalOptions,
-  getRawTriggers,
+  getTriggerConstructorParams,
 } from "./trigger";
 export { getContext } from "./context";
 export { getWorkflow, getBuiltWorkflow, getWorkflows } from "./workflow";
@@ -18,6 +18,7 @@ export {
   getTriggerWebhookBasePath,
   isMatchWebhookBasePath,
   isPromise,
+  getRawTriggers,
 } from "./utils";
 export { getWebhookByRequest } from "./webhook";
 export {
