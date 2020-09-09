@@ -4,10 +4,11 @@ import {
   ITriggerResult,
   IHelpers,
   AnyObject,
+  ITriggerOptions,
 } from "actionsflow-interface";
 import Twit from "twit";
 export default class Example implements ITriggerClassType {
-  options: AnyObject = {};
+  options: ITriggerOptions = {};
   helpers: IHelpers;
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {

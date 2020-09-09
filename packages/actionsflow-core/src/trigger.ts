@@ -7,6 +7,7 @@ import {
   ITriggerClassType,
   IHelpers,
   IWorkflowData,
+  ITriggerOptions,
 } from "actionsflow-interface";
 import axios from "axios";
 import { Log, prefix, colors } from "./log";
@@ -70,7 +71,7 @@ interface IGeneralTriggerOptions {
 }
 export const getGeneralTriggerFinalOptions = (
   triggerInstance: ITriggerClassType,
-  userOptions: AnyObject
+  userOptions: ITriggerOptions
 ): IGeneralTriggerOptions => {
   const options: IGeneralTriggerOptions = {
     every: 5,

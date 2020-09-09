@@ -1,7 +1,7 @@
 import {
   ITriggerContructorParams,
-  AnyObject,
   IWorkflow,
+  ITriggerOptions,
 } from "actionsflow-interface";
 import path from "path";
 import { getTriggerHelpers, getWorkflow } from "actionsflow-core";
@@ -22,7 +22,7 @@ export const getTriggerConstructorParams = async ({
   options,
   name,
 }: {
-  options: AnyObject;
+  options: ITriggerOptions;
   name: string;
 }): Promise<ITriggerContructorParams> => {
   return {

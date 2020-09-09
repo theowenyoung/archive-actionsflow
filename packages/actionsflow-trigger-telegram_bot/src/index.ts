@@ -3,6 +3,7 @@ import {
   ITriggerContructorParams,
   ITriggerResult,
   AnyObject,
+  ITriggerOptions,
   IHelpers,
   IWebhookRequest,
 } from "actionsflow-interface";
@@ -14,7 +15,7 @@ export default class TelegramBot implements ITriggerClassType {
     }
     this.helpers = helpers;
   }
-  options: AnyObject = {};
+  options: ITriggerOptions = {};
   helpers: IHelpers;
   shouldDeduplicate = true;
   getItemKey = (item: AnyObject): string => {

@@ -19,7 +19,7 @@ An Actionsflow workflow can include multiple triggers, you can use the trigger's
 
 # General params for triggers
 
-All triggers support follow params:
+All triggers support the following params:
 
 - `active`, optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
 - `every`, optional, `number`, polling data interval time, the unit is minute, the default value is `5`

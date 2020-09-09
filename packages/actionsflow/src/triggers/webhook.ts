@@ -5,11 +5,12 @@ import {
   AnyObject,
   ITriggerResult,
   IWebhookRequest,
+  ITriggerOptions,
   IHelpers,
 } from "actionsflow-interface";
 
 export default class Webhook implements ITriggerClassType {
-  options: AnyObject = {};
+  options: ITriggerOptions = {};
   helpers: IHelpers;
   shouldDeduplicate = false;
   constructor({ options, helpers }: ITriggerContructorParams) {

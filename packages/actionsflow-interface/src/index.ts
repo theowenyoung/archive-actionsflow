@@ -1,6 +1,6 @@
 import { URLSearchParams, URL } from "url";
 import { ParsedUrlQuery } from "querystring";
-import { Logger } from "loglevel";
+import { Logger, LogLevelDesc } from "loglevel";
 import { AxiosStatic } from "axios";
 export type HTTP_METHODS_LOWERCASE =
   | "head"
@@ -32,8 +32,18 @@ export interface ITriggerContext extends AnyObject {
   github: IGithub;
 }
 
+export interface ITriggerOptions extends AnyObject {
+  every?: number;
+  should_deduplicate?: boolean;
+  skip_first?: boolean;
+  max_items_count?: number;
+  force?: boolean;
+  log_level?: LogLevelDesc;
+  active?: boolean;
+}
+
 export interface ITriggerContructorParams {
-  options: AnyObject;
+  options: ITriggerOptions;
   helpers: IHelpers;
   workflow: IWorkflow;
 }
@@ -83,7 +93,7 @@ export interface ITriggerClassTypeConstructable {
 
 export interface ITrigger {
   name: string;
-  options: AnyObject;
+  options: ITriggerOptions;
 }
 export type OutcomeStatus = "success" | "failure" | "skipped";
 export type ConclusionStatus = "success" | "failure" | "skipped";

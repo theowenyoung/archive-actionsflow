@@ -21,7 +21,7 @@ import {
   ITrigger,
 } from "actionsflow-interface";
 const MAX_CACHE_KEYS_COUNT = 5000;
-interface ITriggerOptions {
+interface ITriggerInternalOptions {
   trigger: {
     name: string;
     options: Record<string, unknown>;
@@ -41,7 +41,7 @@ export const run = async ({
   trigger,
   event,
   workflow,
-}: ITriggerOptions): Promise<ITriggerInternalResult> => {
+}: ITriggerInternalOptions): Promise<ITriggerInternalResult> => {
   log.debug("trigger:", trigger);
   log.debug("trigger event", event);
   const finalResult: ITriggerInternalResult = {

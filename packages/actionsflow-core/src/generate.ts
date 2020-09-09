@@ -2,10 +2,10 @@ import path from "path";
 import yaml from "js-yaml";
 import fs from "fs-extra";
 import { log } from "./log";
-import { IWorkflowData, AnyObject } from "actionsflow-interface";
+import { IWorkflowData, IGithub } from "actionsflow-interface";
 export const buildNativeEvent = async (options: {
   dest: string;
-  github: AnyObject;
+  github: IGithub;
 }): Promise<{ path: string; eventJson: string }> => {
   const baseDest = options.dest;
   const github = options.github;
@@ -25,7 +25,7 @@ export const buildNativeEvent = async (options: {
 };
 export const buildNativeSecrets = async (options: {
   dest: string;
-  secrets: AnyObject;
+  secrets: Record<string, string>;
 }): Promise<{ path: string; secrets: string }> => {
   const baseDest = options.dest;
   const secretsObj = options.secrets;

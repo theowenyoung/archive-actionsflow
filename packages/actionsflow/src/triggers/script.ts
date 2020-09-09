@@ -2,6 +2,7 @@ import {
   ITriggerClassType,
   ITriggerContructorParams,
   AnyObject,
+  ITriggerOptions,
   ITriggerResult,
   IHelpers,
   IWorkflow,
@@ -18,7 +19,7 @@ const AsyncFunction = Object.getPrototypeOf(async () => null).constructor;
 type AsyncFunctionArguments = {
   helpers: IHelpers;
   require: NodeRequire;
-  options: AnyObject;
+  options: ITriggerOptions;
   github?: InstanceType<typeof GitHub>;
 };
 

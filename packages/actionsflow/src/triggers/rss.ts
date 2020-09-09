@@ -5,10 +5,11 @@ import {
   ITriggerResult,
   IHelpers,
   AnyObject,
+  ITriggerOptions,
 } from "actionsflow-interface";
 
 export default class Rss implements ITriggerClassType {
-  options: AnyObject = {};
+  options: ITriggerOptions = {};
   helpers: IHelpers;
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
