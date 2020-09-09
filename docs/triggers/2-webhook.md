@@ -4,6 +4,10 @@ metaTitle: "Actionsflow Webhook trigger"
 metaDescription: "Trigger by a Webhook request"
 ---
 
+You can use webhook trigger to receive data from any service.
+
+[View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/webhook.ts)
+
 # Events
 
 ## New Webhook Event
@@ -15,7 +19,7 @@ on:
 
 ## Trigger Webhook
 
-The webhook URL is in the following format:
+The webhook URL is in the following format, you should set this url to the third party service webhook settings.
 
 ```bash
 https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/webhook?__token=<your-github-personal-token>

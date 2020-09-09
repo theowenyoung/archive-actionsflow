@@ -1,6 +1,10 @@
 # `@actionsflow/trigger-twitter`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) twitter trigger. You can watch the `user_timeline` updates by using this trigger.
+This is an [Actionsflow](https://github.com/actionsflow/actionsflow) twitter trigger. You can watch yours or the other twitter user's updates by using this trigger.
+
+> This is an official trigger, you don't need to install it manually.
+
+[View trigger on Github](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-twitter)
 
 ## Events
 

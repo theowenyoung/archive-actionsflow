@@ -6,6 +6,8 @@ metaDescription: "RSS trigger is triggered when new items are detected. This tri
 
 RSS trigger is triggered when new items are detected. Both single feed and multiple feeds are supported for RSS trigger.
 
+[View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts)
+
 # Events
 
 ## New item in a feed

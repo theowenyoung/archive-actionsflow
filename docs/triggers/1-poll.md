@@ -4,6 +4,10 @@ metaTitle: "Actionsflow Poll trigger"
 metaDescription: "Poll trigger is triggered when new items of a rest API are detected."
 ---
 
+Poll trigger is triggered when new items of a rest API are detected.
+
+[View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/poll.ts)
+
 # Events
 
 ## New item in JSON API

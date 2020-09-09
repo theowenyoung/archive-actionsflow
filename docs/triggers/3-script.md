@@ -6,6 +6,8 @@ metaDescription: "Script trigger is triggered when call a custom script function
 
 You can use script trigger simply to write a script for a custom trigger logic.
 
+[View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/script.ts)
+
 # Events
 
 ## New item when run javascript function script

@@ -2,6 +2,10 @@
 
 This is an [Actionsflow](https://github.com/actionsflow/actionsflow) telegram bot trigger. `telegram_bot` trigger is triggered when new messages of telegram bot are detected. This trigger supports to specify one message type or multiple message types
 
+> This is an official trigger, you don't need to install it manually.
+
+[View trigger on Github](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot)
+
 # Events
 
 ## New message in telegram bot
