@@ -15,7 +15,7 @@ jobs:
           # inline YAML or path to separate file (e.g.: .github/filters.yaml)
           filters: |
             docs:
-              - 'docs/**/*'
+              - '**/*.md'
       # run only if 'docs' files were changed
       - name: trigger docs site build
         if: steps.filter.outputs.docs == 'true'
