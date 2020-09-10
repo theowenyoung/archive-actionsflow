@@ -11,7 +11,7 @@ import {
   buildNativeSecrets,
   buildWorkflowFile,
 } from "actionsflow-core";
-
+import del from "del";
 import { run as runTrigger } from "./trigger";
 import { LogLevelDesc } from "loglevel";
 import { getTasksByTriggerEvent } from "./task";
@@ -46,6 +46,9 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   const { cwd, dest, include, exclude, force } = options;
   const destPath = path.resolve(cwd as string, dest as string);
   log.debug("destPath:", destPath);
+  // clean the dest folder
+  await del([destPath]);
+  log.info("clean the dest folder");
   const context = getContext();
   // create workflow dest dir
   const workflowsDestPath = path.resolve(destPath, "workflows");

@@ -223,9 +223,7 @@ export const run = async ({
 
         return finalResult;
       } else {
-        throw new Error(
-          `Trigger [${trigger.name}] does not return a valid result with items key`
-        );
+        log.debug("no items update, do not need to update cache");
       }
     } else {
       throw new Error(`Trigger [${trigger.name}] construct error`);

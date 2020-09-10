@@ -30,7 +30,7 @@ curl --request POST 'https://webhook.actionsflow.workers.dev/actionsflow/webhook
 }'
 ```
 
-> `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/<trigger-name>` is a fixed prefix for webhook URL, most triggers will use this as their webhook URL. But if some trigger has more than one webhook path, the webhook URL may have a suffix, like `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/<trigger-name>/webhook1`, you should check that trigger's documentation about webhook URL to get more information.
+> `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/<trigger-name>` is the fixed prefix for webhook URL, most triggers will use this as their webhook URL. But if some trigger has more than one webhook path, the webhook URL may have a suffix, like `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/<trigger-name>/webhook1`, you should check that trigger's documentation about webhook URL to get more information.
 
 # How It Works
 

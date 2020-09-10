@@ -1,5 +1,5 @@
 ---
-title: "Core concepts"
+title: "Core Concepts"
 metaTitle: "Actionsflow Getting Started"
 ---
 

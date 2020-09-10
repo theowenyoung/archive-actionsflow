@@ -9,7 +9,30 @@ Workflow files use YAML syntax and must have either a `.yml` or `.yaml` file ext
 
 You must store workflow files in the `workflows` directory of your repository.
 
-# on
+A typical workflow file `xxx.yml` looks like this:
+
+```yaml
+on:
+  rss:
+    event: new_item
+    url: https://hnrss.org/newest?points=300
+jobs:
+  ifttt:
+    name: Make a Request to IFTTT
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actionsflow/ifttt-webhook-action@v1
+        with:
+          event: notice
+          key: ${{ secrets.IFTTT_KEY }}
+          value1: ${{on.rss.outputs.title}}
+          value2: ${{on.rss.outputs.contentSnippet}}
+          value3: ${{on.rss.outputs.link}}
+```
+
+The following doc will show you about workflow syntax:
+
+# `on`
 
 Required, The name of the Actionsflow event that triggers the workflow. You should provide a trigger configuration map to watch the trigger updating.
 
@@ -39,7 +62,7 @@ on:
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 ```
 
-# jobs
+# `jobs`
 
 A workflow run is made up of one or more jobs. Jobs run in parallel by default. To run jobs sequentially, you can define dependencies on other jobs using the `jobs.<job_id>.needs` keyword.
 

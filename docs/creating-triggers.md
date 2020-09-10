@@ -51,3 +51,4 @@ This section of the docs includes the following guides:
 
 - [Creating a Generic Trigger](/docs/creating-triggers/creating-a-generic-trigger.md)
 - [Creating a Local Trigger](/docs/creating-triggers/creating-a-local-trigger.md)
+- [Triggers API](/docs/reference/0-trigger-api.md)

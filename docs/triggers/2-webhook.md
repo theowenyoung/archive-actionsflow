@@ -19,7 +19,7 @@ on:
 
 ## Trigger Webhook
 
-The webhook URL is in the following format, you should set this url to the third party service webhook settings.
+The webhook URL is in the following format, you should set this URL to the third party service webhook settings.
 
 ```bash
 https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/webhook?__token=<your-github-personal-token>

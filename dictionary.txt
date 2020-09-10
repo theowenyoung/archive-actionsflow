@@ -36,3 +36,5 @@ deduplication
 dest
 actionslfow-cli
 actionsflow
+symlink
+async
