@@ -1,20 +1,16 @@
 ---
-title: Actionsflow action API
+title: Actionsflow Actions API
 ---
 
-Actionsflow action for Github.
+Actionsflow action for Github. With this action, you can use Actionsflow without `node_modules`. It can speed up your workflow.
 
 ## Inputs
 
 ```yaml
 inputs:
-  base:
+  cwd:
     description: "base workspace folder, default is current workspace"
     required: false
-  workflows:
-    description: "Actionsflow workflow files path, default valid is 'workflows'"
-    required: false
-    default: "workflows"
   dest:
     description: "dest folder, the default value is 'dist', the standard Github actions workflow files will place to ./dist/workflows"
     required: false
@@ -23,6 +19,10 @@ inputs:
     description: 'Log level, default is "info", you can use one of these values, "trace" | "debug" | "info" | "warn" | "error" | "silent"'
     required: false
     default: "info"
+  force:
+    description: "force update all triggers, it will ignore the update interval and cached deduplicate key"
+    required: false
+    default: "false"
 ```
 
 ## Outputs

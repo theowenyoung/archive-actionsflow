@@ -9,11 +9,22 @@ Triggers are how your workflows can start automated workflows whenever they add 
 
 # Triggers supported
 
-For now, Actionsflow supports:
+For now, Actionsflow provides the following official triggers:
 
-- [RSS](/docs/triggers/0-rss.md)
-- [API polling](/docs/triggers/1-poll.md)
-- [Webhook](/docs/triggers/2-webhook.md)
+## Official Triggers
+
+- [RSS](/docs/triggers/0-rss.md) - Watching RSS feed updates
+- [API polling](/docs/triggers/1-poll.md) - Poling the rest JSON API updates
+- [Webhook](/docs/triggers/2-webhook.md) - Receiving webhook notifications
+- [Script](/docs/triggers/3-script.md) - Running javascript code to get getUpdates
+- [Telegram Bot](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot) - Watching Telegram Bot updates
+- [Twitter](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-twitter) - Watching twitter's timeline updates
+
+## Community Triggers
+
+Want to list your trigger here? Welcome to [submit a pull request](https://github.com/actionsflow/actionsflow/edit/master/docs/triggers.md)
+
+[Creating a third-party trigger](/docs/creating-triggers.md) is really easy, we are so happy that you can share your trigger for community.
 
 An Actionsflow workflow can include multiple triggers, you can use the trigger's outputs at the [job steps](/docs/steps.md)
 

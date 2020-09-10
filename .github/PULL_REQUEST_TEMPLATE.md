@@ -1,5 +1,5 @@
 <!--
-  Have any questions? Check out the contributing docs at https://github.com/actionsflow/actionsflow/blob/master/CONTRIBUTING.md, or
+  Have any questions? Check out the contributing docs at https://github.com/actionsflow/actionsflow/blob/master/docs/contributing.md, or
   ask in this Pull Request and a Actionsflow maintainer will be happy to help :)
 -->
 
@@ -12,10 +12,12 @@
 <!--
   Where is this feature or API documented?
 
+  - If it's a documentation pull request?
+    - If so, you can ignore here.
   - If docs exist:
     - Update any references, if relevant. This includes Guides and Actionsflow Internals docs.
   - If no docs exist:
-    - Create a stub for documentation including bullet points for how to use the feature, code snippets (including from happy path tests), etc.
+    - Create a stub for documentation at `docs` including bullet points for how to use the feature, code snippets (including from happy path tests), etc.
 -->
 
 ## Related Issues

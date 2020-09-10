@@ -175,7 +175,7 @@ interface IWebhook {
 
 `path` is using to set the webhook path. if `path` provided, then only the webhook URL matched the `path` will call the handler.
 
-if you only handle one webhook path, then you can provide `handler` method only. All webhook event to the trigger will call the `handler`.
+If you only handle one webhook path, then you can provide `handler` method only. All webhook event to the trigger will call the `handler`.
 
 Generally, most of triggers only handle one path. But if your trigger need to handle more than one path, you should set different paths to handle the webhook event.
 
