@@ -38,7 +38,7 @@ Required, The name of the Actionsflow trigger. Triggers are how your workflows c
 
 For a list of available triggers, see "[Triggers](/docs/triggers.md)"
 
-**Example using RSS trigger**
+Example using RSS trigger:
 
 ```yaml
 on:
@@ -46,7 +46,7 @@ on:
     url: https://hnrss.org/newest?points=300
 ```
 
-**Context and expression syntax for Actionsflow on**
+## Context and expression syntax for Actionsflow on
 
 You can access context information in workflow triggers, you need to use specific syntax to tell Actionsflow to evaluate a variable rather than treat it as a string.
 
@@ -124,7 +124,7 @@ All triggers' will export the following key:
 
 ## `on.<trigger_name>.outputs`
 
-A map of outputs for a trigger resultss' item. Trigger's outputs are available to all jobs.
+A map of outputs for a trigger results' item. Trigger's outputs are available to all jobs.
 
 Trigger's outputs are `object`, you can use it like this: `${{ on.telegram_bot.from.first_name }}`
 
