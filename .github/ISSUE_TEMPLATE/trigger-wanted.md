@@ -1,7 +1,11 @@
 ---
-name: 🤖 Trigger Wanted
-about: If you have a trigger need that is not currently available in the community 💡
-labels: "type: trigger wanted"
+name: "\U0001F916 Trigger Wanted"
+about: "If you have a trigger need that is not currently available in the community
+  \U0001F4A1"
+title: ''
+labels: trigger wanted
+assignees: ''
+
 ---
 
 **Context**

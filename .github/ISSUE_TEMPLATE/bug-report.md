@@ -1,7 +1,10 @@
 ---
-name: 🐞 Bug Report
+name: "\U0001F41E Bug Report"
 about: Something isn't working as expected? Here is the right place to report.
-labels: "type: bug"
+title: ''
+labels: bug
+assignees: ''
+
 ---
 
 <!--
