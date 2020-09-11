@@ -9,7 +9,7 @@ Build an Actionsflow workflow is basically a three-step process:
 
 # 1. Create a Github repository
 
-Click this [link](https://github.com/actionsflow/workflow/generate) to generate a new public Github repository, pick a repository name as you like, for example, `workflow`, `my-workflow`
+Click this [link](https://github.com/actionsflow/workflow/generate) to generate a new public Github repository, pick a repository name as you like, for example, `actionsflow-workflow`, `workflow`, `my-workflow`,
 
 # 2. Create workflow files
 

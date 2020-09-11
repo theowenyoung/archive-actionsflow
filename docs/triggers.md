@@ -7,7 +7,7 @@ Every Actionsflow workflow file starts with a trigger, which watches for new dat
 
 Triggers are how your workflows can start automated workflows whenever they add or update something in your workflow. Actionsflow extends the triggers that [Github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows) supported.
 
-# Triggers supported
+# Triggers List
 
 For now, Actionsflow provides the following official triggers:
 
@@ -16,7 +16,7 @@ For now, Actionsflow provides the following official triggers:
 - [RSS](/docs/triggers/0-rss.md) - Watching RSS feed updates
 - [API polling](/docs/triggers/1-poll.md) - Poling the rest JSON API updates
 - [Webhook](/docs/triggers/2-webhook.md) - Receiving webhook notifications
-- [Script](/docs/triggers/3-script.md) - Running javascript code to get getUpdates
+- [Script](/docs/triggers/3-script.md) - Running javascript code to get updates
 - [Telegram Bot](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot) - Watching Telegram Bot updates
 - [Twitter](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-twitter) - Watching twitter's timeline updates
 

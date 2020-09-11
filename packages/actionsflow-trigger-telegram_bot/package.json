@@ -28,7 +28,8 @@
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
-    "actionsflow-interface": "^0.1.12"
+    "actionsflow-interface": "^0.1.12",
+    "tslib": "^2.0.1"
   },
   "devDependencies": {
     "actionsflow-core": "^0.1.14",
