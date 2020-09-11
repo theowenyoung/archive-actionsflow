@@ -124,7 +124,7 @@ All triggers' will export the following key:
 
 ## `on.<trigger_name>.outputs`
 
-A map of outputs for a trigger resutls' item. Trigger's outputs are available to all jobs.
+A map of outputs for a trigger results' item. Trigger's outputs are available to all jobs.
 
 Trigger's outputs are `object`, you can use it like this: `${{ on.telegram_bot.from.first_name }}`
 

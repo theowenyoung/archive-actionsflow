@@ -21,6 +21,7 @@
     "lint:code": "eslint --cache --ext .js,.ts .",
     "lint:docs": "remark . --quiet --frail --ext md",
     "lint:other": "npm run prettier -- --check",
+    "lint-staged": "lint-staged",
     "remark": "remark",
     "format:other": "npm run prettier -- --write",
     "format:code": "npm run lint:code -- --fix",
