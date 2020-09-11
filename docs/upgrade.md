@@ -1,6 +1,6 @@
 ---
 title: "Upgrade"
-metaTitle: "Actionsflow upgrade"
+metaTitle: "Actionsflow Upgrade"
 ---
 
 Upgrade to the latest version, run the following command at your workflows folder:

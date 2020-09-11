@@ -1,6 +1,6 @@
 ---
 title: "Introduction"
-metaTitle: "Actionsflow introduction"
+metaTitle: "Actionsflow Introduction"
 ---
 
 [Actionsflow](https://github.com/actionsflow/actionsflow) helps you to automate workflows, it's the best [IFTTT](https://ifttt.com/)/[Zapier](https://zapier.com/) free alternative for developers. With [Actionsflow](https://github.com/actionsflow/actionsflow), you can connect your favorite apps, data, and APIs, receive notifications of actions as they occur, sync files, collect data, and more. We implemented it based on [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow)) to build your workflows. If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's really easy to define an Actionsflow workflow file, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your job's steps.
@@ -14,7 +14,7 @@ You can see the core concepts of Actionsflow at [here](/docs/concepts.md).
 - **Support Almost ALL Actions of [Github Actions](https://github.com/marketplace?type=actions)**. Actionsflow use [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally) for running jobs of your workflow file. With [Github actions](https://github.com/marketplace?type=actions), You can connect with IFTTT, Zapier, or the other services.
 - **Easy for Writing Workflow File**. The Actionsflow configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow) before, it's really easy for you to define an Actionsflow workflow file
 - **Run a trigger per 5 minutes**. The workflow can check and run every 5 minutes based on [Github actions scheduled events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events)
-- **Totally Support Webhook Event for Every 3rd Party Service**. You can easily set a webhook URL at 3rd party service, then receive the webhook event at triggers who supported the webhook.
+- **Use Webhook to Connect with any 3rd party Service**. You can easily set a webhook URL at 3rd party service, then receive the webhook event at triggers who supported the webhook.
 
 # Quick Started
 

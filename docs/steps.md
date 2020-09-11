@@ -1,6 +1,6 @@
 ---
 title: "Job Steps"
-metaTitle: "Actionsflow job steps"
+metaTitle: "Actionsflow Job Steps"
 ---
 
 Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions) by using [act](https://github.com/nektos/act).
