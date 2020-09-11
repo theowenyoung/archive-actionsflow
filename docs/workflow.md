@@ -9,7 +9,7 @@ Workflow files use YAML syntax and must have either a `.yml` or `.yaml` file ext
 
 You must store workflow files in the `workflows` directory of your repository.
 
-A typical workflow file `xxx.yml` looks like this:
+A typical workflow file `workflow.yml` looks like this:
 
 ```yaml
 on:
@@ -34,7 +34,7 @@ The following doc will show you about workflow syntax:
 
 # `on`
 
-Required, The name of the Actionsflow event that triggers the workflow. You should provide a trigger configuration map to watch the trigger updating.
+Required, The name of the Actionsflow trigger. Triggers are how your workflows can start automated workflows whenever they add or update something in your workflow.
 
 For a list of available triggers, see "[Triggers](/docs/triggers.md)"
 
@@ -46,7 +46,13 @@ on:
     url: https://hnrss.org/newest?points=300
 ```
 
-## Context and expression syntax for Actionsflow on
+## `on.<trigger_name>`
+
+Optional, the options of the trigger, the default value is `{}`, You can find the trigger's documentation for getting the available params.
+
+All triggers are supported a general options, For a list of general params, see [General params for triggers](/docs/triggers.md#general-params-for-triggers)
+
+### Context and expression syntax for Actionsflow on
 
 You can access context information in workflow triggers, you need to use specific syntax to tell Actionsflow to evaluate a variable rather than treat it as a string.
 
@@ -68,7 +74,7 @@ A workflow run is made up of one or more jobs. Jobs run in parallel by default. 
 
 The jobs configure format is the same as [Github actions jobs](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobs), so you can learn more about jobs at [here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobs)
 
-Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions) by using [act](https://github.com/nektos/act).
+Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions) by using [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally).
 
 A typical job steps look like this:
 
@@ -95,10 +101,30 @@ You can access context information in workflow jobs, you need to use specific sy
 ${{ <context> }}
 ```
 
-All [Github actions contexts and expressions](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions) are supported by Actionsflow, and we extend the context as follows:
+All [Github actions contexts and expressions](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions) are supported by Actionsflow, and we extend `on` context for trigger's results. You can use it like this:
 
 ```yaml
 ${{ on.<trigger_name>.outputs.<key> }}
 ```
 
-For a list of available triggers, see "[Triggers](/docs/triggers.md)", you can find params and outputs keys supported by the trigger at the trigger's doc.
+You can find params and outputs keys supported by the trigger at the trigger's doc.
+
+All triggers' will export the following key:
+
+## `on.<trigger_name>.outptus`
+
+A map of outputs for a trigger resutls' item. Trigger's outputs are available to all jobs.
+
+Trigger's outputs are `object`, you can use it like this: `${{ on.telegram_bot.from.first_name }}`
+
+## `on.<trigger_name>.outcome`
+
+The result of a completed trigger, Possible values are success, failure, or skipped. When a `continue-on-error` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
+
+## `on.<trigger_name>.conclusion`
+
+The result of a completed step after continue-on-error is applied. Possible values are success, failure, or skipped. When a `continue-on-error` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
+
+## Triggers
+
+For a list of available triggers, see "[Triggers](/docs/triggers.md)"
