@@ -1,5 +1,5 @@
 ---
-name: 😀 Other
+name: 😀 Others
 about: None of the above is the type you want? Here is the right place to report.
 labels: "type: other"
 ---
