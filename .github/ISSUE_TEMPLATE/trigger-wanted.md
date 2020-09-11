@@ -6,7 +6,7 @@ labels: "type: trigger wanted"
 
 **Context**
 
-What are you trying to do and how would you want to do it differently? Is it something you currently you cannot do? Is this related to an issue/problem?
+What trigger do you want? Is it something you currently you cannot do? Is this related to an issue/problem?
 
 **API**
 
