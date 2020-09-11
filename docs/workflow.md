@@ -76,7 +76,7 @@ All triggers are supported the following general options:
 - `max_items_count`, optional, the trigger's results max length, the default value is `undefined`, it means the trigger will trigger all items
 - `should_deduplicate`, optional, `boolean`, if the trigger's results should be dedeplicate, the default value is decided by the trigger, you can force to override it.
 - `force`, optional, `boolean`, whether to force data to be updated, if `true`, the trigger will ignore cache, and last update time. The default value is `false`
-- `continue-on-error`, optional, `boolean`, Set to `true`, Actionsflow will generate a `outcome: true` workflow from failing when a trigger fails. The default valude is `false`, Actionsflow will ignore the trigger for this time if there are any fails.
+- `continue-on-error`, optional, `boolean`, Set to `true`, Actionsflow will generate a `outcome: true` workflow from failing when a trigger fails. The default value is `false`, Actionsflow will ignore the trigger for this time if there are any fails.
 - `log_level`, optional, `string`, log level for trigger, the default value is `info`, you can use `trace`, `debug`, `info`, `warn`, `error`
 
 # `jobs`
