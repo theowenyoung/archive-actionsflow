@@ -1,7 +1,5 @@
 on:
   slack:
-    force: true
-    token: ${{ secrets.SLACK_TOKEN }}
 jobs:
   print:
     name: Print
