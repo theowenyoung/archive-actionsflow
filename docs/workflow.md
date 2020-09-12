@@ -144,4 +144,4 @@ By default(if there is only one trigger at a workflow file), `conclusion` is alw
 
 ## Triggers
 
-For a list of available triggers, see "[Triggers](/docs/triggers.md)"
+For a list of available triggers, see "[Triggers List](/docs/triggers.md)"

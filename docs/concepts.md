@@ -1,6 +1,5 @@
 ---
-title: "Core Concepts"
-metaTitle: "Actionsflow Getting Started"
+title: "Core Concepts of Actionsflow"
 ---
 
 # How Actionsflow worked

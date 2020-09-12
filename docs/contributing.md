@@ -7,7 +7,7 @@ Great that you are here and you want to contribute to [Actionsflow](https://gith
 
 # Docs Contributions
 
-> I appreciate that you want to contribute to the docs, I have to say that I'm not a native English speaker, so maybe there are some grammar errors on the docs, I really appreciate it if you can improve this document.
+> I appreciate that you want to contribute to the docs, I have to say that I'm not a native English speaker, maybe there are some sentences that don’t make sense. I really appreciate it if you can improve this document.
 
 When working on the Actionsflow documentation, you can choose between two major styles of working:
 
@@ -17,7 +17,7 @@ When working on the Actionsflow documentation, you can choose between two major 
 Some tips:
 
 - if you need use link the internal docs at Actionsflow, you should always use `/docs/about.md` format to link the other doc, then the doc site will be built as expected
-- we use [remark lint](https://github.com/remarkjs/remark-lint) as our markdown document lint, the config is [here](https://github.com/actionsflow/actionsflow/blob/master/.remarkrc.js), run `npm run lint` will checking the document format.
+- we use [remark lint](https://github.com/remarkjs/remark-lint) as our markdown document lint, the config is [here](https://github.com/actionsflow/actionsflow/blob/master/.remarkrc.js), run `npm run lint` will checking the document format. It will run lint automatically before you commit.
 
 # Code Contributions
 
@@ -80,9 +80,9 @@ npm run test
 
 # Run example workflows
 
-build all `examples/actionsflow-workflow-example` workflows:
+Build all `examples/actionsflow-workflow-example` workflows:
 
-> You should create `.env` file at the example directory with follow content:
+> If you need to build all workflow files, you should create `.env` file at `examples/actionsflow-workflow-example` directory with follow content, some workflow files depend on these secrets:
 > `JSON_SECRETS='{"IFTTT_KEY":"place your ifttt webhook key","TELEGRAM_BOT_TOKEN":"place your telegram bot token"}'`
 
 ```bash
@@ -92,7 +92,7 @@ npm run build:example
 or you can build a specific workflow file:
 
 ```bash
-npm run build:example -- -- -w ./workflows/rss.yml
+npm run build:example -- -i rss.yml
 ```
 
 run `act` for run workflows local, you should install [act](https://github.com/nektos/act) first.
@@ -101,7 +101,7 @@ run `act` for run workflows local, you should install [act](https://github.com/n
 npm run act:example
 ```
 
-clean build files:
+clean build files and cache:
 
 ```bash
 npm run clean:example
@@ -120,9 +120,4 @@ automatically build your code, rebuild on every change you make.
 
 ## Create Trigger
 
-It is very easy to create a trigger or Actionsflow.
-
-1. Create a new file for the new trigger. See the [example trigger code](https://github.com/actionsflow/actionsflow/blob/master/examples/triggers/example.ts), you can also see the other [real triggers](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow/src/triggers)
-1. Add an example YAML workflow file at `/examples/workflows`
-1. Add a test for this trigger at `/packages/actionsflow/src/triggers/__tests__`
-1. Add a document for this trigger at `/docs/triggers`
+It is really easy to create a trigger of Actionsflow, see [here](/docs/creating-triggers.md)

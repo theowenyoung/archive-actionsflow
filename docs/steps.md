@@ -3,7 +3,7 @@ title: "Job Steps"
 metaTitle: "Actionsflow Job Steps"
 ---
 
-Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions) by using [act](https://github.com/nektos/act).
+Actionsflow support almost all [Github actions](https://github.com/marketplace?type=actions) by using [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally).
 
 Typical job steps look like this:
 
@@ -52,7 +52,8 @@ jobs:
           value3: ${{ on.rss.outputs.link }}
 ```
 
-Learn more information about job steps format, please see [Workflow syntax for GitHub Actions
+Learn more information about job steps format, please see [Workflow syntax for Actionsflow
+](/docs/workflow.md) and [Workflow syntax for GitHub Actions
 ](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions)
 
 For exploring more actions, please see [Github Actions Marketplace](https://github.com/marketplace?type=actions)

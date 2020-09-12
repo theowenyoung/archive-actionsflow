@@ -67,11 +67,11 @@ git push
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
 
-For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](/docs/workflow.md).
+# Learn More
 
-For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
-
-For more information about use cases, see [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
-
-For more questions about Actionsflow, see [FAQs](/docs/faqs.md)
+- [Workflow Syntax for Actionsflow](/docs/workflow.md) - Learn more about the Actionsflow workflow file syntax
+- [Triggers List](/docs/triggers.md) - Explore Actionsflow triggers
+- [Workflows Use Case](/docs/explore.md) - Explore Actionsflow workflows use case to get inspired
+- [Core Concepts](/docs/concepts.md) - Learn more about how Actionsflow worked
+- [Creating Triggers for Actionsflow](/docs/creating-triggers.md) - Learn more about how to create your own trigger for Actionsflow
+- [FAQs](/docs/faqs.md) - Actionsflow FAQs

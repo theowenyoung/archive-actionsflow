@@ -36,7 +36,7 @@ Build an Actionsflow workflow is a three-step process:
    └── package.json
    ```
 
-1. **Define your [workflow file](https://actionsflow.github.io/docs/workflow/) at `workflows` directory**
+1. **Define your [workflow file](/docs/workflow.md) at `workflows` directory**
 
    A typical workflow file `rss.yml` looks like this:
 
@@ -59,15 +59,15 @@ Build an Actionsflow workflow is a three-step process:
    ```
 
    For more information about the Actionsflow workflow file, see the
-   [Actionsflow workflow reference](https://actionsflow.github.io/docs/workflow/).
+   [Actionsflow workflow reference](/docs/workflow.md).
 
-   You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Workflows by Use Case](https://actionsflow.github.io/docs/explore/) to get more inspired.
+   You can explore [Triggers List](/docs/triggers.md) or [Workflows by Use Case](/docs/explore.md) to get more inspired.
 
 1. **commit and push your updates to Github**
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
 
-For more information about quick started, see [Getting Started](https://actionsflow.github.io/docs/getting-started/)
+For more information about quick started, see [Getting Started](/docs/getting-started.md)
 
 # Learn More
 
