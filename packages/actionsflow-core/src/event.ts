@@ -7,7 +7,9 @@ import {
   AnyObject,
 } from "actionsflow-interface";
 import querystring from "querystring";
-import { WEBHOOK_DEFAULT_HOST } from "./constans";
+import typeis from "type-is";
+import { IncomingMessage } from "http";
+import { WEBHOOK_DEFAULT_HOST, jsonTypes, formTypes } from "./constans";
 import { URL } from "url";
 export const formatRequest = ({
   path,
@@ -82,8 +84,17 @@ export const getEventByContext = (context: ITriggerContext): ITriggerEvent => {
     // format body
 
     if (clientPayload.body && typeof clientPayload.body === "string") {
-      try {
+      if (typeis(clientPayload as IncomingMessage, jsonTypes)) {
         clientPayload.body = JSON.parse(clientPayload.body);
+      }
+
+      if (typeis(clientPayload as IncomingMessage, formTypes)) {
+        clientPayload.body = querystring.parse(clientPayload.body as string);
+      }
+
+      // try json
+      try {
+        clientPayload.body = JSON.parse(clientPayload.body as string);
       } catch (error) {
         // do nothing
       }

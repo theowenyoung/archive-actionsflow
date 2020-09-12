@@ -1,6 +1,6 @@
 ---
-title: Webhook API
-metaTitle: Actionsflow Webhook API
+title: "Webhook Syntax"
+metaTitle: "Webhook Syntax for Actionsflow"
 ---
 
 Some triggers (like [telegram_bot](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot)) may provide webhook option, so you can get updates more timely.

@@ -19,6 +19,12 @@ export const getThirdPartyTrigger = (
     log.debug("try to load third party trigger", thirdPartyTrigger);
     triggerPath = resolveCwd.silent(thirdPartyTrigger);
   }
+  if (!triggerPath) {
+    // support package name
+    const thirdPartyTrigger = `${triggerName}`;
+    log.debug("try to load third party trigger", thirdPartyTrigger);
+    triggerPath = resolveCwd.silent(thirdPartyTrigger);
+  }
   if (triggerPath) {
     log.debug("success found third party trigger: ", triggerPath);
     // eslint-disable-next-line @typescript-eslint/no-var-requires

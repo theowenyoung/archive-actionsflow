@@ -1,0 +1,38 @@
+{
+  "name": "@actionsflow/trigger-slack",
+  "version": "0.1.17",
+  "description": "Actionsflow trigger slack",
+  "keywords": [
+    "slack",
+    "actionsflow",
+    "trigger"
+  ],
+  "author": "Owen Young <theowenyoung@gmail.com>",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-slack",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actionsflow/actionsflow.git"
+  },
+  "scripts": {
+    "start": "tsc -w -p tsconfig.production.json",
+    "build": "tsc -p tsconfig.production.json",
+    "clean": "rimraf ./dist",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
+  "dependencies": {
+    "actionsflow-interface": "^0.1.12",
+    "tslib": "^2.0.1"
+  },
+  "devDependencies": {
+    "actionsflow-core": "^0.1.15",
+    "axios": "^0.20.0"
+  }
+}

@@ -37,7 +37,7 @@ curl --request POST 'https://webhook.actionsflow.workers.dev/actionsflow/actions
 }'
 ```
 
-Learn more about webhook URL, see [here](/docs/reference/5-webhook.md)
+Learn more about webhook URL, see [here](/docs/webhook.md)
 
 ### IFTTT Webhook Request example
 

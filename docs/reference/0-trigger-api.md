@@ -156,9 +156,9 @@ module.exports = class Example {
 };
 ```
 
-`webhooks` define a group of webhook handlers. When a [webhook event](/docs/reference/5-webhook.md) of the trigger comes, the handler will be called with the webhook request.
+`webhooks` define a group of webhook handlers. When a [webhook event](/docs/webhook.md) of the trigger comes, the handler will be called with the webhook request.
 
-> Note: If you don't familiar with Actionsflow webhook URL format, please see [here](/docs/reference/5-webhook.md)
+> Note: If you don't familiar with Actionsflow webhook URL format, please see [here](/docs/webhook.md)
 
 The following interface is a webhook interface:
 

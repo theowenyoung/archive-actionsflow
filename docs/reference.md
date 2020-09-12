@@ -10,7 +10,7 @@ In this section:
 - [Workflow Syntax](/docs/workflow.md)
 - [Trigger API](/docs/reference/0-trigger-api.md)
 - [Trigger Helpers API](/docs/reference/0-trigger-helpers.md)
-- [Webhook API](/docs/reference/5-webhook.md)
+- [Webhook Syntax](/docs/webhook.md)
 - [Actionsflow Actions API](/docs/reference/1-action-api.md)
 - [Actionsflow Core API](/docs/reference/2-api.md)
 - [Actionsflow CLI API](/docs/reference/3-cli.md)

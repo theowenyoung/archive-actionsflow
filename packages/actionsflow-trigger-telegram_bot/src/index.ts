@@ -12,6 +12,9 @@ export default class TelegramBot implements ITriggerClassType {
   constructor({ helpers, options }: ITriggerContructorParams) {
     if (options) {
       this.options = options;
+      if (options.webhook) {
+        this.shouldDeduplicate = false;
+      }
     }
     this.helpers = helpers;
   }
@@ -44,8 +47,6 @@ export default class TelegramBot implements ITriggerClassType {
     const log = this.helpers.log;
     const { token } = this.options as {
       token?: string;
-      every?: number;
-      event?: string | string[];
     };
 
     if (!token) {
