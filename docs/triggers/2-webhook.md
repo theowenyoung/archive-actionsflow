@@ -1,6 +1,6 @@
 ---
 title: "Webhook"
-metaTitle: "Actionsflow Webhook trigger"
+metaTitle: "Actionsflow Webhook Trigger"
 metaDescription: "Trigger by a Webhook request"
 ---
 
