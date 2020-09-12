@@ -9,9 +9,12 @@ I started this project because I need to watch some RSS and do something, but I 
 
 Here are some useful links:
 
-- [Workflow syntax for Actionsflow](/docs/workflow.md)
-- [Actionsflow Triggers](/docs/triggers.md)
-- [FAQs](/docs/faqs.md)
+- [Workflow Syntax for Actionsflow](/docs/workflow.md) - Learn more about the Actionsflow workflow file syntax
+- [Triggers List](/docs/triggers.md) - Explore Actionsflow triggers
+- [Workflows Use Case](/docs/explore.md) - Explore Actionsflow workflows use case to get inspired
+- [Core Concepts](/docs/concepts.md) - Learn more about how Actionsflow worked
+- [Creating Triggers for Actionsflow](/docs/creating-triggers.md) - Learn more about how to create your own trigger for Actionsflow
+- [FAQs](/docs/faqs.md) - Actionsflow FAQs
 
 I ❤️ building Actionsflow and hope it simplifies your next project or business.
 
