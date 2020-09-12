@@ -1,5 +1,5 @@
 ---
-title: "Core Concepts of Actionsflow"
+title: "Core Concepts"
 ---
 
 # How Actionsflow worked
@@ -112,6 +112,6 @@ Then, Actionsflow will call [act](https://github.com/nektos/act)(a tool for runn
 
 # What Actionsflow workflow file include
 
-A typical Actionsflow workflow file includes a [trigger](/docs/triggers.md) and some [job steps](/docs/steps.md)(Actionsflow also support multiple triggers and multiple jobs)
+A typical Actionsflow workflow file includes a [trigger](/docs/triggers.md) and some jobs. Actionsflow also support multiple triggers and multiple jobs.
 
 Learn more about Workflow syntax for Actionsflow, please see [here](/docs/workflow.md).

@@ -1,5 +1,6 @@
 ---
-title: Actionsflow Actions API
+title: Actions API
+metaTitle: Actionsflow Actions API
 ---
 
 Actionsflow action for Github. With this action, you can use Actionsflow without `node_modules`. It can speed up your workflow.

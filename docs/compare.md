@@ -1,5 +1,5 @@
 ---
-title: Compare with Zapier and IFTTT
+title: Compare with Zapier & IFTTT
 metaTitle: "Compare with Zapier and IFTTT"
 ---
 

@@ -1,5 +1,6 @@
 ---
-title: Actionsflow Core API
+title: Core API
+metaTitle: Actionsflow Core API
 ---
 
 This document is for [npm Actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.

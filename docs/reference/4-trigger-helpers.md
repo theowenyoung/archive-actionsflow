@@ -1,5 +1,6 @@
 ---
 title: Trigger Helpers API
+metaTitle: Actionsflow Trigger Helpers API
 ---
 
 Trigger helpers is passed to the [trigger class'](/docs/reference/0-trigger-api.md) constructor.

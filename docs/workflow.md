@@ -1,5 +1,5 @@
 ---
-title: "Workflow Syntax for Actionsflow"
+title: "Workflow Syntax"
 metaTitle: "Workflow Syntax for Actionsflow"
 ---
 
@@ -103,6 +103,8 @@ jobs:
           value2: ${{ on.rss.outputs.contentSnippet }}
           value3: ${{ on.rss.outputs.link }}
 ```
+
+For exploring more actions, please see [Awesome Actions List we Collected](/docs/actions.md) and [Github Actions Marketplace](https://github.com/marketplace?type=actions)
 
 **Context and expression syntax for Actionsflow jobs**:
 

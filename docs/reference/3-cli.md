@@ -1,5 +1,6 @@
 ---
-title: Actionsflow CLI API
+title: CLI API
+metaTitle: Actionsflow CLI API
 ---
 
 This document is for [npm Actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.

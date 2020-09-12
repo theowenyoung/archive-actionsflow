@@ -1,6 +1,6 @@
 ---
-title: Creating a Generic Trigger
-metaTitle: Creating an Generic Actionsflow Trigger
+title: Generic Trigger
+metaTitle: Creating a Generic Actionsflow Trigger
 ---
 
 A trigger contain a file, usually in the project root, called `package.json` - this file holds various metadata relevant to the project. The `package.json` file is also used to provide information to npm that identifies the project and allows npm to handle the project's dependencies.

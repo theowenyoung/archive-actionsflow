@@ -1,6 +1,6 @@
 ---
-title: "Explore Workflows by Use Case"
-metaTitle: "Explore Workflows to use Actionsflow by Use Case"
+title: "Explore Workflows"
+metaTitle: "Explore Actionsflow Workflows by Use Case"
 ---
 
 # Workflow Use Case List
