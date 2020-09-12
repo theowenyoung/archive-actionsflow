@@ -9,4 +9,4 @@ jobs:
         env:
           slack_outputs: ${{ toJson(on.slack.outputs) }}
         run: |
-          echo telegram: $slack_outputs
+          echo slack: $slack_outputs
