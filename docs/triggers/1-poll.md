@@ -8,9 +8,9 @@ Poll trigger is triggered when new items of a rest API are detected.
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/poll.ts)
 
-# Events
+# Usage
 
-## New item in JSON API
+Watching new item in API `https://jsonplaceholder.typicode.com/posts` response:
 
 ```yaml
 on:
@@ -19,9 +19,9 @@ on:
     deduplication_key: id
 ```
 
-### Params
+## Params
 
-This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
 
 - `url`, required, the polling API URL, for example, `https://jsonplaceholder.typicode.com/posts`
 
@@ -41,7 +41,7 @@ This trigger accepts [all trigger's general params](https://actionsflow.github.i
           Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
   ```
 
-### Outputs
+## Outputs
 
 Poll trigger's outputs will be the item of the API results, and `raw__body` for the whole raw body
 

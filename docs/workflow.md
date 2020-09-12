@@ -46,7 +46,7 @@ on:
     url: https://hnrss.org/newest?points=300
 ```
 
-## Context and expression syntax for Actionsflow on
+**Context and expression syntax for Actionsflow on**:
 
 You can access context information in workflow triggers, you need to use specific syntax to tell Actionsflow to evaluate a variable rather than treat it as a string.
 
@@ -66,9 +66,9 @@ on:
 
 Optional, the options of the trigger, the default value is `{}`, You can find the trigger's documentation for getting the available params.
 
-All triggers are supported the following general options:
+## `on.<trigger_name>.<param>`
 
-### General params for triggers
+All triggers are supported the following general options:
 
 - `active`, optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
 - `every`, optional, `number`, polling data interval time, the unit is minute, the default value is `5`
@@ -104,7 +104,7 @@ jobs:
           value3: ${{ on.rss.outputs.link }}
 ```
 
-## Context and expression syntax for Actionsflow jobs
+**Context and expression syntax for Actionsflow jobs**:
 
 You can access context information in workflow jobs, you need to use specific syntax to tell Actionsflow to evaluate a variable rather than treat it as a string.
 

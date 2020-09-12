@@ -8,9 +8,7 @@ You can use script trigger simply to write a script for a custom trigger logic.
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/script.ts)
 
-# Events
-
-## New item when run javascript function script
+# Usage
 
 ```yaml
 on:
@@ -33,9 +31,9 @@ on:
 
 > `script.js` should be placed in the same directory with the workflow file. You can also place it in the other folder if you prefer, use a relative path to refer it.
 
-### Params
+## Params
 
-This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
 
 - `run`, optional, the script code, you must provider `run` or `path` at least. you should use javascript language for the script. The context you can use at the script, see [here](#context), for example,
 
@@ -69,7 +67,7 @@ This trigger accepts [all trigger's general params](https://actionsflow.github.i
 
 - `deduplication_key`, optional. The script trigger deduplicates the array against the key. If the `id` key does not exist, you should specify an alternative unique key to deduplicate off of. If neither are supplied, we fallback to looking for `id`, `key`, if neither are supplied, we will hash the item, and generate a unique key
 
-### Context
+## Context
 
 You can use the following context at your script code:
 
@@ -94,7 +92,7 @@ You can use the following context at your script code:
       }
   ```
 
-### Outputs
+## Outputs
 
 Script trigger's outputs will be the item of the script function results.
 

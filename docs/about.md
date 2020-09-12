@@ -9,7 +9,7 @@ I started this project because I need to watch some RSS and do something, but I 
 
 Here are some useful links:
 
-- [Workflow syntax for Actionsflow](/docs/workflow.md)
+- [Workflow syntax for Actionsflow](./workflow.md)
 - [Actionsflow Triggers](/docs/triggers.md)
 - [FAQs](/docs/faqs.md)
 

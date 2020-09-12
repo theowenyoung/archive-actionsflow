@@ -8,18 +8,16 @@ You can use webhook trigger to receive data from any service.
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/webhook.ts)
 
-# Events
-
-## New Webhook Event
+# Usage
 
 ```yaml
 on:
   webhook:
 ```
 
-## Trigger Webhook
+## Setup Webhook URL
 
-The webhook URL is in the following format, you should set this URL to the third party service webhook settings.
+The webhook URL is in the following format, you should set this URL to the 3rd party service webhook settings.
 
 ```bash
 https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/webhook?__token=<your-github-personal-token>
@@ -29,7 +27,7 @@ https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/webh
 
 > You need to generate personal access tokens with `repo` scope at [Github settings](https://github.com/settings/tokens), then replace `<your-github-personal-token>`
 
-For example,
+Here is an example for sending a webhook event:
 
 ```bash
 curl --request POST 'https://webhook.actionsflow.workers.dev/actionsflow/actionsflow/webhook/webhook?__token=<your-github-personal-token>' \
@@ -43,7 +41,9 @@ Learn more about webhook URL, see [here](/docs/reference/5-webhook.md)
 
 ### IFTTT Webhook Request example
 
-You can use IFTTT webhook as a `then` action to trigger the workflow webhook, here is an example:
+You can send webhook event from [IFTTT webhook](https://ifttt.com/maker_webhooks).
+
+For example, you can input the following value at [IFTTT webhook](https://ifttt.com/maker_webhooks) settings:
 
 - URL: `https://webhook.actionsflow.workers.dev/actionsflow/actionsflow/webhook/webhook?__token=<your-github-personal-token>`
 - Method: `POST`
@@ -60,7 +60,7 @@ You can use IFTTT webhook as a `then` action to trigger the workflow webhook, he
 
 ## Params
 
-This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
 
 - `method`, optional, `string` or `string[]`, you can define one or more as the specific method that the webhook should listen, the default is `undefined`, means that the webhook would listen all methods. The options value can be `get`, `post`, `put`, `patch`, `delete`, `head`, `options`
 - `should_deduplicate`, optional, `boolean`, if the webhook payload should be dedeplicate, the default value is `false`, it means every webhook request will trigger the jobs. You can set this `true`, and set `deduplication_key` to define the deduplication key.

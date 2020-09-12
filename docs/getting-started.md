@@ -13,7 +13,7 @@ Click this [link](https://github.com/actionsflow/workflow/generate) to generate 
 
 # 2. Create workflow files
 
-Define your [workflow files](/docs/workflow.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
+Define your [workflow files](https://actionsflow.github.io/docs/workflow/) at `workflows` directory, you can explore [trigger list](https://actionsflow.github.io/docs/triggers/) or [workflows by use case](https://actionsflow.github.io/docs/explore/)
 
 A typical Actionsflow repository structure looks like this:
 

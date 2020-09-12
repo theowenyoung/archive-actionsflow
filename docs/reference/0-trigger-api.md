@@ -78,7 +78,7 @@ interface ITriggerContructorParams {
   }
   ```
 
-  > You don't need to handle [the general options of Actionsflow triggers](/docs/triggers.md/#general-params-for-triggers), Actionsflow will automatically handle them.
+  > You don't need to handle [the general options of Actionsflow triggers](/docs/workflow.md#ontrigger_nameparam), Actionsflow will automatically handle them.
 
 - `helpers` is a collection of the commonly used utils for trigger, including `cache`, `log`, `axios`, look at the interface declaration:
 

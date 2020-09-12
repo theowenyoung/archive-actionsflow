@@ -8,9 +8,7 @@ RSS trigger is triggered when new items are detected. Both single feed and multi
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts)
 
-# Events
-
-## New item in a feed
+# Usage
 
 Single feed:
 
@@ -31,13 +29,13 @@ on:
     max_items_count: 15
 ```
 
-### Params
+## Params
 
-This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
 
 - `url`, required, `string` or `string[]`, when `url` is `string[]`, then multiple RSS feeds can trigger the action.
 
-### Outputs
+## Outputs
 
 Actionsflow use [rss-parser](https://github.com/rbren/rss-parser) for parse RSS file, the outputs are same as [rss-parser](https://github.com/rbren/rss-parser)
 

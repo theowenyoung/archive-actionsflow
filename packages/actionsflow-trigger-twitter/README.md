@@ -6,7 +6,7 @@ This is an [Actionsflow](https://github.com/actionsflow/actionsflow) twitter tri
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-twitter)
 
-## Events
+# Usage
 
 ```yaml
 on:
@@ -21,9 +21,9 @@ on:
       screen_name: theowenyoung
 ```
 
-### Params
+## Params
 
-This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
 
 - `event`, optional, default is `user_timeline`, for now only support `user_timeline`.
 
@@ -48,7 +48,7 @@ This trigger accepts [all trigger's general params](https://actionsflow.github.i
     tweet_mode: "extended",
   ```
 
-### Outputs
+## Outputs
 
 This trigger's outputs will be the item of the following results.
 

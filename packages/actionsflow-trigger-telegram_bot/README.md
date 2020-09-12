@@ -6,9 +6,7 @@ This is an [Actionsflow](https://github.com/actionsflow/actionsflow) telegram bo
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot)
 
-# Events
-
-## New message in telegram bot
+# Usage
 
 ```yaml
 # single message type
@@ -26,9 +24,9 @@ on:
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 ```
 
-### Params
+## Params
 
-This trigger accepts [all trigger's general params](https://actionsflow.github.io/docs/triggers/#general-params-for-triggers).
+This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
 
 - `token`, required, telegram bot token, you should get it from [Telegram BotFather](https://telegram.me/BotFather), for example: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`
 
