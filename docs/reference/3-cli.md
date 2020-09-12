@@ -25,20 +25,13 @@ npm i actionsflow --save
 Usage: actionsflow <command> [options]
 
 Commands:
-  actionsflow build  Build an Actionsflow
-                     workflows.
-  actionsflow clean  Wipe the local actionsflow
-                     environment including built
-                     assets and cache
+  actionsflow build  Build a Actionsflow workflows.
+  actionsflow clean  Wipe the local actionsflow environment including built assets and cache
 
 Options:
-  --verbose      Turn on verbose output
-                      [boolean] [default: false]
-  -h, --help     Show help             [boolean]
-  -v, --version  Show the version of the
-                 Actionsflow CLI and the
-                 Actionsflow package in the
-                 current project       [boolean]
+  --verbose      Turn on verbose output                                                                                                                                       [boolean] [default: false]
+  -h, --help     Show help                                                                                                                                                                     [boolean]
+  -v, --version  Show the version of the Actionsflow CLI and the Actionsflow package in the current project                                                                                    [boolean]
 ```
 
 # Commands
@@ -50,16 +43,17 @@ Build Actionsflow workflow files to standard Github actions workflow files
 ```bash
 actionsflow build
 
-Build an Actionsflow workflow.
+Build a Actionsflow workflows.
 
 Options:
-  --verbose      Turn on verbose output                                                                                  [boolean] [default: false]
-  --dest, -d     workflows build dest path                                                                             [string] [default: "./dist"]
-  --cwd          current workspace path                                                  [string] [default: <your current workspace directory>]
-  --include, -i  workflow files that should include, you can use <glob> patterns                                              [array] [default: []]
-  --exclude, -e  workflow files that should exclude, you can use <glob> patterns                                              [array] [default: []]
-  -h, --help     Show help                                                                                                                [boolean]
-  -v, --version  Show the version of the Actionsflow CLI and the Actionsflow package in the current project                               [boolean]
+  --verbose      Turn on verbose output                                                                                                                                       [boolean] [default: false]
+  --dest, -d     workflows build dest path                                                                                                                                  [string] [default: "./dist"]
+  --cwd          current workspace path                                                                                                       [string] [default: <your current workspace folder>]
+  --include, -i  workflow files that should include, you can use <glob> patterns                                                                                                   [array] [default: []]
+  --exclude, -e  workflow files that should exclude, you can use <glob> patterns                                                                                                   [array] [default: []]
+  --force, -f    force update all triggers, it will ignore the update interval and cached deduplicate key                                                                                      [boolean]
+  -h, --help     Show help                                                                                                                                                                     [boolean]
+  -v, --version  Show the version of the Actionsflow CLI and the Actionsflow package in the current project                                                                                    [boolean]
 ```
 
 ## clean
@@ -72,10 +66,9 @@ actionsflow clean
 Wipe the local actionsflow environment including built assets and cache
 
 Options:
-  --verbose      Turn on verbose output                                         [boolean] [default: false]
-  --dest, -d     workflows build dest path                                    [string] [default: "./dist"]
-  --base, -b     workspace base path            [string] [default: "/Users/owenyoung/project/actionsflow"]
-  -h, --help     Show help                                                                       [boolean]
-  -v, --version  Show the version of the Actionsflow CLI and the Actionsflow package in the current
-                 project                                                                         [boolean]
+  --verbose      Turn on verbose output                                                                                                                                       [boolean] [default: false]
+  --dest, -d     workflows build dest path                                                                                                                                  [string] [default: "./dist"]
+  --base, -b     workspace base path                                                                                                          [string] [default: "/Users/owenyoung/project/actionsflow"]
+  -h, --help     Show help                                                                                                                                                                     [boolean]
+  -v, --version  Show the version of the Actionsflow CLI and the Actionsflow package in the current project                                                                                    [boolean]
 ```
