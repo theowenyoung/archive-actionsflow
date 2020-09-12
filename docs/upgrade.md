@@ -5,7 +5,7 @@ metaTitle: "Actionsflow Upgrade"
 
 There are two things to upgrade to the latest version of Actionsflow.
 
-# Upgrade Actionsflow to the Latest Version
+# 1. Upgrade Actionsflow to the Latest Version
 
 The first thing is to upgrade to [the latest version of actionsflow](https://github.com/actionsflow/actionsflow/releases).
 
@@ -19,7 +19,7 @@ The first thing is to upgrade to [the latest version of actionsflow](https://git
 
   then, commit & push your updates to github.
 
-# Upgrade Github Actions workflow file
+# 2. Upgrade Github Actions workflow file
 
 The second thing is to update the [`.github/workflows/actionsflow-jobs.yml`](https://github.com/actionsflow/actionsflow-workflow-default/blob/master/.github/workflows/actionsflow-jobs.yml) to the latest version.
 
