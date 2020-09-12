@@ -20,63 +20,60 @@ You can see the core concepts of Actionsflow at [here](/docs/concepts.md).
 
 Build an Actionsflow workflow is a three-step process:
 
-1. Create a public Github repository by this [link](https://github.com/actionsflow/actionsflow-workflow-default/generate)
-1. Define your [workflow files](https://actionsflow.github.io/docs/workflow/) at `workflows` directory, you can explore [trigger list](https://actionsflow.github.io/docs/triggers/) or [workflows by use case](https://actionsflow.github.io/docs/explore/)
-1. commit and push your updates to Github
+1. **Create a public Github repository by this [link](https://github.com/actionsflow/actionsflow-workflow-default/generate).**
+
+   A typical Actionsflow repository structure looks like this:
+
+   ```sh
+   ├── .github
+   │   └── workflows
+   │       └── actionsflow-jobs.yml
+   ├── .gitignore
+   ├── README.md
+   └── workflows
+   │   └── rss.yml
+   │   └── webhook.yml
+   └── package.json
+   ```
+
+1. **Define your [workflow file](https://actionsflow.github.io/docs/workflow/) at `workflows` directory**
+
+   A typical workflow file `rss.yml` looks like this:
+
+   ```yaml
+   on:
+     rss:
+       url: https://hnrss.org/newest?points=300
+   jobs:
+     ifttt:
+       name: Make a Request to IFTTT
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actionsflow/ifttt-webhook-action@v1
+           with:
+             event: notice
+             key: ${{ secrets.IFTTT_KEY }}
+             value1: ${{on.rss.outputs.title}}
+             value2: ${{on.rss.outputs.contentSnippet}}
+             value3: ${{on.rss.outputs.link}}
+   ```
+
+   For more information about the Actionsflow workflow file, see the
+   [Actionsflow workflow reference](https://actionsflow.github.io/docs/workflow/).
+
+   You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Workflows by Use Case](https://actionsflow.github.io/docs/explore/) to get more inspired.
+
+1. **commit and push your updates to Github**
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
 
-For more information about quick started, see [Getting Started](/docs/getting-started.md)
+For more information about quick started, see [Getting Started](https://actionsflow.github.io/docs/getting-started/)
 
-# Structure
+# Learn More
 
-A typical Actionsflow repository structure looks like this:
-
-```sh
-.
-├── .github
-│   └── workflows
-│       └── actionsflow-jobs.yml
-├── .gitignore
-├── README.md
-└── workflows
-│   └── rss.yml
-│   └── webhook.yml
-└── package.json
-```
-
-You should place your workflow files at `workflows` folder, and you can install the 3rd party triggers at `package.json` or create your own trigger at `triggers` folder.
-
-Take a look with the Actionsflow [official workflow template repository](https://github.com/actionsflow/actionsflow-workflow-default)
-
-# Workflow File
-
-A typical workflow file `workflow.yml` looks like this:
-
-```yaml
-on:
-  rss:
-    event: new_item
-    url: https://hnrss.org/newest?points=300
-jobs:
-  ifttt:
-    name: Make a Request to IFTTT
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: notice
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{on.rss.outputs.title}}
-          value2: ${{on.rss.outputs.contentSnippet}}
-          value3: ${{on.rss.outputs.link}}
-```
-
-For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](/docs/workflow.md).
-
-For more information about the Actionsflow triggers, see [Triggers](/docs/triggers.md)
-
-For more information about use cases, see [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/actionsflow-workflow-example).
-
-For more questions about Actionsflow, see [FAQs](/docs/faqs.md)
+- [Workflow Syntax for Actionsflow](/docs/workflow.md) - Learn more about the Actionsflow workflow file syntax
+- [Triggers List](/docs/triggers.md) - Explore Actionsflow triggers
+- [Workflows Use Case](/docs/explore.md) - Explore Actionsflow workflows use case to get inspired
+- [Core Concepts](/docs/concepts.md) - Learn more about how Actionsflow worked
+- [Creating Triggers for Actionsflow](/docs/creating-triggers.md) - Learn more about how to create your own trigger for Actionsflow
+- [FAQs](/docs/faqs.md) - Actionsflow FAQs

@@ -21,7 +21,7 @@ cd actionsflow-trigger-<your_trigger_name>
 
 # Sample
 
-You need export a class that implements [Actionsflow trigger API](../reference/0-trigger-api.md) for your trigger package, a simple example for trigger looks like this:
+You need export a class that implements [Actionsflow trigger API](/docs/reference/0-trigger-api.md) for your trigger package, a simple example for trigger looks like this:
 
 ```javascript
 module.exports = class Example {

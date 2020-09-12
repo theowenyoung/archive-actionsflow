@@ -9,32 +9,31 @@ Build an Actionsflow workflow is basically a three-step process:
 
 # 1. Create a Github repository
 
-Click this [link](https://github.com/actionsflow/workflow/generate) to generate a new public Github repository, pick a repository name as you like, for example, `actionsflow-workflow`, `workflow`, `my-workflow`,
-
-# 2. Create workflow files
-
-Define your [workflow files](https://actionsflow.github.io/docs/workflow/) at `workflows` directory, you can explore [trigger list](https://actionsflow.github.io/docs/triggers/) or [workflows by use case](https://actionsflow.github.io/docs/explore/)
+Click this [link](https://github.com/actionsflow/workflow/generate) to generate a new public Github repository, pick a repository name as you like, for example, `actionsflow-workflow`, `workflow`, `my-workflow`
 
 A typical Actionsflow repository structure looks like this:
 
 ```sh
-.
 ├── .github
 │   └── workflows
 │       └── actionsflow-jobs.yml
 ├── .gitignore
 ├── README.md
-└── workflows # you should add workflow files at this directory
-    └── rss2ifttt.yml
-    └── webhook2ifttt.yml
+└── workflows
+│   └── rss.yml
+│   └── webhook.yml
+└── package.json
 ```
 
-A typical workflow file `xxx.yml` looks like this:
+# 2. Create workflow files
+
+Define your [workflow files](https://actionsflow.github.io/docs/workflow/) at `workflows` directory.
+
+A typical workflow file `rss.yml` looks like this:
 
 ```yaml
 on:
   rss:
-    event: new_item
     url: https://hnrss.org/newest?points=300
 jobs:
   ifttt:
@@ -52,6 +51,8 @@ jobs:
 
 For more information about the Actionsflow workflow file, see the
 [Actionsflow workflow reference](/docs/workflow.md).
+
+You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Workflows by Use Case](https://actionsflow.github.io/docs/explore/) to get more inspired.
 
 # 3. Commit and push your updates to Github
 
