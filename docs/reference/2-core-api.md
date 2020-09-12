@@ -42,7 +42,7 @@ import { clean } from "actionsflow";
 
 function clean (options: {
   dest?: string; // dest folder, the default value is 'dist'
-  base?: string; // base workspace folder, default is process.cwd()
+  cwd?: string; // base workspace folder, default is process.cwd()
   logLevel?: Log.LogLevelDesc; // Log level, default is "info", you can use one of these values, "trace" | "debug" | "info" | "warn" | "error" | "silent"
 }): Promise<void>;
 };
