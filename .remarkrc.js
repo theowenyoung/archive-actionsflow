@@ -28,6 +28,7 @@ module.exports = {
     ["remark-lint-maximum-heading-length", false],
     ["remark-lint-list-item-indent", false],
     ["lint-no-multiple-toplevel-headings", false],
+    ["remark-lint-no-emphasis-as-heading", false],
     ["remark-lint-no-duplicate-headings", false],
   ],
 };

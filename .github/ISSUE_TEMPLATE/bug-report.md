@@ -1,10 +1,9 @@
 ---
 name: "\U0001F41E Bug Report"
 about: Something isn't working as expected? Here is the right place to report.
-title: ''
+title: ""
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 <!--
@@ -22,7 +21,7 @@ Describe the issue that you're seeing.
 
 ### Steps to reproduce
 
-Clear steps describing how to reproduce the issue. Please please please link to a demo project if possible, this makes your issue _much_ easier to diagnose (seriously).
+Clear steps describing how to reproduce the issue. Please please please link to a demo project if possible, this makes your issue much easier to diagnose (seriously).
 
 ### Expected result
 

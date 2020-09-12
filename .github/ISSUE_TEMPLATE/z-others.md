@@ -1,10 +1,9 @@
 ---
 name: "\U0001F600 Others"
 about: None of the above is the type you want? Here is the right place to report.
-title: ''
+title: ""
 labels: help wanted
-assignees: ''
-
+assignees: ""
 ---
 
 <!--

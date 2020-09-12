@@ -1,10 +1,9 @@
 ---
 name: "\U0001F680 Feature request"
 about: "If you have a feature request \U0001F4A1"
-title: ''
+title: ""
 labels: enhancement
-assignees: ''
-
+assignees: ""
 ---
 
 **Context**
@@ -21,4 +20,4 @@ Please provide a link to the issue.
 
 **If the feature request is approved, would you be willing to submit a PR?**
 
-Yes / No _(Help can be provided if you need assistance submitting a PR)_
+Yes / No (Help can be provided if you need assistance submitting a PR)

@@ -1,11 +1,11 @@
 ---
 name: "\U0001F916 Trigger Wanted"
-about: "If you have a trigger need that is not currently available in the community
+about:
+  "If you have a trigger need that is not currently available in the community
   \U0001F4A1"
-title: ''
+title: ""
 labels: trigger wanted
-assignees: ''
-
+assignees: ""
 ---
 
 **Context**
@@ -26,4 +26,4 @@ Please provide a link to the issue.
 
 **If the trigger request is approved, would you be willing to submit a PR?**
 
-Yes / No _(Help can be provided if you need assistance submitting a PR)_
+Yes / No (Help can be provided if you need assistance submitting a PR)
