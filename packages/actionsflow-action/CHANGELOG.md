@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.18](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.17...actionsflow-action@0.1.18) (2020-09-12)
+
+### Features
+
+- support slack ([7f3ed23](https://github.com/actionsflow/actionsflow/commit/7f3ed23d4c9cd4d1845bf6bd00692726ad6543f5))
+
 ## [0.1.17](https://github.com/actionsflow/actionsflow/compare/actionsflow-action@0.1.16...actionsflow-action@0.1.17) (2020-09-11)
 
 **Note:** Version bump only for package actionsflow-action
