@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.19](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-telegram_bot@0.1.17...@actionsflow/trigger-telegram_bot@0.1.19) (2020-09-13)
+
+### Features
+
+- support slack ([7f3ed23](https://github.com/actionsflow/actionsflow/commit/7f3ed23d4c9cd4d1845bf6bd00692726ad6543f5))
+
 ## [0.1.18](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-telegram_bot@0.1.17...@actionsflow/trigger-telegram_bot@0.1.18) (2020-09-12)
 
 ### Features

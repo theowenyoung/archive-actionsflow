@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.24](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.22...actionsflow-workflow-example@0.0.24) (2020-09-13)
+
+### Features
+
+- support slack ([7f3ed23](https://github.com/actionsflow/actionsflow/commit/7f3ed23d4c9cd4d1845bf6bd00692726ad6543f5))
+
 ## [0.0.23](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.22...actionsflow-workflow-example@0.0.23) (2020-09-12)
 
 ### Features
