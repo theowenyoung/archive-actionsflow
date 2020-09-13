@@ -15,7 +15,7 @@ module.exports = {
     if (match.length > 0) {
       return `remark --quiet --frail ${match.join(" ")}`;
     } else {
-      return "echo";
+      return ":";
     }
   },
 };
