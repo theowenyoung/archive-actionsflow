@@ -31,9 +31,7 @@ module.exports = class Example {
         title: "hello world title2",
       },
     ];
-    return {
-      items,
-    };
+    return items;
   }
 };
 ```
@@ -93,6 +91,11 @@ interface ITriggerContructorParams {
     };
     log: Logger;
     axios: AxiosStatic;
+    formatBinary: (
+      content: Buffer,
+      filePath?: string,
+      mimeType?: string
+    ) => Promise<IBinaryData>;
   }
   ```
 
@@ -113,17 +116,15 @@ interface ITriggerContructorParams {
 Actionsflow call the trigger's instance `run` method in a timed loop, the `run` method should return an object which looks like this:
 
 ```javascript
-{
-  items: [
-    {
-      id: "uniqueId",
-      title: "title",
-    },
-  ];
-}
+[
+  {
+    id: "uniqueId",
+    title: "title",
+  },
+];
 ```
 
-By default, Actionsflow will deduplicate your `items` by using the deduplication key `item.id`, if the item key `id` not exist, then Actionsflow will hash the `item` data to deduplication. If you don't want to deduplicate your data, then your should set the trigger instance property `shouldDeduplicate` as `true`. You can also set `getItemKey` method to return the item's deduplication key.
+By default, Actionsflow will deduplicate your results by using the deduplication key `item.id`, if the item key `id` not exist, then Actionsflow will hash the `item` data to deduplication. If you don't want to deduplicate your data, then your should set the trigger instance property `shouldDeduplicate` as `true`. You can also set `getItemKey` method to return the item's deduplication key.
 
 > Note: if your trigger only handle [`webhook`](#webhooks) event, you can ignore this method.
 
@@ -147,9 +148,7 @@ module.exports = class Example {
       method: "post",
       handler: (request) => {
         let items = [request.body];
-        return {
-          items,
-        };
+        return items;
       },
     },
   ];
@@ -213,17 +212,15 @@ interface IWebhookRequest {
 
 When the webhook payload `body` is a JSON string, `body` will be converted javascript object automatically.
 
-Like [`run`](#run), The handler also should return an object which looks like this:
+Like [`run`](#run), The handler also should return an array which looks like this:
 
 ```javascript
-{
-  items: [
-    {
-      id: "uniqueId",
-      title: "title",
-    },
-  ];
-}
+[
+  {
+    id: "uniqueId",
+    title: "title",
+  },
+];
 ```
 
 # More Examples

@@ -105,3 +105,15 @@ const response = await this.helpers.axios(options);
 ```
 
 See [axios documentation](https://github.com/axios/axios)
+
+# `formatBinary`
+
+Prepare binary data, this helper will transform your binary to base64 string, so user can use it at workflow.
+
+For example:
+
+```javascript
+const binaryData = helpers.formatBinary(Buffer.from("test"));
+console.log(binaryData.data === "dGVzdA==");
+console.log(binaryData.mimeType === "text/plain");
+```

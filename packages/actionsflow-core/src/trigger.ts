@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { createContentDigest, getCache, prepareBinaryData } from "./helpers";
+import { createContentDigest, getCache, formatBinary } from "./helpers";
 import { LogLevelDesc } from "loglevel";
 import path from "path";
 import {
@@ -57,7 +57,7 @@ export const getTriggerHelpers = ({
   }
   const triggerHelpers = {
     createContentDigest,
-    prepareBinaryData,
+    formatBinary,
     cache: getCache(`trigger-${triggerId}`),
     log: triggerLog,
     axios: axios,

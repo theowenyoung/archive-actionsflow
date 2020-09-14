@@ -8,13 +8,13 @@ import path from "path";
  * base64 and adds metadata.
  *
  * @export
- * @param {Buffer} binaryData
+ * @param {Buffer} content
  * @param {string} [filePath]
  * @param {string} [mimeType]
  * @returns {Promise<IBinaryData>}
  */
-export async function prepareBinaryData(
-  binaryData: Buffer,
+export async function formatBinary(
+  content: Buffer,
   filePath?: string,
   mimeType?: string
 ): Promise<IBinaryData> {
@@ -31,7 +31,7 @@ export async function prepareBinaryData(
 
     if (!mimeType) {
       // Use buffer to guess mime type
-      const fileTypeData = await fromBuffer(binaryData);
+      const fileTypeData = await fromBuffer(content);
       if (fileTypeData) {
         mimeType = fileTypeData.mime;
       }
@@ -48,7 +48,7 @@ export async function prepareBinaryData(
     // TODO: Should program it in a way that it does not have to converted to base64
     //       It should only convert to and from base64 when saved in database because
     //       of for example an error or when there is a wait node.
-    data: binaryData.toString(BINARY_ENCODING),
+    data: content.toString(BINARY_ENCODING),
   };
 
   if (filePath) {

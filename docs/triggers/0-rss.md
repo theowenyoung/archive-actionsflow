@@ -1,10 +1,10 @@
 ---
 title: "RSS"
 metaTitle: "Actionsflow RSS trigger"
-metaDescription: "RSS trigger is triggered when new items are detected. This trigger supports one or multiple RSS sources"
+metaDescription: "RSS trigger is triggered when new item are detected. This trigger supports one or multiple RSS sources"
 ---
 
-RSS trigger is triggered when new items are detected. Both single feed and multiple feeds are supported for RSS trigger.
+RSS trigger is triggered when new item are detected. Both single feed and multiple feeds are supported for RSS trigger.
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts)
 

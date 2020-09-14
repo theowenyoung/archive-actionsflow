@@ -15,9 +15,7 @@ on:
   script:
     run: |
       const result = await helpers.axios.get("https://jsonplaceholder.typicode.com/posts")
-      return {
-        items: result.data
-      }
+      return result.data
     deduplicationKey: id
 ```
 
@@ -45,9 +43,7 @@ This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_
       title: "title1",
     });
   }
-  return {
-    items: items,
-  };
+  return items;
   ```
 
 - `path`, optional, you can run script from an external file. For example, `path: ./script.js`, the `script.js` should export following function:
@@ -57,9 +53,7 @@ This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_
     const result = await helpers.axios.get(
       "https://jsonplaceholder.typicode.com/posts"
     );
-    return {
-      items: result.data,
-    };
+    return result.data;
   };
   ```
 
@@ -82,14 +76,11 @@ You can use the following context at your script code:
   script:
     github_token: ${{secrets.GITHUB_TOKEN}}
     run: |
-      let items = [];
       const results = await github.issues.listForRepo({
         owner:"actionsflow",
         repo:"actionsflow",
       });
-      return {
-        items:resutls.data
-      }
+      return resutls.data;
   ```
 
 ## Outputs
@@ -112,9 +103,7 @@ on:
   script:
     run: |
       const result = await helpers.axios.get("https://jsonplaceholder.typicode.com/posts")
-      return {
-        items: result.data
-      }
+      return result.data
     deduplicationKey: id
 jobs:
   print:

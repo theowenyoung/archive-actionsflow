@@ -25,8 +25,8 @@ export interface IGithub extends AnyObject {
 }
 export interface IHelpers {
   createContentDigest: (input: unknown) => string;
-  prepareBinaryData: (
-    binaryData: Buffer,
+  formatBinary: (
+    content: Buffer,
     filePath?: string,
     mimeType?: string
   ) => Promise<IBinaryData>;

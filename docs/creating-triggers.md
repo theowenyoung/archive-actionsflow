@@ -26,9 +26,7 @@ module.exports = class Example {
         title: "hello world title",
       },
     ];
-    return {
-      items,
-    };
+    return items;
   }
 };
 ```

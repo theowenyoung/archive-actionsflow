@@ -8,7 +8,7 @@ export {
 export { getContext } from "./context";
 export { getWorkflow, getBuiltWorkflow, getWorkflows } from "./workflow";
 export { formatRequest, getEventByContext } from "./event";
-export { createContentDigest, getCache } from "./helpers";
+export { createContentDigest, getCache, formatBinary } from "./helpers";
 export {
   template,
   getAstsByParentName,

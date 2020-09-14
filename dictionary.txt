@@ -40,3 +40,4 @@ symlink
 async
 deduplicating
 TODO
+base64

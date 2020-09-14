@@ -122,7 +122,7 @@ export async function parseRawEmail(
   // responseData.headers = headers;
   responseData.headerLines = undefined;
   responseData.headers = undefined;
-  const binaryData: IBinaryData[] = [];
+  const content: IBinaryData[] = [];
   if (isDownloadAttachments && responseData.attachments) {
     for (
       let i = 0;
@@ -132,7 +132,7 @@ export async function parseRawEmail(
       const attachment = ((responseData.attachments as unknown) as Attachment[])[
         i
       ];
-      binaryData[i] = await this.helpers.prepareBinaryData(
+      content[i] = await this.helpers.formatBinary(
         attachment.content,
         attachment.filename,
         attachment.contentType
@@ -145,6 +145,6 @@ export async function parseRawEmail(
 
   return {
     ...responseData,
-    attachments: binaryData,
+    attachments: content,
   };
 }
