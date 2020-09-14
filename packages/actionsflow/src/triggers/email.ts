@@ -49,8 +49,8 @@ export default class Email implements ITriggerClassType {
     const mailbox = (options.mailbox as string) || "INBOX";
     const postProcessAction =
       (options.post_process_action as string) || "nothing";
-    const isDownloadAttachments =
-      (options.is_download_attachments as boolean) || false;
+    const shouldDownloadAttachments =
+      (options.shouldDownloadAttachments as boolean) || false;
 
     // Returns all the new unseen messages
     const getNewEmails = async (
@@ -79,7 +79,7 @@ export default class Email implements ITriggerClassType {
         const parsedEmail = await parseRawEmail.call(
           this,
           part.body,
-          isDownloadAttachments
+          shouldDownloadAttachments
         );
 
         newEmails.push(parsedEmail);
@@ -106,7 +106,7 @@ export default class Email implements ITriggerClassType {
 export async function parseRawEmail(
   this: Email,
   messageEncoded: ParserSource,
-  isDownloadAttachments: boolean
+  shouldDownloadAttachments: boolean
 ): Promise<AnyObject> {
   const responseData = ((await simpleParser(
     messageEncoded
@@ -123,7 +123,10 @@ export async function parseRawEmail(
   responseData.headerLines = undefined;
   responseData.headers = undefined;
   const content: IBinaryData[] = [];
-  if (isDownloadAttachments && responseData.attachments) {
+  console.log("shouldDownloadAttachments", shouldDownloadAttachments);
+  console.log("responseData", responseData.attachments);
+
+  if (shouldDownloadAttachments && responseData.attachments) {
     for (
       let i = 0;
       i < ((responseData.attachments as unknown) as Attachment[]).length;
