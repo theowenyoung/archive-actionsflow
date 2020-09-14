@@ -12,11 +12,36 @@ test("script trigger", async () => {
     })
   );
   const triggerResults = await script.run();
-  const triggerResultFormat: ITriggerResultObject = {
+  let triggerResultFormat: ITriggerResultObject = {
     items: [],
   };
   if (Array.isArray(triggerResults)) {
     triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
+  }
+  expect(triggerResultFormat.items.length).toBe(1);
+  const itemKey = script.getItemKey(triggerResultFormat.items[0]);
+  expect(itemKey).toBe("test");
+});
+
+test("script trigger with items", async () => {
+  const script = new Script(
+    await getTriggerConstructorParams({
+      options: {
+        run: `return {items:[{id:'test',title:'test'}]}`,
+      },
+      name: "script",
+    })
+  );
+  const triggerResults = await script.run();
+  let triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
   }
   expect(triggerResultFormat.items.length).toBe(1);
   const itemKey = script.getItemKey(triggerResultFormat.items[0]);
@@ -34,11 +59,13 @@ test("script trigger with options", async () => {
     })
   );
   const triggerResults = await script.run();
-  const triggerResultFormat: ITriggerResultObject = {
+  let triggerResultFormat: ITriggerResultObject = {
     items: [],
   };
   if (Array.isArray(triggerResults)) {
     triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
   }
   expect(triggerResultFormat.items.length).toBe(1);
   const options = triggerResultFormat.items[0].options as Record<
@@ -59,11 +86,13 @@ test("script trigger with deduplication_key", async () => {
     })
   );
   const triggerResults = await script.run();
-  const triggerResultFormat: ITriggerResultObject = {
+  let triggerResultFormat: ITriggerResultObject = {
     items: [],
   };
   if (Array.isArray(triggerResults)) {
     triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
   }
   expect(triggerResultFormat.items.length).toBe(1);
   const itemKey = script.getItemKey(triggerResultFormat.items[0]);
@@ -80,11 +109,13 @@ test("script trigger with deduplication_key no found", async () => {
     })
   );
   const triggerResults = await script.run();
-  const triggerResultFormat: ITriggerResultObject = {
+  let triggerResultFormat: ITriggerResultObject = {
     items: [],
   };
   if (Array.isArray(triggerResults)) {
     triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
   }
   expect(triggerResultFormat.items.length).toBe(1);
   const itemKey = script.getItemKey(triggerResultFormat.items[0]);
@@ -116,11 +147,13 @@ test("script trigger with file path", async () => {
     })
   );
   const triggerResults = await script.run();
-  const triggerResultFormat: ITriggerResultObject = {
+  let triggerResultFormat: ITriggerResultObject = {
     items: [],
   };
   if (Array.isArray(triggerResults)) {
     triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
   }
   expect(triggerResultFormat.items.length).toBe(2);
   const itemKey = script.getItemKey(triggerResultFormat.items[0]);
@@ -149,11 +182,13 @@ test("script trigger with github token", async () => {
     })
   );
   const triggerResults = await script.run();
-  const triggerResultFormat: ITriggerResultObject = {
+  let triggerResultFormat: ITriggerResultObject = {
     items: [],
   };
   if (Array.isArray(triggerResults)) {
     triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
   }
   expect(Array.isArray(triggerResultFormat.items)).toBe(true);
 });
