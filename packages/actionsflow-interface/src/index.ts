@@ -10,26 +10,8 @@ export type HTTP_METHODS_LOWERCASE =
   | "patch"
   | "delete"
   | "options";
-export type GenericValue =
-  | string
-  | number
-  | boolean
-  | undefined
-  | null
-  | bigint;
-
-export interface AnyObject {
-  [key: string]:
-    | string
-    | number
-    | boolean
-    | undefined
-    | null
-    | bigint
-    | AnyObject
-    | GenericValue[]
-    | AnyObject[];
-}
+export type GenericValue = string | number | boolean | undefined | null;
+export type AnyObject = Record<string, GenericValue | GenericValue[] | unknown>;
 export interface IBinaryData {
   [key: string]: string | undefined;
   data: string;
@@ -37,9 +19,7 @@ export interface IBinaryData {
   fileName?: string;
   fileExtension?: string;
 }
-export interface IBinaryKeyData {
-  [key: string]: IBinaryData;
-}
+
 export interface IGithub extends AnyObject {
   event: AnyObject;
 }
