@@ -8,7 +8,6 @@ import { simpleParser, Source as ParserSource, Attachment } from "mailparser";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerResult,
   IHelpers,
   AnyObject,
   ITriggerOptions,
@@ -32,7 +31,7 @@ export default class Email implements ITriggerClassType {
     this.helpers = helpers;
   }
 
-  async run(): Promise<ITriggerResult> {
+  async run(): Promise<AnyObject[]> {
     const options = this.options;
     let items: AnyObject[] = [];
 

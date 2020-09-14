@@ -1,6 +1,7 @@
 import Script from "../script";
 import { getTriggerConstructorParams } from "./trigger.util";
 import path from "path";
+import { ITriggerResultObject } from "actionsflow-interface";
 test("script trigger", async () => {
   const script = new Script(
     await getTriggerConstructorParams({
@@ -11,8 +12,14 @@ test("script trigger", async () => {
     })
   );
   const triggerResults = await script.run();
-  expect(triggerResults.length).toBe(1);
-  const itemKey = script.getItemKey(triggerResults[0]);
+  const triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  }
+  expect(triggerResultFormat.items.length).toBe(1);
+  const itemKey = script.getItemKey(triggerResultFormat.items[0]);
   expect(itemKey).toBe("test");
 });
 
@@ -27,8 +34,17 @@ test("script trigger with options", async () => {
     })
   );
   const triggerResults = await script.run();
-  expect(triggerResults.length).toBe(1);
-  const options = triggerResults[0].options as Record<string, string>;
+  const triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  }
+  expect(triggerResultFormat.items.length).toBe(1);
+  const options = triggerResultFormat.items[0].options as Record<
+    string,
+    string
+  >;
   expect(options.test).toBe("222");
 });
 
@@ -43,9 +59,14 @@ test("script trigger with deduplication_key", async () => {
     })
   );
   const triggerResults = await script.run();
-
-  expect(triggerResults.length).toBe(1);
-  const itemKey = script.getItemKey(triggerResults[0]);
+  const triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  }
+  expect(triggerResultFormat.items.length).toBe(1);
+  const itemKey = script.getItemKey(triggerResultFormat.items[0]);
   expect(itemKey).toBe("test");
 });
 
@@ -59,9 +80,14 @@ test("script trigger with deduplication_key no found", async () => {
     })
   );
   const triggerResults = await script.run();
-
-  expect(triggerResults.length).toBe(1);
-  const itemKey = script.getItemKey(triggerResults[0]);
+  const triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  }
+  expect(triggerResultFormat.items.length).toBe(1);
+  const itemKey = script.getItemKey(triggerResultFormat.items[0]);
   expect(itemKey).toBe("0ace22c97c74a9a75c1aabc6eb40fcdf");
 });
 
@@ -90,8 +116,14 @@ test("script trigger with file path", async () => {
     })
   );
   const triggerResults = await script.run();
-  expect(triggerResults.length).toBe(2);
-  const itemKey = script.getItemKey(triggerResults[0]);
+  const triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  }
+  expect(triggerResultFormat.items.length).toBe(2);
+  const itemKey = script.getItemKey(triggerResultFormat.items[0]);
   expect(itemKey).toBe("test1");
 });
 
@@ -117,5 +149,11 @@ test("script trigger with github token", async () => {
     })
   );
   const triggerResults = await script.run();
-  expect(Array.isArray(triggerResults)).toBe(true);
+  const triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  }
+  expect(Array.isArray(triggerResultFormat.items)).toBe(true);
 });

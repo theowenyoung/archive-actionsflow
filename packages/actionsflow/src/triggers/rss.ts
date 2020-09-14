@@ -2,7 +2,6 @@ import Parser from "rss-parser";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerResult,
   IHelpers,
   AnyObject,
   ITriggerOptions,
@@ -25,7 +24,7 @@ export default class Rss implements ITriggerClassType {
     this.helpers = helpers;
   }
 
-  async run(): Promise<ITriggerResult> {
+  async run(): Promise<AnyObject[]> {
     const { url } = this.options as { url: string | string[] };
     let urls: string[] = [];
 

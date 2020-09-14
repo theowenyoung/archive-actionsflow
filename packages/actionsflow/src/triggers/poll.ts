@@ -4,7 +4,6 @@ import get from "lodash.get";
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerResult,
   IHelpers,
   AnyObject,
   ITriggerOptions,
@@ -30,7 +29,7 @@ export default class Poll implements ITriggerClassType {
     }
     this.helpers = helpers;
   }
-  async run(): Promise<ITriggerResult> {
+  async run(): Promise<AnyObject[]> {
     const { url, items_path, ...requestOptions } = this.options as {
       url?: string;
       items_path?: string;

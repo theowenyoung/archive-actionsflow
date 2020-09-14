@@ -1,7 +1,6 @@
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerResult,
   IHelpers,
   AnyObject,
   ITriggerOptions,
@@ -22,7 +21,7 @@ export default class Example implements ITriggerClassType {
     this.helpers = helpers;
   }
 
-  async run(): Promise<ITriggerResult> {
+  async run(): Promise<AnyObject[]> {
     const {
       consumer_key,
       consumer_secret,
@@ -40,7 +39,7 @@ export default class Example implements ITriggerClassType {
     if (!event) {
       event = "user_timeline";
     }
-    let finalResult: ITriggerResult = [];
+    let finalResult: AnyObject[] = [];
     const twitter = new Twit({
       consumer_key,
       consumer_secret,

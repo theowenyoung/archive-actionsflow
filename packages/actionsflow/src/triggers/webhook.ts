@@ -3,7 +3,6 @@ import {
   ITriggerContructorParams,
   IWebhook,
   AnyObject,
-  ITriggerResult,
   IWebhookRequest,
   ITriggerOptions,
   IHelpers,
@@ -39,7 +38,7 @@ export default class Webhook implements ITriggerClassType {
   }
   webhooks: IWebhook[] = [
     {
-      handler: (request: IWebhookRequest): ITriggerResult => {
+      handler: (request: IWebhookRequest): AnyObject[] => {
         const id = this._getBodyKey((request.body as AnyObject) || {});
         return [
           {

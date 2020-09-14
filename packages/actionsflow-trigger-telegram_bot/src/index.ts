@@ -1,7 +1,6 @@
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerResult,
   AnyObject,
   ITriggerOptions,
   IHelpers,
@@ -27,7 +26,7 @@ export default class TelegramBot implements ITriggerClassType {
   };
   webhooks = [
     {
-      handler: (request: IWebhookRequest): ITriggerResult => {
+      handler: (request: IWebhookRequest): AnyObject[] => {
         let items: AnyObject[] = [];
 
         if (request.body && (request.body as AnyObject).update_id) {
@@ -37,7 +36,7 @@ export default class TelegramBot implements ITriggerClassType {
       },
     },
   ];
-  async run(): Promise<ITriggerResult> {
+  async run(): Promise<AnyObject[]> {
     // if webhook is true, then dont run manual fetch
     if (this.options.webhook) {
       return [];

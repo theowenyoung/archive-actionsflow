@@ -15,6 +15,7 @@ import {
   AnyObject,
   ITriggerClassTypeConstructable,
   ITriggerResult,
+  ITriggerResultObject,
   IWorkflow,
   ITriggerEvent,
   IWebhookRequestPayload,
@@ -169,8 +170,16 @@ export const run = async ({
       }
 
       if (triggerResult) {
+        let triggerResultFormat: ITriggerResultObject = {
+          items: [],
+        };
         const { getItemKey } = triggerGeneralOptions;
-        let items = triggerResult;
+        if (Array.isArray(triggerResult)) {
+          triggerResultFormat.items = triggerResult;
+        } else {
+          triggerResultFormat = triggerResult as ITriggerResultObject;
+        }
+        let items = triggerResultFormat.items;
         if (items.length > 0) {
           // duplicate
           if (shouldDeduplicate === true && getItemKey && !force) {

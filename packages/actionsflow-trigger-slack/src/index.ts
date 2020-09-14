@@ -1,7 +1,6 @@
 import {
   ITriggerClassType,
   ITriggerContructorParams,
-  ITriggerResult,
   AnyObject,
   ITriggerOptions,
   IHelpers,
@@ -19,7 +18,7 @@ export default class Slack implements ITriggerClassType {
   webhooks = [
     {
       method: "post",
-      handler: (request: IWebhookRequest): ITriggerResult => {
+      handler: (request: IWebhookRequest): AnyObject[] => {
         let items: AnyObject[] = [];
         if (request.body) {
           items = [request.body as AnyObject];
