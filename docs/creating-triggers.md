@@ -43,6 +43,17 @@ on:
 
 > if your trigger name is more than one word, snake case format is recommended for a trigger name, because the jobs use trigger's outputs by `on.trigger_name.outputs.param`, if your trigger is named `trigger-name`, then the jobs should use trigger's outputs by `on['trigger-name'].outputs.param`. Snake case is also Github actions naming conventions, like `pull_request`, it's also Actionsflow trigger recommended naming conventions.
 
+# Options styles
+
+Follow the Javascript name styles, we recommend you use camel case as the options field name style. For example:
+
+```javascript
+{
+  skipFirst: true,
+  deduplicationKey: "id"
+}
+```
+
 # Start to build a trigger
 
 This section of the docs includes the following guides:
