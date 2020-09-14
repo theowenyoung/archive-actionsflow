@@ -25,7 +25,7 @@ test("webhook trigger", async () => {
     request
   );
 
-  expect(triggerResults.items.length).toBe(1);
+  expect(triggerResults.length).toBe(1);
 });
 test("webhook trigger with path", async () => {
   const webhook = new Webhook(
@@ -49,9 +49,9 @@ test("webhook trigger with path", async () => {
     request
   );
 
-  expect(triggerResults.items.length).toBe(1);
+  expect(triggerResults.length).toBe(1);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect((triggerResults as any).items[0].body.id).toBe("test123");
+  expect((triggerResults as any)[0].body.id).toBe("test123");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expect((triggerResults as any).items[0].method).toBe("post");
+  expect((triggerResults as any)[0].method).toBe("post");
 });

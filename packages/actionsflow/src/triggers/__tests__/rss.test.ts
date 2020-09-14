@@ -13,7 +13,7 @@ test("rss trigger", async () => {
   );
   const triggerResults = await rss.run();
 
-  expect(triggerResults.items.length).toBe(2);
+  expect(triggerResults.length).toBe(2);
 });
 
 test("rss trigger with multiple urls", async () => {
@@ -28,7 +28,7 @@ test("rss trigger with multiple urls", async () => {
   );
   const triggerResults = await rss.run();
 
-  expect(triggerResults.items.length).toBe(2);
+  expect(triggerResults.length).toBe(2);
 });
 test("rss trigger without required param", async () => {
   const rss = new Rss(

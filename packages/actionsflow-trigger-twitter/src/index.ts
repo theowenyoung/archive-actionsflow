@@ -40,9 +40,7 @@ export default class Example implements ITriggerClassType {
     if (!event) {
       event = "user_timeline";
     }
-    const finalResult: ITriggerResult = {
-      items: [],
-    };
+    let finalResult: ITriggerResult = [];
     const twitter = new Twit({
       consumer_key,
       consumer_secret,
@@ -82,7 +80,7 @@ export default class Example implements ITriggerClassType {
       if (max_id) {
         this.helpers.cache.set(`${event}_since_id`, max_id);
       }
-      finalResult.items = tweets;
+      finalResult = tweets;
     }
 
     return finalResult;

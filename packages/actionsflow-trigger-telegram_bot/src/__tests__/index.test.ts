@@ -60,8 +60,8 @@ test("telegram bot with webhook", async () => {
     telegramBot
   )(request);
 
-  expect(triggerResults.items.length).toBe(1);
-  expect(triggerResults.items[0].text).toBe("hello");
+  expect(triggerResults.length).toBe(1);
+  expect(triggerResults[0].text).toBe("hello");
 });
 
 test("telegram bot trigger", async () => {
@@ -138,9 +138,9 @@ test("telegram bot trigger", async () => {
 
   const triggerResults = await telegramBot.run();
 
-  expect(triggerResults.items.length).toBe(2);
+  expect(triggerResults.length).toBe(2);
 
-  expect(telegramBot.getItemKey(triggerResults.items[0])).toBe(791185170);
+  expect(telegramBot.getItemKey(triggerResults[0])).toBe(791185170);
 
   const telegramBot2 = new TelegramBot({
     options: {
@@ -155,7 +155,7 @@ test("telegram bot trigger", async () => {
     })) as IWorkflow,
   });
   const triggerResults2 = await telegramBot2.run();
-  expect(triggerResults2.items.length).toBe(1);
+  expect(triggerResults2.length).toBe(1);
 
-  expect(telegramBot2.getItemKey(triggerResults2.items[0])).toBe(791185171);
+  expect(telegramBot2.getItemKey(triggerResults2[0])).toBe(791185171);
 });

@@ -48,6 +48,6 @@ test("slack with webhook", async () => {
     request
   );
 
-  expect(triggerResults.items.length).toBe(1);
-  expect(triggerResults.items[0].text).toBe("test");
+  expect(triggerResults.length).toBe(1);
+  expect(triggerResults[0].text).toBe("test");
 });

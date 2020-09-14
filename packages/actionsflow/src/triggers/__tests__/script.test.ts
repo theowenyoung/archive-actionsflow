@@ -5,16 +5,14 @@ test("script trigger", async () => {
   const script = new Script(
     await getTriggerConstructorParams({
       options: {
-        run: `return {
-          items: [{id:'test',title:'test'}]
-        }`,
+        run: `return [{id:'test',title:'test'}]`,
       },
       name: "script",
     })
   );
   const triggerResults = await script.run();
-  expect(triggerResults.items.length).toBe(1);
-  const itemKey = script.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(1);
+  const itemKey = script.getItemKey(triggerResults[0]);
   expect(itemKey).toBe("test");
 });
 
@@ -23,16 +21,14 @@ test("script trigger with options", async () => {
     await getTriggerConstructorParams({
       options: {
         test: "222",
-        run: `return {
-          items: [{id:'test',title:'test',options:options}]
-        }`,
+        run: `return  [{id:'test',title:'test',options:options}]`,
       },
       name: "script",
     })
   );
   const triggerResults = await script.run();
-  expect(triggerResults.items.length).toBe(1);
-  const options = triggerResults.items[0].options as Record<string, string>;
+  expect(triggerResults.length).toBe(1);
+  const options = triggerResults[0].options as Record<string, string>;
   expect(options.test).toBe("222");
 });
 
@@ -40,9 +36,7 @@ test("script trigger with deduplication_key", async () => {
   const script = new Script(
     await getTriggerConstructorParams({
       options: {
-        run: `return {
-          items: [{id:'test',title:'test'}]
-        }`,
+        run: `return  [{id:'test',title:'test'}]`,
         deduplication_key: "title",
       },
       name: "script",
@@ -50,8 +44,8 @@ test("script trigger with deduplication_key", async () => {
   );
   const triggerResults = await script.run();
 
-  expect(triggerResults.items.length).toBe(1);
-  const itemKey = script.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(1);
+  const itemKey = script.getItemKey(triggerResults[0]);
   expect(itemKey).toBe("test");
 });
 
@@ -59,17 +53,15 @@ test("script trigger with deduplication_key no found", async () => {
   const script = new Script(
     await getTriggerConstructorParams({
       options: {
-        run: `return {
-          items: [{id2:'test',title:'test'}]
-        }`,
+        run: `return [{id2:'test',title:'test'}]`,
       },
       name: "script",
     })
   );
   const triggerResults = await script.run();
 
-  expect(triggerResults.items.length).toBe(1);
-  const itemKey = script.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(1);
+  const itemKey = script.getItemKey(triggerResults[0]);
   expect(itemKey).toBe("0ace22c97c74a9a75c1aabc6eb40fcdf");
 });
 
@@ -98,8 +90,8 @@ test("script trigger with file path", async () => {
     })
   );
   const triggerResults = await script.run();
-  expect(triggerResults.items.length).toBe(2);
-  const itemKey = script.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(2);
+  const itemKey = script.getItemKey(triggerResults[0]);
   expect(itemKey).toBe("test1");
 });
 
@@ -114,19 +106,16 @@ test("script trigger with github token", async () => {
       options: {
         github_token: token,
         run: `
-        let items = [];
         const results = await github.issues.listForRepo({
           owner:"actionsflow",
           repo:"actionsflow",
         });
-        return {
-          items:resutls.data
-        }
+        return resutls.data
         `,
       },
       name: "script",
     })
   );
   const triggerResults = await script.run();
-  expect(Array.isArray(triggerResults.items)).toBe(true);
+  expect(Array.isArray(triggerResults)).toBe(true);
 });

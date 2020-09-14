@@ -60,9 +60,7 @@ export interface ITriggerContructorParams {
   workflow: IWorkflow;
 }
 
-export interface ITriggerResult {
-  items: AnyObject[];
-}
+export type ITriggerResult = AnyObject[];
 export interface IWebhookRequestRawPayload {
   method?: HTTP_METHODS_LOWERCASE;
   headers?: Record<string, string>;

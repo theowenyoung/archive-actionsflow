@@ -101,9 +101,7 @@ export default class Email implements ITriggerClassType {
     items = await getNewEmails(imapConnection);
     await imapConnection.end();
     // if need
-    return {
-      items,
-    };
+    return items;
   }
 }
 export async function parseRawEmail(

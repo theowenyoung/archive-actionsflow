@@ -33,16 +33,14 @@ export default class TelegramBot implements ITriggerClassType {
         if (request.body && (request.body as AnyObject).update_id) {
           items = this._getItems([request.body as AnyObject]);
         }
-        return {
-          items,
-        };
+        return items;
       },
     },
   ];
   async run(): Promise<ITriggerResult> {
     // if webhook is true, then dont run manual fetch
     if (this.options.webhook) {
-      return { items: [] };
+      return [];
     }
     const log = this.helpers.log;
     const { token } = this.options as {
@@ -88,9 +86,7 @@ export default class TelegramBot implements ITriggerClassType {
     }
 
     // if need
-    return {
-      items,
-    };
+    return items;
   }
   _getItems(itemsArray: AnyObject[]): AnyObject[] {
     const { event } = this.options as {

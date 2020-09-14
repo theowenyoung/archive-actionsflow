@@ -74,8 +74,6 @@ export default class Poll implements ITriggerClassType {
     }
 
     // if need
-    return {
-      items,
-    };
+    return items;
   }
 }

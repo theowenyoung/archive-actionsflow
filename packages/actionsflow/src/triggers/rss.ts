@@ -69,8 +69,6 @@ export default class Rss implements ITriggerClassType {
     }
 
     // if need
-    return {
-      items,
-    };
+    return items;
   }
 }

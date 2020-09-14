@@ -149,7 +149,7 @@ export const run = async ({
         if (!shouldUpdate) {
           finalResult.outcome = "skipped";
           finalResult.conclusion = "skipped";
-          triggerResult = { items: [] };
+          triggerResult = [];
         } else {
           // check should run
           // scheduled event call run method
@@ -165,12 +165,12 @@ export const run = async ({
         //  skipped, no method for the event type
         finalResult.outcome = "skipped";
         finalResult.conclusion = "skipped";
-        triggerResult = { items: [] };
+        triggerResult = [];
       }
 
-      if (triggerResult && triggerResult.items) {
+      if (triggerResult) {
         const { getItemKey } = triggerGeneralOptions;
-        let { items } = triggerResult;
+        let items = triggerResult;
         if (items.length > 0) {
           // duplicate
           if (shouldDeduplicate === true && getItemKey && !force) {

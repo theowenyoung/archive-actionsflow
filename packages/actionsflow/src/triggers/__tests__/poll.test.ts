@@ -41,8 +41,8 @@ test("poll trigger", async () => {
   const poll = new Poll(constructionParams);
   const triggerResults = await poll.run();
 
-  expect(triggerResults.items.length).toBe(2);
-  const itemKey = poll.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(2);
+  const itemKey = poll.getItemKey(triggerResults[0]);
   expect(itemKey).toBe(1);
 });
 
@@ -62,8 +62,8 @@ test("poll trigger with deduplication_key", async () => {
 
   const triggerResults = await poll.run();
 
-  expect(triggerResults.items.length).toBe(2);
-  const itemKey = poll.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(2);
+  const itemKey = poll.getItemKey(triggerResults[0]);
   expect(itemKey).toBe(1);
 });
 
@@ -100,8 +100,8 @@ test("poll trigger with deduplication_key as key", async () => {
   const poll = new Poll(constructionParams);
   const triggerResults = await poll.run();
 
-  expect(triggerResults.items.length).toBe(2);
-  const itemKey = poll.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(2);
+  const itemKey = poll.getItemKey(triggerResults[0]);
   expect(itemKey).toBe(1);
 });
 
@@ -137,8 +137,8 @@ test("poll trigger with deduplication_key no found", async () => {
 
   const triggerResults = await poll.run();
 
-  expect(triggerResults.items.length).toBe(2);
-  const itemKey = poll.getItemKey(triggerResults.items[0]);
+  expect(triggerResults.length).toBe(2);
+  const itemKey = poll.getItemKey(triggerResults[0]);
   expect(itemKey).toBe("044d71aceeae5a9c202d197f4d216a6e");
 });
 

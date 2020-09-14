@@ -24,9 +24,7 @@ export default class Slack implements ITriggerClassType {
         if (request.body) {
           items = [request.body as AnyObject];
         }
-        return {
-          items,
-        };
+        return items;
       },
     },
   ];
