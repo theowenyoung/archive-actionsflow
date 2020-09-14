@@ -5,6 +5,7 @@ import Script from "./script";
 import TelegramBot from "@actionsflow/trigger-telegram_bot";
 import Twitter from "@actionsflow/trigger-twitter";
 import Slack from "@actionsflow/trigger-slack";
+import email from "./email";
 export default {
   poll: Poll,
   rss: Rss,
@@ -13,4 +14,5 @@ export default {
   telegram_bot: TelegramBot,
   twitter: Twitter,
   slack: Slack,
+  email,
 };

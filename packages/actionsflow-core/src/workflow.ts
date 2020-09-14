@@ -47,7 +47,7 @@ export const getWorkflow = async ({
     if (doc.on && typeof doc.on === "object") {
       const currentEnv = doc.env || {};
       // get new env actual value of doc yml
-      const newEnv = mapObj(
+      const newEnv: Record<string, string> = mapObj(
         currentEnv as Record<string, string>,
         (mapKey, mapValue) => {
           let newMapValueString = "";
@@ -76,7 +76,7 @@ export const getWorkflow = async ({
         {
           deep: true,
         }
-      );
+      ) as Record<string, string>;
       // add env to context
       const newContext = {
         ...context,
@@ -99,15 +99,15 @@ export const getWorkflow = async ({
             isHandled = true;
           }
           if (isHandled) {
-            return [mapKey, newMapValueString];
+            return [mapKey as string, newMapValueString];
           } else {
-            return [mapKey, mapValue];
+            return [mapKey as string, mapValue];
           }
         },
         {
           deep: true,
         }
-      );
+      ) as Record<string, AnyObject>;
       doc.on = newOn;
     }
 
@@ -386,7 +386,9 @@ export const getBuiltWorkflow = async (
         const job = jobs[jobKey];
         if (jobsGroup.firstJobs.includes(jobKey)) {
           if (Array.isArray(job.needs)) {
-            job.needs = job.needs.concat(jobsGroups[index - 1].lastJobs);
+            job.needs = (job.needs as string[]).concat(
+              jobsGroups[index - 1].lastJobs
+            );
           } else {
             job.needs = jobsGroups[index - 1].lastJobs;
           }

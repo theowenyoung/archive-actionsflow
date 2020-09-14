@@ -10,14 +10,46 @@ export type HTTP_METHODS_LOWERCASE =
   | "patch"
   | "delete"
   | "options";
+export type GenericValue =
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | bigint;
 
-export type AnyObject = Record<string, unknown>;
-export interface IGithub {
+export interface AnyObject {
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | undefined
+    | null
+    | bigint
+    | AnyObject
+    | GenericValue[]
+    | AnyObject[];
+}
+export interface IBinaryData {
+  [key: string]: string | undefined;
+  data: string;
+  mimeType: string;
+  fileName?: string;
+  fileExtension?: string;
+}
+export interface IBinaryKeyData {
+  [key: string]: IBinaryData;
+}
+export interface IGithub extends AnyObject {
   event: AnyObject;
-  [key: string]: unknown;
 }
 export interface IHelpers {
   createContentDigest: (input: unknown) => string;
+  prepareBinaryData: (
+    binaryData: Buffer,
+    filePath?: string,
+    mimeType?: string
+  ) => Promise<IBinaryData>;
   cache: {
     get: (key: string) => Promise<unknown>;
     set: (key: string, value: unknown) => Promise<unknown>;
@@ -27,7 +59,7 @@ export interface IHelpers {
   log: Logger;
   axios: AxiosStatic;
 }
-export interface ITriggerContext extends AnyObject {
+export interface ITriggerContext {
   secrets: Record<string, string>;
   github: IGithub;
 }

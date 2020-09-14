@@ -136,10 +136,7 @@ export default class TelegramBot implements ITriggerClassType {
     ];
 
     itemsArray.forEach((item: AnyObject) => {
-      const message = item.message as {
-        update_id: string;
-        [key: string]: unknown;
-      };
+      const message = item.message as AnyObject;
       // add update_id to message for unique key
       message.update_id = item.update_id as string;
       const messageType = _messageTypes.find((messageType) => {

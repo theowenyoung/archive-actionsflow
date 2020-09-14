@@ -9,7 +9,7 @@
   "scripts": {
     "start": "npm run build && lerna run --ignore actionsflow-workflow* --parallel start",
     "clean": "lerna run --ignore actionsflow-workflow* clean && rimraf ./.cache ./dist ./coverage",
-    "build": "npm run clean && lerna exec --ignore actionsflow-workflow* -- npm run build ",
+    "build": "lerna exec --ignore actionsflow-workflow* -- npm run build ",
     "release": "npm run test && lerna publish",
     "test": "npm run lint && jest",
     "coverage": "jest --coverage",

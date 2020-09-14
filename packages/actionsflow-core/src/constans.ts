@@ -16,3 +16,4 @@ export const textTypes = ["text/plain"];
 
 // default xml types
 export const xmlTypes = ["text/xml", "application/xml"];
+export const BINARY_ENCODING = "base64";

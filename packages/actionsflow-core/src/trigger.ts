@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { createContentDigest, getCache } from "./helpers";
+import { createContentDigest, getCache, prepareBinaryData } from "./helpers";
 import { LogLevelDesc } from "loglevel";
 import path from "path";
 import {
@@ -57,6 +57,7 @@ export const getTriggerHelpers = ({
   }
   const triggerHelpers = {
     createContentDigest,
+    prepareBinaryData,
     cache: getCache(`trigger-${triggerId}`),
     log: triggerLog,
     axios: axios,
@@ -77,7 +78,7 @@ export const getGeneralTriggerFinalOptions = (
   userOptions: ITriggerOptions
 ): IGeneralTriggerOptions => {
   const options: IGeneralTriggerOptions = {
-    every: 5,
+    every: 1, // github actions every 5, here we can set 1,due to triggered by other event, like push
     shouldDeduplicate: true,
     getItemKey: (item: AnyObject): string => {
       return createContentDigest(item);

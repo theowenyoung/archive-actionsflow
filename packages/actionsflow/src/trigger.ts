@@ -24,7 +24,7 @@ const MAX_CACHE_KEYS_COUNT = 5000;
 interface ITriggerInternalOptions {
   trigger: {
     name: string;
-    options: Record<string, unknown>;
+    options: AnyObject;
   };
   workflow: IWorkflow;
   event: ITriggerEvent;

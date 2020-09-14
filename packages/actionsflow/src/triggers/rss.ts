@@ -26,8 +26,8 @@ export default class Rss implements ITriggerClassType {
   }
 
   async run(): Promise<ITriggerResult> {
-    const { url } = this.options;
-    let urls = [];
+    const { url } = this.options as { url: string | string[] };
+    let urls: string[] = [];
 
     if (Array.isArray(url)) {
       if (url.length === 0) {
