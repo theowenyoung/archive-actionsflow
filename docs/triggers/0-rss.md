@@ -26,7 +26,7 @@ on:
     url:
       - https://hnrss.org/newest?points=300
       - https://www.buzzfeed.com/world.xml
-    max_items_count: 15
+    maxItemsCount: 15
 ```
 
 ## Params

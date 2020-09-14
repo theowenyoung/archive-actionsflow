@@ -68,11 +68,11 @@ interface ITriggerContructorParams {
   ```typescript
   interface ITriggerOptions {
     every?: number;
-    should_deduplicate?: boolean;
-    skip_first?: boolean;
-    max_items_count?: number;
+    shouldDeduplicate?: boolean;
+    skipFirst?: boolean;
+    maxItemsCount?: number;
     force?: boolean;
-    log_level?: LogLevelDesc;
+    logLevel?: LogLevelDesc;
     active?: boolean;
     [key: string]: unknown;
   }

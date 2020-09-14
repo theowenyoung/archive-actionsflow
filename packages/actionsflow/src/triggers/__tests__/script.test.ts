@@ -75,12 +75,12 @@ test("script trigger with options", async () => {
   expect(options.test).toBe("222");
 });
 
-test("script trigger with deduplication_key", async () => {
+test("script trigger with deduplicationKey", async () => {
   const script = new Script(
     await getTriggerConstructorParams({
       options: {
         run: `return  [{id:'test',title:'test'}]`,
-        deduplication_key: "title",
+        deduplicationKey: "title",
       },
       name: "script",
     })
@@ -99,7 +99,7 @@ test("script trigger with deduplication_key", async () => {
   expect(itemKey).toBe("test");
 });
 
-test("script trigger with deduplication_key no found", async () => {
+test("script trigger with deduplicationKey no found", async () => {
   const script = new Script(
     await getTriggerConstructorParams({
       options: {

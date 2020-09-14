@@ -18,7 +18,7 @@ on:
       return {
         items: result.data
       }
-    deduplication_key: id
+    deduplicationKey: id
 ```
 
 Or, you can use a `path` to run the external script. For example,
@@ -65,7 +65,7 @@ This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_
 
   The context you can use is the same as `run`, see [here](#context)
 
-- `deduplication_key`, optional. The script trigger deduplicates the array against the key. If the `id` key does not exist, you should specify an alternative unique key to deduplicate off of. If neither are supplied, we fallback to looking for `id`, `key`, if neither are supplied, we will hash the item, and generate a unique key
+- `deduplicationKey`, optional. The script trigger deduplicates the array against the key. If the `id` key does not exist, you should specify an alternative unique key to deduplicate off of. If neither are supplied, we fallback to looking for `id`, `key`, if neither are supplied, we will hash the item, and generate a unique key
 
 ## Context
 
@@ -115,7 +115,7 @@ on:
       return {
         items: result.data
       }
-    deduplication_key: id
+    deduplicationKey: id
 jobs:
   print:
     name: Print

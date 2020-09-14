@@ -37,9 +37,9 @@ export default class Script implements ITriggerClassType {
   workflow: IWorkflow;
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
-    const deduplication_key = this.options.deduplication_key;
-    if (deduplication_key) {
-      return item[deduplication_key as string] as string;
+    const deduplicationKey = this.options.deduplicationKey;
+    if (deduplicationKey) {
+      return item[deduplicationKey as string] as string;
     }
     if (item.id) return item.id as string;
     if (item.key) return item.key as string;

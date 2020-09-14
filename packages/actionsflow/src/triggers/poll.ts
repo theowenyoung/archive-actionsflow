@@ -15,9 +15,9 @@ export default class Poll implements ITriggerClassType {
   shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     // TODO adapt every cases
-    const deduplication_key = this.options.deduplication_key;
-    if (deduplication_key) {
-      return item[deduplication_key as string] as string;
+    const deduplicationKey = this.options.deduplicationKey;
+    if (deduplicationKey) {
+      return item[deduplicationKey as string] as string;
     }
     if (item.id) return item.id as string;
     if (item.key) return item.key as string;
@@ -30,11 +30,11 @@ export default class Poll implements ITriggerClassType {
     this.helpers = helpers;
   }
   async run(): Promise<AnyObject[]> {
-    const { url, items_path, ...requestOptions } = this.options as {
+    const { url, itemsPath, requestConfig } = this.options as {
       url?: string;
-      items_path?: string;
-      deduplication_key?: string;
-      every?: number;
+      itemsPath?: string;
+      deduplicationKey?: string;
+      requestConfig?: AnyObject;
     };
 
     if (!url) {
@@ -42,7 +42,7 @@ export default class Poll implements ITriggerClassType {
     }
     const items: AnyObject[] = [];
     const config: AxiosRequestConfig = {
-      ...requestOptions,
+      ...requestConfig,
       url: url as string,
     };
 
@@ -62,8 +62,8 @@ export default class Poll implements ITriggerClassType {
     }
     // For now we just take the items and ignore everything else
     if (requestResult && requestResult.data) {
-      const itemsArray: AnyObject[] = items_path
-        ? get(requestResult.data, items_path)
+      const itemsArray: AnyObject[] = itemsPath
+        ? get(requestResult.data, itemsPath)
         : requestResult.data;
       const deepClonedData = clonedeep(itemsArray);
       itemsArray.forEach((item) => {

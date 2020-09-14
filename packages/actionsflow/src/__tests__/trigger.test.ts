@@ -33,7 +33,7 @@ test("run trigger with  webhook", async () => {
   const result = await run({
     trigger: {
       name: "webhook",
-      options: { deduplication_key: "update_id", force: true },
+      options: { deduplicationKey: "update_id", force: true },
     },
 
     workflow: (await getWorkflow({

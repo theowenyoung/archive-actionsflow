@@ -46,14 +46,14 @@ test("poll trigger", async () => {
   expect(itemKey).toBe(1);
 });
 
-test("poll trigger with deduplication_key", async () => {
+test("poll trigger with deduplicationKey", async () => {
   const axios = jest.fn();
   axios.mockImplementation(() => Promise.resolve(resp));
   helpers.axios = (axios as unknown) as AxiosStatic;
   const constructionParams = await getTriggerConstructorParams({
     options: {
       url: "https://jsonplaceholder.typicode.com/posts",
-      deduplication_key: "userId",
+      deduplicationKey: "userId",
     },
     name: "poll",
   });
@@ -67,7 +67,7 @@ test("poll trigger with deduplication_key", async () => {
   expect(itemKey).toBe(1);
 });
 
-test("poll trigger with deduplication_key as key", async () => {
+test("poll trigger with deduplicationKey as key", async () => {
   const resp2 = {
     data: [
       {
@@ -105,7 +105,7 @@ test("poll trigger with deduplication_key as key", async () => {
   expect(itemKey).toBe(1);
 });
 
-test("poll trigger with deduplication_key no found", async () => {
+test("poll trigger with deduplicationKey no found", async () => {
   const resp2 = {
     data: [
       {

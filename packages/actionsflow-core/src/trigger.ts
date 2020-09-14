@@ -94,9 +94,9 @@ export const getGeneralTriggerFinalOptions = (
   if (triggerInstance.shouldDeduplicate !== undefined) {
     options.shouldDeduplicate = Boolean(triggerInstance.shouldDeduplicate);
   }
-  if (userOptions.should_deduplicate !== undefined) {
+  if (userOptions.shouldDeduplicate !== undefined) {
     // priorty
-    options.shouldDeduplicate = Boolean(userOptions.should_deduplicate);
+    options.shouldDeduplicate = Boolean(userOptions.shouldDeduplicate);
   }
 
   if (options.shouldDeduplicate) {
@@ -104,17 +104,17 @@ export const getGeneralTriggerFinalOptions = (
       options.getItemKey = triggerInstance.getItemKey.bind(triggerInstance);
     }
   }
-  if (userOptions.skip_first !== undefined) {
-    options.skipFirst = Boolean(userOptions.skip_first);
+  if (userOptions.skipFirst !== undefined) {
+    options.skipFirst = Boolean(userOptions.skipFirst);
   }
-  if (userOptions.max_items_count) {
-    options.maxItemsCount = Number(userOptions.max_items_count);
+  if (userOptions.maxItemsCount) {
+    options.maxItemsCount = Number(userOptions.maxItemsCount);
   }
   if (userOptions.force !== undefined) {
     options.force = Boolean(userOptions.force);
   }
-  if (userOptions.log_level) {
-    options.logLevel = userOptions.log_level as LogLevelDesc;
+  if (userOptions.logLevel) {
+    options.logLevel = userOptions.logLevel as LogLevelDesc;
   }
 
   return options;

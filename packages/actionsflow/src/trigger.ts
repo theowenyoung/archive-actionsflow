@@ -68,8 +68,8 @@ export const run = async ({
       name: trigger.name,
       workflowRelativePath: workflow.relativePath,
     };
-    if (trigger.options && trigger.options.log_level) {
-      triggerHelperOptions.logLevel = trigger.options.log_level as LogLevelDesc;
+    if (trigger.options && trigger.options.logLevel) {
+      triggerHelperOptions.logLevel = trigger.options.logLevel as LogLevelDesc;
     }
     const triggerHelpers = getTriggerHelpers(triggerHelperOptions);
     finalResult.helpers = triggerHelpers;

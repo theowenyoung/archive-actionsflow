@@ -63,8 +63,8 @@ For example, you can input the following value at [IFTTT webhook](https://ifttt.
 This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
 
 - `method`, optional, `string` or `string[]`, you can define one or more as the specific method that the webhook should listen, the default is `undefined`, means that the webhook would listen all methods. The options value can be `get`, `post`, `put`, `patch`, `delete`, `head`, `options`
-- `should_deduplicate`, optional, `boolean`, if the webhook payload should be dedeplicate, the default value is `false`, it means every webhook request will trigger the jobs. You can set this `true`, and set `deduplication_key` to define the deduplication key.
-- `deduplication_key`, optional. The webhook trigger deduplicates the webhook body payload against body `id` key. If the id key does not exist, you should specify an alternative unique key to deduplicate. If neither are supplied, we fallback to looking for `id`, `key`, if neither are supplied, we will hash the body, and generate a unique key
+- `shouldDeduplicate`, optional, `boolean`, if the webhook payload should be dedeplicate, the default value is `false`, it means every webhook request will trigger the jobs. You can set this `true`, and set `deduplicationKey` to define the deduplication key.
+- `deduplicationKey`, optional. The webhook trigger deduplicates the webhook body payload against body `id` key. If the id key does not exist, you should specify an alternative unique key to deduplicate. If neither are supplied, we fallback to looking for `id`, `key`, if neither are supplied, we will hash the body, and generate a unique key
 
 ## Outputs
 
