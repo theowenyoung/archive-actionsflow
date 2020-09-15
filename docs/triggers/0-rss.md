@@ -29,11 +29,11 @@ on:
     maxItemsCount: 15
 ```
 
-## Params
-
-This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
+## Options
 
 - `url`, required, `string` or `string[]`, when `url` is `string[]`, then multiple RSS feeds can trigger the action.
+
+> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

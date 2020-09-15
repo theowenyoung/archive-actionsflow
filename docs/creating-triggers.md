@@ -18,7 +18,6 @@ module.exports = class Example {
     this.options = options;
     this.helpers = helpers;
   }
-  shouldDeduplicate = true;
   async run() {
     const items = [
       {

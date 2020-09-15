@@ -66,18 +66,65 @@ on:
 
 Optional, the options of the trigger, the default value is `{}`, You can find the trigger's documentation for getting the available params.
 
+## `on.<trigger_name>.config`
+
+Optional, you can use `config` to configure the general options for Actionsflow trigger. These options are handled by Actionsflow, so all triggers accept these options.
+
+For example:
+
+```yaml
+on:
+  rss:
+    url: https://hnrss.org/newest?points=300
+    config:
+      maxItemsCount: 15
+```
+
+The `config` has the following options.
+
+### `on.<trigger_name>.config.active`
+
+Optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
+
+### `on<trigger_name>.config.every`
+
+Optional, `number`, polling data interval time, the unit is minute, the default value is `5`
+
+### `on<trigger_name>.config.skipFirst`
+
+Optional, `boolean`, whether to skip the data obtained for the first time, if `true`, the trigger will run the next time it get data. The default value is `false`
+
+### `on<trigger_name>.config.maxItemsCount`
+
+Optional, the trigger's results max length, the default value is `undefined`, it means the trigger will trigger all items
+
+### `on<trigger_name>.config.shouldDeduplicate`
+
+Optional, `boolean`, if the trigger's results should be dedeplicate, the default value is decided by the trigger, you can force to override it.
+
+### `on<trigger_name>.config.force`
+
+Optional, `boolean`, whether to force data to be updated, if `true`, the trigger will ignore cache, and last update time. The default value is `false`
+
+### `on<trigger_name>.config.continueOnError`
+
+Optional, `boolean`, Set to `true`, Actionsflow will generate a `outcome: true` workflow from failing when a trigger fails. The default value is `false`, Actionsflow will ignore the trigger for this time if there are any fails.
+
+### `on<trigger_name>.config.logLevel`
+
+Optional, `string`, log level for trigger, the default value is `info`, you can use `trace`, `debug`, `info`, `warn`, `error`
+
 ## `on.<trigger_name>.<param>`
 
-All triggers are supported the following general options:
+Optional, the trigger's options, defined by the specific trigger, you should read the trigger's documentation to get all options that available for the trigger. For [`rss`](/docs/triggers/0-rss.md) example:
 
-- `active`, optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
-- `every`, optional, `number`, polling data interval time, the unit is minute, the default value is `5`
-- `skipFirst`, optional, `boolean`, whether to skip the data obtained for the first time, if `true`, the trigger will run the next time it get data. The default value is `false`
-- `maxItemsCount`, optional, the trigger's results max length, the default value is `undefined`, it means the trigger will trigger all items
-- `shouldDeduplicate`, optional, `boolean`, if the trigger's results should be dedeplicate, the default value is decided by the trigger, you can force to override it.
-- `force`, optional, `boolean`, whether to force data to be updated, if `true`, the trigger will ignore cache, and last update time. The default value is `false`
-- `continue-on-error`, optional, `boolean`, Set to `true`, Actionsflow will generate a `outcome: true` workflow from failing when a trigger fails. The default value is `false`, Actionsflow will ignore the trigger for this time if there are any fails.
-- `logLevel`, optional, `string`, log level for trigger, the default value is `info`, you can use `trace`, `debug`, `info`, `warn`, `error`
+```yaml
+on:
+  rss:
+    url: https://hnrss.org/newest?points=300
+    config:
+      maxItemsCount: 15
+```
 
 # `jobs`
 
@@ -134,15 +181,15 @@ Trigger's outputs are `object`, you can use it like this: `${{ on.telegram_bot.f
 
 The result of a completed trigger, Possible values are `success`, `failure`, or `skipped`.
 
-By default(if there is only one trigger at a workflow file), `outcome` is always `success` unless you set the trigger options `continue-on-error: true`, then when a `continue-on-error` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
+By default(if there is only one trigger at a workflow file), `outcome` is always `success` unless you set the trigger options `continueOnError: true`, then when a `continueOnError` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
 
 If you set multiple triggers on one workflow, only one trigger's `outcome` is `success`, the others `outcome` will be `skipped`, so you should use `if: on.<trigger_name>.outcome === 'success'` to ensure the current `<trigger_name>.outputs.<key>` is available.
 
 ## `on.<trigger_name>.conclusion`
 
-The result of a completed step after continue-on-error is applied. Possible values are `success`, `failure`, or `skipped`.
+The result of a completed step after `continueOnError` is applied. Possible values are `success`, `failure`, or `skipped`.
 
-By default(if there is only one trigger at a workflow file), `conclusion` is always `success` unless you set the trigger options `continue-on-error: true`, then when a `continue-on-error` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
+By default(if there is only one trigger at a workflow file), `conclusion` is always `success` unless you set the trigger options `continueOnError: true`, then when a `continueOnError` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
 
 ## Triggers
 

@@ -40,12 +40,6 @@ A simple example of trigger looks like this:
 
 ```javascript
 module.exports = class Example {
-  options = {};
-  shouldDeduplicate = true;
-  getItemKey(item) {
-    if (item.id) return item.id;
-    return this.helpers.createContentDigest(item);
-  }
   constructor({ helpers, options }) {
     this.options = options;
     this.helpers = helpers;

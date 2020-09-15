@@ -21,9 +21,7 @@ on:
       screen_name: theowenyoung
 ```
 
-## Params
-
-This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
+## Options
 
 - `event`, optional, default is `user_timeline`, for now only support `user_timeline`.
 
@@ -37,16 +35,18 @@ This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_
     access_token_secret: ${{ secrets.TWITTER_ACCESS_SECRET }}
   ```
 
-- `params`, optional, fetch twitter API query params, for `user_timeline`, you must provide `screen_name` field, for example:
+- `query`, optional, fetch twitter API query params, for `user_timeline`, you must provide `screen_name` field, for example:
 
   ```yaml
-  params:
+  query:
     screen_name: theowenyoung
     count: 50,
     exclude_replies: true,
     include_rts: true,
     tweet_mode: "extended",
   ```
+
+> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

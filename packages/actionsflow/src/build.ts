@@ -116,9 +116,13 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     const triggerResults: ITriggerBuildResult[] = [];
     if (force) {
       if (trigger.options) {
-        trigger.options.force = true;
+        if (trigger.options.config) {
+          trigger.options.config.force = true;
+        } else {
+          trigger.options.config = { force: true };
+        }
       } else {
-        trigger.options = { force: true };
+        trigger.options = { config: { force: true } };
       }
     }
     let triggerRunResult: ITriggerInternalResult | undefined;
@@ -132,14 +136,14 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         event: event,
       });
     } catch (error) {
-      // if continue-on-error
-      if (trigger.options && trigger.options["continue-on-error"]) {
+      // if continueOnError
+      if (trigger.options && trigger.options["continueOnError"]) {
         log.warn(
           `Run ${workflow.relativePath} trigger ${trigger.name} error: `,
           error
         );
         log.warn(
-          "But the workflow will continue to run because continue-on-error: true"
+          "But the workflow will continue to run because continueOnError: true"
         );
         triggerResults.push({
           outputs: {},

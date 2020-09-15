@@ -49,6 +49,7 @@ export default class Webhook implements ITriggerClassType {
             query: request.query,
             querystring: request.querystring,
             search: request.search,
+            params: request.params,
           },
         ];
       },

@@ -17,7 +17,7 @@ export default class Example implements ITriggerClassType {
   constructor({ helpers, options }: ITriggerContructorParams) {
     this.options = options;
     this.options.auth = this.options.auth || {};
-    this.options.params = (this.options.params as AnyObject) || {};
+    this.options.query = (this.options.query as AnyObject) || {};
     this.helpers = helpers;
   }
 
@@ -52,7 +52,7 @@ export default class Example implements ITriggerClassType {
         | string
         | undefined;
       // get screen_name
-      const optionParams = this.options.params as AnyObject;
+      const optionParams = this.options.query as AnyObject;
       const params = {
         screen_name: "",
         count: 50,

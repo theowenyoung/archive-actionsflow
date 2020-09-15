@@ -21,9 +21,7 @@ on:
 
 > Tips: [Common used `imap` host config](https://support.microsoft.com/en-us/office/pop-and-imap-email-settings-for-outlook-8361e398-8af4-4e97-b147-6c6c4ac95353)
 
-## Params
-
-This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
+## Options
 
 - `imap`, `IMAP` connection config, we use [`imap-simple`](https://github.com/chadxz/imap-simple) for mail connection, learn more about config please see [here](https://github.com/chadxz/imap-simple)
 
@@ -55,6 +53,8 @@ This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_
   ```
 
 - `shouldDownloadAttachments`, optional, `boolean`, if need downloading attachments, the default value is `false`.
+
+> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

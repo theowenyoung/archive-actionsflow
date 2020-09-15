@@ -24,9 +24,7 @@ on:
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 ```
 
-## Params
-
-This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
+## Options
 
 - `token`, required, telegram bot token, you should get it from [Telegram BotFather](https://telegram.me/BotFather), for example: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`
 
@@ -72,6 +70,8 @@ This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_
   - `voice`
 
   if `event` is not provided, all message will be triggered. example: `["text","photo"]`,`text`
+
+> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

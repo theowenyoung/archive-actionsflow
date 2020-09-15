@@ -19,9 +19,7 @@ on:
     deduplicationKey: id
 ```
 
-## Params
-
-This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
+## Options
 
 - `url`, required, the polling API URL, for example, `https://jsonplaceholder.typicode.com/posts`
 
@@ -40,6 +38,8 @@ This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_
         headers:
           Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
   ```
+
+> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

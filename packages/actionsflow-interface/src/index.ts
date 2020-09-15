@@ -43,8 +43,7 @@ export interface ITriggerContext {
   secrets: Record<string, string>;
   github: IGithub;
 }
-
-export interface ITriggerOptions extends AnyObject {
+export interface ITriggerGeneralConfigOptions {
   every?: number;
   shouldDeduplicate?: boolean;
   skipFirst?: boolean;
@@ -52,6 +51,10 @@ export interface ITriggerOptions extends AnyObject {
   force?: boolean;
   logLevel?: LogLevelDesc;
   active?: boolean;
+  continueOnError?: boolean;
+}
+export interface ITriggerOptions extends AnyObject {
+  config?: ITriggerGeneralConfigOptions;
 }
 
 export interface ITriggerContructorParams {
@@ -94,7 +97,7 @@ export interface IWebhook {
   handler: IWebhookHandler;
 }
 export interface ITriggerClassType {
-  shouldDeduplicate?: boolean;
+  config?: ITriggerGeneralConfigOptions;
   getItemKey?: (item: AnyObject) => string;
   run?(): Promise<ITriggerResult> | ITriggerResult;
   webhooks?: IWebhook[];

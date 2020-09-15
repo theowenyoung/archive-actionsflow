@@ -19,9 +19,9 @@ on:
   slack:
 ```
 
-## Params
+## Options
 
-This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
+There is nothing can be specified. You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

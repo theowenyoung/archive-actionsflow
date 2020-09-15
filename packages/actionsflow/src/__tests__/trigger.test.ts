@@ -8,7 +8,9 @@ test("run trigger", async () => {
       name: "rss",
       options: {
         url: "https://hnrss.org/newest?points=300",
-        force: true,
+        config: {
+          force: true,
+        },
       },
     },
 
@@ -33,7 +35,12 @@ test("run trigger with  webhook", async () => {
   const result = await run({
     trigger: {
       name: "webhook",
-      options: { deduplicationKey: "update_id", force: true },
+      options: {
+        deduplicationKey: "update_id",
+        config: {
+          force: true,
+        },
+      },
     },
 
     workflow: (await getWorkflow({
@@ -70,7 +77,13 @@ test("run trigger with  special webhook", async () => {
   const result = await run({
     trigger: {
       name: "webhook",
-      options: { path: "/test", method: "post", force: true },
+      options: {
+        path: "/test",
+        method: "post",
+        config: {
+          force: true,
+        },
+      },
     },
 
     workflow: (await getWorkflow({

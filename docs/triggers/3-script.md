@@ -29,9 +29,7 @@ on:
 
 > `script.js` should be placed in the same directory with the workflow file. You can also place it in the other folder if you prefer, use a relative path to refer it.
 
-## Params
-
-This trigger accepts [all trigger's general params](/docs/workflow.md#ontrigger_nameparam).
+## Options
 
 - `run`, optional, the script code, you must provider `run` or `path` at least. you should use javascript language for the script. The context you can use at the script, see [here](#context), for example,
 
@@ -82,6 +80,8 @@ You can use the following context at your script code:
       });
       return resutls.data;
   ```
+
+> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

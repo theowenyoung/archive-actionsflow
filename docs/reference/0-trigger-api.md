@@ -10,12 +10,6 @@ A trigger should export a class that implements trigger interface, a simple exam
 
 ```javascript
 module.exports = class Example {
-  options = {};
-  shouldDeduplicate = true;
-  getItemKey(item) {
-    if (item.id) return item.id;
-    return this.helpers.createContentDigest(item);
-  }
   constructor({ helpers, options }) {
     this.options = options;
     this.helpers = helpers;
@@ -40,7 +34,7 @@ See the trigger class declaration:
 
 ```typescript
 interface ITriggerClassType {
-  shouldDeduplicate?: boolean;
+  config?: ITriggerGeneralConfigOptions;
   getItemKey?: (item: AnyObject) => string;
   run?(): Promise<ITriggerResult> | ITriggerResult;
   webhooks?: IWebhook[];
@@ -64,7 +58,17 @@ interface ITriggerContructorParams {
 - `options` is the trigger options by user defining, the default value is `{}`, it can be the following values:
 
   ```typescript
-  interface ITriggerOptions {
+  interface ITriggerOptions extends AnyObject {
+    config?: ITriggerGeneralConfigOptions;
+  }
+  ```
+
+  `config` is the [general options for Actionsflow trigger](/docs/workflow.md#ontrigger_nameconfig), `config` are handled by Actionsflow, you can change the default config by change the instance `config` value, learn more about changing the default`config` see [here](#config)
+
+  `config` interface:
+
+  ```typescript
+  interface ITriggerGeneralConfigOptions {
     every?: number;
     shouldDeduplicate?: boolean;
     skipFirst?: boolean;
@@ -72,11 +76,9 @@ interface ITriggerContructorParams {
     force?: boolean;
     logLevel?: LogLevelDesc;
     active?: boolean;
-    [key: string]: unknown;
+    continueOnError?: boolean;
   }
   ```
-
-  > You don't need to handle [the general options of Actionsflow triggers](/docs/workflow.md#ontrigger_nameparam), Actionsflow will automatically handle them.
 
 - `helpers` is a collection of the commonly used utils for trigger, including `cache`, `log`, `axios`, look at the interface declaration:
 
@@ -128,13 +130,70 @@ By default, Actionsflow will deduplicate your results by using the deduplication
 
 > Note: if your trigger only handle [`webhook`](#webhooks) event, you can ignore this method.
 
-# `shouldDeduplicate`
+# `config`
 
-optional, `boolean`, the default value is `true`. If `true`, Actionsflow will deduplicate the trigger's results through [`getItemKey`](#getItemKey)
+optional, `ITriggerGeneralConfigOptions`, you can change the default config by provide `config`.
+
+```yaml
+interface ITriggerGeneralConfigOptions {
+  every?: number;
+  shouldDeduplicate?: boolean;
+  skipFirst?: boolean;
+  maxItemsCount?: number;
+  force?: boolean;
+  logLevel?: LogLevelDesc;
+  active?: boolean;
+  continueOnError?: boolean;
+}
+```
+
+Learn more about config field meaning, see [general options for Actionsflow trigger](/docs/workflow.md#ontrigger_nameconfig)
+
+The default value is:
+
+```json
+{
+  "every": 5,
+  "shouldDeduplicate": true,
+  "skipFirst": false,
+  "maxItemsCount": -1,
+  "force": false,
+  "logLevel": "info",
+  "active": true,
+  "continueOnError": false
+}
+```
+
+You can set one or more config option to change the default value. For example:
+
+```javascript
+module.exports = class Example {
+  constructor({ helpers, options }) {
+    this.options = options;
+    this.helpers = helpers;
+  }
+  config = {
+    maxItemsCount: 15,
+  };
+  async run() {
+    const items = [
+      {
+        id: "uniqueId",
+        title: "hello world title",
+      },
+      {
+        id: "uniqueId2",
+        title: "hello world title2",
+      },
+    ];
+    return items;
+  }
+};
+```
 
 # `getItemKey`
 
-Optional, a hook `function`, you can use `getItemKey` to specify the deduplication key. `getItemKey` receives `item` as input, return a string of deduplication key.
+Optional, a hook `function`, when `config.shouldDeduplicate` is `true`(the default value for `shouldDeduplicate` is `true`), we use `getItemKey` to specify the deduplication key. `getItemKey` receives `item` as input, return a string of deduplication key.
 
 If you don't provide the method, Actionsflow fallback to looking for `id`, `key`, if neither are supplied, Actionsflow will hash the item, and generate a unique key.
 

@@ -7,6 +7,7 @@ import {
   ITriggerClassType,
   IHelpers,
   IWorkflow,
+  ITriggerGeneralConfigOptions,
   ITriggerOptions,
   ITriggerContructorParams,
 } from "actionsflow-interface";
@@ -67,16 +68,23 @@ export const getTriggerHelpers = ({
 interface IGeneralTriggerOptions {
   every: number;
   shouldDeduplicate: boolean;
-  getItemKey?: (item: AnyObject) => string;
+  getItemKey: (item: AnyObject) => string;
   skipFirst: boolean;
   maxItemsCount: number;
   force: boolean;
   logLevel: LogLevelDesc;
+  active: boolean;
+  continueOnError: boolean;
 }
 export const getGeneralTriggerFinalOptions = (
   triggerInstance: ITriggerClassType,
-  userOptions: ITriggerOptions
+  triggerOptions: ITriggerOptions
 ): IGeneralTriggerOptions => {
+  const instanceConfig = triggerInstance.config || {};
+  let userOptions: ITriggerGeneralConfigOptions = {};
+  if (triggerOptions && triggerOptions.config) {
+    userOptions = triggerOptions.config;
+  }
   const options: IGeneralTriggerOptions = {
     every: 1, // github actions every 5, here we can set 1,due to triggered by other event, like push
     shouldDeduplicate: true,
@@ -87,34 +95,16 @@ export const getGeneralTriggerFinalOptions = (
     maxItemsCount: -1,
     force: false,
     logLevel: "info",
+    active: true,
+    continueOnError: false,
+    ...instanceConfig,
+    ...userOptions,
   };
-  if (!userOptions.every === undefined) {
-    options.every = Number(userOptions.every);
-  }
-  if (triggerInstance.shouldDeduplicate !== undefined) {
-    options.shouldDeduplicate = Boolean(triggerInstance.shouldDeduplicate);
-  }
-  if (userOptions.shouldDeduplicate !== undefined) {
-    // priorty
-    options.shouldDeduplicate = Boolean(userOptions.shouldDeduplicate);
-  }
 
   if (options.shouldDeduplicate) {
     if (triggerInstance.getItemKey) {
       options.getItemKey = triggerInstance.getItemKey.bind(triggerInstance);
     }
-  }
-  if (userOptions.skipFirst !== undefined) {
-    options.skipFirst = Boolean(userOptions.skipFirst);
-  }
-  if (userOptions.maxItemsCount) {
-    options.maxItemsCount = Number(userOptions.maxItemsCount);
-  }
-  if (userOptions.force !== undefined) {
-    options.force = Boolean(userOptions.force);
-  }
-  if (userOptions.logLevel) {
-    options.logLevel = userOptions.logLevel as LogLevelDesc;
   }
 
   return options;

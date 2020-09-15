@@ -4,10 +4,7 @@ import { IWorkflow } from "actionsflow-interface";
 import path from "path";
 test("run trigger", async () => {
   const trigger = new Trigger({
-    options: {
-      params1: "value1",
-      every: 10,
-    },
+    options: {},
     helpers: getTriggerHelpers({
       name: "twitter",
       workflowRelativePath: "workflow.yml",
