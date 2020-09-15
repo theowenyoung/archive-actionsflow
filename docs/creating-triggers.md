@@ -48,10 +48,11 @@ Follow the Javascript name styles, we recommend you use camel case as the option
 
 ```javascript
 {
-  skipFirst: true,
-  deduplicationKey: "id"
+  deduplicationKey: "id";
 }
 ```
+
+> Note, `options.config` is the [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig), so you should not use `config` as your options.
 
 # Start to build a trigger
 
