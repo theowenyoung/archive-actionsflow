@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.21](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.20...actionsflow@0.1.21) (2020-09-15)
+
+### Features
+
+- no \_ ([21f913d](https://github.com/actionsflow/actionsflow/commit/21f913ddc3fb95aec299b5d60e5bdcd6d0299a2d))
+- support config option ([ab75cfb](https://github.com/actionsflow/actionsflow/commit/ab75cfbcb59fffb6f007d96cc2f6665015632109))
+- support email trigger ([7f3ae2d](https://github.com/actionsflow/actionsflow/commit/7f3ae2d35e839eb5e87d35c4d57beb6e9cf03a0e))
+- support items ([dfb6ea0](https://github.com/actionsflow/actionsflow/commit/dfb6ea0f570be4497c23ab0c0058714fbc71df5e))
+- triggerResult can be array ([9ca58ad](https://github.com/actionsflow/actionsflow/commit/9ca58ad2f452826867fa15e74adde3a37994bfbd))
+
 ## [0.1.20](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.17...actionsflow@0.1.20) (2020-09-13)
 
 ### Features
