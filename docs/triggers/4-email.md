@@ -6,7 +6,7 @@ metaDescription: "Email trigger is triggered when new mail are detected."
 
 Email trigger is triggered when new mail are received, you need to provide a `imap` config.
 
-[View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts)
+[View trigger on Github](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/email.ts)
 
 # Usage
 
