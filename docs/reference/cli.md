@@ -7,7 +7,7 @@ This document is for [npm Actionsflow package](https://www.npmjs.com/package/act
 
 Here are the Actionsflow CLI API docs, you can see [API docs at here](/docs/reference/api.md)
 
-## Install
+# Install
 
 ```bash
 # You can use Actionsflow by npx

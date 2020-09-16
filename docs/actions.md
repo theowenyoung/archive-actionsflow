@@ -14,7 +14,7 @@ For now, the following triggers are available:
 > Want to list actions here? Welcome to [submit a pull request](https://github.com/actionsflow/actionsflow/edit/master/docs/actions.md)
 
 - [IFTTT Webhook Action](https://github.com/marketplace/actions/ifttt-webhook-action) - This is useful when you want to trigger a IFTTT webhook after anything you want to trigger a notice at IFTTT.
-- [axios actions](https://github.com/marketplace/actions/axios-actionhttps://github.com/marketplace/actions/axios-action) - Make HTTP requests easily
+- [axios actions](https://github.com/marketplace/actions/axios-action) - Make HTTP requests easily
 
 # Workflow Syntax
 

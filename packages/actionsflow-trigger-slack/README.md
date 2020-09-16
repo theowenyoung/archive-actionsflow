@@ -6,13 +6,13 @@ This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [slack](htt
 
 [View trigger on Github](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-slack)
 
-# Prerequisites
+## Prerequisites
 
 We used [Slack Outgoing Webhook](https://actionsflow.slack.com/apps/A0F7VRG6Q-outgoing-webhooks?next_id=0) to implement this trigger. So, you should add [Outgoing Webhook](https://actionsflow.slack.com/apps/A0F7VRG6Q-outgoing-webhooks?next_id=0) to your Slack workspace, and set `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/slack?__token=<your-github-personal-token>` as your webhook `URL(s)`
 
 > You can configure the Channel or Trigger Word you want to watch at there.
 
-# Usage
+## Usage
 
 ```yaml
 on:
@@ -25,7 +25,7 @@ There is nothing can be specified. You can use [General Config for Actionsflow T
 
 ## Outputs
 
-This trigger's outputs will be the item of the slack message, you can see it [here](https://core.slack.org/bots/api#message)
+This trigger's outputs will be the item of the slack message, you can see it [here](https://api.slack.com/legacy/custom-integrations/outgoing-webhooks#legacy-info__post-data)
 
 An outputs example:
 

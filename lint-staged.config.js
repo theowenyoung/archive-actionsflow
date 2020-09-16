@@ -13,7 +13,7 @@ module.exports = {
     // from `files` filter those _NOT_ matching `*test.js`
     const match = micromatch.not(files, "**/CHANGELOG.md");
     if (match.length > 0) {
-      return `remark --quiet --frail ${match.join(" ")}`;
+      return `remark --quiet ${match.join(" ")}`;
     } else {
       return "true";
     }

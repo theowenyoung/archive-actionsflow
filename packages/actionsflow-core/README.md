@@ -1,5 +1,17 @@
 # `actionsflow-core`
 
-The core library of [actionsflow](https://github.com/actionsflow/actionsflow)
+This document is for [npm `actionsflow-core` package](https://www.npmjs.com/package/actionsflow-core)
 
-See [Contributing Guide](/docs/contributing.md)
+See index at [here](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow-core/src/index.ts)
+
+## Install
+
+```bash
+npm i actionsflow-core --save
+
+# or
+
+yarn add actionsflow-core
+```
+
+> TODO

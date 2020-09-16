@@ -30,5 +30,13 @@ module.exports = {
     ["lint-no-multiple-toplevel-headings", false],
     ["remark-lint-no-emphasis-as-heading", false],
     ["remark-lint-no-duplicate-headings", false],
+    [
+      "remark-lint-no-dead-urls",
+      {
+        skipUrlPatterns: [
+          "https://github.com/actionsflow/actionsflow-workflow-default/generate",
+        ],
+      },
+    ],
   ],
 };

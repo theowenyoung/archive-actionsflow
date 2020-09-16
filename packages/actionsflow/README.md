@@ -34,16 +34,17 @@
 
 ## 🧐 About <a name = "about"></a>
 
-[Actionsflow](https://github.com/actionsflow/actionsflow) helps you to automate workflows, it's the best [IFTTT](https://ifttt.com/)/[Zapier](https://zapier.com/) free alternative for developers. With [Actionsflow](https://github.com/actionsflow/actionsflow), you can connect your favorite apps, data, and APIs, receive notifications of actions as they occur, sync files, collect data, and more. , We implemented it based on [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow)) to build your workflows. If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's very easy to define an Actionsflow workflow file, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your job's steps.
+[Actionsflow](https://github.com/actionsflow/actionsflow) helps you to automate workflows, it's the best [IFTTT](https://ifttt.com/)/[Zapier](https://zapier.com/) free alternative for developers. With [Actionsflow](https://github.com/actionsflow/actionsflow), you can connect your favorite apps, data, and APIs, receive notifications of actions as they occur, sync files, collect data, and more. We implemented it based on [Github actions](https://docs.github.com/en/actions), and you use a YAML file (The configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow)) to build your workflows. If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's very easy to define an Actionsflow workflow file, and you can use any [Github actions](https://github.com/marketplace?type=actions) as your job's steps.
 
 You can see core concepts of Actionsflow at [here](#howactionsflowworked).
 
 ## 🔥 Features
 
-- **Totally Free!** Actionsflow based on [Github actions](https://docs.github.com/en/actions). To run an Actionsflow workflow, you just need to [create a repository from Actionsflow template repository](https://github.com/actionsflow/workflow/generate).
+- **Totally Free!** Actionsflow based on [Github actions](https://docs.github.com/en/actions). To run an Actionsflow workflow, you just need to [create a repository from Actionsflow template repository](https://github.com/actionsflow/actionsflow-workflow-default/generate).
 - **support almost all actions of github**, you can use almost all [Github actions](https://github.com/marketplace?type=actions). Actionsflow use [act](https://github.com/nektos/act) for running [Github actions](https://github.com/marketplace?type=actions). With [Github actions](https://github.com/marketplace?type=actions), You can connect with IFTTT, Zapier, or the other services.
 - **Easy to write workflow file**, the Actionsflow configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), it's very easy to define an Actionsflow workflow file,
 - **Run a trigger every 5 minutes**. The workflow can check and run every 5 minutes based on [Github actions scheduled events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events)
+- **Support complex workflows**. With Actionsflow, you can make complex advanced workflows. Actionsflow providers a [MongoDB query language](https://actionsflow.github.io/docs/workflow/#ontrigger_nameconfigfilter) for you to filter your data as you want.
 
 ## 🎓 Document <a name="document"></a>
 
@@ -51,79 +52,83 @@ Full documentation for Actionsflow lives [on the website](https://actionsflow.gi
 
 You can also [view it at Github](https://github.com/actionsflow/actionsflow/blob/master/docs/index.md) if you prefer.
 
-If you need `actionsflow` npm package docs, please see [here](https://actionsflow.github.io/docs/reference/api/)
+If you need `actionsflow` npm package docs, please see [here](https://actionsflow.github.io/docs/reference/actionsflow-api/)
 
 ## 👀 How Actionsflow worked <a name = "howactiionsflowworked"></a>
 
-Actionsflow setup a Github scheduled action with running every 5 minutes, Actionsflow will check if there are any updates with the triggers in the workflows, if Actionsflow found an updated item, it will generate a standard Github actions workflow file with the item payload, and call [act](https://github.com/nektos/act) to run the built workflow.
+Actionsflow uses [Github Actions](https://docs.github.com/en/actions)' [**`repository_dispatch` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch) and [**per 5 minutes' `scheduled` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events) to run [Actionsflow triggers](https://actionsflow.github.io/docs/triggers/) for getting result **items**, and do some caching and deduplication works, then generating a standard Github actions workflow file with the trigger result, then calling [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally) to run the built workflow files.
+
+Learn more about How Actionsflow worked, please see [Core Concepts of Actionsflow](https://actionsflow.github.io/docs/concepts/).
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
-Build an Actionsflow workflows is basically a three-step process:
+Build an Actionsflow workflow is a three-step process:
 
-1. Create a public Github repository by this [link](https://github.com/actionsflow/workflow/generate)
-1. Define your [workflow files](https://actionsflow.github.io/docs/workflow.md) at `workflows` directory, you can find some workflow file examples at [here](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows)
-1. commit and push your updates to Github
+1. **Create a public Github repository by this [link](https://github.com/actionsflow/actionsflow-workflow-default/generate).**
+
+   A typical Actionsflow repository structure looks like this:
+
+   ```sh
+   ├── .github
+   │   └── workflows
+   │       └── actionsflow-jobs.yml
+   ├── .gitignore
+   ├── README.md
+   └── workflows
+   │   └── rss.yml
+   │   └── webhook.yml
+   └── package.json
+   ```
+
+1. **Define your [workflow file](https://actionsflow.github.io/docs/workflow/) at `workflows` directory**
+
+   A typical workflow file `rss.yml` looks like this:
+
+   ```yaml
+   on:
+     rss:
+       url: https://hnrss.org/newest?points=300
+   jobs:
+     ifttt:
+       name: Make a Request to IFTTT
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actionsflow/ifttt-webhook-action@v1
+           with:
+             event: notice
+             key: ${{ secrets.IFTTT_KEY }}
+             value1: ${{on.rss.outputs.title}}
+             value2: ${{on.rss.outputs.contentSnippet}}
+             value3: ${{on.rss.outputs.link}}
+   ```
+
+   For more information about the Actionsflow workflow file, see the
+   [Actionsflow workflow reference](https://actionsflow.github.io/docs/workflow/).
+
+   You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Workflows by Use Case](https://actionsflow.github.io/docs/explore/) to get more inspired.
+
+1. **commit and push your updates to Github**
 
 Then, Actionsflow will run your workflows as you defined, you can view logs at your repository actions tab at [Github](https://github.com)
 
-For more information about quick started, see [Getting Started](https://actionsflow.github.io/docs/getting-started.md)
+For more information about quick started, see [Getting Started](https://actionsflow.github.io/docs/getting-started/)
 
-### Structure
+# 🎓 Learn More <a name="reference"></a>
 
-A typical Actionsflow repository structure looks like this:
+Full documentation for Actionsflow lives [on the website](https://actionsflow.github.io/docs/).
 
-```sh
-.
-├── .github
-│   └── workflows
-│       └── actionsflow-jobs.yml
-├── .gitignore
-├── README.md
-└── workflows
-    └── rss2ifttt.yml
-    └── webhook2ifttt.yml
-```
-
-Take a look with the Actionsflow [official template repository](https://github.com/actionsflow/workflow)
-
-### Workflow File
-
-A typical workflow file `xxx.yml` looks like this:
-
-```yaml
-on:
-  rss:
-    event: new_item
-    url: https://hnrss.org/newest?points=300
-jobs:
-  ifttt:
-    name: Make a Request to IFTTT
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actionsflow/ifttt-webhook-action@v1
-        with:
-          event: notice
-          key: ${{ secrets.IFTTT_KEY }}
-          value1: ${{on.rss.outputs.title}}
-          value2: ${{on.rss.outputs.contentSnippet}}
-          value3: ${{on.rss.outputs.link}}
-```
-
-For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](https://actionsflow.github.io/docs/workflow.md).
-
-For more information about the Actionsflow triggers, see [Triggers](https://actionsflow.github.io/docs/triggers.md)
-
-For more information about use cases, see [Examples](https://github.com/actionsflow/actionsflow/tree/master/examples/workflows).
-
-For more questions about Actionsflow, see [FAQs](https://actionsflow.github.io/docs/faqs.md)
+- [Workflow Syntax for Actionsflow](https://actionsflow.github.io/docs/workflow/) - Learn more about the Actionsflow workflow file syntax
+- [Triggers List](https://actionsflow.github.io/docs/triggers/) - Explore Actionsflow triggers
+- [Workflows Use Case](https://actionsflow.github.io/docs/explore/) - Explore Actionsflow workflows use case to get inspired
+- [Core Concepts](https://actionsflow.github.io/docs/concepts/) - Learn more about how Actionsflow worked
+- [Creating Triggers for Actionsflow](https://actionsflow.github.io/docs/creating-triggers/) - Learn more about how to create your own trigger for Actionsflow
+- [FAQs](https://actionsflow.github.io/docs/faqs/) - Actionsflow FAQs
 
 ## 🤝 How to Contribute <a name = "contributing"></a>
 
 Whether you're helping us fix bugs, improve the docs, or spread the word, we'd love to have you as part of the Actionsflow community! 💪💜
 
-Check out our [Contributing Guide](https://actionsflow.github.io/docs/contributing.md) for ideas on contributing and setup steps for getting our repositories up and running on your local machine.
+Check out our [Contributing Guide](https://actionsflow.github.io/docs/contributing/) for ideas on contributing and setup steps for getting our repositories up and running on your local machine.
 
 ## ✍️ Authors <a name = "authors"></a>
 

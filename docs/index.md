@@ -9,7 +9,7 @@ You can see the core concepts of Actionsflow at [here](/docs/concepts.md).
 
 # Features
 
-- **Totally Free!** Actionsflow based on [Github actions](https://docs.github.com/en/actions). To run an Actionsflow workflow, all you need to do is [creating a repository from the Actionsflow template repository](https://github.com/actionsflow/workflow/generate).
+- **Totally Free!** Actionsflow based on [Github actions](https://docs.github.com/en/actions). To run an Actionsflow workflow, all you need to do is [creating a repository from the Actionsflow template repository](https://github.com/actionsflow/actionsflow-workflow-default/generate).
 - **Enjoy with Community Triggers**. You can use many [triggers provided by the community](/docs/triggers.md#triggers-list), you can also [create your own triggers](/docs/create-trigger.md) easily.
 - **Support Almost ALL Actions of [Github Actions](https://github.com/marketplace?type=actions)**. Actionsflow use [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally) for running jobs of your workflow file. With [Github actions](https://github.com/marketplace?type=actions), You can connect with IFTTT, Zapier, or the other services.
 - **Easy for Writing Workflow File**. The Actionsflow configuration format is the same as [Github actions](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow), If you have already written a [Github actions file](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow) before, it's really easy for you to define an Actionsflow workflow file
