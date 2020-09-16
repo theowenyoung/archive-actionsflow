@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.20](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.19...actionsflow-core@0.1.20) (2020-09-16)
+
+### Features
+
+- support filter filter output ([be78598](https://github.com/actionsflow/actionsflow/commit/be785983194a4b7406dcc4e12726ff23e941ce5c))
+
 ## [0.1.19](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.18...actionsflow-core@0.1.19) (2020-09-15)
 
 ### Features
