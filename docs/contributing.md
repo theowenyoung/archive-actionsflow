@@ -16,8 +16,8 @@ When working on the Actionsflow documentation, you can choose between two major 
 
 Some tips:
 
-- if you need use link the internal docs at Actionsflow, you should always use `/docs/about.md` format to link the other doc, then the doc site will be built as expected
-- we use [remark lint](https://github.com/remarkjs/remark-lint) as our markdown document lint, the config is [here](https://github.com/actionsflow/actionsflow/blob/master/.remarkrc.js), run `npm run lint` will checking the document format. It will run lint automatically before you commit.
+- if you need use link the internal docs at Actionsflow, you should always use relative link, like `./about.md` format to link the other doc, then the doc site will be built as expected
+- we use [remark lint](https://github.com/remarkjs/remark-lint) as our markdown document lint, the config is [here](https://github.com/actionsflow/actionsflow/blob/master/.remarkrc.js), run `npm run lint:docs` will checking the document format. It will run lint automatically before you commit.
 
 # Code Contributions
 
