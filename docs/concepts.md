@@ -4,7 +4,7 @@ title: "Core Concepts"
 
 # How Actionsflow worked
 
-Actionsflow uses [Github Actions](https://docs.github.com/en/actions)' [**`repository_dispatch` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch) and [**per 5 minutes' `scheduled` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events) to run [Actionsflow triggers](/docs/triggers.md) for getting an array results, and do some caching and deduplication works, then generating a standard Github actions workflow file with the trigger result, then calling [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally) to run the built workflow files.
+Actionsflow uses [Github Actions](https://docs.github.com/en/actions)' [**`repository_dispatch` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch) and [**per 5 minutes' `scheduled` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events) to run [Actionsflow triggers](./triggers.md) for getting an array results, and do some caching and deduplication works, then generating a standard Github actions workflow file with the trigger result, then calling [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally) to run the built workflow files.
 
 ## `scheduled` Run
 
@@ -32,7 +32,7 @@ jobs:
           echo link: $link
 ```
 
-Then, Actionsflow will call [RSS trigger](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts), [RSS trigger](/docs/triggers/rss.md) will return data of the feed items in JSON format. Actionsflow will generate a standard Github actions workflow file after some caching, deduplicating works.
+Then, Actionsflow will call [RSS trigger](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts), [RSS trigger](./triggers/rss.md) will return data of the feed items in JSON format. Actionsflow will generate a standard Github actions workflow file after some caching, deduplicating works.
 
 The built workflow file looks like:
 
@@ -112,6 +112,6 @@ Then, Actionsflow will call [act](https://github.com/nektos/act)(a tool for runn
 
 # What Actionsflow workflow file include
 
-A typical Actionsflow workflow file includes a [trigger](/docs/triggers.md) and some jobs. Actionsflow also support multiple triggers and multiple jobs.
+A typical Actionsflow workflow file includes a [trigger](./triggers.md) and some jobs. Actionsflow also support multiple triggers and multiple jobs.
 
-Learn more about Workflow syntax for Actionsflow, please see [here](/docs/workflow.md).
+Learn more about Workflow syntax for Actionsflow, please see [here](./workflow.md).

@@ -120,4 +120,4 @@ automatically build your code, rebuild on every change you make.
 
 ## Create Trigger
 
-It is really easy to create a trigger of Actionsflow, see [here](/docs/creating-triggers.md)
+It is really easy to create a trigger of Actionsflow, see [here](./creating-triggers.md)

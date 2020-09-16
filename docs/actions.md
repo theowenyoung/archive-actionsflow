@@ -18,4 +18,4 @@ For now, the following triggers are available:
 
 # Workflow Syntax
 
-For how to use actions, see [Workflow Syntax for Actionsflow](/docs/workflow.md)
+For how to use actions, see [Workflow Syntax for Actionsflow](./workflow.md)

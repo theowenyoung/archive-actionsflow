@@ -50,7 +50,7 @@ jobs:
 ```
 
 For more information about the Actionsflow workflow file, see the
-[Actionsflow workflow reference](/docs/workflow.md).
+[Actionsflow workflow reference](./workflow.md).
 
 You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Workflows by Use Case](https://actionsflow.github.io/docs/explore/) to get more inspired.
 
@@ -69,9 +69,9 @@ Then, Actionsflow will run your workflows as you defined, you can view logs at y
 
 # Learn More
 
-- [Workflow Syntax for Actionsflow](/docs/workflow.md) - Learn more about the Actionsflow workflow file syntax
-- [Triggers List](/docs/triggers.md) - Explore Actionsflow triggers
-- [Workflows Use Case](/docs/explore.md) - Explore Actionsflow workflows use case to get inspired
-- [Core Concepts](/docs/concepts.md) - Learn more about how Actionsflow worked
-- [Creating Triggers for Actionsflow](/docs/creating-triggers.md) - Learn more about how to create your own trigger for Actionsflow
-- [FAQs](/docs/faqs.md) - Actionsflow FAQs
+- [Workflow Syntax for Actionsflow](./workflow.md) - Learn more about the Actionsflow workflow file syntax
+- [Triggers List](./triggers.md) - Explore Actionsflow triggers
+- [Workflows Use Case](./explore.md) - Explore Actionsflow workflows use case to get inspired
+- [Core Concepts](./concepts.md) - Learn more about how Actionsflow worked
+- [Creating Triggers for Actionsflow](./creating-triggers.md) - Learn more about how to create your own trigger for Actionsflow
+- [FAQs](./faqs.md) - Actionsflow FAQs

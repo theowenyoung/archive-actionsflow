@@ -1,5 +1,6 @@
 const fs = require("fs");
 const unified = require("unified");
+const headings = require("rehype-autolink-headings");
 
 const dictionary = fs.readFileSync("./dictionary.txt");
 
@@ -29,10 +30,12 @@ module.exports = {
     ["remark-lint-list-item-indent", false],
     ["lint-no-multiple-toplevel-headings", false],
     ["remark-lint-no-emphasis-as-heading", false],
-    ["remark-lint-no-duplicate-headings", false],
+    // ["remark-lint-no-duplicate-headings", false],
+    ["validate-links"],
     [
-      "remark-lint-no-dead-urls",
+      "@theowenyoung/remark-lint-no-dead-urls",
       {
+        checkIsOnline: false,
         skipUrlPatterns: [
           "https://github.com/actionsflow/actionsflow-workflow-default/generate",
         ],

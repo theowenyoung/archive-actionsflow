@@ -46,7 +46,7 @@ on:
     tweet_mode: "extended",
   ```
 
-> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](https://actionsflow.github.io/docs/workflow/#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

@@ -23,7 +23,7 @@ cd actionsflow-trigger-<your_trigger_name>
 
 # Sample
 
-You need export a class that implements [Actionsflow trigger API](/docs/reference/trigger-api.md) for your trigger package, a simple example for trigger looks like this:
+You need export a class that implements [Actionsflow trigger API](../reference/trigger-api.md) for your trigger package, a simple example for trigger looks like this:
 
 ```javascript
 module.exports = class Example {
@@ -49,7 +49,7 @@ module.exports = class Example {
 
 You should implement `run` method or declare `webhooks` definition in a trigger at least.
 
-Learn more about trigger API, please see [Trigger API](/docs/reference/trigger-api.md)
+Learn more about trigger API, please see [Trigger API](../reference/trigger-api.md)
 
 Learn more about trigger examples, see:
 
@@ -66,7 +66,7 @@ By running `npm link ../path/to/my-trigger` in the root of your Actionsflow work
 
 # API
 
-See [Trigger API](/docs/reference/trigger-api.md)
+See [Trigger API](../reference/trigger-api.md)
 
 # Test
 

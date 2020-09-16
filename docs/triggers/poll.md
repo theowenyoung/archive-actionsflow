@@ -60,7 +60,7 @@ on:
           Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
   ```
 
-> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](../workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

@@ -9,15 +9,15 @@ Every Actionsflow workflow file starts with a trigger, which watches for new dat
 
 For now, the following triggers are available:
 
-> [Creating a 3rd-party trigger](/docs/creating-triggers.md) is really easy, we are so happy that you can share your trigger for community.
+> [Creating a 3rd-party trigger](./creating-triggers.md) is really easy, we are so happy that you can share your trigger for community.
 
 ## Official Triggers
 
-- [RSS](/docs/triggers/rss.md) - Watching RSS feed updates
-- [API polling](/docs/triggers/poll.md) - Polling the rest JSON API updates
-- [Webhook](/docs/triggers/2-webhook.md) - Receiving webhook notifications
-- [Script](/docs/triggers/script.md) - Running javascript code to get updates
-- [Email](/docs/triggers/email.md) - Watching new emails
+- [RSS](./triggers/rss.md) - Watching RSS feed updates
+- [API polling](./triggers/poll.md) - Polling the rest JSON API updates
+- [Webhook](./triggers/webhook.md) - Receiving webhook notifications
+- [Script](./triggers/script.md) - Running javascript code to get updates
+- [Email](./triggers/email.md) - Watching new emails
 - [Telegram Bot](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot) - Watching Telegram Bot updates
 - [Twitter](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-twitter) - Watching twitter's timeline updates
 
@@ -29,4 +29,4 @@ Want to list your trigger here? Welcome to [submit a pull request](https://githu
 
 # Trigger Syntax
 
-For how to define a trigger, see [Workflow Syntax for Actionsflow](/docs/workflow.md)
+For how to define a trigger, see [Workflow Syntax for Actionsflow](./workflow.md)

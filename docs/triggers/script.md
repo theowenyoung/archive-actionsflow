@@ -63,7 +63,7 @@ on:
 
 You can use the following context at your script code:
 
-- `helpers`, The Actionsflow triggers general helpers, which has `cache`, `log`, etc... You can see all helpers methods at [here](/docs/reference/trigger-helpers.md)
+- `helpers`, The Actionsflow triggers general helpers, which has `cache`, `log`, etc... You can see all helpers methods at [here](../reference/trigger-helpers.md)
 
 - `options`, the options you pass it to `script` trigger
 
@@ -81,7 +81,7 @@ You can use the following context at your script code:
       return resutls.data;
   ```
 
-> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](../workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

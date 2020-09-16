@@ -63,7 +63,7 @@ interface ITriggerContructorParams {
   }
   ```
 
-  `config` is the [general options for Actionsflow trigger](/docs/workflow.md#ontrigger_nameconfig), `config` are handled by Actionsflow, you can change the default config by change the instance `config` value, learn more about changing the default`config` see [here](#config)
+  `config` is the [general options for Actionsflow trigger](../workflow.md#ontrigger_nameconfig), `config` are handled by Actionsflow, you can change the default config by change the instance `config` value, learn more about changing the default`config` see [here](#config)
 
   `config` interface:
 
@@ -101,9 +101,9 @@ interface ITriggerContructorParams {
   }
   ```
 
-  Learn more about helpers, see [Trigger Helpers API](/docs/reference/trigger-helpers.md)
+  Learn more about helpers, see [Trigger Helpers API](../reference/trigger-helpers.md)
 
-- `workflow`, is the current workflow who use the trigger, including `path`: the workflow absolute path, `relativePath`: the workflow relative path, `data`, the [workflow](/docs/workflow.md) data in JSON object.
+- `workflow`, is the current workflow who use the trigger, including `path`: the workflow absolute path, `relativePath`: the workflow relative path, `data`, the [workflow](../workflow.md) data in JSON object.
 
   ```typescript
   interface IWorkflow {
@@ -147,7 +147,7 @@ interface ITriggerGeneralConfigOptions {
 }
 ```
 
-Learn more about config field meaning, see [general options for Actionsflow trigger](/docs/workflow.md#ontrigger_nameconfig)
+Learn more about config field meaning, see [general options for Actionsflow trigger](../workflow.md#ontrigger_nameconfig)
 
 The default value is:
 
@@ -213,9 +213,9 @@ module.exports = class Example {
 };
 ```
 
-`webhooks` define a group of webhook handlers. When a [webhook event](/docs/webhook.md) of the trigger comes, the handler will be called with the webhook request.
+`webhooks` define a group of webhook handlers. When a [webhook event](../webhook.md) of the trigger comes, the handler will be called with the webhook request.
 
-> Note: If you don't familiar with Actionsflow webhook URL format, please see [here](/docs/webhook.md)
+> Note: If you don't familiar with Actionsflow webhook URL format, please see [here](../webhook.md)
 
 The following interface is a webhook interface:
 
@@ -228,7 +228,7 @@ interface IWebhook {
 }
 ```
 
-## `path`
+## `webhook.path`
 
 `path` is using to set the webhook path. if `path` provided, then only the webhook URL matched the `path` will call the handler.
 
@@ -240,15 +240,15 @@ Generally, most of triggers only handle one path. But if your trigger need to ha
 
 You can also use params path to define your path, like `/user/:user_id`, Actionsflow use [path-to-regexp](https://github.com/pillarjs/path-to-regexp) to handle route.
 
-## `method`
+## `webhook.method`
 
 `method` is using to set the webhook method, it can be `string` or `string[]`, if provided, only specific methods will call the handler. the default value is `undefined`, means all methods request will call the handler.
 
-## `getItemKey`
+## `webhook.getItemKey`
 
 Like the trigger instance method [`getItemKey`](#getItemKey), you can specify the `getItemKey` for the webhook. If not provided, Actionsflow will fallback to use the instance's `getItemKey`.
 
-## `handler`
+## `webhook.handler`
 
 Required, a hook function that be called when the webhook event comes. It receives a `request` as input, which has the following properties:
 

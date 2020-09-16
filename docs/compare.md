@@ -5,7 +5,7 @@ metaTitle: "Compare with Zapier and IFTTT"
 
 [Actionsflow](https://github.com/actionsflow/actionsflow) is a great alternative to [Zapier](https://zapier.com/) and [IFTTT](https://ifttt.com/) for developers, you can also use it with [Zapier](https://zapier.com/) or [IFTTT](https://ifttt.com/). With [Actionsflow](https://github.com/actionsflow/actionsflow), you can connect your favorite apps, data, and APIs, receive notifications of actions as they occur, sync files, collect data, and more.
 
-Compared with other automation tools, **[Actionsflow](https://github.com/actionsflow/actionsflow)'s features are free, open-source, supporting complex workflows, community triggers, custom triggers, github actions**. Actually, With the [Actionsflow's custom triggers feature](/docs/creating-triggers.md), you can get all abilities for any ideas you want.
+Compared with other automation tools, **[Actionsflow](https://github.com/actionsflow/actionsflow)'s features are free, open-source, supporting complex workflows, community triggers, custom triggers, github actions**. Actually, With the [Actionsflow's custom triggers feature](./creating-triggers.md), you can get all abilities for any ideas you want.
 
 Here is a list of the differences between Actionsflow and Zapier & IFTTT
 

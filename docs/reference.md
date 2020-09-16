@@ -7,10 +7,11 @@ Learn more about Actionsflow config, methods and options, common files, and cust
 
 In this section:
 
-- [Workflow Syntax](/docs/workflow.md)
-- [Trigger API](/docs/reference/trigger-api.md)
-- [Trigger Helpers API](/docs/reference/trigger-helpers.md)
-- [Webhook Syntax](/docs/webhook.md)
-- [Actionsflow Actions API](/docs/reference/action-api.md)
-- [Actionsflow Core API](/docs/reference/api.md)
-- [Actionsflow CLI API](/docs/reference/cli.md)
+- [Workflow Syntax](./workflow.md)
+- [Trigger API](./reference/trigger-api.md)
+- [Trigger Helpers API](./reference/trigger-helpers.md)
+- [Webhook Syntax](./webhook.md)
+- [Package actionsflow API](./reference/actionsflow-api.md)
+- [Package actionsflow-core API](https://actionsflow.github.io/docs/reference/actionsflow-core-api/)
+- [Package actionsflow-action CLI API](https://actionsflow.github.io/docs/reference/actionsflow-action-api/)
+- [Package actionsflow-interface CLI API](https://actionsflow.github.io/docs/reference/actionsflow-interface-api/)

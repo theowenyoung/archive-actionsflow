@@ -71,7 +71,7 @@ on:
 
   if `event` is not provided, all message will be triggered. example: `["text","photo"]`,`text`
 
-> You can use [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig) for more customization.
+  > You can use [General Config for Actionsflow Trigger](https://actionsflow.github.io/docs/workflow/#ontrigger_nameconfig) for more customization.
 
 ## Outputs
 

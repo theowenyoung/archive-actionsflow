@@ -5,7 +5,7 @@ metaTitle: Actionsflow Pakcage actionsflow API
 
 This document is for [npm Actionsflow package](https://www.npmjs.com/package/actionsflow), you can use `actionsflow` by API or CLI.
 
-Here is the Actionsflow core API docs, you can see [CLI docs at here](/docs/reference/cli.md)
+Here is the Actionsflow core API docs, you can see [CLI docs at here](../reference/cli.md)
 
 # Install
 

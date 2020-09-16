@@ -36,7 +36,7 @@ The following doc will show you about workflow syntax:
 
 Required, The name of the Actionsflow trigger. Triggers are how your workflows can start automated workflows whenever they add or update something in your workflow.
 
-For a list of available triggers, see "[Triggers](/docs/triggers.md)"
+For a list of available triggers, see "[Triggers](./triggers.md)"
 
 Example using RSS trigger:
 
@@ -188,7 +188,7 @@ Optional, `boolean`, if the trigger is active, default is `true`. for some reaso
 
 ## `on.<trigger_name>.<param>`
 
-Optional, the trigger's options, defined by the specific trigger, you should read the trigger's documentation to get all options that available for the trigger. For [`rss`](/docs/triggers/rss.md) example:
+Optional, the trigger's options, defined by the specific trigger, you should read the trigger's documentation to get all options that available for the trigger. For [`rss`](./triggers/rss.md) example:
 
 ```yaml
 on:
@@ -223,7 +223,7 @@ jobs:
           value3: ${{ on.rss.outputs.link }}
 ```
 
-For exploring more actions, please see [Awesome Actions List we Collected](/docs/actions.md) and [Github Actions Marketplace](https://github.com/marketplace?type=actions)
+For exploring more actions, please see [Awesome Actions List we Collected](./actions.md) and [Github Actions Marketplace](https://github.com/marketplace?type=actions)
 
 **Context and expression syntax for Actionsflow jobs**:
 
@@ -265,4 +265,4 @@ By default(if there is only one trigger at a workflow file), `conclusion` is alw
 
 ## Triggers
 
-For a list of available triggers, see "[Triggers List](/docs/triggers.md)"
+For a list of available triggers, see "[Triggers List](./triggers.md)"

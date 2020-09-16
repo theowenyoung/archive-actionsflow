@@ -7,7 +7,7 @@ You may be looking to build and perhaps publish a trigger that doesn't exist yet
 
 # Core concepts
 
-- Each Actionsflow trigger can be created as an npm package or as a [local trigger](/docs/creating-triggers/creating-a-local-trigger.md)
+- Each Actionsflow trigger can be created as an npm package or as a [local trigger](./creating-triggers/creating-a-local-trigger.md)
 - Trigger exports a class with `run` method for getting the initial results.
 
 A typical trigger class looks like this:
@@ -52,12 +52,12 @@ Follow the Javascript name styles, we recommend you use camel case as the option
 }
 ```
 
-> Note, `options.config` is the [General Config for Actionsflow Trigger](/docs/workflow.md#ontrigger_nameconfig), so you should not use `config` as your options.
+> Note, `options.config` is the [General Config for Actionsflow Trigger](./workflow.md#ontrigger_nameconfig), so you should not use `config` as your options.
 
 # Start to build a trigger
 
 This section of the docs includes the following guides:
 
-- [Creating a Generic Trigger](/docs/creating-triggers/creating-a-generic-trigger.md)
-- [Creating a Local Trigger](/docs/creating-triggers/creating-a-local-trigger.md)
-- [Triggers API](/docs/reference/trigger-api.md)
+- [Creating a Generic Trigger](./creating-triggers/creating-a-generic-trigger.md)
+- [Creating a Local Trigger](./creating-triggers/creating-a-local-trigger.md)
+- [Triggers API](./reference/trigger-api.md)
