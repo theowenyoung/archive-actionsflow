@@ -4,7 +4,46 @@ import {
   getExpressionResult,
   isPromise,
   getRawTriggers,
+  filter,
 } from "../utils";
+import emails from "./fixtures/emails.json";
+test("filter", () => {
+  const items = emails;
+  const filterResults = filter(items, {
+    "from.value": {
+      $elemMatch: {
+        address: "test3@gmail.com",
+      },
+    },
+    subject: {
+      $regex: "hash2",
+    },
+  });
+  expect(filterResults.all().length).toBe(1);
+});
+test("filter outputs", () => {
+  const items = emails;
+  const filterResults = filter(
+    items,
+    {
+      "from.value": {
+        $elemMatch: {
+          address: "test3@gmail.com",
+        },
+      },
+      subject: {
+        $regex: "hash2",
+      },
+    },
+    {
+      subject: 1,
+    }
+  );
+  expect(filterResults.all().length).toBe(1);
+  expect(JSON.stringify(filterResults.all())).toBe(
+    '[{"subject":"[hash2] Subject Test"}]'
+  );
+});
 
 test("isPromise yes", () => {
   const is = isPromise(

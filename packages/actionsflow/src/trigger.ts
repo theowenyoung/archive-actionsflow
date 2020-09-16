@@ -7,6 +7,8 @@ import {
   isPromise,
   log,
   getWebhookByRequest,
+  Cursor,
+  filter as filterFn,
 } from "actionsflow-core";
 import { LogLevelDesc } from "loglevel";
 import Triggers from "./triggers";
@@ -94,7 +96,11 @@ export const run = async ({
       const {
         every,
         shouldDeduplicate,
-        maxItemsCount,
+        limit,
+        filter,
+        filterOutputs,
+        sort,
+        skip,
         skipFirst,
         force,
       } = triggerGeneralOptions;
@@ -173,6 +179,7 @@ export const run = async ({
         let triggerResultFormat: ITriggerResultObject = {
           items: [],
         };
+        let deduplicationKeys: string[] = [];
         const { getItemKey } = triggerGeneralOptions;
         if (Array.isArray(triggerResult)) {
           triggerResultFormat.items = triggerResult;
@@ -185,7 +192,7 @@ export const run = async ({
           if (shouldDeduplicate === true && getItemKey && !force) {
             // deduplicate
             // get cache
-            let deduplicationKeys =
+            deduplicationKeys =
               (await triggerCacheManager.get("deduplicationKeys")) || [];
             log.debug("get cached deduplicationKeys", deduplicationKeys);
             const itemsKeyMaps = new Map();
@@ -201,12 +208,51 @@ export const run = async ({
                 return true;
               }
             });
+          }
+          let cursor: Cursor | undefined;
+          // filter
+          if (filter) {
+            cursor = filterFn(items, filter);
+          }
 
+          if (sort) {
+            if (!cursor) {
+              cursor = filterFn(items, {});
+            }
+            cursor = cursor.sort(sort);
+          }
+          if (cursor) {
+            items = cursor.all();
+          }
+          if (skip && skip > 0) {
+            items = items.slice(skip, items.length);
+          }
+
+          if (limit && limit > 0) {
+            items = items.slice(0, limit);
+          }
+
+          if (shouldDeduplicate === true && getItemKey && !force) {
+            // set deduplicate key
             // if save to cache
+            // items should use raw items
             if (items.length > 0) {
               deduplicationKeys = (deduplicationKeys as string[]).concat(
-                items.map((item: AnyObject) => getItemKey(item))
+                items
+                  .map((item: AnyObject) => getItemKey(item))
+                  .filter((item) => {
+                    if (deduplicationKeys.includes(item)) {
+                      return false;
+                    } else {
+                      return true;
+                    }
+                  })
               );
+
+              // deduplicate, just in case
+
+              deduplicationKeys = [...new Set(deduplicationKeys)];
+
               deduplicationKeys = (deduplicationKeys as string[]).slice(
                 -MAX_CACHE_KEYS_COUNT
               );
@@ -221,8 +267,11 @@ export const run = async ({
               log.debug("no items update, do not need to update cache");
             }
           }
-          if (maxItemsCount > 0) {
-            items = items.slice(0, maxItemsCount);
+
+          // last filter outputs
+          if (filterOutputs) {
+            const filterOutpusCursor = filterFn(items, {}, filterOutputs);
+            items = filterOutpusCursor.all();
           }
         }
 

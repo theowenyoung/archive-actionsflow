@@ -62,7 +62,7 @@ module.exports = class Example {
 
 You should implement `run` method or declare `webhooks` definition in a trigger at least.
 
-Learn more about trigger API, please see [Trigger API](/docs/reference/0-trigger-api.md)
+Learn more about trigger API, please see [Trigger API](/docs/reference/trigger-api.md)
 
 Learn more about trigger examples, see:
 
@@ -73,7 +73,7 @@ Learn more about trigger examples, see:
 
 # API
 
-See [Trigger API](/docs/reference/0-trigger-api.md)
+See [Trigger API](/docs/reference/trigger-api.md)
 
 # Test
 

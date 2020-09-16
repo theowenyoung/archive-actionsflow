@@ -32,7 +32,7 @@ jobs:
           echo link: $link
 ```
 
-Then, Actionsflow will call [RSS trigger](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts), [RSS trigger](/docs/triggers/0-rss.md) will return data of the feed items in JSON format. Actionsflow will generate a standard Github actions workflow file after some caching, deduplicating works.
+Then, Actionsflow will call [RSS trigger](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow/src/triggers/rss.ts), [RSS trigger](/docs/triggers/rss.md) will return data of the feed items in JSON format. Actionsflow will generate a standard Github actions workflow file after some caching, deduplicating works.
 
 The built workflow file looks like:
 

@@ -139,7 +139,7 @@ test("poll trigger with deduplicationKey no found", async () => {
 
   expect(triggerResults.length).toBe(2);
   const itemKey = poll.getItemKey(triggerResults[0]);
-  expect(itemKey).toBe("044d71aceeae5a9c202d197f4d216a6e");
+  expect(itemKey).toBe("cc07d3ed62e22cafc9becd556e360619");
 });
 
 test("poll trigger without required param", async () => {

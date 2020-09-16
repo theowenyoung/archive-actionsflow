@@ -1,4 +1,6 @@
-import { ITrigger, IWorkflowData } from "actionsflow-interface";
+import { ITrigger, IWorkflowData, AnyObject } from "actionsflow-interface";
+import mingo from "mingo";
+import { Cursor } from "mingo/cursor";
 /**
  * get raw triggers from workflow data
  * @param doc
@@ -22,4 +24,13 @@ export const getRawTriggers = (doc: IWorkflowData): ITrigger[] => {
     }
   }
   return triggers;
+};
+
+export const filter = (
+  items: AnyObject[],
+  condition: AnyObject,
+  projection?: AnyObject
+): Cursor => {
+  const cursor = mingo.find(items, condition, projection);
+  return cursor;
 };

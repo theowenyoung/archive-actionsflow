@@ -53,6 +53,7 @@
     "loglevel-plugin-prefix": "^0.8.4",
     "map-obj": "^4.1.0",
     "mime-types": "^2.1.27",
+    "mingo": "^3.0.6",
     "multimatch": "^4.0.0",
     "node-object-hash": "^2.0.0",
     "path-to-regexp": "^6.1.0",

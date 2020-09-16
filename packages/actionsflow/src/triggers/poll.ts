@@ -67,7 +67,9 @@ export default class Poll implements ITriggerClassType {
         : requestResult.data;
       const deepClonedData = clonedeep(itemsArray);
       itemsArray.forEach((item) => {
-        item.raw__body = deepClonedData;
+        if (this.options.shouldIncludeRawBody) {
+          item.raw__body = deepClonedData;
+        }
         items.push(item);
       });
     }

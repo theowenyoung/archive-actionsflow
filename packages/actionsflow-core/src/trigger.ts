@@ -65,12 +65,11 @@ export const getTriggerHelpers = ({
   };
   return triggerHelpers;
 };
-interface IGeneralTriggerOptions {
+interface IGeneralTriggerOptions extends ITriggerGeneralConfigOptions {
   every: number;
   shouldDeduplicate: boolean;
   getItemKey: (item: AnyObject) => string;
   skipFirst: boolean;
-  maxItemsCount: number;
   force: boolean;
   logLevel: LogLevelDesc;
   active: boolean;
@@ -92,7 +91,6 @@ export const getGeneralTriggerFinalOptions = (
       return createContentDigest(item);
     },
     skipFirst: false,
-    maxItemsCount: -1,
     force: false,
     logLevel: "info",
     active: true,

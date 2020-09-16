@@ -13,11 +13,11 @@ For now, the following triggers are available:
 
 ## Official Triggers
 
-- [RSS](/docs/triggers/0-rss.md) - Watching RSS feed updates
-- [API polling](/docs/triggers/1-poll.md) - Polling the rest JSON API updates
+- [RSS](/docs/triggers/rss.md) - Watching RSS feed updates
+- [API polling](/docs/triggers/poll.md) - Polling the rest JSON API updates
 - [Webhook](/docs/triggers/2-webhook.md) - Receiving webhook notifications
-- [Script](/docs/triggers/3-script.md) - Running javascript code to get updates
-- [Email](/docs/triggers/4-email.md) - Watching new emails
+- [Script](/docs/triggers/script.md) - Running javascript code to get updates
+- [Email](/docs/triggers/email.md) - Watching new emails
 - [Telegram Bot](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-telegram_bot) - Watching Telegram Bot updates
 - [Twitter](https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-twitter) - Watching twitter's timeline updates
 

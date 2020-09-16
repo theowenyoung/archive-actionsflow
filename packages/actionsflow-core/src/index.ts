@@ -19,6 +19,7 @@ export {
   isMatchWebhookBasePath,
   isPromise,
   getRawTriggers,
+  filter,
 } from "./utils";
 export { getWebhookByRequest } from "./webhook";
 export {
@@ -26,3 +27,4 @@ export {
   buildNativeSecrets,
   buildWorkflowFile,
 } from "./generate";
+export { Cursor } from "mingo/cursor";

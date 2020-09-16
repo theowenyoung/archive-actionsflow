@@ -1,7 +1,8 @@
 on:
   poll:
     url: https://jsonplaceholder.typicode.com/posts
-    maxItemsCount: 5
+    config:
+      limit: 5
 jobs:
   print:
     name: Print

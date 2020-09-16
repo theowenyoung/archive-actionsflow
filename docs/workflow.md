@@ -77,14 +77,86 @@ on:
   rss:
     url: https://hnrss.org/newest?points=300
     config:
-      maxItemsCount: 15
+      limit: 15
 ```
 
 The `config` has the following options.
 
-### `on.<trigger_name>.config.active`
+### `on<trigger_name>.config.filter`
 
-Optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
+Optional, [`MongoDB query language`](https://docs.mongodb.com/manual/tutorial/query-documents/index.html). You can use `filter` to filter the trigger's results as you need.
+
+Actionsflow use [`mingo`](https://github.com/kofrasa/mingo)(A tool to use MongoDB query language for in-memory objects) for filter the trigger's results. For example, the following workflow will only be triggered when RSS feed `title` contains `interviews`:
+
+```yaml
+on:
+  rss:
+    url: https://hnrss.org/newest?points=300
+    config:
+      filter:
+        title:
+          $regex: interviews
+```
+
+Learn more about MongoDB query language, please see [`MongoDB query documents`](https://docs.mongodb.com/manual/tutorial/query-documents/index.html) and [`mingo`](https://github.com/kofrasa/mingo).
+
+### `on<trigger_name>.config.filterOutputs`
+
+Optional, [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection). You can use `filterOutputs` to filter result's field of the trigger's outputs as you need.
+
+Actionsflow use [`mingo`](https://github.com/kofrasa/mingo)(A tool to use MongoDB query language for in-memory objects) for filter the trigger's outputs. For example, the following email trigger outputs will only include `subject`:
+
+```yaml
+on:
+  email:
+    imap:
+      host: outlook.office365.com
+      user: ${{secrets.EMAIL_USER}}
+      password: ${{secrets.EMAIL_PASSWORD}}
+    config:
+      filterOutputs:
+        subject: 1
+```
+
+Trigger built result, `outputs` will only include `subject` key:
+
+```json
+{
+  "outcome": "success",
+  "conclusion": "success",
+  "outputs": {
+    "subject": "Hello"
+  }
+}
+```
+
+Learn more about MongoDB query projection syntax, please see [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection) and [`mingo`](https://github.com/kofrasa/mingo).
+
+### `on<trigger_name>.config.sort`
+
+Optional, [`MongoDB query language sort syntax`](https://docs.mongodb.com/manual/reference/method/cursor.sort/index.html), You can use `sort` to change the order of the trigger's results as you need.
+
+Actionsflow use [`mingo`](https://github.com/kofrasa/mingo)(A tool to use MongoDB query language for in-memory objects) for sort the trigger's results. For example, the following workflow will sort the triggers results by descending:
+
+```yaml
+on:
+  poll:
+    url: https://jsonplaceholder.typicode.com/posts
+    config:
+      limit: 1
+      sort:
+        id: -1
+```
+
+Learn more about MongoDB query sort syntax, please see [`MongoDB query language sort syntax`](https://docs.mongodb.com/manual/reference/method/cursor.sort/index.html) and [`mingo`](https://github.com/kofrasa/mingo).
+
+### `on<trigger_name>.config.limit`
+
+Optional, `number`, the trigger's results max length, the default value is `undefined`, it means the trigger will handle all items
+
+### `on<trigger_name>.config.skip`
+
+Optional, `number`, skip `<count>` results of the trigger's results , the default value is `undefined`, it means the trigger will handle all items
 
 ### `on<trigger_name>.config.every`
 
@@ -93,10 +165,6 @@ Optional, `number`, polling data interval time, the unit is minute, the default 
 ### `on<trigger_name>.config.skipFirst`
 
 Optional, `boolean`, whether to skip the data obtained for the first time, if `true`, the trigger will run the next time it get data. The default value is `false`
-
-### `on<trigger_name>.config.maxItemsCount`
-
-Optional, the trigger's results max length, the default value is `undefined`, it means the trigger will trigger all items
 
 ### `on<trigger_name>.config.shouldDeduplicate`
 
@@ -114,16 +182,20 @@ Optional, `boolean`, Set to `true`, Actionsflow will generate a `outcome: true` 
 
 Optional, `string`, log level for trigger, the default value is `info`, you can use `trace`, `debug`, `info`, `warn`, `error`
 
+### `on.<trigger_name>.config.active`
+
+Optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
+
 ## `on.<trigger_name>.<param>`
 
-Optional, the trigger's options, defined by the specific trigger, you should read the trigger's documentation to get all options that available for the trigger. For [`rss`](/docs/triggers/0-rss.md) example:
+Optional, the trigger's options, defined by the specific trigger, you should read the trigger's documentation to get all options that available for the trigger. For [`rss`](/docs/triggers/rss.md) example:
 
 ```yaml
 on:
   rss:
     url: https://hnrss.org/newest?points=300
     config:
-      maxItemsCount: 15
+      limit: 15
 ```
 
 # `jobs`

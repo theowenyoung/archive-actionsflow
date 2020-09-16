@@ -47,11 +47,15 @@ export interface ITriggerGeneralConfigOptions {
   every?: number;
   shouldDeduplicate?: boolean;
   skipFirst?: boolean;
-  maxItemsCount?: number;
   force?: boolean;
   logLevel?: LogLevelDesc;
   active?: boolean;
   continueOnError?: boolean;
+  filter?: AnyObject;
+  filterOutputs?: AnyObject;
+  skip?: number;
+  limit?: number;
+  sort?: AnyObject;
 }
 export interface ITriggerOptions extends AnyObject {
   config?: ITriggerGeneralConfigOptions;
