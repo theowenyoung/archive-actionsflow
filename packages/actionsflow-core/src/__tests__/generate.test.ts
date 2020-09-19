@@ -45,7 +45,9 @@ test("build env", async () => {
   process.env.ACTIONS_TEST = "";
   process.env.GITHUB_RUN_ID = "";
   const envString = await readFile(path.resolve(".cache/.env"), "utf8");
-  expect(envString).toEqual("GITHUB_TEST=test\nACTIONS_TEST=test\n");
+  expect(envString).toEqual(
+    "GITHUB_TEST=test\nACTIONS_TEST=test\nGITHUB_RUN_ID=22\n"
+  );
 });
 
 test("build workflow file", async () => {
