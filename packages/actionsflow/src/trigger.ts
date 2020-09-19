@@ -107,7 +107,7 @@ export const run = async ({
       // last update at, first find at env
       const lastUpdateAtFromEnv = process.env.ACTIONSFLOW_LAST_UPDATE_AT;
       let lastUpdateAtTimeFromEnv: number | undefined;
-      if (lastUpdateAtFromEnv) {
+      if (lastUpdateAtFromEnv && process.env.GITHUB_ACTIONS === "true") {
         log.debug("lastUpdateAtFromEnv", lastUpdateAtFromEnv);
         lastUpdateAtTimeFromEnv = new Date(
           Number(lastUpdateAtFromEnv)
