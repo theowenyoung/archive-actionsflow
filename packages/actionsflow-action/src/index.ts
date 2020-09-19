@@ -4,6 +4,7 @@ process.on("unhandledRejection", handleError);
 main().catch(handleError);
 
 async function main(): Promise<void> {
+  console.log("start test");
   const cwd = core.getInput("cwd");
   const dest = core.getInput("dest");
   const logLevel = core.getInput("log-level");
