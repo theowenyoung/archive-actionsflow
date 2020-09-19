@@ -104,8 +104,24 @@ export const run = async ({
         skipFirst,
         force,
       } = triggerGeneralOptions;
+      // last update at, first find at env
+      const lastUpdateAtFromEnv = process.env.ACTIONSFLOW_LAST_UPDATE_AT;
+      let lastUpdateAtTimeFromEnv: number | undefined;
+      if (lastUpdateAtFromEnv) {
+        log.debug("lastUpdateAtFromEnv", lastUpdateAtFromEnv);
+        lastUpdateAtTimeFromEnv = new Date(
+          Number(lastUpdateAtFromEnv)
+        ).getTime();
+        if (isNaN(lastUpdateAtTimeFromEnv)) {
+          lastUpdateAtTimeFromEnv = undefined;
+        } else {
+          log.debug("get last update at from env", lastUpdateAtTimeFromEnv);
+        }
+      }
       const lastUpdatedAt =
-        (await triggerCacheManager.get("lastUpdatedAt")) || 0;
+        lastUpdateAtTimeFromEnv ||
+        (await triggerCacheManager.get("lastUpdatedAt")) ||
+        0;
       log.debug("lastUpdatedAt: ", lastUpdatedAt);
       if (event.type === "webhook" && triggerInstance.webhooks) {
         // webhook event should call webhook method
@@ -134,7 +150,11 @@ export const run = async ({
           } else {
             triggerResult = webhookHandlerResult as ITriggerResult;
           }
-          await triggerCacheManager.set("lastUpdatedAt", Date.now());
+          if (process.env.GITHUB_ACTIONS !== "true") {
+            log.debug("save last update at at cache for locally");
+            // only save at local run, not for github enviroment
+            await triggerCacheManager.set("lastUpdatedAt", Date.now());
+          }
         } else {
           // skip
           throw new Error(
@@ -147,7 +167,8 @@ export const run = async ({
         // check if should update
         // unit minutes
         // get latest update time
-        const shouldUpdateUtil = (lastUpdatedAt as number) + every * 60 * 1000;
+        const shouldUpdateUtil =
+          (Number(lastUpdatedAt) as number) + every * 60 * 1000;
         const now = Date.now();
 
         const shouldUpdate = force || shouldUpdateUtil - now <= 0;
@@ -166,7 +187,10 @@ export const run = async ({
           } else {
             triggerResult = runHandler as ITriggerResult;
           }
-          await triggerCacheManager.set("lastUpdatedAt", Date.now());
+          if (process.env.GITHUB_ACTIONS !== "true") {
+            log.debug("save last update at at cache for locally");
+            await triggerCacheManager.set("lastUpdatedAt", Date.now());
+          }
         }
       } else {
         //  skipped, no method for the event type

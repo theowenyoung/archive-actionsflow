@@ -160,7 +160,9 @@ Optional, `number`, skip `<count>` results of the trigger's results , the defaul
 
 ### `on<trigger_name>.config.every`
 
-Optional, `number`, polling data interval time, the unit is minute, the default value is `5`
+Optional, `number`, polling data interval time, the unit is minute, the default value is `0`, means the trigger will be ran every time. But due to the limitation of the [shortest interval of github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#schedule), generally Actionsflow will run once every 5 minutes, but you can also trigger Actionsflow run through `push` or the [other events that trigger Actionsflow run](https://docs.github.com/en/actions/reference/events-that-trigger-workflows)
+
+> Note, webhook event will ignore `every` config
 
 ### `on<trigger_name>.config.skipFirst`
 

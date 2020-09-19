@@ -85,7 +85,7 @@ export const getGeneralTriggerFinalOptions = (
     userOptions = triggerOptions.config;
   }
   const options: IGeneralTriggerOptions = {
-    every: 1, // github actions every 5, here we can set 1,due to triggered by other event, like push
+    every: 0, // github actions every 5, here we can set 0,due to triggered by other event, like push
     shouldDeduplicate: true,
     getItemKey: (item: AnyObject): string => {
       return createContentDigest(item);

@@ -123,9 +123,6 @@ export async function parseRawEmail(
   responseData.headerLines = undefined;
   responseData.headers = undefined;
   const content: IBinaryData[] = [];
-  console.log("shouldDownloadAttachments", shouldDownloadAttachments);
-  console.log("responseData", responseData.attachments);
-
   if (shouldDownloadAttachments && responseData.attachments) {
     for (
       let i = 0;
