@@ -9,6 +9,7 @@ import {
   log,
   buildNativeEvent,
   buildNativeSecrets,
+  buildNativeEnv,
   buildWorkflowFile,
 } from "actionsflow-core";
 import del from "del";
@@ -64,6 +65,11 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
   await buildNativeSecrets({
     dest: destPath,
     secrets: context.secrets,
+  });
+
+  // build env file
+  await buildNativeEnv({
+    dest: destPath,
   });
 
   // get all valid workflows

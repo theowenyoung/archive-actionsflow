@@ -4,6 +4,7 @@ import {
   buildNativeEvent,
   buildNativeSecrets,
   buildWorkflowFile,
+  buildNativeEnv,
 } from "../generate";
 
 test("build native event", async () => {
@@ -31,6 +32,20 @@ test("build secrets", async () => {
   });
   const secretsString = await readFile(path.resolve(".cache/.secrets"), "utf8");
   expect(secretsString).toEqual("TOKEN=token\nTEST=test\n");
+});
+
+test("build env", async () => {
+  process.env.GITHUB_TEST = "test";
+  process.env.ACTIONS_TEST = "test";
+  process.env.GITHUB_RUN_ID = "22";
+  await buildNativeEnv({
+    dest: path.resolve(".cache"),
+  });
+  process.env.GITHUB_TEST = "";
+  process.env.ACTIONS_TEST = "";
+  process.env.GITHUB_RUN_ID = "";
+  const envString = await readFile(path.resolve(".cache/.env"), "utf8");
+  expect(envString).toEqual("GITHUB_TEST=test\nACTIONS_TEST=test\n");
 });
 
 test("build workflow file", async () => {

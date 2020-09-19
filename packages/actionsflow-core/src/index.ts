@@ -25,6 +25,7 @@ export { getWebhookByRequest } from "./webhook";
 export {
   buildNativeEvent,
   buildNativeSecrets,
+  buildNativeEnv,
   buildWorkflowFile,
 } from "./generate";
 export { Cursor } from "mingo/cursor";
