@@ -18,17 +18,17 @@ export const textTypes = ["text/plain"];
 export const xmlTypes = ["text/xml", "application/xml"];
 export const BINARY_ENCODING = "base64";
 export const EXCLUDE_INJECT_GIHTUB_ENV = [
-  "GITHUB_WORKFLOW",
-  "GITHUB_RUN_ID",
-  "GITHUB_RUN_NUMBER",
-  "GITHUB_ACTION",
-  "GITHUB_ACTIONS",
-  "GITHUB_ACTOR",
-  "GITHUB_REPOSITORY",
+  // "GITHUB_WORKFLOW",
+  // "GITHUB_RUN_ID",
+  // "GITHUB_RUN_NUMBER",
+  // "GITHUB_ACTION",
+  // "GITHUB_ACTIONS",
+  // "GITHUB_ACTOR",
+  // "GITHUB_REPOSITORY",
   "GITHUB_EVENT_NAME",
   "GITHUB_EVENT_PATH",
   "GITHUB_WORKSPACE",
-  "GITHUB_SHA",
-  "GITHUB_REF",
-  "GITHUB_TOKEN",
+  // "GITHUB_SHA",
+  // "GITHUB_REF",
+  // "GITHUB_TOKEN",
 ];
