@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.21](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.20...actionsflow-core@0.1.21) (2020-09-19)
+
+### Features
+
+- build ([fa882cd](https://github.com/actionsflow/actionsflow/commit/fa882cdbbf96d5d2057b3044b80eaeca12dfa946))
+- change every to 0 ([6271e02](https://github.com/actionsflow/actionsflow/commit/6271e02811aaee47b11ccac898e231661b3497aa))
+- support env ([1528e45](https://github.com/actionsflow/actionsflow/commit/1528e45bcd4230b615a6a3b4bb422a39102654d8))
+
 ## [0.1.20](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.19...actionsflow-core@0.1.20) (2020-09-16)
 
 ### Features
