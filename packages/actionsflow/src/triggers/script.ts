@@ -13,7 +13,6 @@ import { OctokitOptions } from "@octokit/core/dist-types/types";
 import resolveCwd from "resolve-cwd";
 import { getOctokit } from "@actions/github";
 import { isPromise } from "actionsflow-core";
-import { resolve } from "path";
 const AsyncFunction = Object.getPrototypeOf(async () => null).constructor;
 
 type AsyncFunctionArguments = {
@@ -80,8 +79,7 @@ export default class Script implements ITriggerClassType {
       )) as ITriggerResult;
       return results;
     } else if (path) {
-      const scriptAbsolutePath = resolve(this.workflow.path, "../", path);
-      const scriptPath = resolveCwd.silent(scriptAbsolutePath);
+      const scriptPath = resolveCwd.silent(path);
       if (scriptPath) {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const scriptFunction = require(scriptPath);

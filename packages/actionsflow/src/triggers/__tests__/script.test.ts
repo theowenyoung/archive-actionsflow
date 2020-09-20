@@ -1,6 +1,6 @@
 import Script from "../script";
 import { getTriggerConstructorParams } from "./trigger.util";
-import path from "path";
+// import path from "path";
 import { ITriggerResultObject } from "actionsflow-interface";
 test("script trigger", async () => {
   const script = new Script(
@@ -141,11 +141,44 @@ test("script trigger with file path", async () => {
   const script = new Script(
     await getTriggerConstructorParams({
       options: {
-        path: path.resolve(__dirname, "fixtures/script.js"),
+        path:
+          "./packages/actionsflow/src/triggers/__tests__/fixtures/script.js",
       },
       name: "script",
     })
   );
+  const triggerResults = await script.run();
+  let triggerResultFormat: ITriggerResultObject = {
+    items: [],
+  };
+  if (Array.isArray(triggerResults)) {
+    triggerResultFormat.items = triggerResults;
+  } else {
+    triggerResultFormat = triggerResults;
+  }
+  expect(triggerResultFormat.items.length).toBe(2);
+  const itemKey = script.getItemKey(triggerResultFormat.items[0]);
+  expect(itemKey).toBe("test1");
+});
+
+test("script trigger with script require", async () => {
+  process.env.GITHUB_WORKSPACE = process.cwd();
+  const script = new Script(
+    await getTriggerConstructorParams({
+      options: {
+        run: `
+          const script = require("${process.env.GITHUB_WORKSPACE}/packages/actionsflow/src/triggers/__tests__/fixtures/script.js")
+          const items = await script({
+            helpers,
+            options
+          })
+          return items;
+        `,
+      },
+      name: "script",
+    })
+  );
+  process.env.GITHUB_WORKSPACE = "";
   const triggerResults = await script.run();
   let triggerResultFormat: ITriggerResultObject = {
     items: [],

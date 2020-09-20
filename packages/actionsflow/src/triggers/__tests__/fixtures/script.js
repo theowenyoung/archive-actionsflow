@@ -1,4 +1,4 @@
-module.exports = async function ({ helpers, context, axios, options }) {  
+module.exports = async function ({ helpers, options }) {  
   return [
     {
       id: "test1",

@@ -81,6 +81,21 @@ You can use the following context at your script code:
       return resutls.data;
   ```
 
+- `require`, you can use `require` to require the `js` module. Be care for, you should use an absolute path to require the specific js file.
+
+  ```yaml
+    on:
+  script:
+    github_token: ${{secrets.GITHUB_TOKEN}}
+    run: |
+      const script = require(`${process.env.GITHUB_WORKSPACE}/path/xx.js`);
+      const items = await script({
+        helpers,
+        options,
+      });
+      return items;
+  ```
+
 > You can use [General Config for Actionsflow Trigger](../workflow.md#ontrigger_nameconfig) for more customization.
 
 ## Outputs
