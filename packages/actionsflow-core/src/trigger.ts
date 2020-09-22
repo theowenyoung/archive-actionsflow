@@ -59,7 +59,7 @@ export const getTriggerHelpers = ({
   const triggerHelpers = {
     createContentDigest,
     formatBinary,
-    cache: getCache(`trigger-${triggerId}`),
+    cache: getCache(`trigger-${name}-${triggerId}`),
     log: triggerLog,
     axios: axios,
   };

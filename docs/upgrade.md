@@ -21,6 +21,6 @@ The first thing is to upgrade to [the latest version of actionsflow](https://git
 
 # 2. Upgrade Github Actions workflow file
 
-The second thing is to update the [`.github/workflows/actionsflow-jobs.yml`](https://github.com/actionsflow/actionsflow-workflow-default/blob/master/.github/workflows/actionsflow-jobs.yml) to the latest version.
+The second thing is to update the [`.github/workflows/actionsflow.yml`](https://github.com/actionsflow/actionsflow-workflow-default/blob/master/.github/workflows/actionsflow.yml) to the latest version.
 
 You should check the [actionsflow-workflow-default release](https://github.com/actionsflow/actionsflow-workflow-default/releases) to get whether there are any updates.

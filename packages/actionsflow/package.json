@@ -70,5 +70,6 @@
     "update-notifier": "^4.1.0",
     "yargs": "^15.4.1"
   },
-  "gitHead": "5354ce92742b20e721fb899516bf376702872ed2"
+  "gitHead": "5354ce92742b20e721fb899516bf376702872ed2",
+  "devDependencies": {}
 }

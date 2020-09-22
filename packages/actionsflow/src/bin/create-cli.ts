@@ -1,70 +1,9 @@
-import path from "path";
-import resolveCwd from "resolve-cwd";
 import yargs from "yargs";
 import { log } from "actionsflow-core";
-// eslint-disable-next-line @typescript-eslint/ban-types
-const handlerP = (fn: Function) => (...args: unknown[]): void => {
-  Promise.resolve(fn(...args)).then(
-    () => process.exit(0),
-    (err) => {
-      log.error(err);
-      process.exit(1);
-    }
-  );
-};
+import build from "../build";
+import clean from "../clean";
+
 function buildLocalCommands(cli: yargs.Argv) {
-  const directory = path.resolve(`.`);
-  const workflowInfo = {
-    directory,
-    workflowPackageJson: undefined,
-  };
-
-  function resolveLocalCommand(command: string) {
-    try {
-      const cmdPath = resolveCwd.silent(
-        path.resolve(__dirname, `../commands/${command}`)
-      );
-      if (!cmdPath)
-        return log.warn(
-          `There was a problem loading the local ${command} command. Actionsflow may not be installed in your workflow's "node_modules" directory. Perhaps you need to run "npm install"? You might need to delete your "package-lock.json" as well.`
-        );
-      log.debug(`loading local command from: ${cmdPath}`);
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const cmdModule = require(cmdPath);
-      const cmd = cmdModule.default;
-      if (cmd instanceof Function) {
-        return cmd;
-      }
-      return log.warn(
-        `Handler for command "${command}" is not a function. Your Actionsflow package might be corrupted, try reinstalling it and running the command again.`
-      );
-    } catch (err) {
-      cli.showHelp();
-      return log.warn(
-        `There was a problem loading the local ${command} command. Actionsflow may not be installed. Perhaps you need to run "npm install"?`,
-        err
-      );
-    }
-  }
-  function getCommandHandler(
-    command: string,
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    handler?: (args: yargs.Arguments, cmd: Function) => void
-  ) {
-    return (argv: yargs.Arguments): void => {
-      const args = Object.assign(
-        Object.assign(Object.assign({}, argv), workflowInfo)
-      );
-      if (argv.verbose) {
-        log.setLevel("debug");
-        args.logLevel = "debug";
-      }
-      const localCmd = resolveLocalCommand(command);
-      log.debug(`running command: ${command}`);
-      return handler ? handler(args, localCmd) : localCmd(args);
-    };
-  }
-
   cli.command({
     command: `build`,
     describe: `Build a Actionsflow workflows.`,
@@ -98,11 +37,7 @@ function buildLocalCommands(cli: yargs.Argv) {
           describe:
             "force update all triggers, it will ignore the update interval and cached deduplicate key",
         }),
-    handler: handlerP(
-      getCommandHandler(`build`, (args, cmd) => {
-        return cmd(args);
-      })
-    ),
+    handler: build,
   });
 
   cli.command({
@@ -120,7 +55,7 @@ function buildLocalCommands(cli: yargs.Argv) {
         describe: `workspace base path`,
         default: process.cwd(),
       }),
-    handler: handlerP(getCommandHandler(`clean`)),
+    handler: clean,
   });
 }
 
@@ -130,33 +65,43 @@ function getVersionInfo() {
 
   return `Actionsflow CLI version: ${version}`;
 }
-export const createCli = (argv: string[]): yargs.Arguments => {
-  const cli = yargs(argv);
-  cli
-    .scriptName(`actionsflow`)
-    .usage(`Usage: $0 <command> [options]`)
-    .alias(`h`, `help`)
-    .alias(`v`, `version`)
-    .option(`verbose`, {
-      default: false,
-      type: `boolean`,
-      describe: `Turn on verbose output`,
-      global: true,
-    });
+export const createCli = (argv: string[]): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const cli = yargs;
+    cli
+      .scriptName(`actionsflow`)
+      .usage(`Usage: $0 <command> [options]`)
+      .alias(`h`, `help`)
+      .alias(`v`, `version`)
+      .option(`verbose`, {
+        default: false,
+        type: `boolean`,
+        describe: `Turn on verbose output`,
+        global: true,
+      });
 
-  buildLocalCommands(cli);
-  cli.version(
-    `version`,
-    `Show the version of the Actionsflow CLI and the Actionsflow package in the current project`,
-    getVersionInfo()
-  );
-
-  const cliArgv = cli
-    .wrap(cli.terminalWidth())
-    .recommendCommands()
-    .parse(argv.slice(2));
-  if (!cliArgv._[0]) {
-    cli.showHelp();
-  }
-  return cliArgv;
+    buildLocalCommands(cli);
+    cli.version(
+      `version`,
+      `Show the version of the Actionsflow CLI and the Actionsflow package in the current project`,
+      getVersionInfo()
+    );
+    cli
+      .wrap(cli.terminalWidth())
+      .recommendCommands()
+      .onFinishCommand((result) => {
+        log.debug("finish command");
+        return resolve(result);
+      })
+      .fail((msg, err) => {
+        log.debug("fail command");
+        if (msg || err) log.error(msg || err);
+        reject(err);
+      });
+    const cliArgv = cli.parse(argv);
+    if (!cliArgv._[0]) {
+      cli.showHelp();
+      return resolve();
+    }
+  });
 };

@@ -86,7 +86,9 @@ export const run = async ({
       name: trigger.name,
       workflowRelativePath: workflow.relativePath,
     });
-    const triggerCacheManager = getCache(`trigger-cache-manager-${triggerId}`);
+    const triggerCacheManager = getCache(
+      `trigger-cache-manager-${trigger.name}-${triggerId}`
+    );
 
     if (triggerInstance) {
       const triggerGeneralOptions = getGeneralTriggerFinalOptions(

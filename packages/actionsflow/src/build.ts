@@ -29,6 +29,7 @@ interface IBuildOptions {
   exclude?: string[];
   force?: boolean;
   logLevel?: string;
+  verbose?: boolean;
 }
 const build = async (options: IBuildOptions = {}): Promise<void> => {
   options = {
@@ -36,13 +37,16 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
     cwd: process.cwd(),
     include: [],
     exclude: [],
-    logLevel: "info",
+    logLevel: "",
+    verbose: false,
     force: false,
     ...options,
   };
-  // log.debug("build: options", options);
+  log.debug("build: options", options);
   if (options.logLevel) {
     log.setLevel(options.logLevel as LogLevelDesc);
+  } else if (options.verbose) {
+    log.setLevel("debug");
   }
   const { cwd, dest, include, exclude, force } = options;
   const destPath = path.resolve(cwd as string, dest as string);

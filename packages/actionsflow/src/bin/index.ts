@@ -48,4 +48,6 @@ process.on(`uncaughtException`, (error) => {
   console.warn(`UNHANDLED EXCEPTION`, error);
 });
 
-createCli(process.argv);
+createCli(process.argv.slice(2)).catch(() => {
+  // do nothing
+});

@@ -2,27 +2,19 @@ name: "Actionsflow Action"
 author: Actionsflow
 description: "Run Actionsflow in Github"
 inputs:
-  cwd:
-    description: "base workspace folder, default is current workspace"
+  using:
+    descript: "actionsflow runner using, the default value is auto, auto to detect is using local npm to build"
     required: false
-  dest:
-    description: "dest folder, default value is 'dist', the standard Github actions workflow files will place to ./dist/workflows"
+  args:
+    description: "actionsflow args, the default value is build"
     required: false
-    default: "dist"
-  log-level:
-    description: 'Log level, default is "info", you can use one of these values, "trace" | "debug" | "info" | "warn" | "error" | "silent"'
-    required: false
-    default: "info"
-  force:
-    description: "force update all triggers, it will ignore the update interval and cached deduplicate key"
-    required: false
-    default: "false"
 outputs:
   success:
     description: "If the build status is success, value can be 'true', or 'false', if build failed, the action outcome will be set failed"
 runs:
   using: "node12"
-  main: "packages/actionsflow-action/dist/index.js"
+  main: "packages/actionsflow-action/dist/main/index.js"
+  pre: "packages/actionsflow-action/dist/pre/index.js"
 branding:
   icon: "send"
   color: "blue"

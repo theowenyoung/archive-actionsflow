@@ -27,5 +27,6 @@
   "dependencies": {
     "axios": "^0.20.0",
     "loglevel": "^1.7.0"
-  }
+  },
+  "devDependencies": {}
 }

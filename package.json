@@ -28,14 +28,15 @@
     "prettier": "prettier \"**/*.{md,json,js,ts,yaml,yml}\"",
     "bootstrap": "npx lerna bootstrap",
     "lerna": "npx lerna",
-    "build:example": "lerna run build --scope actionsflow-workflow-example -- -- --verbose",
+    "build:example": "rimraf ./.cache && lerna run build --scope actionsflow-workflow-example -- -- --verbose",
     "act:example": "lerna run act --scope actionsflow-workflow-example",
     "clean:example": "lerna run clean --scope actionsflow-workflow-example",
     "actionsflow": "./packages/actionsflow/cli.js",
     "postinstall": "npm run bootstrap",
     "hooks:uninstall": "node node_modules/husky/husky.js uninstall",
     "hooks:install": "node node_modules/husky/husky.js install",
-    "version": "prettier --write \"**/CHANGELOG.md\""
+    "version": "prettier --write \"**/CHANGELOG.md\"",
+    "ts": "ts-node"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
@@ -78,6 +79,7 @@
     "retext-syntax-urls": "^2.0.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.2.0",
+    "ts-node": "^9.0.0",
     "tslib": "^2.0.1",
     "typescript": "^3.9.7",
     "unified": "^9.1.0"

@@ -1,6 +1,6 @@
 on:
   script:
-    path: ./script.js
+    path: ./workflows/script.js
 jobs:
   print:
     name: Print
