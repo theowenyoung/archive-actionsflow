@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.15](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.14...actionsflow-interface@0.1.15) (2020-09-22)
+
+### Features
+
+- remove action ([6a9080a](https://github.com/actionsflow/actionsflow/commit/6a9080a4e6254a95e34316caa4122022d7b8f4be))
+
 ## [0.1.14](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.13...actionsflow-interface@0.1.14) (2020-09-16)
 
 ### Features

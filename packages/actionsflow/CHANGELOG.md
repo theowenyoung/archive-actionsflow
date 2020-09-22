@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.24](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.23...actionsflow@0.1.24) (2020-09-22)
+
+### Features
+
+- fix script require path ([37b24ca](https://github.com/actionsflow/actionsflow/commit/37b24cad211c7b635173a47e62171b11fe3e18c3))
+- remove action ([6a9080a](https://github.com/actionsflow/actionsflow/commit/6a9080a4e6254a95e34316caa4122022d7b8f4be))
+
 ## [0.1.23](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.22...actionsflow@0.1.23) (2020-09-19)
 
 ### Features

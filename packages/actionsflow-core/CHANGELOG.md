@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.22](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.21...actionsflow-core@0.1.22) (2020-09-22)
+
+### Features
+
+- remove action ([6a9080a](https://github.com/actionsflow/actionsflow/commit/6a9080a4e6254a95e34316caa4122022d7b8f4be))
+- test ([315f989](https://github.com/actionsflow/actionsflow/commit/315f989ad3b7fa0c7d00a9da5ea315566a154c45))
+
 ## [0.1.21](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.20...actionsflow-core@0.1.21) (2020-09-19)
 
 ### Features

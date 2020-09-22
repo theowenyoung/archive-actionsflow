@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.24](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-slack@0.1.23...@actionsflow/trigger-slack@0.1.24) (2020-09-22)
+
+### Features
+
+- remove action ([6a9080a](https://github.com/actionsflow/actionsflow/commit/6a9080a4e6254a95e34316caa4122022d7b8f4be))
+
 ## [0.1.23](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-slack@0.1.22...@actionsflow/trigger-slack@0.1.23) (2020-09-19)
 
 **Note:** Version bump only for package @actionsflow/trigger-slack
