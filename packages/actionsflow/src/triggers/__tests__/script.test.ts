@@ -1,6 +1,6 @@
 import Script from "../script";
 import { getTriggerConstructorParams } from "./trigger.util";
-// import path from "path";
+import path from "path";
 import { ITriggerResultObject } from "actionsflow-interface";
 test("script trigger", async () => {
   const script = new Script(
@@ -162,7 +162,7 @@ test("script trigger with file path", async () => {
 });
 
 test("script trigger with script require", async () => {
-  process.env.GITHUB_WORKSPACE = process.cwd();
+  process.env.GITHUB_WORKSPACE = path.normalize(process.cwd());
   const script = new Script(
     await getTriggerConstructorParams({
       options: {
