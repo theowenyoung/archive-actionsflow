@@ -332,7 +332,7 @@ export const getSupportedTriggers = (rawTriggers: ITrigger[]): ITrigger[] => {
       isTriggerSupported = true;
     }
     if (!isTriggerSupported) {
-      log.info(
+      log.warn(
         `can not found the trigger [${name}]. Did you forget to install the third party trigger?
 Try \`npm i @actionsflow/trigger-${name}\` if it exists.
 `

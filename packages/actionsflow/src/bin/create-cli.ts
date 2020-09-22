@@ -3,41 +3,42 @@ import { log } from "actionsflow-core";
 import build from "../build";
 import clean from "../clean";
 
+export const buildCommandBuilder = (_: yargs.Argv): yargs.Argv =>
+  _.option(`dest`, {
+    alias: "d",
+    type: `string`,
+    describe: `workflows build dest path`,
+    default: "./dist",
+  })
+    .option(`cwd`, {
+      type: `string`,
+      describe: `current workspace path`,
+      default: process.cwd(),
+    })
+    .option(`include`, {
+      alias: "i",
+      type: "array",
+      describe: `workflow files that should include, you can use <glob> patterns`,
+      default: [],
+    })
+    .option(`exclude`, {
+      alias: "e",
+      type: "array",
+      describe: `workflow files that should exclude, you can use <glob> patterns`,
+      default: [],
+    })
+    .option("force", {
+      alias: "f",
+      type: "boolean",
+      describe:
+        "force update all triggers, it will ignore the update interval and cached deduplicate key",
+    });
 function buildLocalCommands(cli: yargs.Argv) {
   cli.command({
     command: `build`,
     describe: `Build a Actionsflow workflows.`,
-    builder: (_) =>
-      _.option(`dest`, {
-        alias: "d",
-        type: `string`,
-        describe: `workflows build dest path`,
-        default: "./dist",
-      })
-        .option(`cwd`, {
-          type: `string`,
-          describe: `current workspace path`,
-          default: process.cwd(),
-        })
-        .option(`include`, {
-          alias: "i",
-          type: "array",
-          describe: `workflow files that should include, you can use <glob> patterns`,
-          default: [],
-        })
-        .option(`exclude`, {
-          alias: "e",
-          type: "array",
-          describe: `workflow files that should exclude, you can use <glob> patterns`,
-          default: [],
-        })
-        .option("force", {
-          alias: "f",
-          type: "boolean",
-          describe:
-            "force update all triggers, it will ignore the update interval and cached deduplicate key",
-        }),
-    handler: build,
+    builder: buildCommandBuilder,
+    handler: build as () => Promise<void>,
   });
 
   cli.command({
