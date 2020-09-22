@@ -167,7 +167,8 @@ test("script trigger with script require", async () => {
     await getTriggerConstructorParams({
       options: {
         run: `
-          const script = require("${process.env.GITHUB_WORKSPACE}/packages/actionsflow/src/triggers/__tests__/fixtures/script.js")
+          const path = require('path')
+          const script = require(path.resolve(process.env.GITHUB_WORKSPACE,"packages/actionsflow/src/triggers/__tests__/fixtures/script.js"))
           const items = await script({
             helpers,
             options
