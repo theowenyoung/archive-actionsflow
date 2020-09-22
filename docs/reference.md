@@ -13,5 +13,5 @@ In this section:
 - [Webhook Syntax](./webhook.md)
 - [Package actionsflow API](./reference/actionsflow-api.md)
 - [Package actionsflow-core API](https://actionsflow.github.io/docs/reference/actionsflow-core-api/)
-- [Package actionsflow-action CLI API](https://actionsflow.github.io/docs/reference/actionsflow-action-api/)
+- [Package actionsflow-action CLI API](https://github.com/actionsflow/actionsflow-action)
 - [Package actionsflow-interface CLI API](https://actionsflow.github.io/docs/reference/actionsflow-interface-api/)
