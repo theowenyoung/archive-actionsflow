@@ -27,6 +27,8 @@ Want to list your trigger here? Welcome to [submit a pull request](https://githu
 
 > TODO
 
+- [rsshub](https://github.com/theowenyoung/actionsflow-trigger-rsshub) - Watches [rsshub](https://docs.rsshub.app/social-media.html) routes easily
+
 # Trigger Syntax
 
 For how to define a trigger, see [Workflow Syntax for Actionsflow](./workflow.md)

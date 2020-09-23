@@ -26,7 +26,8 @@ on:
     url:
       - https://hnrss.org/newest?points=300
       - https://www.buzzfeed.com/world.xml
-    limit: 15
+    config:
+      limit: 15
 ```
 
 ## Options

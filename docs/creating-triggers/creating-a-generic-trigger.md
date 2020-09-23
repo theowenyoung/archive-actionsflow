@@ -21,6 +21,14 @@ cd actionsflow-trigger-<your_trigger_name>
 # change the package.json name author, etc...
 ```
 
+or if you prefer to use javascript:
+
+```bash
+git clone git@github.com:actionsflow/actionsflow-trigger-example_for_js.git actionsflow-trigger-<your_trigger_name>
+cd actionsflow-trigger-<your_trigger_name>
+# change the package.json name author, etc...
+```
+
 # Sample
 
 You need export a class that implements [Actionsflow trigger API](../reference/trigger-api.md) for your trigger package, a simple example for trigger looks like this:
