@@ -14,6 +14,8 @@ export const getThirdPartyTrigger = (
   log.debug("Try to find trigger at package: ", thirdPartyTrigger);
   let triggerPath = resolveCwd.silent(thirdPartyTrigger);
 
+  // TODO get @scope/actionsflow-trigger-xxxx
+
   if (!triggerPath) {
     const thirdPartyTrigger = `actionsflow-trigger-${triggerName}`;
     log.debug("Try to find trigger at package: ", thirdPartyTrigger);

@@ -309,14 +309,16 @@ export const resolveTrigger = (
 ): ITriggerClassTypeConstructable | undefined => {
   // check thirdparty support
   let trigger: ITriggerClassTypeConstructable | undefined;
-
-  trigger = getLocalTrigger(name);
   // first get local trigger
-  if (!trigger) {
-    trigger = allTriggers[name];
-  }
+  trigger = getLocalTrigger(name);
+
+  // then, get third party trigger
   if (!trigger) {
     trigger = getThirdPartyTrigger(name);
+  }
+  // last, get official trigger
+  if (!trigger) {
+    trigger = allTriggers[name];
   }
   return trigger;
 };
