@@ -1,5 +1,5 @@
 {
-  "version": "0.1.27",
+  "version": "0.1.28",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -37,9 +37,9 @@
   "author": "Owen Young",
   "dependencies": {
     "@actions/github": "^4.0.0",
-    "@actionsflow/trigger-slack": "^0.1.27",
-    "@actionsflow/trigger-telegram_bot": "^0.1.27",
-    "@actionsflow/trigger-twitter": "^0.1.24",
+    "@actionsflow/trigger-slack": "^0.1.28",
+    "@actionsflow/trigger-telegram_bot": "^0.1.28",
+    "@actionsflow/trigger-twitter": "^0.1.25",
     "@babel/polyfill": "^7.11.5",
     "@octokit/core": "^3.1.2",
     "@types/fs-extra": "^9.0.1",
@@ -51,7 +51,7 @@
     "@types/semver": "^7.3.4",
     "@types/update-notifier": "^4.1.1",
     "@types/xml2js": "^0.4.5",
-    "actionsflow-core": "^0.1.25",
+    "actionsflow-core": "^0.1.26",
     "actionsflow-interface": "^0.1.16",
     "axios": "^0.20.0",
     "del": "^5.1.0",
