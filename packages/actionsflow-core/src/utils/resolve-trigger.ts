@@ -5,9 +5,7 @@ import { log } from "../log";
 export const getThirdPartyTrigger = (
   triggerName: string
 ): ITriggerClassTypeConstructable | undefined => {
-  // first resolve local triggers
   log.debug(`Try to find trigger: [${triggerName}]`);
-  log.debug(`Try to find trigger at ./triggers/${triggerName}`);
 
   // support package name
   const thirdPartyTrigger = `${triggerName}`;
