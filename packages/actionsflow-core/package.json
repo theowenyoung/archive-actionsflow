@@ -1,5 +1,5 @@
 {
-  "version": "0.1.23",
+  "version": "0.1.24",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -39,7 +39,7 @@
     "@types/lodash.has": "^4.5.6",
     "@types/mime-types": "^2.1.0",
     "@types/type-is": "^1.6.3",
-    "actionsflow-interface": "^0.1.15",
+    "actionsflow-interface": "^0.1.16",
     "axios": "^0.20.0",
     "cache-manager": "^3.3.0",
     "cache-manager-fs-hash": "^0.0.9",

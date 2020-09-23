@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.16](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.15...actionsflow-interface@0.1.16) (2020-09-23)
+
+### Features
+
+- better resolve trigger ([adbf3ed](https://github.com/actionsflow/actionsflow/commit/adbf3ed92c4761f058909fbbdab6ce3ae781d583))
+
 ## [0.1.15](https://github.com/actionsflow/actionsflow/compare/actionsflow-interface@0.1.14...actionsflow-interface@0.1.15) (2020-09-22)
 
 ### Features
