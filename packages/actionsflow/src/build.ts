@@ -142,6 +142,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         trigger: {
           name: trigger.name,
           options: trigger.options,
+          class: trigger.class,
         },
         event: event,
       });

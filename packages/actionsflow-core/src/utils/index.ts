@@ -4,7 +4,7 @@ export {
   getTemplateStringByParentName,
   getExpressionResult,
 } from "./template";
-export { getThirdPartyTrigger } from "./resolve-trigger";
+export { getThirdPartyTrigger, getLocalTrigger } from "./resolve-trigger";
 export { getTriggerWebhookBasePath, isMatchWebhookBasePath } from "./path";
 export { isPromise } from "./promise";
 export { getRawTriggers, filter } from "./filter";

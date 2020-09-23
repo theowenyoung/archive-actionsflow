@@ -8,6 +8,7 @@ import {
   log,
   getWebhookByRequest,
   Cursor,
+  getLocalTrigger,
   filter as filterFn,
 } from "actionsflow-core";
 import { LogLevelDesc } from "loglevel";
@@ -19,16 +20,14 @@ import {
   ITriggerResult,
   ITriggerResultObject,
   IWorkflow,
+  ITaskTrigger,
   ITriggerEvent,
   IWebhookRequestPayload,
   ITrigger,
 } from "actionsflow-interface";
 const MAX_CACHE_KEYS_COUNT = 5000;
 interface ITriggerInternalOptions {
-  trigger: {
-    name: string;
-    options: AnyObject;
-  };
+  trigger: ITaskTrigger;
   workflow: IWorkflow;
   event: ITriggerEvent;
 }
@@ -53,17 +52,7 @@ export const run = async ({
     conclusion: "success",
   };
 
-  let Trigger: ITriggerClassTypeConstructable | undefined;
-
-  if (allTriggers[trigger.name]) {
-    Trigger = allTriggers[trigger.name];
-  }
-
-  if (!Trigger) {
-    Trigger = getThirdPartyTrigger(
-      trigger.name
-    ) as ITriggerClassTypeConstructable;
-  }
+  const Trigger = trigger.class;
 
   if (Trigger) {
     const triggerHelperOptions: ITriggerHelpersOptions = {
@@ -133,7 +122,7 @@ export const run = async ({
           webhooks: triggerInstance.webhooks,
           request: event.request as IWebhookRequestPayload,
           workflow,
-          trigger,
+          trigger: { name: trigger.name, options: trigger.options },
         });
 
         if (webhook) {
@@ -315,35 +304,50 @@ export const run = async ({
   }
   return finalResult;
 };
+export const resolveTrigger = (
+  name: string
+): ITriggerClassTypeConstructable | undefined => {
+  // check thirdparty support
+  let trigger: ITriggerClassTypeConstructable | undefined;
 
-export const getSupportedTriggers = (rawTriggers: ITrigger[]): ITrigger[] => {
-  const supportTriggerKeys = Object.keys(Triggers);
+  trigger = getLocalTrigger(name);
+  // first get local trigger
+  if (!trigger) {
+    trigger = allTriggers[name];
+  }
+  if (!trigger) {
+    trigger = getThirdPartyTrigger(name);
+  }
+  return trigger;
+};
+
+export const getSupportedTriggers = (
+  rawTriggers: ITrigger[]
+): ITaskTrigger[] => {
   const triggers = [];
-
   for (let index = 0; index < rawTriggers.length; index++) {
     const trigger = rawTriggers[index];
     const name = trigger.name;
-    const options = trigger.options || {};
-    // check thirdparty support
-    let isTriggerSupported = false;
-    if (supportTriggerKeys.includes(name)) {
-      isTriggerSupported = true;
-    } else if (getThirdPartyTrigger(name)) {
-      isTriggerSupported = true;
+    const triggerOptions = trigger.options || {};
+    // is active
+    if (triggerOptions.config && triggerOptions.config.active === false) {
+      continue;
     }
-    if (!isTriggerSupported) {
+    // check thirdparty support
+    const triggerClass = resolveTrigger(name);
+    if (!triggerClass) {
       log.warn(
         `can not found the trigger [${name}]. Did you forget to install the third party trigger?
-Try \`npm i @actionsflow/trigger-${name}\` if it exists.
-`
+  Try \`npm i @actionsflow/trigger-${name}\` if it exists.
+  `
       );
     }
-    if (isTriggerSupported) {
-      // is active
-      if (!(options.active === false)) {
-        // valid event
-        triggers.push(trigger);
-      }
+    if (triggerClass) {
+      // valid event
+      triggers.push({
+        ...trigger,
+        class: triggerClass,
+      });
     }
   }
   return triggers;

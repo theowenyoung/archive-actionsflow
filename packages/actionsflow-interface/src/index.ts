@@ -143,9 +143,12 @@ export interface ITriggerEvent {
   type: TriggerEventType;
   request?: IWebhookRequestPayload;
 }
+export interface ITaskTrigger extends ITrigger {
+  class: ITriggerClassTypeConstructable | undefined;
+}
 
 export interface ITask {
   workflow: IWorkflow;
-  trigger: ITrigger;
+  trigger: ITaskTrigger;
   event: ITriggerEvent;
 }

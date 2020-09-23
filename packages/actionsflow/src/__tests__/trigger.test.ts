@@ -1,5 +1,5 @@
 import path from "path";
-import { run } from "../trigger";
+import { run, resolveTrigger } from "../trigger";
 import { IWorkflow } from "actionsflow-interface";
 import { formatRequest, getWorkflow, getContext } from "actionsflow-core";
 test("run trigger", async () => {
@@ -12,6 +12,7 @@ test("run trigger", async () => {
           force: true,
         },
       },
+      class: resolveTrigger("rss"),
     },
 
     workflow: (await getWorkflow({
@@ -44,6 +45,7 @@ test("run trigger with github enviroment, use lastUpdateAt", async () => {
           every: 5,
         },
       },
+      class: resolveTrigger("rss"),
     },
 
     workflow: (await getWorkflow({
@@ -75,6 +77,7 @@ test("run trigger with  webhook", async () => {
           force: true,
         },
       },
+      class: resolveTrigger("webhook"),
     },
 
     workflow: (await getWorkflow({
@@ -118,6 +121,7 @@ test("run trigger with  special webhook", async () => {
           force: true,
         },
       },
+      class: resolveTrigger("webhook"),
     },
 
     workflow: (await getWorkflow({
