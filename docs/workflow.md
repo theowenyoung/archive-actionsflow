@@ -104,7 +104,7 @@ Learn more about MongoDB query language, please see [`MongoDB query documents`](
 
 Optional, [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection). You can use `filterOutputs` to filter result's field of the trigger's outputs as you need.
 
-Actionsflow use [`mingo`](https://github.com/kofrasa/mingo)(A tool to use MongoDB query language for in-memory objects) for filter the trigger's outputs. For example, the following email trigger outputs will only include `subject`:
+Actionsflow use [`mingo`](https://github.com/kofrasa/mingo)(A tool to use MongoDB query language for in-memory objects) for filter the trigger's outputs. For example, the following email trigger outputs will include `date`, `subject`, and `subject` will only [include the first 7 bytes](https://docs.mongodb.com/manual/reference/operator/aggregation/substrBytes/):
 
 ```yaml
 on:
@@ -115,7 +115,12 @@ on:
       password: ${{secrets.EMAIL_PASSWORD}}
     config:
       filterOutputs:
-        subject: 1
+        date: 1
+        subject:
+          $substrBytes:
+            - $subject
+            - 0
+            - 7
 ```
 
 Trigger built result, `outputs` will only include `subject` key:
