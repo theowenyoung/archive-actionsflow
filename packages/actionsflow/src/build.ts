@@ -147,8 +147,8 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         event: event,
       });
     } catch (error) {
-      // if continueOnError
-      if (trigger.options && trigger.options["continueOnError"]) {
+      // if buildOutputsOnError
+      if (trigger.options && trigger.options["buildOutputsOnError"]) {
         log.warn(
           `Run ${workflow.relativePath} trigger ${trigger.name} error: `,
           error
@@ -162,10 +162,12 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
           conclusion: "success",
         });
         continue;
-      } else {
-        log.warn(`Skip ${workflow.relativePath} trigger [${trigger.name}]`);
-        log.warn(`Run trigger ${trigger.name} error: `, error);
+      } else if (trigger.options && trigger.options.skipOnError === true) {
+        log.info(`Skip ${workflow.relativePath} trigger [${trigger.name}]`);
+        log.info(`Run trigger ${trigger.name} error: `, error);
         continue;
+      } else {
+        throw error;
       }
     }
 

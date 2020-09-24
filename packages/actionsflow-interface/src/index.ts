@@ -50,7 +50,8 @@ export interface ITriggerGeneralConfigOptions {
   force?: boolean;
   logLevel?: LogLevelDesc;
   active?: boolean;
-  continueOnError?: boolean;
+  buildOutputsOnError?: boolean;
+  skipOnError?: boolean;
   filter?: AnyObject;
   filterOutputs?: AnyObject;
   format?: string;

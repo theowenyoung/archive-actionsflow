@@ -82,7 +82,7 @@ on:
 
 The `config` has the following options.
 
-## `on<trigger>.config.filter`
+## `on.<trigger>.config.filter`
 
 Optional, [`MongoDB query language`](https://docs.mongodb.com/manual/tutorial/query-documents/index.html). You can use `filter` to filter the trigger's results as you need.
 
@@ -100,7 +100,7 @@ on:
 
 Learn more about MongoDB query language, please see [`MongoDB query documents`](https://docs.mongodb.com/manual/tutorial/query-documents/index.html) and [`mingo`](https://github.com/kofrasa/mingo).
 
-## `on<trigger>.config.filterOutputs`
+## `on.<trigger>.config.filterOutputs`
 
 Optional, [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection). You can use `filterOutputs` to filter result's field of the trigger's outputs as you need.
 
@@ -138,7 +138,7 @@ Trigger built result, `outputs` will include `date`, `subject` key:
 
 Learn more about MongoDB query projection syntax, please see [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection) and [`mingo`](https://github.com/kofrasa/mingo).
 
-## `on<trigger>.config.format`
+## `on.<trigger>.config.format`
 
 Optional, `js function code`. You can use `format` to filter result's field of the trigger's outputs as you need. `format` will be called after `filterOutputs`. You can use `format` like this:
 
@@ -153,7 +153,7 @@ on:
         return item;
 ```
 
-## `on<trigger>.config.sort`
+## `on.<trigger>.config.sort`
 
 Optional, [`MongoDB query language sort syntax`](https://docs.mongodb.com/manual/reference/method/cursor.sort/index.html), You can use `sort` to change the order of the trigger's results as you need.
 
@@ -171,37 +171,41 @@ on:
 
 Learn more about MongoDB query sort syntax, please see [`MongoDB query language sort syntax`](https://docs.mongodb.com/manual/reference/method/cursor.sort/index.html) and [`mingo`](https://github.com/kofrasa/mingo).
 
-## `on<trigger>.config.limit`
+## `on.<trigger>.config.limit`
 
 Optional, `number`, the trigger's results max length, the default value is `undefined`, it means the trigger will handle all items
 
-## `on<trigger>.config.skip`
+## `on.<trigger>.config.skip`
 
 Optional, `number`, skip `<count>` results of the trigger's results , the default value is `undefined`, it means the trigger will handle all items
 
-## `on<trigger>.config.every`
+## `on.<trigger>.config.every`
 
 Optional, `number`, polling data interval time, the unit is minute, the default value is `0`, means the trigger will be ran every time. But due to the limitation of the [shortest interval of github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#schedule), generally Actionsflow will run once every 5 minutes, but you can also trigger Actionsflow run through `push` or the [other events that trigger Actionsflow run](https://docs.github.com/en/actions/reference/events-that-trigger-workflows)
 
 > Note, webhook event will ignore `every` config
 
-## `on<trigger>.config.skipFirst`
+## `on.<trigger>.config.skipFirst`
 
 Optional, `boolean`, whether to skip the data obtained for the first time, if `true`, the trigger will run the next time it get data. The default value is `false`
 
-## `on<trigger>.config.shouldDeduplicate`
+## `on.<trigger>.config.shouldDeduplicate`
 
 Optional, `boolean`, if the trigger's results should be dedeplicate, the default value is decided by the trigger, you can force to override it.
 
-## `on<trigger>.config.force`
+## `on.<trigger>.config.force`
 
 Optional, `boolean`, whether to force data to be updated, if `true`, the trigger will ignore cache, and last update time. The default value is `false`
 
-## `on<trigger>.config.continueOnError`
+## `on.<trigger>.config.skipOnError`
 
-Optional, `boolean`, Set to `true`, Actionsflow will generate a `outcome: true` workflow from failing when a trigger fails. The default value is `false`, Actionsflow will ignore the trigger for this time if there are any fails.
+Optional, `boolean`, Set to `true`, Actionsflow will ignore the trigger for this time if there are any fails. The default value is `false`, which means Actionsflow will throw an error, stop to build.
 
-## `on<trigger>.config.logLevel`
+## `on.<trigger>.config.buildOutputsOnError`
+
+Optional, `boolean`, Set to `true`, Actionsflow will build a workflow with `on.<trigger>.outcome` as `true`, `on.<trigger>.outputs` as `{}` from failing when a trigger fails. The default value is `false`, Actionsflow will skip to build outputs for this trigger this time.
+
+## `on.<trigger>.config.logLevel`
 
 Optional, `string`, log level for trigger, the default value is `info`, you can use `trace`, `debug`, `info`, `warn`, `error`
 
@@ -272,20 +276,26 @@ A map of outputs for a trigger results' item. Trigger's outputs are available to
 
 Trigger's outputs are `object`, you can use it like this: `${{ on.telegram_bot.from.first_name }}`
 
+By default, `on.<trigger>.outputs` will always available, unless you set `buildOutputsOnError` as `true`, when `buildOutputsOnError` is `true`, and the trigger runs with error, then, the outputs will be `{}`, you can use `on.<trigger>.outcome` to check if the trigger runs with error. When `on.<trigger>.outcome` is `failure`, then the `on.<trigger>.outputs` will be `{}`
+
 ## `on.<trigger>.outcome`
 
 The result of a completed trigger, Possible values are `success`, `failure`, or `skipped`.
 
-By default(if there is only one trigger at a workflow file), `outcome` is always `success` unless you set the trigger options `continueOnError: true`, then when a `continueOnError` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
+If there is only one trigger at a workflow file, by default, `outcome` will always be `success`. If you set the trigger options `buildOutputsOnError: true`, then the trigger runs with error, the `outcome` will be `failure`, but the final `conclusion`is `success`.
 
 If you set multiple triggers on one workflow, only one trigger's `outcome` is `success`, the others `outcome` will be `skipped`, so you should use `if: on.<trigger>.outcome === 'success'` to ensure the current `<trigger>.outputs.<key>` is available.
 
 ## `on.<trigger>.conclusion`
 
-The result of a completed step after `continueOnError` is applied. Possible values are `success`, `failure`, or `skipped`.
+The result of a completed trigger. Possible values are `success`, or `skipped`.
 
-By default(if there is only one trigger at a workflow file), `conclusion` is always `success` unless you set the trigger options `continueOnError: true`, then when a `continueOnError` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
+If there is only one trigger at a workflow file, `conclusion` will always be `success`
 
-# Triggers
+If you set multiple triggers on one workflow, only one trigger's `conclusion` is `success`, the others `conclusion` will be `skipped`
+
+# Learn More
 
 For a list of available triggers, see "[Triggers List](./triggers.md)"
+
+For a list of awesome workflows, see "[Explore Workflows](./explore.md)"

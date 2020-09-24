@@ -72,11 +72,17 @@ interface ITriggerContructorParams {
     every?: number;
     shouldDeduplicate?: boolean;
     skipFirst?: boolean;
-    limit?: number;
     force?: boolean;
     logLevel?: LogLevelDesc;
     active?: boolean;
-    continueOnError?: boolean;
+    buildOutputsOnError?: boolean;
+    skipOnError?: boolean;
+    filter?: AnyObject;
+    filterOutputs?: AnyObject;
+    format?: string;
+    skip?: number;
+    limit?: number;
+    sort?: AnyObject;
   }
   ```
 
@@ -139,11 +145,17 @@ interface ITriggerGeneralConfigOptions {
   every?: number;
   shouldDeduplicate?: boolean;
   skipFirst?: boolean;
-  limit?: number;
   force?: boolean;
   logLevel?: LogLevelDesc;
   active?: boolean;
-  continueOnError?: boolean;
+  buildOutputsOnError?: boolean;
+  skipOnError?: boolean;
+  filter?: AnyObject;
+  filterOutputs?: AnyObject;
+  format?: string;
+  skip?: number;
+  limit?: number;
+  sort?: AnyObject;
 }
 ```
 
@@ -159,7 +171,8 @@ The default value is:
   "force": false,
   "logLevel": "info",
   "active": true,
-  "continueOnError": false
+  "skipOnError": false,
+  "buildOutputsOnError": false
 }
 ```
 
