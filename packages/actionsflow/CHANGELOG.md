@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.35](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.34...actionsflow@0.1.35) (2020-09-24)
+
+### Features
+
+- catch function string error ([0332ab3](https://github.com/actionsflow/actionsflow/commit/0332ab3ff82a144ab26b91f1144b1ca452f6b5dc))
+
 ## [0.1.34](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.33...actionsflow@0.1.34) (2020-09-24)
 
 ### Features

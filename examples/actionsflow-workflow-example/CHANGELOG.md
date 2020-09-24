@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.40](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.39...actionsflow-workflow-example@0.0.40) (2020-09-24)
+
+### Features
+
+- catch function string error ([0332ab3](https://github.com/actionsflow/actionsflow/commit/0332ab3ff82a144ab26b91f1144b1ca452f6b5dc))
+
 ## [0.0.39](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.38...actionsflow-workflow-example@0.0.39) (2020-09-24)
 
 **Note:** Version bump only for package actionsflow-workflow-example
