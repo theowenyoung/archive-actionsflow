@@ -36,13 +36,13 @@ test("filter outputs", () => {
       },
     },
     {
-      subject: 1,
+      subject: {
+        $substrBytes: ["$subject", 0, 7],
+      },
     }
   );
   expect(filterResults.all().length).toBe(1);
-  expect(JSON.stringify(filterResults.all())).toBe(
-    '[{"subject":"[hash2] Subject Test"}]'
-  );
+  expect(JSON.stringify(filterResults.all())).toBe('[{"subject":"[hash2]"}]');
 });
 
 test("isPromise yes", () => {

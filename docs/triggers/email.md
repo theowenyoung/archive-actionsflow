@@ -54,7 +54,7 @@ on:
 
 - `shouldDownloadAttachments`, optional, `boolean`, if need downloading attachments, the default value is `false`.
 
-> You can use [General Config for Actionsflow Trigger](../workflow.md#ontrigger_nameconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](../workflow.md#ontriggerconfig) for more customization.
 
 ## Outputs
 

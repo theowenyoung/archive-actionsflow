@@ -1,6 +1,11 @@
 import { ITrigger, IWorkflowData, AnyObject } from "actionsflow-interface";
+import { useOperators, OperatorType } from "mingo/core";
 import mingo from "mingo";
+import * as stringOperators from "mingo/operators/expression/string";
+
 import { Cursor } from "mingo/cursor";
+useOperators(OperatorType.EXPRESSION, stringOperators);
+
 /**
  * get raw triggers from workflow data
  * @param doc

@@ -65,7 +65,7 @@ For example, you can input the following value at [IFTTT webhook](https://ifttt.
 - `path`, optional, `string`, you can define a path as the specific path that the webhook should listen, the default is `undefined`, means that the webhook would listen all path with prefix `https://webhook.actionsflow.workers.dev/actionsflow/actionsflow/webhook/webhook` . The options value can be `/`, `/user/:userId`
 - `deduplicationKey`, optional. When `config.shouldDeduplicate` is `true`, the webhook trigger deduplicates the webhook body payload against body `id` key. If the id key does not exist, you should specify an alternative unique key to deduplicate. If neither are supplied, we fallback to looking for `id`, `key`, if neither are supplied, we will hash the body, and generate a unique key
 
-> You can use [General Config for Actionsflow Trigger](../workflow.md#ontrigger_nameconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](../workflow.md#ontriggerconfig) for more customization.
 
 > Note, the default value of `config.shouldDeduplicate` is `false` for this trigger.
 

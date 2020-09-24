@@ -96,7 +96,7 @@ You can use the following context at your script code:
       return items;
   ```
 
-> You can use [General Config for Actionsflow Trigger](../workflow.md#ontrigger_nameconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](../workflow.md#ontriggerconfig) for more customization.
 
 ## Outputs
 

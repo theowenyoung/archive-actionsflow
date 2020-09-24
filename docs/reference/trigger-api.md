@@ -63,7 +63,7 @@ interface ITriggerContructorParams {
   }
   ```
 
-  `config` is the [general options for Actionsflow trigger](../workflow.md#ontrigger_nameconfig), `config` are handled by Actionsflow, you can change the default config by change the instance `config` value, learn more about changing the default`config` see [here](#config)
+  `config` is the [general options for Actionsflow trigger](../workflow.md#ontriggerconfig), `config` are handled by Actionsflow, you can change the default config by change the instance `config` value, learn more about changing the default`config` see [here](#config)
 
   `config` interface:
 
@@ -147,7 +147,7 @@ interface ITriggerGeneralConfigOptions {
 }
 ```
 
-Learn more about config field meaning, see [general options for Actionsflow trigger](../workflow.md#ontrigger_nameconfig)
+Learn more about config field meaning, see [general options for Actionsflow trigger](../workflow.md#ontriggerconfig)
 
 The default value is:
 

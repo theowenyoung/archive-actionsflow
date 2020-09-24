@@ -21,7 +21,7 @@ on:
 
 ## Options
 
-There is nothing can be specified. You can use [General Config for Actionsflow Trigger](https://actionsflow.github.io/docs/workflow/#ontrigger_nameconfig) for more customization.
+There is nothing can be specified. You can use [General Config for Actionsflow Trigger](https://actionsflow.github.io/docs/workflow/#ontriggerconfig) for more customization.
 
 ## Outputs
 

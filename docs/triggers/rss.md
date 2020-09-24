@@ -34,7 +34,7 @@ on:
 
 - `url`, required, `string` or `string[]`, when `url` is `string[]`, then multiple RSS feeds can trigger the action.
 
-> You can use [General Config for Actionsflow Trigger](../workflow.md#ontrigger_nameconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](../workflow.md#ontriggerconfig) for more customization.
 
 ## Outputs
 
