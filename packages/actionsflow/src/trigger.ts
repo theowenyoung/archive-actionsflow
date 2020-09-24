@@ -300,7 +300,9 @@ export const run = async ({
                 return newItem;
               } catch (error) {
                 throw new Error(
-                  `An error occurred in the format function: ${error.toString()}`
+                  `An error occurred in the ${workflow.relativePath} [${
+                    trigger.name
+                  }] format function: ${error.toString()}`
                 );
               }
             });
