@@ -73,7 +73,8 @@ interface IGeneralTriggerOptions extends ITriggerGeneralConfigOptions {
   force: boolean;
   logLevel: LogLevelDesc;
   active: boolean;
-  continueOnError: boolean;
+  buildOutputsOnError: boolean;
+  skipOnError: boolean;
 }
 export const getGeneralTriggerFinalOptions = (
   triggerInstance: ITriggerClassType,
@@ -94,7 +95,8 @@ export const getGeneralTriggerFinalOptions = (
     force: false,
     logLevel: "info",
     active: true,
-    continueOnError: false,
+    buildOutputsOnError: false,
+    skipOnError: false,
     ...instanceConfig,
     ...userOptions,
   };

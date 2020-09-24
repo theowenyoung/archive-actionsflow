@@ -154,7 +154,7 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
           error
         );
         log.warn(
-          "But the workflow will continue to run because continueOnError: true"
+          "But the workflow will continue to run because buildOutputsOnError: true"
         );
         triggerResults.push({
           outputs: {},
