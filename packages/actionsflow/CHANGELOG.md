@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.31](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.30...actionsflow@0.1.31) (2020-09-24)
+
+### Features
+
+- support more operator for mongo string ([ed20379](https://github.com/actionsflow/actionsflow/commit/ed2037900d35547cf37bff2bd278e8b1d714dbb9))
+
 ## [0.1.30](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.29...actionsflow@0.1.30) (2020-09-24)
 
 ### Features
