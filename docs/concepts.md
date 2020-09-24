@@ -6,6 +6,33 @@ title: "Core Concepts"
 
 Actionsflow uses [Github Actions](https://docs.github.com/en/actions)' [**`repository_dispatch` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch) and [**per 5 minutes' `scheduled` event**](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events) to run [Actionsflow triggers](./triggers.md) for getting an array results, and do some caching and deduplication works, then generating a standard Github actions workflow file with the trigger result, then calling [act](https://github.com/nektos/act)(a tool for running GitHub Actions locally) to run the built workflow files.
 
+In programming language, the power of actionsflow comes from the following Github workflows file (`.github/workflows/actionsflow.yml`):
+
+```yaml
+name: Actionsflow
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+  push:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: Run
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Actionsflow
+        uses: actionsflow/actionsflow-action@master
+        env:
+          JSON_SECRETS: ${{ toJson(secrets) }}
+          JSON_GITHUB: ${{ toJson(github) }}
+      - name: Setup act
+        uses: actionsflow/setup-act-for-actionsflow@v1
+      - name: Run act
+        run: act --workflows ./dist/workflows --secret-file ./dist/.secrets --eventpath ./dist/event.json --env-file ./dist/.env
+```
+
 ## `scheduled` Run
 
 Actionsflow setup a Github scheduled action running per 5 minutes, Actionsflow will call the trigger's manual `run` method to check if there are any updates with the triggers in the workflows, if Actionsflow found an updated item, it will generate a standard Github actions workflow file with the item payload, and call [act](https://github.com/nektos/act) to run the built workflows.
