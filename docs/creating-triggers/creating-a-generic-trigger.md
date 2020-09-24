@@ -9,6 +9,8 @@ An Actionsflow trigger name looks like **`@actionsflow/trigger-*`**, for example
 
 > if your trigger name is more than one word, snake case format is recommended for a trigger name, because the jobs use trigger's outputs by `on.trigger_name.outputs.param`, if your trigger is named `trigger-name`, then the jobs should use trigger's outputs by `on['trigger-name'].outputs.param`. Snake case is also Github actions naming conventions, like `pull_request`, it's also Actionsflow trigger recommended naming conventions.
 
+> if the trigger name you want to create has been used, Actionsflow also support load the full name of your trigger package. For example, if your trigger is named `twitter_trigger_for_actionsflow`, then your can use `twitter_trigger_for_actionsflow` as your trigger name at `on`
+
 # Initializing your trigger project through trigger starter
 
 We provide two trigger starters, [one for typescript](https://github.com/actionsflow/actionsflow-trigger-example), [one for javascript](https://github.com/actionsflow/actionsflow-trigger-example_for_js), you can start your trigger from any of them.

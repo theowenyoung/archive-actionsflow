@@ -9,14 +9,20 @@ export const getThirdPartyTrigger = (
 
   // TODO get @scope/actionsflow-trigger-xxxx
 
-  const thirdPartyTrigger = `actionsflow-trigger-${triggerName}`;
+  let thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
   log.debug("Try to find trigger at package: ", thirdPartyTrigger);
   let triggerPath = resolveCwd.silent(thirdPartyTrigger);
 
   if (!triggerPath) {
-    const thirdPartyTrigger = `@actionsflow/trigger-${triggerName}`;
+    thirdPartyTrigger = `actionsflow-trigger-${triggerName}`;
     log.debug("Try to find trigger at package: ", thirdPartyTrigger);
     triggerPath = resolveCwd.silent(thirdPartyTrigger);
+  }
+
+  if (!triggerPath) {
+    // try to resolve the direct package
+    log.debug("Try to find trigger at package: ", triggerName);
+    triggerPath = resolveCwd.silent(triggerName);
   }
 
   if (triggerPath) {
