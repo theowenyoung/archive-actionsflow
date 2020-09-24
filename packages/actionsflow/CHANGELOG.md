@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.30](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.29...actionsflow@0.1.30) (2020-09-24)
+
+### Features
+
+- args string ([3385157](https://github.com/actionsflow/actionsflow/commit/3385157cb8071bcaba2ef8a0760ac84c3ae588c5))
+
 ## [0.1.29](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.28...actionsflow@0.1.29) (2020-09-24)
 
 **Note:** Version bump only for package actionsflow

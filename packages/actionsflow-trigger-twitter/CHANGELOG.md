@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.27](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.26...@actionsflow/trigger-twitter@0.1.27) (2020-09-24)
+
+**Note:** Version bump only for package @actionsflow/trigger-twitter
+
 ## [0.1.26](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.25...@actionsflow/trigger-twitter@0.1.26) (2020-09-24)
 
 **Note:** Version bump only for package @actionsflow/trigger-twitter
