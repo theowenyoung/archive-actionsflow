@@ -171,7 +171,11 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
         trigger.options.config &&
         trigger.options.config.skipOnError === true
       ) {
-        log.info(`Skip ${workflow.relativePath} trigger [${trigger.name}]`);
+        log.info(
+          `Skip ${workflow.relativePath} trigger [${trigger.name}]`,
+          `becaulse there is an error occurred at trigger ${trigger.name}: `,
+          error
+        );
         log.info(`Run trigger ${trigger.name} error: `, error);
         continue;
       } else {
