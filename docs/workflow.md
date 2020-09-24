@@ -62,11 +62,11 @@ on:
     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 ```
 
-## `on.<trigger_name>`
+## `on.<trigger>`
 
 Optional, the options of the trigger, the default value is `{}`, You can find the trigger's documentation for getting the available params.
 
-## `on.<trigger_name>.config`
+## `on.<trigger>.config`
 
 Optional, you can use `config` to configure the general options for Actionsflow trigger. These options are handled by Actionsflow, so all triggers accept these options.
 
@@ -82,7 +82,7 @@ on:
 
 The `config` has the following options.
 
-### `on<trigger_name>.config.filter`
+## `on<trigger>.config.filter`
 
 Optional, [`MongoDB query language`](https://docs.mongodb.com/manual/tutorial/query-documents/index.html). You can use `filter` to filter the trigger's results as you need.
 
@@ -100,7 +100,7 @@ on:
 
 Learn more about MongoDB query language, please see [`MongoDB query documents`](https://docs.mongodb.com/manual/tutorial/query-documents/index.html) and [`mingo`](https://github.com/kofrasa/mingo).
 
-### `on<trigger_name>.config.filterOutputs`
+## `on<trigger>.config.filterOutputs`
 
 Optional, [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection). You can use `filterOutputs` to filter result's field of the trigger's outputs as you need.
 
@@ -132,7 +132,7 @@ Trigger built result, `outputs` will only include `subject` key:
 
 Learn more about MongoDB query projection syntax, please see [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection) and [`mingo`](https://github.com/kofrasa/mingo).
 
-### `on<trigger_name>.config.sort`
+## `on<trigger>.config.sort`
 
 Optional, [`MongoDB query language sort syntax`](https://docs.mongodb.com/manual/reference/method/cursor.sort/index.html), You can use `sort` to change the order of the trigger's results as you need.
 
@@ -150,45 +150,45 @@ on:
 
 Learn more about MongoDB query sort syntax, please see [`MongoDB query language sort syntax`](https://docs.mongodb.com/manual/reference/method/cursor.sort/index.html) and [`mingo`](https://github.com/kofrasa/mingo).
 
-### `on<trigger_name>.config.limit`
+## `on<trigger>.config.limit`
 
 Optional, `number`, the trigger's results max length, the default value is `undefined`, it means the trigger will handle all items
 
-### `on<trigger_name>.config.skip`
+## `on<trigger>.config.skip`
 
 Optional, `number`, skip `<count>` results of the trigger's results , the default value is `undefined`, it means the trigger will handle all items
 
-### `on<trigger_name>.config.every`
+## `on<trigger>.config.every`
 
 Optional, `number`, polling data interval time, the unit is minute, the default value is `0`, means the trigger will be ran every time. But due to the limitation of the [shortest interval of github actions](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#schedule), generally Actionsflow will run once every 5 minutes, but you can also trigger Actionsflow run through `push` or the [other events that trigger Actionsflow run](https://docs.github.com/en/actions/reference/events-that-trigger-workflows)
 
 > Note, webhook event will ignore `every` config
 
-### `on<trigger_name>.config.skipFirst`
+## `on<trigger>.config.skipFirst`
 
 Optional, `boolean`, whether to skip the data obtained for the first time, if `true`, the trigger will run the next time it get data. The default value is `false`
 
-### `on<trigger_name>.config.shouldDeduplicate`
+## `on<trigger>.config.shouldDeduplicate`
 
 Optional, `boolean`, if the trigger's results should be dedeplicate, the default value is decided by the trigger, you can force to override it.
 
-### `on<trigger_name>.config.force`
+## `on<trigger>.config.force`
 
 Optional, `boolean`, whether to force data to be updated, if `true`, the trigger will ignore cache, and last update time. The default value is `false`
 
-### `on<trigger_name>.config.continueOnError`
+## `on<trigger>.config.continueOnError`
 
 Optional, `boolean`, Set to `true`, Actionsflow will generate a `outcome: true` workflow from failing when a trigger fails. The default value is `false`, Actionsflow will ignore the trigger for this time if there are any fails.
 
-### `on<trigger_name>.config.logLevel`
+## `on<trigger>.config.logLevel`
 
 Optional, `string`, log level for trigger, the default value is `info`, you can use `trace`, `debug`, `info`, `warn`, `error`
 
-### `on.<trigger_name>.config.active`
+## `on.<trigger>.config.active`
 
 Optional, `boolean`, if the trigger is active, default is `true`. for some reason, you can make trigger inactive by set `active: false`
 
-## `on.<trigger_name>.<param>`
+## `on.<trigger>.<param>`
 
 Optional, the trigger's options, defined by the specific trigger, you should read the trigger's documentation to get all options that available for the trigger. For [`rss`](./triggers/rss.md) example:
 
@@ -238,33 +238,33 @@ ${{ <context> }}
 All [Github actions contexts and expressions](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions) are supported by Actionsflow, and we extend `on` context for trigger's results. You can use it like this:
 
 ```yaml
-${{ on.<trigger_name>.outputs.<key> }}
+${{ on.<trigger>.outputs.<key> }}
 ```
 
 You can find params and outputs keys supported by the trigger at the trigger's doc.
 
 All triggers' will export the following key:
 
-## `on.<trigger_name>.outputs`
+## `on.<trigger>.outputs`
 
 A map of outputs for a trigger results' item. Trigger's outputs are available to all jobs.
 
 Trigger's outputs are `object`, you can use it like this: `${{ on.telegram_bot.from.first_name }}`
 
-## `on.<trigger_name>.outcome`
+## `on.<trigger>.outcome`
 
 The result of a completed trigger, Possible values are `success`, `failure`, or `skipped`.
 
 By default(if there is only one trigger at a workflow file), `outcome` is always `success` unless you set the trigger options `continueOnError: true`, then when a `continueOnError` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
 
-If you set multiple triggers on one workflow, only one trigger's `outcome` is `success`, the others `outcome` will be `skipped`, so you should use `if: on.<trigger_name>.outcome === 'success'` to ensure the current `<trigger_name>.outputs.<key>` is available.
+If you set multiple triggers on one workflow, only one trigger's `outcome` is `success`, the others `outcome` will be `skipped`, so you should use `if: on.<trigger>.outcome === 'success'` to ensure the current `<trigger>.outputs.<key>` is available.
 
-## `on.<trigger_name>.conclusion`
+## `on.<trigger>.conclusion`
 
 The result of a completed step after `continueOnError` is applied. Possible values are `success`, `failure`, or `skipped`.
 
 By default(if there is only one trigger at a workflow file), `conclusion` is always `success` unless you set the trigger options `continueOnError: true`, then when a `continueOnError` trigger fails, the `outcome` is `failure`, but the final `conclusion`is `success`.
 
-## Triggers
+# Triggers
 
 For a list of available triggers, see "[Triggers List](./triggers.md)"
