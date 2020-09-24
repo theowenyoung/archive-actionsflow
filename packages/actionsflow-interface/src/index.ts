@@ -53,6 +53,7 @@ export interface ITriggerGeneralConfigOptions {
   continueOnError?: boolean;
   filter?: AnyObject;
   filterOutputs?: AnyObject;
+  format?: string;
   skip?: number;
   limit?: number;
   sort?: AnyObject;

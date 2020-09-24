@@ -14,6 +14,7 @@ export {
   getAstsByParentName,
   getTemplateStringByParentName,
   getExpressionResult,
+  getStringFunctionResult,
   getThirdPartyTrigger,
   getLocalTrigger,
   getTriggerWebhookBasePath,

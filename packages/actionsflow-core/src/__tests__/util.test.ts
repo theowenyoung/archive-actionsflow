@@ -1,6 +1,7 @@
 import {
   template,
   getTemplateStringByParentName,
+  getStringFunctionResult,
   getExpressionResult,
   isPromise,
   getRawTriggers,
@@ -62,6 +63,19 @@ test("getExpressionResult", () => {
   expect(
     getExpressionResult("data.test", { data: { test: "testvalue" } })
   ).toBe("testvalue");
+});
+test("getStringFunction object", () => {
+  expect(
+    getStringFunctionResult("return item.message", {
+      item: {
+        message: {
+          id: "messageid",
+        },
+      },
+    })
+  ).toEqual({
+    id: "messageid",
+  });
 });
 test("getTemplateStringByParentName simple", () => {
   expect(

@@ -10,6 +10,9 @@ on:
           $eq: 5
       filterOutputs:
         title: 1
+      format: |
+        item.title = item.title.substring(0,5)
+        return item;
       skip: 1
       sort:
         id: -1

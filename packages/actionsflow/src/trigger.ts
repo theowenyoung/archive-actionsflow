@@ -10,6 +10,7 @@ import {
   Cursor,
   getLocalTrigger,
   filter as filterFn,
+  getStringFunctionResult,
 } from "actionsflow-core";
 import { LogLevelDesc } from "loglevel";
 import Triggers from "./triggers";
@@ -90,6 +91,7 @@ export const run = async ({
         limit,
         filter,
         filterOutputs,
+        format,
         sort,
         skip,
         skipFirst,
@@ -287,6 +289,15 @@ export const run = async ({
           if (filterOutputs) {
             const filterOutpusCursor = filterFn(items, {}, filterOutputs);
             items = filterOutpusCursor.all();
+          }
+          // last format outputs
+          if (format) {
+            items = items.map((item) => {
+              return getStringFunctionResult(format, { item }) as Record<
+                string,
+                unknown
+              >;
+            });
           }
         }
 

@@ -123,19 +123,35 @@ on:
             - 7
 ```
 
-Trigger built result, `outputs` will only include `subject` key:
+Trigger built result, `outputs` will include `date`, `subject` key:
 
 ```json
 {
   "outcome": "success",
   "conclusion": "success",
   "outputs": {
+    "date": "2020-09-15T21:14:26.000Z",
     "subject": "Hello"
   }
 }
 ```
 
 Learn more about MongoDB query projection syntax, please see [`MongoDB query language projection syntax`](https://docs.mongodb.com/manual/reference/method/db.collection.find/index.html#find-projection) and [`mingo`](https://github.com/kofrasa/mingo).
+
+## `on<trigger>.config.format`
+
+Optional, `js function code`. You can use `format` to filter result's field of the trigger's outputs as you need. `format` will be called after `filterOutputs`. You can use `format` like this:
+
+```yaml
+name: A really complex example
+on:
+  poll:
+    url: https://jsonplaceholder.typicode.com/posts
+    config:
+      format: |
+        item.title = item.title.substring(0,5)
+        return item;
+```
 
 ## `on<trigger>.config.sort`
 

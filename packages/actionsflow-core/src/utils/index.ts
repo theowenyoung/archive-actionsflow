@@ -3,6 +3,7 @@ export {
   getAstsByParentName,
   getTemplateStringByParentName,
   getExpressionResult,
+  getStringFunctionResult,
 } from "./template";
 export { getThirdPartyTrigger, getLocalTrigger } from "./resolve-trigger";
 export { getTriggerWebhookBasePath, isMatchWebhookBasePath } from "./path";

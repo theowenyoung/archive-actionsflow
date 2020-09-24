@@ -24,10 +24,10 @@ Or, you can use a `path` to run the external script. For example,
 ```yaml
 on:
   script:
-    path: ./script.js
+    path: ./workflows/script.js
 ```
 
-> `script.js` should be placed in the same directory with the workflow file. You can also place it in the other folder if you prefer, use a relative path to refer it.
+> Use a relative path based on your project root directory.
 
 ## Options
 

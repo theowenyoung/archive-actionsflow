@@ -215,12 +215,16 @@ export const getExpressionResult = (
   expressionText: string,
   context: AnyObject
 ): string => {
-  return Function(
-    "var toJson = function(obj){return JSON.stringify(obj,null,2)}; var toJSON = toJson; var fromJson = function(string){return JSON.parse(string)};var fromJSON = fromJson;with(this)return " +
-      expressionText
-  ).call(context);
+  return Function("with(this){\nreturn " + expressionText + "\n}").call(
+    context
+  );
 };
-
+export const getStringFunctionResult = (
+  expressionText: string,
+  context: AnyObject
+): unknown => {
+  return Function("with(this){\n" + expressionText + "\n}").call(context);
+};
 const variableHandle = ({
   text,
   regex,
