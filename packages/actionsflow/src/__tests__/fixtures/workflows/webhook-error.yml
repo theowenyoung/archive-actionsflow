@@ -1,5 +1,9 @@
 on:
   webhook:
+    config:
+      format: |
+        console.log('data', item, data);
+        return item;
 jobs:
   ifttt:
     name: Make a Request to IFTTT

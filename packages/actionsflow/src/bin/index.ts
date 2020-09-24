@@ -6,6 +6,7 @@ import util from "util";
 import { createCli } from "./create-cli";
 import pkg from "../../package.json";
 import updateNotifier from "update-notifier";
+import { log } from "actionsflow-core";
 // Check if update is available
 updateNotifier({ pkg }).notify({ isGlobal: true });
 
@@ -48,6 +49,8 @@ process.on(`uncaughtException`, (error) => {
   console.warn(`UNHANDLED EXCEPTION`, error);
 });
 
-createCli(process.argv.slice(2).join(" ")).catch(() => {
+createCli(process.argv.slice(2).join(" ")).catch((err) => {
   // do nothing
+  log.error(err);
+  process.exit(1);
 });

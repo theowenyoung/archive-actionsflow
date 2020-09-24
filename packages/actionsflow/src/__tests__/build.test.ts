@@ -59,3 +59,26 @@ test("build webhook workflows", async () => {
     "${{(fromJSON(env.ACTIONSFLOW_TRIGGER_RESULT_FOR_webhook_0)).outputs.payload.key}}"
   );
 });
+
+test("build webhook workflows with error", async () => {
+  // set process env
+  process.env.JSON_SECRETS =
+    '{"GITHUB_TOKEN": "fake_github_token","IFTTT_KEY":"fake_ifttt_key","TELEGRAM_BOT_TOKEN":"fake_telegram_bot_token"}';
+  process.env.JSON_GITHUB = `{
+    "event_name":"repository_dispatch",
+    "event":{
+      "action":"webhook",
+      "client_payload":{
+        "path":"/webhook-error/webhook",
+        "body":"{\\"id\\":\\"test123\\",\\"title\\":\\"webhook test title\\"}"
+      }
+    }
+  }`;
+
+  await expect(
+    build({
+      force: true,
+      cwd: path.resolve(__dirname, "./fixtures"),
+    })
+  ).rejects.toEqual(new ReferenceError("data is not defined"));
+});
