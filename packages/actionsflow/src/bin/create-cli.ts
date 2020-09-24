@@ -66,7 +66,7 @@ function getVersionInfo() {
 
   return `Actionsflow CLI version: ${version}`;
 }
-export const createCli = (argv: string[]): Promise<string> => {
+export const createCli = (argv: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const cli = yargs;
     cli
