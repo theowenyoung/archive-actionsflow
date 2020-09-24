@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.34](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.33...actionsflow@0.1.34) (2020-09-24)
+
+### Features
+
+- throw error ([12112dd](https://github.com/actionsflow/actionsflow/commit/12112dd037b708dbf6d8d9f2c90dfa7b23b4941f))
+
 ## [0.1.33](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.32...actionsflow@0.1.33) (2020-09-24)
 
 **Note:** Version bump only for package actionsflow
