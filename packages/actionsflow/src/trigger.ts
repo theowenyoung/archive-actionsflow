@@ -293,10 +293,16 @@ export const run = async ({
           // last format outputs
           if (format) {
             items = items.map((item) => {
-              return getStringFunctionResult(format, { item }) as Record<
-                string,
-                unknown
-              >;
+              try {
+                const newItem = getStringFunctionResult(format, {
+                  item,
+                }) as Record<string, unknown>;
+                return newItem;
+              } catch (error) {
+                throw new Error(
+                  `An error occurred in the format function: ${error.toString()}`
+                );
+              }
             });
           }
         }

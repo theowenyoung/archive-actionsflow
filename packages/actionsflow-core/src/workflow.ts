@@ -331,32 +331,41 @@ export const getBuiltWorkflow = async (
         ] = `(fromJSON(env.${TRIGGER_RESULT_ENV_PREFIX}${rawTrigger.name}_${index}))`;
       });
       // handle context expresstion
-      const newJobs = mapObj(
-        workflowDataJobs as Record<string, unknown>,
-        (key, value) => {
-          value = value as unknown;
+      let newJobs = {};
+      try {
+        newJobs = mapObj(
+          workflowDataJobs as Record<string, unknown>,
+          (key, value) => {
+            value = value as unknown;
 
-          if (typeof value === "string" && key !== "if") {
-            // if supported
+            if (typeof value === "string" && key !== "if") {
+              // if supported
 
-            value = getTemplateStringByParentName(value, "on", context);
-          }
-          if (key === "if" && typeof value === "string") {
-            if (value.trim().indexOf("${{") !== 0) {
-              value = `\${{ ${value} }}`;
+              value = getTemplateStringByParentName(value, "on", context);
             }
-            value = getTemplateStringByParentName(
-              value as string,
-              "on",
-              context
-            );
+            if (key === "if" && typeof value === "string") {
+              if (value.trim().indexOf("${{") !== 0) {
+                value = `\${{ ${value} }}`;
+              }
+              value = getTemplateStringByParentName(
+                value as string,
+                "on",
+                context
+              );
+            }
+            return [key, value];
+          },
+          {
+            deep: true,
           }
-          return [key, value];
-        },
-        {
-          deep: true,
-        }
-      );
+        );
+      } catch (error) {
+        throw new Error(
+          `An error occurred when parsing workflow file ${
+            workflow.relativePath
+          }:  ${error.toString()}`
+        );
+      }
 
       const jobs = renameJobsBySuffix(
         newJobs as Record<string, AnyObject>,

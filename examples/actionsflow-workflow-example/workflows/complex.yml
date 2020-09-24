@@ -11,6 +11,7 @@ on:
       filterOutputs:
         title: 1
       format: |
+        console.log(data)
         item.title = item.title.substring(0,5)
         return item;
       skip: 1
