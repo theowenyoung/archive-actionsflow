@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.30](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.29...actionsflow-core@0.1.30) (2020-09-24)
+
+### Features
+
+- format ([7482e42](https://github.com/actionsflow/actionsflow/commit/7482e42ad881cb40e3e45cf82a207e1171d04e5b))
+
 ## [0.1.29](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.28...actionsflow-core@0.1.29) (2020-09-24)
 
 ### Features
