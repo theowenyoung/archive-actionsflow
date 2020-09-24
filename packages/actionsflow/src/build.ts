@@ -148,7 +148,11 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
       });
     } catch (error) {
       // if buildOutputsOnError
-      if (trigger.options && trigger.options["buildOutputsOnError"]) {
+      if (
+        trigger.options &&
+        trigger.options.config &&
+        trigger.options.config.buildOutputsOnError
+      ) {
         log.warn(
           `Run ${workflow.relativePath} trigger ${trigger.name} error: `,
           error
@@ -162,7 +166,11 @@ const build = async (options: IBuildOptions = {}): Promise<void> => {
           conclusion: "success",
         });
         continue;
-      } else if (trigger.options && trigger.options.skipOnError === true) {
+      } else if (
+        trigger.options &&
+        trigger.options.config &&
+        trigger.options.config.skipOnError === true
+      ) {
         log.info(`Skip ${workflow.relativePath} trigger [${trigger.name}]`);
         log.info(`Run trigger ${trigger.name} error: `, error);
         continue;
