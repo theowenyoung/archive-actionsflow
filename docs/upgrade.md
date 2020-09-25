@@ -24,3 +24,5 @@ The first thing is to upgrade to [the latest version of actionsflow](https://git
 The second thing is to update the [`.github/workflows/actionsflow.yml`](https://github.com/actionsflow/actionsflow-workflow-default/blob/master/.github/workflows/actionsflow.yml) to the latest version.
 
 You should check the [actionsflow-workflow-default release](https://github.com/actionsflow/actionsflow-workflow-default/releases) to get whether there are any updates.
+
+> Normally, we do not change the Github actions workflow file. If there is a change, it must be a break change!

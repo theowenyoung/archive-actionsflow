@@ -11,7 +11,7 @@ Here are some useful links:
 
 - [Workflow Syntax for Actionsflow](./workflow.md) - Learn more about the Actionsflow workflow file syntax
 - [Triggers List](./triggers.md) - Explore Actionsflow triggers
-- [Workflows Use Case](./explore.md) - Explore Actionsflow workflows use case to get inspired
+- [Awesome Actionsflow Workflows](https://github.com/actionsflow/awesome-actionsflow) - Explore Actionsflow workflows use case to get inspired
 - [Core Concepts](./concepts.md) - Learn more about how Actionsflow worked
 - [Creating Triggers for Actionsflow](./creating-triggers.md) - Learn more about how to create your own trigger for Actionsflow
 - [FAQs](./faqs.md) - Actionsflow FAQs

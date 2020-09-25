@@ -52,7 +52,7 @@ jobs:
 For more information about the Actionsflow workflow file, see the
 [Actionsflow workflow reference](./workflow.md).
 
-You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Workflows by Use Case](https://actionsflow.github.io/docs/explore/) to get more inspired.
+You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Awesome Actionsflow Workflows](https://github.com/actionsflow/awesome-actionsflow/) to get more inspired.
 
 # 3. Commit and push your updates to Github
 
@@ -71,7 +71,7 @@ Then, Actionsflow will run your workflows as you defined, you can view logs at y
 
 - [Workflow Syntax for Actionsflow](./workflow.md) - Learn more about the Actionsflow workflow file syntax
 - [Triggers List](./triggers.md) - Explore Actionsflow triggers
-- [Workflows Use Case](./explore.md) - Explore Actionsflow workflows use case to get inspired
+- [Awesome Actionsflow Workflows](https://github.com/actionsflow/awesome-actionsflow) - Explore Actionsflow workflows use case to get inspired
 - [Core Concepts](./concepts.md) - Learn more about how Actionsflow worked
 - [Creating Triggers for Actionsflow](./creating-triggers.md) - Learn more about how to create your own trigger for Actionsflow
 - [FAQs](./faqs.md) - Actionsflow FAQs

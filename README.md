@@ -103,7 +103,7 @@ Build an Actionsflow workflow is a three-step process:
    For more information about the Actionsflow workflow file, see the
    [Actionsflow workflow reference](https://actionsflow.github.io/docs/workflow/).
 
-   You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Workflows by Use Case](https://actionsflow.github.io/docs/explore/) to get more inspired.
+   You can explore [Triggers List](https://actionsflow.github.io/docs/triggers/) or [Awesome Actionsflow Workflows](https://github.com/actionsflow/awesome-actionsflow) to get more inspired.
 
 1. **commit and push your updates to Github**
 
@@ -117,7 +117,7 @@ Full documentation for Actionsflow lives [on the website](https://actionsflow.gi
 
 - [Workflow Syntax for Actionsflow](https://actionsflow.github.io/docs/workflow/) - Learn more about the Actionsflow workflow file syntax
 - [Triggers List](https://actionsflow.github.io/docs/triggers/) - Explore Actionsflow triggers
-- [Workflows Use Case](https://actionsflow.github.io/docs/explore/) - Explore Actionsflow workflows use case to get inspired
+- [Awesome Actionsflow Workflows](https://github.com/actionsflow/awesome-actionsflow) - Explore Actionsflow workflows use case to get inspired
 - [Core Concepts](https://actionsflow.github.io/docs/concepts/) - Learn more about how Actionsflow worked
 - [Creating Triggers for Actionsflow](https://actionsflow.github.io/docs/creating-triggers/) - Learn more about how to create your own trigger for Actionsflow
 - [FAQs](https://actionsflow.github.io/docs/faqs/) - Actionsflow FAQs
