@@ -281,7 +281,7 @@ export const run = async ({
               );
               log.debug("save deduplicationKeys to cache", deduplicationKeys);
             } else {
-              log.debug("no items update, do not need to update cache");
+              log.warn("no items update, do not need to update cache");
             }
           }
 

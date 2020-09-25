@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+import "./inject-cli";
 import "@babel/polyfill";
 import semver from "semver";
 import util from "util";
@@ -7,6 +7,7 @@ import { createCli } from "./create-cli";
 import pkg from "../../package.json";
 import updateNotifier from "update-notifier";
 import { log } from "actionsflow-core";
+console.log("start");
 // Check if update is available
 updateNotifier({ pkg }).notify({ isGlobal: true });
 
