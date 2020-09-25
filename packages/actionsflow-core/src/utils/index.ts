@@ -6,6 +6,10 @@ export {
   getStringFunctionResult,
 } from "./template";
 export { getThirdPartyTrigger, getLocalTrigger } from "./resolve-trigger";
-export { getTriggerWebhookBasePath, isMatchWebhookBasePath } from "./path";
+export {
+  getParamsByWebhookPath,
+  getWorkflowFileNameByPath,
+  getTriggerWebhookBasePath,
+} from "./path";
 export { isPromise } from "./promise";
 export { getRawTriggers, filter } from "./filter";

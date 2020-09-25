@@ -7,10 +7,10 @@ import {
 import {
   getRawTriggers,
   log,
-  getTriggerWebhookBasePath,
-  isMatchWebhookBasePath,
+  getParamsByWebhookPath,
+  getWorkflowFileNameByPath,
 } from "actionsflow-core";
-import { getSupportedTriggers } from "./trigger";
+import { getSupportedTriggers, resolveTrigger } from "./trigger";
 export const getTasksByTriggerEvent = ({
   event,
   workflows,
@@ -22,29 +22,32 @@ export const getTasksByTriggerEvent = ({
   if (event.type === "webhook") {
     const request = event.request as IWebhookRequest;
     const webhookPath = request.path;
-    for (let i = 0; i < workflows.length; i++) {
-      const workflow = workflows[i];
-      const rawTriggers = getRawTriggers(workflow.data);
-      // get support and active triggers
-      const supportedTriggers = getSupportedTriggers(rawTriggers);
-      for (let j = 0; j < supportedTriggers.length; j++) {
-        const trigger = supportedTriggers[j];
-        const webhookTriggerBasePath = getTriggerWebhookBasePath(
-          workflow.relativePath,
-          trigger.name
+    const webhookParams = getParamsByWebhookPath(webhookPath);
+    if (webhookParams) {
+      for (let i = 0; i < workflows.length; i++) {
+        const workflow = workflows[i];
+        const workflowFileName = getWorkflowFileNameByPath(
+          workflow.relativePath
         );
-
-        if (isMatchWebhookBasePath(webhookPath, webhookTriggerBasePath)) {
-          // final Trigger
-          tasks.push({
-            workflow: workflow,
-            trigger: trigger,
-            event: event,
-          });
-          break;
+        const rawTriggers = getRawTriggers(workflow.data);
+        // get support and active triggers
+        for (let j = 0; j < rawTriggers.length; j++) {
+          const trigger = rawTriggers[j];
+          if (
+            trigger.name === webhookParams.triggerName &&
+            webhookParams.workflowFileName === workflowFileName
+          ) {
+            const TriggerClass = resolveTrigger(trigger.name);
+            tasks.push({
+              workflow: workflow,
+              trigger: { ...trigger, class: TriggerClass },
+              event: event,
+            });
+          }
         }
       }
     }
+
     if (tasks.length === 0) {
       log.info(
         `The webhook request path [${webhookPath}] does not match any workflow triggers, Actionsflow will skip building for this time`

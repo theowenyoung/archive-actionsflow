@@ -6,6 +6,7 @@ import {
   isPromise,
   getRawTriggers,
   filter,
+  getParamsByWebhookPath,
 } from "../utils";
 import emails from "./fixtures/emails.json";
 test("filter", () => {
@@ -185,4 +186,46 @@ test("get raw trigger", () => {
       options: { url: "test2" },
     },
   ]);
+});
+
+test("getParamsByWebhookPath", () => {
+  const triggerName = getParamsByWebhookPath("/test/test_1/test");
+  expect(triggerName).toEqual({
+    workflowFileName: "test",
+    triggerName: "test_1",
+    path: "/test",
+  });
+});
+
+test("getParamsByWebhookPath 2", () => {
+  const triggerName = getParamsByWebhookPath("/test/test_1");
+  expect(triggerName).toEqual({
+    workflowFileName: "test",
+    triggerName: "test_1",
+    path: "/",
+  });
+});
+
+test("getParamsByWebhookPath 3", () => {
+  const triggerName = getParamsByWebhookPath("/test/test_1/");
+  expect(triggerName).toEqual({
+    workflowFileName: "test",
+    triggerName: "test_1",
+    path: "/",
+  });
+});
+test("getParamsByWebhookPath 4", () => {
+  const triggerName = getParamsByWebhookPath(
+    "/test/test_1/xxx/xxx/xxx/xxx/?x=1"
+  );
+  expect(triggerName).toEqual({
+    workflowFileName: "test",
+    triggerName: "test_1",
+    path: "/xxx/xxx/xxx/xxx/?x=1",
+  });
+});
+
+test("getParamsByWebhookPath 5", () => {
+  const triggerName = getParamsByWebhookPath("/test/");
+  expect(triggerName).toBe(undefined);
 });

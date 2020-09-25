@@ -17,11 +17,12 @@ export {
   getStringFunctionResult,
   getThirdPartyTrigger,
   getLocalTrigger,
-  getTriggerWebhookBasePath,
-  isMatchWebhookBasePath,
   isPromise,
   getRawTriggers,
   filter,
+  getParamsByWebhookPath,
+  getWorkflowFileNameByPath,
+  getTriggerWebhookBasePath,
 } from "./utils";
 export { getWebhookByRequest } from "./webhook";
 export {

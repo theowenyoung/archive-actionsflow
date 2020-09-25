@@ -45,3 +45,4 @@ base64
 rsshub
 aws
 sns
+HTTPS

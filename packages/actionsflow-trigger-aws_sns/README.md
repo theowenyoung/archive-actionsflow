@@ -8,7 +8,7 @@ This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [aws sns](h
 
 ## Prerequisites
 
-You should [Create https subscription for some Topic at AWS console](https://console.aws.amazon.com/sns/v3/home?#/create-subscription), and set `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/aws_sns?__token=<your-github-personal-token>` as your endpoint
+You should [Create HTTPS subscription for some Topic at AWS console](https://console.aws.amazon.com/sns/v3/home?#/create-subscription), and set `https://webhook.actionsflow.workers.dev/<owner>/<repo>/<workflow-file-name>/aws_sns?__token=<your-github-personal-token>` as your endpoint
 
 ## Usage
 
