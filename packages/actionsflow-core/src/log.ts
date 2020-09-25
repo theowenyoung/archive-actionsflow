@@ -13,9 +13,11 @@ export const colors: IColors = {
   ERROR: chalk.red,
 };
 prefix.reg(Log);
+
 log.setDefaultLevel(
   (process.env.DEFAULT_LOG_LEVEL as Log.LogLevelDesc) || "info"
 );
+
 prefix.apply(log, {
   format(level, name, timestamp) {
     return `${chalk.gray(`[${timestamp}]`)} ${colors[level.toUpperCase()](
