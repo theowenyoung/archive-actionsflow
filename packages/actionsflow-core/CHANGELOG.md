@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.34](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.33...actionsflow-core@0.1.34) (2020-09-25)
+
+### Features
+
+- support aws sns trigger ([fd58ddc](https://github.com/actionsflow/actionsflow/commit/fd58ddc7d0e8290b87513826d2d58f7a22821a74))
+
 ## [0.1.33](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.32...actionsflow-core@0.1.33) (2020-09-24)
 
 **Note:** Version bump only for package actionsflow-core

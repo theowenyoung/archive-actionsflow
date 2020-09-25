@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.37](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.36...actionsflow@0.1.37) (2020-09-25)
+
+### Features
+
+- add awesome workflows ([a956759](https://github.com/actionsflow/actionsflow/commit/a956759b00ebcd5f8c1ee5dbad64ab660c530e3b))
+- add aws_sns trigger to official trigger ([624def1](https://github.com/actionsflow/actionsflow/commit/624def16becb1bae16b8006674df94d547e32363))
+- support aws sns trigger ([fd58ddc](https://github.com/actionsflow/actionsflow/commit/fd58ddc7d0e8290b87513826d2d58f7a22821a74))
+
 ## [0.1.36](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.35...actionsflow@0.1.36) (2020-09-24)
 
 ### Features
