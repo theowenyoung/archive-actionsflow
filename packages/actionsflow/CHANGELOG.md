@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.38](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.37...actionsflow@0.1.38) (2020-09-25)
+
+### Features
+
+- cli use console.info to console.warn ([853951a](https://github.com/actionsflow/actionsflow/commit/853951a3ccc0bb69b77bc7aa066dbdbfe324fc76))
+
 ## [0.1.37](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.36...actionsflow@0.1.37) (2020-09-25)
 
 ### Features

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.43](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.42...actionsflow-workflow-example@0.0.43) (2020-09-25)
+
+### Features
+
+- cli use console.info to console.warn ([853951a](https://github.com/actionsflow/actionsflow/commit/853951a3ccc0bb69b77bc7aa066dbdbfe324fc76))
+
 ## [0.0.42](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.41...actionsflow-workflow-example@0.0.42) (2020-09-25)
 
 ### Features
