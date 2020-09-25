@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.39](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.38...actionsflow@0.1.39) (2020-09-25)
+
+### Features
+
+- path ([5acadcf](https://github.com/actionsflow/actionsflow/commit/5acadcf9b40096af5e392e7a0ef83b2c92dd99d6))
+- rss ([3aea178](https://github.com/actionsflow/actionsflow/commit/3aea17889925fc51b0ebca5b9276b0f10bfde25b))
+
 ## [0.1.38](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.37...actionsflow@0.1.38) (2020-09-25)
 
 ### Features
