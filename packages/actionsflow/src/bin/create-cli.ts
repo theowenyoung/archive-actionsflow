@@ -68,6 +68,8 @@ function getVersionInfo() {
 }
 export const createCli = (argv: string): Promise<string> => {
   return new Promise((resolve, reject) => {
+    const versionInfo = getVersionInfo();
+    console.log(versionInfo + "\n");
     const cli = yargs;
     cli
       .scriptName(`actionsflow`)
@@ -85,7 +87,7 @@ export const createCli = (argv: string): Promise<string> => {
     cli.version(
       `version`,
       `Show the version of the Actionsflow CLI and the Actionsflow package in the current project`,
-      getVersionInfo()
+      " "
     );
     cli
       .wrap(cli.terminalWidth())
