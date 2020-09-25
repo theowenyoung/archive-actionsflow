@@ -43,3 +43,5 @@ deduplicating
 TODO
 base64
 rsshub
+aws
+sns
