@@ -56,7 +56,7 @@ export default class Rss implements ITriggerClassType {
           );
         }
 
-        this.helpers.log.error("fetch rss feed error: ", e);
+        this.helpers.log.error(`fetch rss feed [${feedUrl}] error: `, e);
         throw e;
       }
       // For now we just take the items and ignore everything else
