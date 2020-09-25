@@ -37,6 +37,7 @@
   "author": "Owen Young",
   "dependencies": {
     "@actions/github": "^4.0.0",
+    "@actionsflow/trigger-aws_sns": "^0.1.35",
     "@actionsflow/trigger-slack": "^0.1.35",
     "@actionsflow/trigger-telegram_bot": "^0.1.35",
     "@actionsflow/trigger-twitter": "^0.1.32",
