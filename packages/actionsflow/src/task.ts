@@ -38,11 +38,19 @@ export const getTasksByTriggerEvent = ({
             webhookParams.workflowFileName === workflowFileName
           ) {
             const TriggerClass = resolveTrigger(trigger.name);
-            tasks.push({
-              workflow: workflow,
-              trigger: { ...trigger, class: TriggerClass },
-              event: event,
-            });
+            if (TriggerClass) {
+              tasks.push({
+                workflow: workflow,
+                trigger: { ...trigger, class: TriggerClass },
+                event: event,
+              });
+            } else {
+              log.warn(
+                `can not found the trigger [${trigger.name}]. Did you forget to install the third party trigger?
+          Try \`npm i @actionsflow/trigger-${trigger.name}\` if it exists.
+          `
+              );
+            }
           }
         }
       }

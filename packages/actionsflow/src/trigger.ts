@@ -129,7 +129,7 @@ export const run = async ({
         });
 
         if (webhook) {
-          log.debug("detect webhook2", webhook);
+          log.debug("detect webhook", webhook);
           // check if specific getItemKey at Webhook
           if (webhook.getItemKey) {
             triggerGeneralOptions.getItemKey = webhook.getItemKey.bind(
