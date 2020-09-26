@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.45](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.44...actionsflow@0.1.45) (2020-09-26)
+
+### Bug Fixes
+
+- typeform ([0350907](https://github.com/actionsflow/actionsflow/commit/0350907bc19a804c29772f01ccc7e8f14b93b739))
+
 ## [0.1.44](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.43...actionsflow@0.1.44) (2020-09-26)
 
 **Note:** Version bump only for package actionsflow
