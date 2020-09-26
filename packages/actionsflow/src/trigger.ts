@@ -83,7 +83,8 @@ export const run = async ({
     if (triggerInstance) {
       const triggerGeneralOptions = getGeneralTriggerFinalOptions(
         triggerInstance,
-        trigger.options
+        trigger.options,
+        event
       );
       const {
         every,

@@ -10,6 +10,7 @@ import {
   ITriggerGeneralConfigOptions,
   ITriggerOptions,
   ITriggerContructorParams,
+  ITriggerEvent,
 } from "actionsflow-interface";
 import axios from "axios";
 import { getWorkflow } from "./workflow";
@@ -78,7 +79,8 @@ interface IGeneralTriggerOptions extends ITriggerGeneralConfigOptions {
 }
 export const getGeneralTriggerFinalOptions = (
   triggerInstance: ITriggerClassType,
-  triggerOptions: ITriggerOptions
+  triggerOptions: ITriggerOptions,
+  event: ITriggerEvent
 ): IGeneralTriggerOptions => {
   const instanceConfig = triggerInstance.config || {};
   let userOptions: ITriggerGeneralConfigOptions = {};
@@ -87,8 +89,11 @@ export const getGeneralTriggerFinalOptions = (
   }
   const options: IGeneralTriggerOptions = {
     every: 0, // github actions every 5, here we can set 0,due to triggered by other event, like push
-    shouldDeduplicate: true,
+    shouldDeduplicate: event.type === "webhook" ? false : true,
     getItemKey: (item: AnyObject): string => {
+      if (item.id) return item.id as string;
+      if (item.key) return item.key as string;
+      if (item.guid) return item.guid as string;
       return createContentDigest(item);
     },
     skipFirst: false,

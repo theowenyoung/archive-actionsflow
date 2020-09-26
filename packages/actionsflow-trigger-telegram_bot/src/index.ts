@@ -11,15 +11,11 @@ export default class TelegramBot implements ITriggerClassType {
   constructor({ helpers, options }: ITriggerContructorParams) {
     if (options) {
       this.options = options;
-      if (options.webhook) {
-        this.shouldDeduplicate = false;
-      }
     }
     this.helpers = helpers;
   }
   options: ITriggerOptions = {};
   helpers: IHelpers;
-  shouldDeduplicate = true;
   getItemKey = (item: AnyObject): string => {
     if (item.update_id) return item.update_id as string;
     return this.helpers.createContentDigest(item);

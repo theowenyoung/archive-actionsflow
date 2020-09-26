@@ -17,7 +17,6 @@ import {
 export default class Email implements ITriggerClassType {
   options: ITriggerOptions = {};
   helpers: IHelpers;
-  shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     // TODO adapt every cases
     if (item.messageId) return item.messageId as string;

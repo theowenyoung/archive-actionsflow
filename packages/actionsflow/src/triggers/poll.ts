@@ -12,7 +12,6 @@ import {
 export default class Poll implements ITriggerClassType {
   options: ITriggerOptions = {};
   helpers: IHelpers;
-  shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     // TODO adapt every cases
     const deduplicationKey = this.options.deduplicationKey;

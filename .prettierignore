@@ -4,10 +4,6 @@
 **/node_modules/**
 # cache-dirs
 **/.cache
-# ignore built packages
-packages/**/*.js
-!packages/*/src/**/*.js
-
 
 # fixtures
 **/__tests__/fixtures/**

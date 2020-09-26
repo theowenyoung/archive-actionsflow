@@ -71,7 +71,7 @@ Build an Actionsflow workflow is a three-step process:
    ```sh
    ├── .github
    │   └── workflows
-   │       └── actionsflow-jobs.yml
+   │       └── actionsflow.yml
    ├── .gitignore
    ├── README.md
    └── workflows

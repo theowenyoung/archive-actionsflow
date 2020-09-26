@@ -10,7 +10,6 @@ import {
 export default class Rss implements ITriggerClassType {
   options: ITriggerOptions = {};
   helpers: IHelpers;
-  shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     // TODO adapt every cases
     if (item.guid) return item.guid as string;

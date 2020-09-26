@@ -1,0 +1,29 @@
+{
+  "name": "@actionsflow/trigger-typeform",
+  "version": "0.1.38",
+  "description": "Actionsflow trigger typeform",
+  "keywords": [
+    "typeform",
+    "actionsflow",
+    "trigger"
+  ],
+  "author": "Owen Young <theowenyoung@gmail.com>",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-typeform",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actionsflow/actionsflow.git"
+  },
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "actionsflow-core": "^0.1.36"
+  }
+}

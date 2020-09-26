@@ -34,7 +34,6 @@ export default class Script implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
   workflow: IWorkflow;
-  shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     const deduplicationKey = this.options.deduplicationKey;
     if (deduplicationKey) {

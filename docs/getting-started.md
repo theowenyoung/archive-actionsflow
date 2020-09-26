@@ -16,7 +16,7 @@ A typical Actionsflow repository structure looks like this:
 ```sh
 ├── .github
 │   └── workflows
-│       └── actionsflow-jobs.yml
+│       └── actionsflow.yml
 ├── .gitignore
 ├── README.md
 └── workflows

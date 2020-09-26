@@ -14,7 +14,6 @@ export default class Slack implements ITriggerClassType {
   }
   options: ITriggerOptions = {};
   helpers: IHelpers;
-  shouldDeduplicate = false;
   webhooks = [
     {
       method: "post",

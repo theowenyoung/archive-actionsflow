@@ -6,10 +6,9 @@ import {
   ITriggerOptions,
 } from "actionsflow-interface";
 import Twit from "twit";
-export default class Example implements ITriggerClassType {
+export default class Twitter implements ITriggerClassType {
   options: ITriggerOptions = {};
   helpers: IHelpers;
-  shouldDeduplicate = true;
   getItemKey(item: AnyObject): string {
     if (item.id_str) return item.id_str as string;
     return this.helpers.createContentDigest(item);
