@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.36](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.35...@actionsflow/trigger-twitter@0.1.36) (2020-09-26)
+
+### Features
+
+- support trigger typeform ([e47e0df](https://github.com/actionsflow/actionsflow/commit/e47e0df8f08927b1a09aac6f5cbc2588a408440d))
+
 ## [0.1.35](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.34...@actionsflow/trigger-twitter@0.1.35) (2020-09-25)
 
 **Note:** Version bump only for package @actionsflow/trigger-twitter

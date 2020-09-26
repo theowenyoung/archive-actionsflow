@@ -1,6 +1,6 @@
 {
   "name": "@actionsflow/trigger-typeform",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "Actionsflow trigger typeform",
   "keywords": [
     "typeform",
@@ -22,8 +22,7 @@
   "bugs": {
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
-  "dependencies": {},
   "devDependencies": {
-    "actionsflow-core": "^0.1.36"
+    "actionsflow-core": "^0.1.37"
   }
 }

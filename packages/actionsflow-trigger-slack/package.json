@@ -1,6 +1,6 @@
 {
   "name": "@actionsflow/trigger-slack",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "Actionsflow trigger slack",
   "keywords": [
     "slack",
@@ -32,7 +32,7 @@
     "tslib": "^2.0.1"
   },
   "devDependencies": {
-    "actionsflow-core": "^0.1.36",
+    "actionsflow-core": "^0.1.37",
     "axios": "^0.20.0"
   }
 }
