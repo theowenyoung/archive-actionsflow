@@ -35,6 +35,7 @@ export const getThirdPartyTrigger = (
       return Trigger;
     }
   } else {
+    log.debug(`Cannot find trigger [${triggerName}]`);
     return undefined;
   }
 };
