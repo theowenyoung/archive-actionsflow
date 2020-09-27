@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.47](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.46...actionsflow@0.1.47) (2020-09-27)
+
+### Features
+
+- update dependence ([550208d](https://github.com/actionsflow/actionsflow/commit/550208dcd2a61dd27eb554dbe2aeab53345ba3a0))
+
 ## [0.1.46](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.45...actionsflow@0.1.46) (2020-09-27)
 
 ### Features

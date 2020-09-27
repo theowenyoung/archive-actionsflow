@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.52](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.51...actionsflow-workflow-example@0.0.52) (2020-09-27)
+
+### Features
+
+- update dependence ([550208d](https://github.com/actionsflow/actionsflow/commit/550208dcd2a61dd27eb554dbe2aeab53345ba3a0))
+
 ## [0.0.51](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.50...actionsflow-workflow-example@0.0.51) (2020-09-27)
 
 ### Features

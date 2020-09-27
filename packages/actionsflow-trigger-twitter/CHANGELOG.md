@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.39](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.38...@actionsflow/trigger-twitter@0.1.39) (2020-09-27)
+
+### Features
+
+- update dependence ([550208d](https://github.com/actionsflow/actionsflow/commit/550208dcd2a61dd27eb554dbe2aeab53345ba3a0))
+
 ## [0.1.38](https://github.com/actionsflow/actionsflow/compare/@actionsflow/trigger-twitter@0.1.37...@actionsflow/trigger-twitter@0.1.38) (2020-09-27)
 
 ### Features
