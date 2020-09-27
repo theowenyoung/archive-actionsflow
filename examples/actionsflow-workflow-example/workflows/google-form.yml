@@ -1,5 +1,5 @@
 on:
-  typeform:
+  google_form:
 jobs:
   print:
     name: Print

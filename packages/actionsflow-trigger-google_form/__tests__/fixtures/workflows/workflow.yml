@@ -1,5 +1,5 @@
 on:
-  typeform:
+  google_form:
 jobs:
   print:
     name: Print
@@ -7,6 +7,6 @@ jobs:
     steps:
       - name: Print Outputs
         env:
-          answer: ${{ toJSON(on.google_form.outputs.answers_map) }}
+          json: ${{toJSON(on.google_form.outputs)}}
         run: |
-          echo answer: $answer
+          echo json: $json

@@ -38,6 +38,7 @@
   "dependencies": {
     "@actions/github": "^4.0.0",
     "@actionsflow/trigger-aws_sns": "^0.1.41",
+    "@actionsflow/trigger-google_form": "^0.1.41",
     "@actionsflow/trigger-reddit": "^0.1.41",
     "@actionsflow/trigger-slack": "^0.1.42",
     "@actionsflow/trigger-telegram_bot": "^0.1.42",

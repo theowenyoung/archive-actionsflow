@@ -67,7 +67,6 @@ test("typeform with webhook", async () => {
   const triggerResults = typeformBot.webhooks[0].handler.bind(typeformBot)(
     request
   );
-  console.log(JSON.stringify(triggerResults[0], null, 2));
   expect(triggerResults.length).toBe(1);
   expect(triggerResults[0].answers_map["What's your name?"]).toBe("test1");
 });
