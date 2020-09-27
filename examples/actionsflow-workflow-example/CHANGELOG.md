@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.51](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.50...actionsflow-workflow-example@0.0.51) (2020-09-27)
+
+### Features
+
+- remove interface add reddit support ([37ee762](https://github.com/actionsflow/actionsflow/commit/37ee76233ee8fa4565711f66c026bd1b7e47c95c))
+
 ## [0.0.50](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.49...actionsflow-workflow-example@0.0.50) (2020-09-26)
 
 **Note:** Version bump only for package actionsflow-workflow-example

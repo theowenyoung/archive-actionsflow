@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.39](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.38...actionsflow-core@0.1.39) (2020-09-27)
+
+### Features
+
+- support reddit, remove actionsflow-interface ([9f7b673](https://github.com/actionsflow/actionsflow/commit/9f7b673550f05b97a33b6413d0bdd0bed168bef7))
+
 ## [0.1.38](https://github.com/actionsflow/actionsflow/compare/actionsflow-core@0.1.37...actionsflow-core@0.1.38) (2020-09-26)
 
 **Note:** Version bump only for package actionsflow-core
