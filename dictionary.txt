@@ -51,3 +51,5 @@ typeform
 webhooks
 reddit
 Reddit
+Subreddit
+multireddit

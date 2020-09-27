@@ -8,7 +8,7 @@ This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [reddit](ht
 
 # Usage
 
-We use [Reddit RSS](https://www.reddit.com/wiki/rss) to implement this trigger, so you need to provide a reddit posts or comment url to watch the reddit updates.
+We use [Reddit RSS](https://www.reddit.com/wiki/rss) to implement this trigger, so you need to provide a reddit posts or comment URL to watch the reddit updates.
 
 All hot feed:
 
@@ -82,7 +82,7 @@ on:
 
 - `url`, required, `string` or `string[]`, when `url` is `string[]`, then multiple Reddit feeds can trigger the action. All [reddit URL supported `.rss` suffix](https://www.reddit.com/wiki/rss) is valid value.
 
-> You can use [General Config for Actionsflow Trigger](../workflow.md#ontriggerconfig) for more customization.
+> You can use [General Config for Actionsflow Trigger](https://actionsflow.github.io/docs/workflow/#ontriggerconfig) for more customization.
 
 ## Outputs
 

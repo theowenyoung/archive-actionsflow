@@ -31,10 +31,9 @@ The most important directories:
 
 - `/packages` - The different Actionsflow modules
 - `/packages/actionsflow` - Core code witch build workflows and handles triggers
-- `/packages/actionsflow-core` - Core code which provide core utils
+- `/packages/actionsflow-core` - Core code which provide core utils and interface
 - `/packages/actionsflow-cli` - CLI code, which is alias of `actionsflow`
 - `/packages/actionsflow-action` - Github actions for Actionsflow
-- `/packages/actionsflow-interface` - Common interfaces
 - `/examples` - workflows examples
 - `/examples/actionsflow-workflow-example` - example workflow
 

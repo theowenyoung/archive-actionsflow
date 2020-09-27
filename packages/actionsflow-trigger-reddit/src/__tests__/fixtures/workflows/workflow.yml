@@ -1,5 +1,6 @@
 on:
   reddit:
+    url: https://reddit.com/r/news/
 jobs:
   print:
     name: Print

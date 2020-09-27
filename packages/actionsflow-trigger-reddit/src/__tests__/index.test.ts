@@ -4,7 +4,9 @@ import { IWorkflow } from "actionsflow-core";
 import path from "path";
 test("run trigger", async () => {
   const trigger = new Trigger({
-    options: {},
+    options: {
+      url: "https://reddit.com/r/news/",
+    },
     helpers: getTriggerHelpers({
       name: "reddit",
       workflowRelativePath: "workflow.yml",

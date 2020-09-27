@@ -41,7 +41,7 @@ interface ITriggerClassType {
 }
 ```
 
-You can look the whole declarations at [here](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow-interface/src/index.ts)
+You can look the whole declarations at [here](https://github.com/actionsflow/actionsflow/blob/master/packages/actionsflow-core/src/interface.ts)
 
 # `constructor`
 
