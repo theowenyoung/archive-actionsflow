@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-telegram_bot`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [telegram bot](https://core.telegram.org/bots/api) trigger. `telegram_bot` trigger is triggered when new messages of telegram bot are detected. This trigger supports to specify one message type or multiple message types
+This is a [telegram bot](https://core.telegram.org/bots/api) trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). `telegram_bot` trigger is triggered when new messages of telegram bot are detected. This trigger supports to specify one message type or multiple message types
 
 > This is an official trigger, you don't need to install it manually.
 

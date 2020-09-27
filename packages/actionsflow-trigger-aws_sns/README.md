@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-aws_sns`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [aws sns](https://aws.amazon.com/sns/) trigger. Any messages published to the SNS topic you created are triggered by this trigger.
+This is an [aws sns](https://aws.amazon.com/sns/) trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). Any messages published to the SNS topic you created are triggered by this trigger.
 
 > This is an official trigger, you don't need to install it manually.
 

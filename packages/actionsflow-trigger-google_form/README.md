@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-google_form`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [google_form](https://docs.google.com/forms) trigger. Any new response in Google Form will trigger the trigger.
+This is an [google_form](https://docs.google.com/forms) trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). Any new response in Google Form will trigger the trigger.
 
 > This is an official trigger, you don't need to install it manually.
 

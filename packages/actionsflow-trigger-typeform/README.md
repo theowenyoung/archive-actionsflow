@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-typeform`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [typeform](https://www.typeform.com/) trigger. Any new submission in Typeform will trigger the trigger.
+This is a [typeform](https://www.typeform.com/) trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). Any new submission in Typeform will trigger the trigger.
 
 > This is an official trigger, you don't need to install it manually.
 

@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-reddit`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [reddit](https://reddit.com/) trigger. `reddit` trigger is triggered when new posts or comments of reddit are detected.
+This is a [reddit](https://reddit.com/) trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). `reddit` trigger is triggered when new posts or comments of reddit are detected.
 
 > This is an official trigger, you don't need to install it manually.
 

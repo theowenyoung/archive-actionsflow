@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-twitter`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) twitter trigger. You can watch yours or the other twitter user's updates by using this trigger.
+This is a twitter trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). You can watch yours or the other twitter user's updates by using this trigger.
 
 > This is an official trigger, you don't need to install it manually.
 

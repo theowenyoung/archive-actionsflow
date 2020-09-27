@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-trello`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [trello](https://trello.com/) trigger. Any new action in Trello will trigger the trigger.
+This is a [trello](https://trello.com/) trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). Any new action in Trello will trigger the trigger.
 
 > This is an official trigger, you don't need to install it manually.
 

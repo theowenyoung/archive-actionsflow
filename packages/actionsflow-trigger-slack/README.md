@@ -1,6 +1,6 @@
 # `@actionsflow/trigger-slack`
 
-This is an [Actionsflow](https://github.com/actionsflow/actionsflow) [slack](https://slack.com/) trigger. `slack` trigger is triggered when new messages of slack channel are detected.
+This is a [slack](https://slack.com/) trigger of [Actionsflow](https://github.com/actionsflow/actionsflow). `slack` trigger is triggered when new messages of slack channel are detected.
 
 > This is an official trigger, you don't need to install it manually.
 
