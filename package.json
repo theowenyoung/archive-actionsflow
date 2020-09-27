@@ -10,7 +10,7 @@
     "start": "npm run build && lerna run --ignore actionsflow-workflow* --parallel start",
     "reset": "lerna clean && lerna bootstrap --no-ci",
     "clean": "lerna run --ignore actionsflow-workflow* clean && rimraf ./.cache ./dist ./coverage",
-    "build": "lerna exec --ignore actionsflow-workflow* --ignore @actionsflow/trigger-typeform --ignore @actionsflow/trigger-google_form -- npm run build ",
+    "build": "lerna exec --ignore actionsflow-workflow* --ignore @actionsflow/trigger-typeform --ignore @actionsflow/trigger-google_form --ignore @actionsflow/trigger-trello -- npm run build ",
     "release": "npm run test && lerna publish",
     "test": "npm run lint && jest",
     "coverage": "jest --coverage",

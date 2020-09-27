@@ -8,6 +8,7 @@ import TelegramBot from "@actionsflow/trigger-telegram_bot";
 import Twitter from "@actionsflow/trigger-twitter";
 import Slack from "@actionsflow/trigger-slack";
 import AWSSNS from "@actionsflow/trigger-aws_sns";
+import Trello from "@actionsflow/trigger-trello";
 import Typeform from "@actionsflow/trigger-typeform";
 import Reddit from "@actionsflow/trigger-reddit";
 export default {
@@ -23,4 +24,5 @@ export default {
   typeform: Typeform,
   reddit: Reddit,
   google_form: GoogleForm,
+  trello: Trello,
 };

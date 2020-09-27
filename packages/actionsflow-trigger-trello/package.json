@@ -1,0 +1,28 @@
+{
+  "name": "@actionsflow/trigger-trello",
+  "version": "0.1.1",
+  "description": "Actionsflow trigger trello",
+  "keywords": [
+    "trello",
+    "actionsflow",
+    "trigger"
+  ],
+  "author": "Owen Young <theowenyoung@gmail.com>",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-trello",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actionsflow/actionsflow.git"
+  },
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/actionsflow/actionsflow/issues"
+  },
+  "devDependencies": {
+    "actionsflow-core": "^0.1.39"
+  }
+}

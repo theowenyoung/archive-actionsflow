@@ -38,6 +38,7 @@ module.exports = {
         checkIsOnline: false,
         skipUrlPatterns: [
           "https://github.com/actionsflow/actionsflow-workflow-default/generate",
+          "https://trello.com/app-key",
         ],
       },
     ],

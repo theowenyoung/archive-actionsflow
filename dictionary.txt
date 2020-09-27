@@ -53,3 +53,5 @@ reddit
 Reddit
 Subreddit
 multireddit
+trello
+Trello
