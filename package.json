@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "npm run build && lerna run --ignore actionsflow-workflow* --parallel start",
+    "reset": "lerna clean && lerna bootstrap --no-ci",
     "clean": "lerna run --ignore actionsflow-workflow* clean && rimraf ./.cache ./dist ./coverage",
     "build": "lerna exec --ignore actionsflow-workflow* --ignore @actionsflow/trigger-typeform -- npm run build ",
     "release": "npm run test && lerna publish",
