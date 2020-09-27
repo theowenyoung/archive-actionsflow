@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.48](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.47...actionsflow@0.1.48) (2020-09-27)
+
+### Features
+
+- support google form ([747529b](https://github.com/actionsflow/actionsflow/commit/747529b3f61efa3c7d87dadaf9d2664686075f19))
+
 ## [0.1.47](https://github.com/actionsflow/actionsflow/compare/actionsflow@0.1.46...actionsflow@0.1.47) (2020-09-27)
 
 ### Features
