@@ -154,3 +154,7 @@ export interface ITask {
   trigger: ITaskTrigger;
   event: ITriggerEvent;
 }
+
+console.warn(
+  "Package actionsflow-interface no longer supported, use actionsflow-core instead!"
+);
