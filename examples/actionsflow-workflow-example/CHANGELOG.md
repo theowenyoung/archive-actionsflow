@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.55](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.54...actionsflow-workflow-example@0.0.55) (2020-09-27)
+
+### Features
+
+- support trello ([393ce74](https://github.com/actionsflow/actionsflow/commit/393ce742671ac6f95c30b448c14e386bfef10462))
+
 ## [0.0.54](https://github.com/actionsflow/actionsflow/compare/actionsflow-workflow-example@0.0.53...actionsflow-workflow-example@0.0.54) (2020-09-27)
 
 **Note:** Version bump only for package actionsflow-workflow-example

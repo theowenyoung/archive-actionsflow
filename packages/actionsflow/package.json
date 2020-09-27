@@ -1,5 +1,5 @@
 {
-  "version": "0.1.49",
+  "version": "0.1.50",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -42,7 +42,7 @@
     "@actionsflow/trigger-reddit": "^0.1.41",
     "@actionsflow/trigger-slack": "^0.1.42",
     "@actionsflow/trigger-telegram_bot": "^0.1.42",
-    "@actionsflow/trigger-trello": "^0.1.1",
+    "@actionsflow/trigger-trello": "^0.1.2",
     "@actionsflow/trigger-twitter": "^0.1.39",
     "@actionsflow/trigger-typeform": "^0.1.41",
     "@babel/polyfill": "^7.11.5",
