@@ -12,7 +12,7 @@ import {
   AnyObject,
   ITriggerOptions,
   IBinaryData,
-} from "actionsflow-interface";
+} from "actionsflow-core";
 
 export default class Email implements ITriggerClassType {
   options: ITriggerOptions = {};
@@ -24,9 +24,7 @@ export default class Email implements ITriggerClassType {
     return this.helpers.createContentDigest(item);
   }
   constructor({ helpers, options }: ITriggerContructorParams) {
-    if (options) {
-      this.options = options;
-    }
+    this.options = options;
     this.helpers = helpers;
   }
 

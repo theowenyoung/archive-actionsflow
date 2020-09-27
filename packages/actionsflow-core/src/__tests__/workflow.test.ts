@@ -7,7 +7,7 @@ import {
 } from "../workflow";
 import { getContext } from "../index";
 import path from "path";
-import { IWorkflow } from "actionsflow-interface";
+import { IWorkflow } from "../interface";
 
 test("get workflows", async () => {
   const workflows = await getWorkflows({

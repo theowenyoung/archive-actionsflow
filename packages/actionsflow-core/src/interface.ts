@@ -2,6 +2,7 @@ import { URLSearchParams, URL } from "url";
 import { ParsedUrlQuery } from "querystring";
 import { Logger, LogLevelDesc } from "loglevel";
 import { AxiosStatic } from "axios";
+import Parser from "rss-parser";
 export type HTTP_METHODS_LOWERCASE =
   | "head"
   | "get"
@@ -38,6 +39,7 @@ export interface IHelpers {
   };
   log: Logger;
   axios: AxiosStatic;
+  rssParser: typeof Parser;
 }
 export interface ITriggerContext {
   secrets: Record<string, string>;

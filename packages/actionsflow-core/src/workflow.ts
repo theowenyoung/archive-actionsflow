@@ -16,7 +16,7 @@ import {
   AnyObject,
   ITriggerBuildResult,
   IWorkflowData,
-} from "actionsflow-interface";
+} from "./interface";
 import { TRIGGER_RESULT_ENV_PREFIX } from "./constans";
 
 interface IGetWorkflowsOptions {

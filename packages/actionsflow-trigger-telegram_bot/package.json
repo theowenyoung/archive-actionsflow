@@ -28,11 +28,10 @@
     "url": "https://github.com/actionsflow/actionsflow/issues"
   },
   "dependencies": {
-    "actionsflow-interface": "^0.1.18",
+    "actionsflow-core": "^0.1.38",
     "tslib": "^2.0.1"
   },
   "devDependencies": {
-    "actionsflow-core": "^0.1.38",
     "axios": "^0.20.0"
   },
   "gitHead": "5354ce92742b20e721fb899516bf376702872ed2"

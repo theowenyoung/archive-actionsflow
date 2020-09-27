@@ -82,7 +82,8 @@
     "ts-node": "^9.0.0",
     "tslib": "^2.0.1",
     "typescript": "^3.9.7",
-    "unified": "^9.1.0"
+    "unified": "^9.1.0",
+    "axios": "^0.20.0"
   },
   "workspaces": {
     "packages": [

@@ -1,7 +1,11 @@
 import { getTasksByTriggerEvent } from "../task";
-import { formatRequest, getWorkflow, getContext } from "actionsflow-core";
+import {
+  formatRequest,
+  getWorkflow,
+  getContext,
+  IWorkflow,
+} from "actionsflow-core";
 import path from "path";
-import { IWorkflow } from "actionsflow-interface";
 
 test("get task by trigger event manual", async () => {
   const tasks = getTasksByTriggerEvent({

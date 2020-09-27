@@ -1,5 +1,5 @@
 import resolveCwd from "resolve-cwd";
-import { ITriggerClassTypeConstructable } from "actionsflow-interface";
+import { ITriggerClassTypeConstructable } from "../interface";
 import { log } from "../log";
 
 export const getThirdPartyTrigger = (

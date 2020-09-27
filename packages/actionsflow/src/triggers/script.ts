@@ -1,18 +1,17 @@
+import { GitHub } from "@actions/github/lib/utils";
+import { OctokitOptions } from "@octokit/core/dist-types/types";
+
+import resolveCwd from "resolve-cwd";
+import { getOctokit } from "@actions/github";
 import {
+  isPromise,
   ITriggerClassType,
   ITriggerContructorParams,
   AnyObject,
   ITriggerOptions,
   ITriggerResult,
   IHelpers,
-  IWorkflow,
-} from "actionsflow-interface";
-import { GitHub } from "@actions/github/lib/utils";
-import { OctokitOptions } from "@octokit/core/dist-types/types";
-
-import resolveCwd from "resolve-cwd";
-import { getOctokit } from "@actions/github";
-import { isPromise } from "actionsflow-core";
+} from "actionsflow-core";
 const AsyncFunction = Object.getPrototypeOf(async () => null).constructor;
 
 type AsyncFunctionArguments = {
@@ -33,7 +32,6 @@ function callAsyncFunction<T>(
 export default class Script implements ITriggerClassType {
   options: AnyObject = {};
   helpers: IHelpers;
-  workflow: IWorkflow;
   getItemKey(item: AnyObject): string {
     const deduplicationKey = this.options.deduplicationKey;
     if (deduplicationKey) {
@@ -43,10 +41,9 @@ export default class Script implements ITriggerClassType {
     if (item.key) return item.key as string;
     return this.helpers.createContentDigest(item);
   }
-  constructor({ helpers, options, workflow }: ITriggerContructorParams) {
+  constructor({ helpers, options }: ITriggerContructorParams) {
     this.options = options;
     this.helpers = helpers;
-    this.workflow = workflow;
   }
 
   async run(): Promise<ITriggerResult> {

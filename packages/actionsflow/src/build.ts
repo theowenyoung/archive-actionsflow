@@ -11,16 +11,14 @@ import {
   buildNativeSecrets,
   buildNativeEnv,
   buildWorkflowFile,
+  ITriggerInternalResult,
+  ITriggerBuildResult,
+  AnyObject,
 } from "actionsflow-core";
 import del from "del";
 import { run as runTrigger } from "./trigger";
 import { LogLevelDesc } from "loglevel";
 import { getTasksByTriggerEvent } from "./task";
-import {
-  ITriggerInternalResult,
-  ITriggerBuildResult,
-  AnyObject,
-} from "actionsflow-interface";
 
 interface IBuildOptions {
   dest?: string;

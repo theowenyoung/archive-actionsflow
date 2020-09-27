@@ -1,4 +1,4 @@
-import { ITrigger, IWorkflowData, AnyObject } from "actionsflow-interface";
+import { ITrigger, IWorkflowData, AnyObject } from "../interface";
 import { useOperators, OperatorType } from "mingo/core";
 import mingo from "mingo";
 import * as stringOperators from "mingo/operators/expression/string";

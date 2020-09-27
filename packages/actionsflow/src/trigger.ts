@@ -11,10 +11,6 @@ import {
   getLocalTrigger,
   filter as filterFn,
   getStringFunctionResult,
-} from "actionsflow-core";
-import { LogLevelDesc } from "loglevel";
-import Triggers from "./triggers";
-import {
   ITriggerInternalResult,
   AnyObject,
   ITriggerClassTypeConstructable,
@@ -25,7 +21,10 @@ import {
   ITriggerEvent,
   IWebhookRequestPayload,
   ITrigger,
-} from "actionsflow-interface";
+} from "actionsflow-core";
+import { LogLevelDesc } from "loglevel";
+import Triggers from "./triggers";
+
 const MAX_CACHE_KEYS_COUNT = 5000;
 interface ITriggerInternalOptions {
   trigger: ITaskTrigger;

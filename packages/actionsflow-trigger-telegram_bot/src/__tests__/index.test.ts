@@ -6,7 +6,7 @@ import {
   getWorkflow,
   formatRequest,
 } from "actionsflow-core";
-import { IWorkflow } from "actionsflow-interface";
+import { IWorkflow } from "actionsflow-core";
 import { AxiosStatic } from "axios";
 const TELEGRAM_TOKEN = "test";
 

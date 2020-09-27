@@ -1,6 +1,6 @@
 import { fromBuffer } from "file-type";
 import { lookup } from "mime-types";
-import { IBinaryData } from "actionsflow-interface";
+import { IBinaryData } from "../interface";
 import { BINARY_ENCODING } from "../constans";
 import path from "path";
 /**

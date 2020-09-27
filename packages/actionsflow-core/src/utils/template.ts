@@ -1,7 +1,7 @@
 import has from "lodash.has";
 import matchAll from "string.prototype.matchall";
 
-import { AnyObject } from "actionsflow-interface";
+import { AnyObject } from "../interface";
 interface IOptions {
   interpolate?: RegExp;
   shouldReplaceUndefinedToEmpty?: boolean;

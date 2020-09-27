@@ -1,4 +1,4 @@
-import { ITriggerContext, IGithub } from "actionsflow-interface";
+import { ITriggerContext, IGithub } from "./interface";
 import { log } from "./log";
 export const getContext = (): ITriggerContext => {
   let secretObj: Record<string, string> = {};

@@ -6,7 +6,7 @@ import {
   getWorkflow,
   formatRequest,
 } from "actionsflow-core";
-import { IWorkflow } from "actionsflow-interface";
+import { IWorkflow } from "actionsflow-core";
 
 test("aws_sns with webhook", async () => {
   const aws_snsBot = new aws_sns({

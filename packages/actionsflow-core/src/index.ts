@@ -32,3 +32,4 @@ export {
   buildWorkflowFile,
 } from "./generate";
 export { Cursor } from "mingo/cursor";
+export * from "./interface";

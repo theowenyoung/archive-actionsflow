@@ -6,7 +6,7 @@ test("run trigger", async () => {
   const trigger = new Trigger({
     options: {},
     helpers: getTriggerHelpers({
-      name: "twitter",
+      name: "reddit",
       workflowRelativePath: "workflow.yml",
     }),
     workflow: (await getWorkflow({
@@ -15,7 +15,6 @@ test("run trigger", async () => {
       context: getContext(),
     })) as IWorkflow,
   });
-  await expect(trigger.run()).rejects.toEqual(
-    new Error("Twit config must include `consumer_key` when using user auth.")
-  );
+  const results = await trigger.run();
+  expect(results.length).toBe(2);
 });

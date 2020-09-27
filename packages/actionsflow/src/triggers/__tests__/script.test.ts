@@ -1,7 +1,7 @@
 import Script from "../script";
 import { getTriggerConstructorParams } from "./trigger.util";
 import path from "path";
-import { ITriggerResultObject } from "actionsflow-interface";
+import { ITriggerResultObject } from "actionsflow-core";
 test("script trigger", async () => {
   const script = new Script(
     await getTriggerConstructorParams({

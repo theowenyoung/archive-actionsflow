@@ -6,7 +6,7 @@ import {
   IWebhookRequest,
   ITriggerOptions,
   IHelpers,
-} from "actionsflow-interface";
+} from "actionsflow-core";
 
 export default class Webhook implements ITriggerClassType {
   options: ITriggerOptions = {};

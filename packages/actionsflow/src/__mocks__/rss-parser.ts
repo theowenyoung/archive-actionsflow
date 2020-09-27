@@ -1,4 +1,4 @@
-import { AnyObject } from "actionsflow-interface";
+import { AnyObject } from "actionsflow-core";
 
 export default class Parser {
   parseURL(): { items: AnyObject[] } {

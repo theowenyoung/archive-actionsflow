@@ -1,6 +1,5 @@
 import Poll from "../poll";
-import { getTriggerHelpers } from "actionsflow-core";
-import { IHelpers } from "actionsflow-interface";
+import { getTriggerHelpers, IHelpers } from "actionsflow-core";
 import { AxiosStatic } from "axios";
 const helpers: IHelpers = getTriggerHelpers({
   name: "poll",

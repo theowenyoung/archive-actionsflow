@@ -11,8 +11,9 @@ import {
   ITriggerOptions,
   ITriggerContructorParams,
   ITriggerEvent,
-} from "actionsflow-interface";
+} from "./interface";
 import axios from "axios";
+import rssParser from "rss-parser";
 import { getWorkflow } from "./workflow";
 import { getContext } from "./context";
 import { Log, prefix, colors } from "./log";
@@ -63,6 +64,7 @@ export const getTriggerHelpers = ({
     cache: getCache(`trigger-${name}-${triggerId}`),
     log: triggerLog,
     axios: axios,
+    rssParser: rssParser,
   };
   return triggerHelpers;
 };

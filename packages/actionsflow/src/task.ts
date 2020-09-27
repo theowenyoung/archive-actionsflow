@@ -1,14 +1,12 @@
 import {
-  ITask,
-  ITriggerEvent,
-  IWorkflow,
-  IWebhookRequest,
-} from "actionsflow-interface";
-import {
   getRawTriggers,
   log,
   getParamsByWebhookPath,
   getWorkflowFileNameByPath,
+  ITask,
+  ITriggerEvent,
+  IWorkflow,
+  IWebhookRequest,
 } from "actionsflow-core";
 import { getSupportedTriggers, resolveTrigger } from "./trigger";
 export const getTasksByTriggerEvent = ({

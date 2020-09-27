@@ -5,7 +5,7 @@ import {
   HTTP_METHODS_LOWERCASE,
   IWebhookRequestPayload,
   AnyObject,
-} from "actionsflow-interface";
+} from "./interface";
 import querystring from "querystring";
 import typeis from "type-is";
 import { IncomingMessage } from "http";

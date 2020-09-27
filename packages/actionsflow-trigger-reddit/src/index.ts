@@ -6,7 +6,7 @@ import {
   ITriggerOptions,
 } from "actionsflow-core";
 
-export default class Rss implements ITriggerClassType {
+export default class Reddit implements ITriggerClassType {
   options: ITriggerOptions = {};
   helpers: IHelpers;
   getItemKey(item: AnyObject): string {
@@ -36,6 +36,13 @@ export default class Rss implements ITriggerClassType {
       }
       urls = [url];
     }
+    urls = urls.map((item) => {
+      if (item.endsWith(".rss")) {
+        return item;
+      } else {
+        return `${item}.rss`;
+      }
+    });
     const items: AnyObject[] = [];
 
     for (let index = 0; index < urls.length; index++) {
@@ -53,7 +60,7 @@ export default class Rss implements ITriggerClassType {
           );
         }
 
-        this.helpers.log.error(`fetch rss feed [${feedUrl}] error: `, e);
+        this.helpers.log.error(`fetch reddit rss feed [${feedUrl}] error: `, e);
         throw e;
       }
       // For now we just take the items and ignore everything else

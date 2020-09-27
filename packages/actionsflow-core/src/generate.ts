@@ -2,7 +2,7 @@ import path from "path";
 import yaml from "js-yaml";
 import fs from "fs-extra";
 import { log } from "./log";
-import { IWorkflowData, IGithub } from "actionsflow-interface";
+import { IWorkflowData, IGithub } from "./interface";
 import { EXCLUDE_INJECT_GIHTUB_ENV } from "./constans";
 export const buildNativeEvent = async (options: {
   dest: string;

@@ -1,5 +1,5 @@
 import triggers from "../index";
-import { ITriggerClassTypeConstructable } from "actionsflow-interface";
+import { ITriggerClassTypeConstructable } from "actionsflow-core";
 import { getTriggerConstructorParams } from "./trigger.util";
 
 test("is all trigger is a valid class", async () => {

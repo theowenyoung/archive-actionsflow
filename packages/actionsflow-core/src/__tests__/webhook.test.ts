@@ -1,6 +1,6 @@
 import { getWebhookByRequest } from "../webhook";
 import path from "path";
-import { IWorkflow } from "actionsflow-interface";
+import { IWorkflow } from "../interface";
 import { formatRequest, getWorkflow, getContext } from "../index";
 
 test("get webhook", async () => {

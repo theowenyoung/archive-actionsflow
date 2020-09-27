@@ -4,7 +4,7 @@ import {
   IHelpers,
   AnyObject,
   ITriggerOptions,
-} from "actionsflow-interface";
+} from "actionsflow-core";
 import Twit from "twit";
 export default class Twitter implements ITriggerClassType {
   options: ITriggerOptions = {};

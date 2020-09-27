@@ -1,10 +1,11 @@
+import path from "path";
 import {
+  getTriggerHelpers,
+  getWorkflow,
   ITriggerContructorParams,
   IWorkflow,
   ITriggerOptions,
-} from "actionsflow-interface";
-import path from "path";
-import { getTriggerHelpers, getWorkflow } from "actionsflow-core";
+} from "actionsflow-core";
 
 export const CONTEXT = {
   github: {

@@ -1,7 +1,11 @@
 import path from "path";
 import { run, resolveTrigger } from "../trigger";
-import { IWorkflow } from "actionsflow-interface";
-import { formatRequest, getWorkflow, getContext } from "actionsflow-core";
+import {
+  IWorkflow,
+  formatRequest,
+  getWorkflow,
+  getContext,
+} from "actionsflow-core";
 test("run trigger", async () => {
   const result = await run({
     trigger: {

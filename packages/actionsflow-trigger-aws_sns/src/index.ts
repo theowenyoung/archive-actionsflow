@@ -5,7 +5,7 @@ import {
   ITriggerOptions,
   IHelpers,
   IWebhookRequest,
-} from "actionsflow-interface";
+} from "actionsflow-core";
 
 export default class AWSSNS implements ITriggerClassType {
   constructor({ helpers, options }: ITriggerContructorParams) {

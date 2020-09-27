@@ -6,7 +6,7 @@ import {
   ITrigger,
   AnyObject,
   IWebhookRequestPayload,
-} from "actionsflow-interface";
+} from "./interface";
 import { match, Match } from "path-to-regexp";
 import { formatRequest } from "./event";
 import { getTriggerWebhookBasePath } from "./utils";

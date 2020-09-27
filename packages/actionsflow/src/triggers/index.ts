@@ -8,6 +8,7 @@ import Twitter from "@actionsflow/trigger-twitter";
 import Slack from "@actionsflow/trigger-slack";
 import AWSSNS from "@actionsflow/trigger-aws_sns";
 import Typeform from "@actionsflow/trigger-typeform";
+import Reddit from "@actionsflow/trigger-reddit";
 export default {
   poll: Poll,
   rss: Rss,
@@ -19,4 +20,5 @@ export default {
   email,
   aws_sns: AWSSNS,
   typeform: Typeform,
+  reddit: Reddit,
 };

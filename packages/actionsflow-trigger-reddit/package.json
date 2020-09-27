@@ -1,14 +1,14 @@
 {
-  "name": "@actionsflow/trigger-aws_sns",
+  "name": "@actionsflow/trigger-reddit",
   "version": "0.1.40",
-  "description": "Actionsflow trigger aws sns",
+  "description": "Actionsflow trigger reddit",
   "keywords": [
-    "aws",
+    "reddit",
     "actionsflow",
     "trigger"
   ],
   "author": "Owen Young <theowenyoung@gmail.com>",
-  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-aws_sns",
+  "homepage": "https://github.com/actionsflow/actionsflow/tree/master/packages/actionsflow-trigger-reddit",
   "license": "MIT",
   "main": "dist/src/index.js",
   "repository": {
